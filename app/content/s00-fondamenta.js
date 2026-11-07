@@ -2450,3 +2450,336 @@ Il metodo è sempre lo stesso: trovo i due punti di intersezione con la retta, p
     { id: 's00.trig.fc8', kind: 'metodo', front: 'Disequazione sul cerchio', back: String.raw`Trovo i punti di intersezione con la retta $y = c$ (per il seno) o $x = c$ (per il coseno), poi scelgo l'arco che soddisfa la disuguaglianza. Gli estremi seguono la disuguaglianza.` },
   ],
 });
+
+// =====================================================================
+// s00.logica
+// =====================================================================
+// Generatori: negazione di un quantificatore, contrapposta, condizione necessaria/sufficiente
+S.push({
+  id: 's00.logica',
+  title: 'Logica e dimostrazioni',
+  summary: String.raw`Saprai leggere un enunciato con $\Rightarrow$, $\forall$ ed $\exists$, negarlo correttamente, distinguere condizione necessaria e sufficiente, e scrivere una dimostrazione diretta, per assurdo o per induzione. Serve sia per la Parte A sia per le definizioni di limite e continuità.`,
+  prereq: ['s00.disequazioni'],
+  examRefs: ['Itinere 11/11/2025 · Parte A (vero/falso motivato)', 'Appello 15/01/2026 · Parte A (dimostrazione per assurdo)', 'Appello 10/02/2026 · Parte A (condizione necessaria)'],
+  lessons: [
+    {
+      id: 's00.logica.L1',
+      title: 'Proposizioni e connettivi',
+      cards: [
+        { type: 'learn', title: 'Una proposizione è vera o falsa', body: String.raw`Una **proposizione** è un'affermazione che è **vera** oppure **falsa**, non entrambe. "$2 + 2 = 4$" è vera; "$2 + 2 = 5$" è falsa; "$x > 1$" non è una proposizione finché non si dice quale $x$.
+
+I **connettivi** combinano proposizioni $P$ e $Q$:
+
+- **non** ($\neg P$): vera quando $P$ è falsa;
+- **e** ($P \wedge Q$): vera solo se sono vere **entrambe**;
+- **o** ($P \vee Q$): vera se è vera **almeno una** (il "o" del corso è inclusivo).
+
+>! Il "o" non è esclusivo: $P \vee Q$ è vera anche quando sono vere entrambe.` },
+        { type: 'learn', title: 'Negare: le leggi di De Morgan', body: String.raw`Per negare una congiunzione o una disgiunzione si cambiano i connettivi e si negano i pezzi:
+
+- $\neg(P \wedge Q) = \neg P \vee \neg Q$;
+- $\neg(P \vee Q) = \neg P \wedge \neg Q$.
+
+Esempio: la negazione di "$x > 0$ e $x < 2$" è "$x \le 0$ oppure $x \ge 2$". Non è "$x < 0$ e $x > 2$": il $\wedge$ diventa $\vee$.` },
+        { id: 's00.logica.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Qual è la negazione di "$x > 0$ e $x < 2$"?`,
+          options: [String.raw`$x < 0$ e $x > 2$`, String.raw`$x \le 0$ oppure $x \ge 2$`, String.raw`$x \le 0$ e $x \ge 2$`, String.raw`$x > 0$ oppure $x < 2$`],
+          answer: 1,
+          explain: String.raw`De Morgan: $\neg(P\wedge Q) = \neg P \vee \neg Q$. $\neg(x>0) = x \le 0$ e $\neg(x<2) = x \ge 2$. Il primo distrattore cambia i segni ma tiene il $\wedge$; il terzo tiene il $\wedge$ invece di $\vee$; il quarto non nega niente.` },
+        { id: 's00.logica.L1.e2', type: 'tf', level: 1,
+          prompt: String.raw`La proposizione "$2 + 2 = 4$ oppure $3 > 5$" è vera.`,
+          answer: true,
+          explain: String.raw`Vero: basta che una delle due sia vera. $2+2=4$ è vera, quindi la disgiunzione è vera anche se la seconda è falsa.` },
+        { id: 's00.logica.L1.e3', type: 'tf', level: 1,
+          prompt: String.raw`La negazione di "$x \ge 3$" è "$x < 3$".`,
+          answer: true,
+          explain: String.raw`Vero: l'opposto di "maggiore o uguale" è "strettamente minore". Errore tipico: scrivere $x \le 3$, che include il $3$.` },
+        { id: 's00.logica.L1.e4', type: 'mcq', level: 1,
+          prompt: String.raw`Sia $P$: "$n$ è pari" e $Q$: "$n$ è multiplo di $3$". Quale proposizione è vera per $n = 6$?`,
+          options: [String.raw`$P \wedge Q$`, String.raw`$P \wedge \neg Q$`, String.raw`$\neg P \wedge Q$`, String.raw`$\neg P \wedge \neg Q$`],
+          answer: 0,
+          explain: String.raw`$6$ è pari e multiplo di $3$: $P$ e $Q$ sono entrambe vere, quindi $P \wedge Q$ è vera. Le altre contengono almeno una negazione falsa per $n=6$.` },
+        { id: 's00.logica.L1.e5', type: 'tf', level: 2,
+          prompt: String.raw`La negazione di "$x^2 > 1$ oppure $x < 0$" è "$x^2 \le 1$ e $x \ge 0$".`,
+          answer: true,
+          explain: String.raw`Vero: $\neg(P\vee Q) = \neg P\wedge\neg Q$, con $\neg(x^2>1) = (x^2 \le 1)$ e $\neg(x<0) = (x \ge 0)$.` },
+        { type: 'learn', title: 'Tabelle di verità', body: String.raw`Per una proposizione composta si costruisce la tabella di verità: si elencano tutti i casi di $P$ e $Q$ (vero/falso) e si valuta il risultato.
+
+- $P = V$, $Q = V$: $P \wedge Q = V$, $P \vee Q = V$;
+- $P = V$, $Q = F$: $P \wedge Q = F$, $P \vee Q = V$;
+- $P = F$, $Q = V$: $P \wedge Q = F$, $P \vee Q = V$;
+- $P = F$, $Q = F$: $P \wedge Q = F$, $P \vee Q = F$.
+
+Con due proposizioni ci sono $2^2 = 4$ casi; con $n$ proposizioni ce ne sono $2^n$.` },
+        { id: 's00.logica.L1.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Quale proposizione è vera per ogni $P$ e $Q$? (la tabella di verità ha sempre valore V)`,
+          options: [String.raw`$P \wedge Q$`, String.raw`$P \vee \neg P$`, String.raw`$P \wedge \neg P$`, String.raw`$P \vee Q$`],
+          answer: 1,
+          explain: String.raw`$P \vee \neg P$ è vera sempre (principio del terzo escluso). $P\wedge\neg P$ è sempre falsa. $P \wedge Q$ e $P \vee Q$ dipendono da $P$ e $Q$.` },
+        { id: 's00.logica.L1.e7', type: 'cloze', level: 2,
+          prompt: String.raw`Completa la negazione di "$P \wedge Q$" usando le parole giuste.`,
+          text: String.raw`$\neg(P \wedge Q) = \neg P\ [[0]]\ \neg Q$.`,
+          blanks: [{ options: [String.raw`$\wedge$`, String.raw`$\vee$`, String.raw`$\Rightarrow$`], answer: 1 }],
+          explain: String.raw`La negazione di "$P$ e $Q$" è "non $P$ oppure non $Q$": la congiunzione $\wedge$ diventa disgiunzione $\vee$.` },
+      ],
+    },
+    {
+      id: 's00.logica.L2',
+      title: 'Implicazione, condizione necessaria e sufficiente',
+      cards: [
+        { type: 'learn', title: 'Se... allora...', body: String.raw`Un'implicazione $P \Rightarrow Q$ si legge "se $P$ allora $Q$" e significa: **ogni volta che $P$ è vera, anche $Q$ è vera**. Se $P$ è falsa, l'implicazione è vera per definizione: non dice niente.
+
+Esempio: $x > 2 \Rightarrow x > 1$ è vera. $x > 1 \Rightarrow x > 2$ è falsa: $x = 1{,}5$ è un controesempio.
+
+Tre varianti di $P \Rightarrow Q$:
+
+- **contrapposta**: $\neg Q \Rightarrow \neg P$, **sempre equivalente** all'originale;
+- **inversa**: $\neg P \Rightarrow \neg Q$;
+- **converso**: $Q \Rightarrow P$.
+
+>! L'inversa e il converso **non** sono equivalenti all'originale. Il loro valore di verità è indipendente.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Scrivi la contrapposta di "Se $n$ è divisibile per $4$, allora $n$ è pari", e dimostrala.`,
+          steps: [
+            String.raw`Sia $P$: "$4 \mid n$" e $Q$: "$n$ è pari". L'implicazione è $P \Rightarrow Q$.`,
+            { text: String.raw`La contrapposta è $\neg Q \Rightarrow \neg P$: "se $n$ non è pari, allora $n$ non è divisibile per $4$".`,
+              ask: { type: 'mcq', prompt: String.raw`Qual è la negazione di "$n$ è pari"?`, options: [String.raw`$n$ è dispari`, String.raw`$n$ è divisibile per $4$`, String.raw`$n$ è negativo`], answer: 0, explain: String.raw`Un intero è pari o dispari: negare "pari" dà "dispari".` } },
+            String.raw`Verifica diretta: se $n$ è divisibile per $4$, cioè $n = 4k = 2(2k)$, allora è pari. Quindi l'implicazione è vera.`,
+          ],
+          result: String.raw`Contrapposta: "se $n$ è dispari, non è divisibile per $4$" (equivalente all'originale).` },
+        { id: 's00.logica.L2.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quale affermazione è equivalente a "se $f$ è derivabile in $x_0$, allora $f$ è continua in $x_0$"?`,
+          options: [String.raw`Se $f$ non è continua in $x_0$, allora $f$ non è derivabile in $x_0$`, String.raw`Se $f$ è continua in $x_0$, allora $f$ è derivabile in $x_0$`, String.raw`Se $f$ non è derivabile in $x_0$, allora $f$ non è continua in $x_0$`, String.raw`$f$ è continua in $x_0$ solo se è derivabile`],
+          answer: 0,
+          explain: String.raw`La contrapposta di $P\Rightarrow Q$ è $\neg Q\Rightarrow\neg P$: "non continua $\Rightarrow$ non derivabile". Il secondo è il converso, che non è equivalente: la continuità non implica la derivabilità ($|x|$ in $0$).` },
+        { id: 's00.logica.L2.e2', type: 'mcq', level: 2,
+          prompt: String.raw`Sia $P\Rightarrow Q$ vera ma $Q$ falsa. Quale conclusione segue?`,
+          options: [String.raw`$P$ è falsa`, String.raw`$P$ è vera`, String.raw`Non si può dire nulla`, String.raw`$Q \Rightarrow P$ è vera`],
+          answer: 0,
+          explain: String.raw`Se $P$ fosse vera, da $P\Rightarrow Q$ seguirebbe $Q$ vera, contro l'ipotesi. Quindi $P$ è falsa. Questo è il modo di ragionare della contrapposta: $\neg Q\Rightarrow\neg P$.` },
+        { id: 's00.logica.L2.e3', type: 'tf', level: 1,
+          prompt: String.raw`L'implicazione "se $n$ è primo, allora $n$ è dispari" è vera.`,
+          answer: false,
+          explain: String.raw`Falsa: $n = 2$ è primo ma è pari. Il controesempio basta per dimostrare che l'enunciato è falso.` },
+        { type: 'learn', title: 'Condizione necessaria e sufficiente', body: String.raw`Dire che $P$ è **condizione sufficiente** per $Q$ significa $P \Rightarrow Q$: basta $P$ per avere $Q$.
+
+Dire che $P$ è **condizione necessaria** per $Q$ significa $Q \Rightarrow P$: senza $P$ non si ha $Q$.
+
+Esempi: "$x > 2$" è sufficiente per "$x > 1$", ma non necessaria. "$x > 1$" è necessaria per "$x > 2$", ma non sufficiente. Per $P$ e $Q$ entrambe necessarie e sufficienti serve $P \Leftrightarrow Q$.
+
+>* Essere derivabile è **sufficiente** per essere continui; essere continui è **necessario** per essere derivabili.` },
+        { id: 's00.logica.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`"$x > 3$" è ... per "$x > 1$"?`,
+          options: [String.raw`Sufficiente ma non necessaria`, String.raw`Necessaria ma non sufficiente`, String.raw`Necessaria e sufficiente`, String.raw`Né necessaria né sufficiente`],
+          answer: 0,
+          explain: String.raw`$x > 3 \Rightarrow x > 1$: quindi è sufficiente. Ma $x > 1$ non implica $x > 3$ (ad esempio $x = 2$): non è necessaria.` },
+        { id: 's00.logica.L2.e5', type: 'mcq', level: 2,
+          prompt: String.raw`"$f$ ha un limite finito in $x_0$" è ... per "$f$ è limitata vicino a $x_0$"?`,
+          options: [String.raw`Sufficiente ma non necessaria`, String.raw`Necessaria ma non sufficiente`, String.raw`Necessaria e sufficiente`, String.raw`Né necessaria né sufficiente`],
+          answer: 0,
+          explain: String.raw`Il limite finito implica la limitatezza vicino a $x_0$: quindi il limite è **sufficiente**. Non è necessario: $\sin\frac{1}{x}$ è limitata vicino a $0$ ma non ha limite in $0$.` },
+        { id: 's00.logica.L2.e6', type: 'order', level: 2,
+          prompt: String.raw`Ordina la dimostrazione per assurdo di: "se $n^2$ è dispari allora $n$ è dispari".`,
+          steps: [
+            String.raw`Supponiamo per assurdo che $n$ non sia dispari: $n$ è pari.`,
+            String.raw`Quindi $n = 2k$ per un intero $k$.`,
+            String.raw`Allora $n^2 = 4k^2 = 2(2k^2)$ è pari.`,
+            String.raw`Ma $n^2$ era dispari: contraddizione, quindi $n$ è dispari.`,
+          ],
+          distractors: [String.raw`Quindi $n^2 = 2k+1$ e $n$ è pari per definizione.`, String.raw`Il converso è vero, quindi la dimostrazione è conclusa.`],
+          explain: String.raw`È una dimostrazione per assurdo: si nega la tesi ($n$ pari), si arriva a un $n^2$ pari e si contraddice l'ipotesi. I distrattori non seguono: il primo ha già assunto $n^2$ dispari, il secondo confonde il converso con l'originale.` },
+        { id: 's00.logica.L2.e7', type: 'tf', level: 2,
+          prompt: String.raw`Per dimostrare "$P \Rightarrow Q$" basta trovare un caso in cui $P$ è vera e $Q$ è falsa.`,
+          answer: false,
+          explain: String.raw`Falso: quello è un **controesempio** che confuta l'implicazione. Per dimostrarla bisogna mostrare che in ogni caso con $P$ vera, $Q$ è vera.` },
+      ],
+    },
+    {
+      id: 's00.logica.L3',
+      title: 'Quantificatori, controesempi e induzione',
+      cards: [
+        { type: 'learn', title: 'Per ogni e esiste', body: String.raw`$\forall x \in A$, $P(x)$ significa: "per **ogni** $x$ di $A$, vale $P(x)$". $\exists x \in A$, $P(x)$ significa: "**esiste** almeno un $x$ di $A$ con $P(x)$".
+
+Per **negare** un quantificatore si cambia il quantificatore e si nega la proprietà:
+
+- $\neg\big(\forall x,\ P(x)\big) = \exists x,\ \neg P(x)$;
+- $\neg\big(\exists x,\ P(x)\big) = \forall x,\ \neg P(x)$.
+
+Esempio: "tutti i numeri hanno quadrato positivo" si nega con "esiste un numero con quadrato non positivo". Basta un $x = 0$.` },
+        { id: 's00.logica.L3.e1', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è la negazione di "$\forall x \in \R,\ x^2 > 0$"?`,
+          options: [String.raw`$\forall x \in \R,\ x^2 \le 0$`, String.raw`$\exists x \in \R:\ x^2 \le 0$`, String.raw`$\exists x \in \R:\ x^2 > 0$`, String.raw`$\forall x \in \R,\ x^2 < 0$`],
+          answer: 1,
+          explain: String.raw`Il $\forall$ diventa $\exists$, e $x^2 > 0$ diventa $x^2 \le 0$. È vera la negazione: con $x = 0$ si ha $0 \le 0$. La prima opzione non cambia il quantificatore; la terza non nega la proprietà.` },
+        { id: 's00.logica.L3.e2', type: 'tf', level: 2,
+          prompt: String.raw`La proposizione "$\exists x \in \R:\ x^2 = -1$" è vera.`,
+          answer: false,
+          explain: String.raw`Falsa: il quadrato di un reale non è mai negativo, quindi non esiste $x$ reale con $x^2 = -1$.` },
+        { id: 's00.logica.L3.e3', type: 'num', level: 2,
+          prompt: String.raw`Qual è il più piccolo intero positivo $n$ che confuta "ogni intero $n$ con $n^2 > n$ è pari"? Scrivi il numero.`,
+          answer: '3',
+          explain: String.raw`Un controesempio: $n = 3$ ha $n^2 = 9 > 3$ e non è pari. Basta un solo controesempio per confutare un "per ogni".` },
+        { id: 's00.logica.L3.e4', type: 'mcq', level: 2,
+          prompt: String.raw`La definizione di continuità in $x_0$ è: $\forall\varepsilon>0\ \exists\delta>0\ \forall x$: $|x-x_0|<\delta \Rightarrow |f(x)-f(x_0)|<\varepsilon$. Qual è la sua negazione?`,
+          options: [String.raw`$\forall\varepsilon>0\ \exists\delta>0\ \forall x$: $|x-x_0|<\delta \Rightarrow |f(x)-f(x_0)|\ge\varepsilon$`, String.raw`$\exists\varepsilon>0\ \forall\delta>0\ \exists x$: $|x-x_0|<\delta$ e $|f(x)-f(x_0)|\ge\varepsilon$`, String.raw`$\exists\varepsilon>0\ \exists\delta>0\ \forall x$: $|x-x_0|<\delta \Rightarrow |f(x)-f(x_0)|\ge\varepsilon$`, String.raw`$\forall\varepsilon>0\ \forall\delta>0\ \exists x$: $|x-x_0|<\delta$ e $|f(x)-f(x_0)|\ge\varepsilon$`],
+          answer: 1,
+          explain: String.raw`Nego ogni quantificatore in ordine: $\forall\varepsilon\to\exists\varepsilon$, $\exists\delta\to\forall\delta$, $\forall x\to\exists x$. Poi nego l'implicazione: $P\Rightarrow Q$ diventa $P \wedge \neg Q$. Il terzo distrattore non cambia il secondo quantificatore; il primo non nega l'implicazione correttamente.` },
+        { type: 'learn', title: 'Dimostrazione diretta e per assurdo', body: String.raw`Per dimostrare $P\Rightarrow Q$ ci sono tre strade principali:
+
+- **diretta**: assumo $P$ e ricavo $Q$ con una catena di passaggi validi;
+- **per contrapposizione**: dimostro $\neg Q \Rightarrow \neg P$;
+- **per assurdo**: assumo $P \wedge \neg Q$ e ricavo una contraddizione.
+
+>* **Dimostrazione per assurdo.** Per dimostrare $Q$ suppongo $\neg Q$ e arrivo a una contraddizione ($A \wedge \neg A$). Allora $Q$ è vera.` },
+        { id: 's00.logica.L3.e5', type: 'mcq', level: 2,
+          prompt: String.raw`Per dimostrare che $\sqrt{2}$ non è razionale per assurdo, si parte da:`,
+          options: [String.raw`Supponiamo che $\sqrt{2}$ sia razionale, cioè $\sqrt2 = p/q$ con $p,q$ interi senza fattori comuni`, String.raw`Supponiamo che $\sqrt2$ sia irrazionale e verifichiamo $\sqrt2 = p/q$`, String.raw`Sappiamo che $\sqrt2 \approx 1{,}414$, quindi è irrazionale`, String.raw`Consideriamo $p/q$ con $p = \sqrt2$ e $q = 1$`],
+          answer: 0,
+          explain: String.raw`Per assurdo si nega la tesi: $\sqrt2$ è razionale. Il secondo distrattore nega male la tesi; il terzo usa un valore approssimato, che non dimostra nulla; il quarto non è un'ipotesi.` },
+        { id: 's00.logica.L3.e6', type: 'order', level: 3, source: 'Appello 15/01/2026 · Parte A (dimostrazione per assurdo)',
+          prompt: String.raw`Ordina la dimostrazione per assurdo che $\sqrt2$ è irrazionale.`,
+          steps: [
+            String.raw`Supponiamo che $\sqrt2 = \dfrac{p}{q}$ con $p, q$ interi, $q \ne 0$, senza fattori comuni.`,
+            String.raw`Elevo al quadrato: $2 = \dfrac{p^2}{q^2}$, cioè $p^2 = 2q^2$.`,
+            String.raw`Quindi $p^2$ è pari, e allora anche $p$ è pari (un numero dispari ha quadrato dispari).`,
+            String.raw`Scrivo $p = 2r$: $4r^2 = 2q^2$, cioè $q^2 = 2r^2$.`,
+            String.raw`Quindi $q^2$ è pari e anche $q$ è pari.`,
+            String.raw`Allora $p$ e $q$ sono entrambi pari, e la frazione non è ridotta: contraddizione. Quindi $\sqrt2$ è irrazionale.`,
+          ],
+          distractors: [String.raw`Quindi $\sqrt2 = p/q$ per definizione di numero reale.`, String.raw`Quindi $p$ è dispari, perché $\sqrt2$ è irrazionale.`],
+          explain: String.raw`Il passo chiave è che il quadrato di un dispari è dispari: se $p^2$ è pari, $p$ è pari. Il primo distrattore ignora l'ipotesi per assurdo; il secondo afferma senza giustificazione un fatto che si deve ancora dimostrare.` },
+        { type: 'learn', title: 'Controesempio', body: String.raw`Per confutare "$\forall x\,P(x)$" basta **un** controesempio: un $x_0$ con $\neg P(x_0)$. Per confutare "$P\Rightarrow Q$" basta un caso con $P$ vera e $Q$ falsa.
+
+>! Un esempio che **verifica** l'affermazione non la dimostra. Con un esempio non si dimostra un "per ogni", con un controesempio sì.` },
+        { type: 'learn', title: 'Il principio di induzione', body: String.raw`Per dimostrare che $P(n)$ è vera per ogni $n \ge n_0$:
+
+1. **passo base**: verifico $P(n_0)$;
+2. **passo induttivo**: assumo $P(n)$ vera (ipotesi induttiva) e dimostro $P(n+1)$.
+
+Allora $P(n)$ vale per ogni $n \ge n_0$. Il passo base è necessario: senza di lui il passo induttivo non basta a dire nulla.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Dimostra per induzione che $1 + 2 + \dots + n = \dfrac{n(n+1)}{2}$ per ogni $n \ge 1$.`,
+          steps: [
+            String.raw`Passo base: per $n = 1$ la somma è $1$, e $\frac{1\cdot 2}{2} = 1$. Vero.`,
+            { text: String.raw`Ipotesi induttiva: $1 + \dots + n = \frac{n(n+1)}{2}$. Aggiungo $n+1$ a entrambi i membri: $\frac{n(n+1)}{2} + (n+1)$.`,
+              ask: { type: 'mcq', prompt: String.raw`Raccogli $(n+1)$ in $\dfrac{n(n+1)}{2} + (n+1)$. Che cosa resta nella parentesi?`, options: [String.raw`$n+1$`, String.raw`$\dfrac{n}{2}+1$`, String.raw`$\dfrac{n+1}{2}$`, String.raw`$n$`], answer: 1, explain: String.raw`$\frac{n(n+1)}{2} + (n+1) = (n+1)\left(\frac{n}{2} + 1\right) = \frac{(n+1)(n+2)}{2}$.` } },
+            String.raw`Ho ottenuto $\frac{(n+1)((n+1)+1)}{2}$, cioè la formula per $n+1$. Per induzione la formula vale per ogni $n \ge 1$.`,
+          ],
+          result: String.raw`$1 + 2 + \dots + n = \dfrac{n(n+1)}{2}$ per ogni $n \ge 1$.` },
+        { id: 's00.logica.L3.e7', type: 'tf', level: 2,
+          prompt: String.raw`Per dimostrare un'affermazione per ogni $n \ge 1$ per induzione, il passo base può essere omesso se il passo induttivo è dimostrato.`,
+          answer: false,
+          explain: String.raw`Falso: senza il passo base l\'induzione non parte. Esempio: $P(n)$: "$n = n+1$" soddisfa il passo induttivo $P(n)\Rightarrow P(n+1)$ (la premessa è sempre falsa), ma $P(n)$ è falsa per ogni $n$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.logica.gen-negazione', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.int(1, 9);
+        const correct = String.raw`$\exists x \in \R:\ x^2 < ${c}$`;
+        const wrong = [
+          String.raw`$\forall x \in \R:\ x^2 < ${c}$`,
+          String.raw`$\exists x \in \R:\ x^2 \ge ${c}$`,
+          String.raw`$\forall x \in \R:\ x^2 \le ${c}$`,
+        ];
+        const idx = R.int(0, 3);
+        const opts = [...wrong];
+        opts.splice(idx, 0, correct);
+        return {
+          type: 'mcq',
+          prompt: String.raw`Qual è la negazione di "$\forall x \in \R,\ x^2 \ge ${c}$"?`,
+          options: opts,
+          answer: idx,
+          explain: String.raw`Nego il quantificatore ($\forall\to\exists$) e la proprietà ($\ge\to<$): "$\exists x \in \R:\ x^2 < ${c}$". Il distrattore $\exists\ x^2 \ge ${c}$ non nega la proprietà; $\forall x^2 < ${c}$ non cambia il quantificatore.`,
+        };
+      } },
+    { id: 's00.logica.gen-contrapposta', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(0, 6), b = R.int(0, a * a);
+        const P = String.raw`$x > ${a}$`;
+        const Q = String.raw`$x^2 > ${b}$`;
+        const correct = String.raw`Se $x^2 \le ${b}$, allora $x \le ${a}$`;
+        const wrong = [
+          String.raw`Se $x^2 > ${b}$, allora $x > ${a}$`,
+          String.raw`Se $x \le ${a}$, allora $x^2 \le ${b}$`,
+          String.raw`Se $x \ge ${a}$, allora $x^2 \ge ${b}$`,
+        ];
+        const idx = R.int(0, 3);
+        const opts = [...wrong];
+        opts.splice(idx, 0, correct);
+        return {
+          type: 'mcq',
+          prompt: String.raw`Sia "Se ${P}, allora ${Q}". Qual è la sua contrapposta?`,
+          options: opts,
+          answer: idx,
+          explain: String.raw`La contrapposta di $P\Rightarrow Q$ è $\neg Q\Rightarrow\neg P$: $\neg Q$ è $x^2 \le ${b}$, $\neg P$ è $x \le ${a}$. Il converso $Q\Rightarrow P$ non è equivalente all'originale, e l'inversa $\neg P\Rightarrow\neg Q$ non è equivalente nemmeno lei.`,
+        };
+      } },
+    { id: 's00.logica.gen-condizione', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(-5, 5);
+        let b = R.int(-5, 5);
+        while (b === a) b = R.int(-5, 5);
+        const P = String.raw`$x > ${a}$`;
+        const Q = String.raw`$x > ${b}$`;
+        const suff = a > b;
+        const opts = [
+          String.raw`Sufficiente ma non necessaria`,
+          String.raw`Necessaria ma non sufficiente`,
+          String.raw`Necessaria e sufficiente`,
+          String.raw`Né necessaria né sufficiente`,
+        ];
+        return {
+          type: 'mcq',
+          prompt: String.raw`${P} è ... per ${Q}?`,
+          options: opts,
+          answer: suff ? 0 : 1,
+          explain: suff
+            ? String.raw`Se $x > ${a}$ allora $x > ${b}$, perché $${a} > ${b}$: quindi $P$ è sufficiente per $Q$. Non è necessaria: per $x$ compreso tra $${b}$ e $${a}$ vale $Q$ ma non $P$.`
+            : String.raw`Se $x > ${b}$ allora $x > ${a}$, perché $${b} > ${a}$: quindi $Q \Rightarrow P$, cioè $P$ è necessaria per $Q$. Non è sufficiente: per $x$ compreso tra $${a}$ e $${b}$ vale $P$ ma non $Q$.`,
+        };
+      } },
+    { id: 's00.logica.p1', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi della dimostrazione diretta: "se $n$ è pari allora $n^2$ è pari".`,
+      steps: [
+        String.raw`Ipotesi: $n$ è pari, cioè $n = 2k$ per un intero $k$.`,
+        String.raw`Calcolo: $n^2 = 4k^2 = 2(2k^2)$.`,
+        String.raw`Quindi $n^2$ è della forma $2\cdot(\text{intero})$, cioè è pari.`,
+      ],
+      distractors: [String.raw`Quindi $n^2$ è dispari, perché $4k^2$ è dispari.`],
+      explain: String.raw`Dimostrazione diretta: si parte dall'ipotesi e si arriva alla tesi con passaggi validi. Il distrattore contraddice il calcolo.`,
+    },
+    { id: 's00.logica.p2', type: 'tf', level: 1,
+      prompt: String.raw`La negazione di "tutti i gatti sono neri" è "nessun gatto è nero".`, answer: false,
+      explain: String.raw`Falso: basta che esista un gatto non nero. "Nessun gatto è nero" è un'affermazione più forte, non la negazione.` },
+    { id: 's00.logica.p3', type: 'cloze', level: 2,
+      prompt: String.raw`Completa la definizione di negazione dei quantificatori.`,
+      text: String.raw`$\neg(\forall x\, P(x)) = [[0]]\, x,\ \neg P(x)$.`,
+      blanks: [{ options: [String.raw`$\forall$`, String.raw`$\exists$`, String.raw`$\Rightarrow$`], answer: 1 }],
+      explain: String.raw`Negare "per ogni" significa dire "esiste almeno uno che non soddisfa": il quantificatore diventa $\exists$.` },
+    { id: 's00.logica.p4', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni proposizione alla sua contrapposta.`,
+      pairs: [
+        [String.raw`$P\Rightarrow Q$`, String.raw`$\neg Q\Rightarrow\neg P$`],
+        [String.raw`$P\Rightarrow\neg Q$`, String.raw`$Q\Rightarrow\neg P$`],
+        [String.raw`$\neg P\Rightarrow Q$`, String.raw`$\neg Q\Rightarrow P$`],
+        [String.raw`$P\wedge Q\Rightarrow R$`, String.raw`$\neg R\Rightarrow\neg(P\wedge Q)$`],
+      ],
+      explain: String.raw`La contrapposta scambia le ipotesi con le negazioni delle conclusioni, e viceversa: $P\Rightarrow Q$ diventa $\neg Q\Rightarrow\neg P$. Nella quarta coppia la premessa composta resta negata come un unico blocco.` },
+    { id: 's00.logica.p5', type: 'open', level: 3, source: 'Appello 10/02/2026 · Parte A (teoria)', points: 2,
+      prompt: String.raw`Dai la definizione di funzione $f$ continua in $x_0$ con i quantificatori, e spiega perché una funzione derivabile in $x_0$ è continua in $x_0$.`,
+      answer: String.raw`$f$ è continua in $x_0$ se $\forall\varepsilon>0\ \exists\delta>0$ tale che $|x-x_0|<\delta \Rightarrow |f(x)-f(x_0)|<\varepsilon$. Se $f$ è derivabile, $\frac{f(x)-f(x_0)}{x-x_0}\to f'(x_0)$ finito, quindi $f(x)-f(x_0) = (x-x_0)\cdot\frac{f(x)-f(x_0)}{x-x_0}\to 0\cdot f'(x_0) = 0$: $f$ è continua in $x_0$.`,
+      rubric: [String.raw`Definizione con i quantificatori $\forall\varepsilon\,\exists\delta$ e $|x-x_0|<\delta \Rightarrow |f(x)-f(x_0)|<\varepsilon$`, String.raw`Scrive $f(x)-f(x_0) = (x-x_0)\cdot$ rapporto incrementale`, String.raw`Usa che il rapporto incrementale tende a $f'(x_0)$ (finito)`, String.raw`Conclude che $f(x)\to f(x_0)$, quindi continua`],
+      explain: String.raw`Il punto chiave: la derivabilità dà un rapporto incrementale finito, che moltiplicato per $(x-x_0)\to 0$ dà $0$. Il converso (continuo $\Rightarrow$ derivabile) è falso: $|x|$ in $0$.` },
+  ],
+  flashcards: [
+    { id: 's00.logica.fc1', kind: 'def', front: 'Proposizione', back: String.raw`Affermazione che è vera oppure falsa, non entrambe. Si combinano con $\neg$, $\wedge$ (e), $\vee$ (o inclusivo).` },
+    { id: 's00.logica.fc2', kind: 'formula', front: 'Leggi di De Morgan', back: String.raw`$\neg(P\wedge Q) = \neg P\vee\neg Q$; $\neg(P\vee Q) = \neg P\wedge\neg Q$.` },
+    { id: 's00.logica.fc3', kind: 'def', front: String.raw`Implicazione $P\Rightarrow Q$ e contrapposta`, back: String.raw`$P\Rightarrow Q$ è vera se ogni volta che $P$ è vera anche $Q$ lo è. La contrapposta $\neg Q\Rightarrow\neg P$ è equivalente; inversa e converso no.` },
+    { id: 's00.logica.fc4', kind: 'def', front: 'Condizione necessaria e sufficiente', back: String.raw`$P$ sufficiente per $Q$: $P\Rightarrow Q$. $P$ necessaria per $Q$: $Q\Rightarrow P$. Entrambe: $P\Leftrightarrow Q$.` },
+    { id: 's00.logica.fc5', kind: 'formula', front: 'Negazione dei quantificatori', back: String.raw`$\neg(\forall x\,P) = \exists x\,\neg P$; $\neg(\exists x\,P) = \forall x\,\neg P$. Negando l'implicazione: $\neg(P\Rightarrow Q) = P\wedge\neg Q$.` },
+    { id: 's00.logica.fc6', kind: 'thm', front: 'Principio di induzione', back: String.raw`Se $P(n_0)$ è vera e $\forall n\ge n_0$ vale $P(n)\Rightarrow P(n+1)$, allora $P(n)$ è vera per ogni $n\ge n_0$.` },
+    { id: 's00.logica.fc7', kind: 'metodo', front: 'Dimostrazione per assurdo', back: String.raw`Per $Q$: suppongo $\neg Q$ e ricavo una contraddizione $A\wedge\neg A$. Allora $Q$ è vera. Per $\sqrt2$ irrazionale: suppongo $\sqrt2 = p/q$ ridotta.` },
+    { id: 's00.logica.fc8', kind: 'errore', front: 'Il converso non è equivalente', back: String.raw`Da "se $P$ allora $Q$" non segue "se $Q$ allora $P$". Esempio: "se $x = 2$ allora $x^2 = 4$" è vera, ma "se $x^2 = 4$ allora $x = 2$" è falsa ($x = -2$).` },
+    { id: 's00.logica.fc9', kind: 'metodo', front: 'Controesempio', back: String.raw`Per confutare "$\forall x\,P(x)$" trovo un $x_0$ con $\neg P(x_0)$. Un solo caso basta; un esempio che verifica non dimostra un "per ogni".` },
+  ],
+});
