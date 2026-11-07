@@ -77,7 +77,6 @@ export class CloudSync {
     this.lastWritten = {};
     this.remoteDocs = {};
     this.timer = null;
-    this.writing = false;
     this.dirty = false;
     this.lastSnapAt = 0;
     this.lastSaved = 0;
@@ -181,27 +180,64 @@ export class CloudSync {
     this.timer = setTimeout(() => this.flush(), delay);
   }
 
+  /**
+   * Salva ora. Una sola scrittura alla volta: se ce n'è una in corso, chi chiama aspetta che finisca
+   * e poi ne fa un'altra se nel frattempo sono cambiate le cose (coda con un solo elemento).
+   */
   async flush() {
     if (this.mode !== 'cloud') return;
-    if (this.writing) {
+    if (this.inflight) {
       this.dirty = true;
+      await this.inflight;
       return;
     }
-    this.writing = true;
     this.dirty = false;
-    this.setStatus('busy', 'Salvataggio…');
-    const st = this.getState();
-    st.meta = { ...st.meta, rev: (st.meta?.rev || 0) + 1, updatedAt: Date.now(), device: deviceId() };
-    const docs = toDocs(st);
-    // i frammenti che esistono nel cloud ma non localmente vanno svuotati (servono dopo un ripristino)
-    for (const k of Object.keys(this.remoteDocs)) if (k.startsWith('items-') && !docs[k]) docs[k] = { epoch: st.epoch || 0, items: {} };
+    this.inflight = this.doFlush();
     try {
+      await this.inflight;
+    } finally {
+      this.inflight = null;
+    }
+    if (this.dirty) await this.flush();
+  }
+
+  async doFlush() {
+    this.setStatus('busy', 'Salvataggio…');
+    try {
+      // Si legge il cloud prima di scrivere: il documento va fuso, mai sovrascritto alla cieca.
+      const fresh = await this.readRemote();
+      let st = this.getState();
+      const remote = fromDocs(fresh);
+      if (remote && (remote.epoch || 0) > (st.epoch || 0)) {
+        // un ripristino è stato fatto altrove: lo stato remoto prevale, nessuna scrittura
+        this.apply(remote, 'replace');
+        this.setStatus('ok', 'Ripristino ricevuto');
+        return;
+      }
+      if (remote && (remote.epoch || 0) === (st.epoch || 0)) {
+        const merged = merge(st, remote);
+        if (!sameContent(merged, st)) {
+          this.apply(merged, 'merge');
+          st = this.getState();
+        }
+      }
+      // Nulla da scrivere se il cloud ha già tutto ciò che c'è qui (es. un dispositivo appena aperto e vuoto):
+      // evita che una scrittura di uno stato vecchio sovrascriva quella di un altro dispositivo.
+      if (remote && sameContent(st, remote)) {
+        this.setStatus('ok', 'Salvato nel cloud');
+        return;
+      }
+      st.meta = { ...st.meta, rev: (st.meta?.rev || 0) + 1, updatedAt: Date.now(), device: deviceId() };
+      const docs = toDocs(st);
+      // i frammenti che esistono nel cloud ma non localmente vanno svuotati (servono dopo un ripristino)
+      for (const k of Object.keys(fresh)) if (k.startsWith('items-') && !docs[k]) docs[k] = { epoch: st.epoch || 0, items: {} };
       for (const [k, body] of Object.entries(docs)) {
         const json = JSON.stringify(body);
         if (this.lastWritten[k] === json) continue;
         await this.withRetry(() => this.db.collection(this.base).doc(k).set(body));
         this.lastWritten[k] = json;
       }
+      this.remoteDocs = { ...fresh, ...Object.fromEntries(Object.entries(docs).map(([k, v]) => [k, v])) };
       this.lastSaved = Date.now();
       this.setStatus('ok', 'Salvato nel cloud');
       await this.maybeAutoSnapshot(st);
@@ -214,10 +250,15 @@ export class CloudSync {
         clearTimeout(this.timer);
         this.timer = setTimeout(() => this.flush(), 8000);
       }
-    } finally {
-      this.writing = false;
-      if (this.dirty) this.schedule();
     }
+  }
+
+  /** Legge tutti i documenti della cartella privata (stato attuale del cloud). */
+  async readRemote() {
+    const q = await this.withRetry(() => this.db.collection(this.base).get());
+    const map = {};
+    for (const d of q.docs || []) if (d.exists !== false) map[d.id] = d.data();
+    return map;
   }
 
   async withRetry(fn) {
