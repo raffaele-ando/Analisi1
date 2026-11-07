@@ -2160,10 +2160,395 @@ Se il numeratore è la derivata del denominatore ($2x+p$), il risultato è un lo
   ],
 };
 
+// ---------------------------------------------------------------------------
+// s11.aree · Calcolo di aree (attenzione al segno)
+// ---------------------------------------------------------------------------
+const aree = {
+  id: 's11.aree',
+  title: 'Calcolo di aree',
+  summary: String.raw`Trasformare un integrale con segno in un'area geometrica: zeri, segno, spezzare, area tra due grafici.`,
+  prereq: ['s11.riemann', 's11.immediati', 's11.parti', 's11.sostituzione'],
+  examRefs: ['Appello 15/01/2026 · Parte B', 'Appello 06/07/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's11.aree.L1',
+      title: 'Area e segno',
+      cards: [
+        {
+          type: 'learn',
+          title: 'L\'integrale ha un segno',
+          body: String.raw`L'integrale $\int_a^b f$ è un'**area con segno**: positiva dove $f\geq0$, negativa dove $f\leq0$. Per l'area **geometrica** della regione compresa tra il grafico e l'asse $x$ devo usare il valore assoluto:
+>* $$\text{Area}=\int_a^b |f(x)|\,dx.$$
+
+Esempio: $\int_0^{2\pi}\sin x\,dx=0$, perché le due "gobbe" si cancellano. Ma le gobbe hanno area $2$ ciascuna: l'area totale è $4$.`,
+          plot: { fns: ['sin(x)'], x: [0, 6.3], y: [-1.3, 1.3] },
+        },
+        {
+          type: 'learn',
+          title: 'Spezzare nei cambi di segno',
+          body: String.raw`Per calcolare $\int_a^b|f|$ trovo gli **zeri** $c_1<c_2<\dots$ di $f$ dentro $(a,b)$. Su ogni intervallo tra due zeri $f$ ha segno costante. Poi:
+
+- dove $f\geq0$ sommo $\displaystyle\int f$;
+- dove $f\leq0$ sommo $-\displaystyle\int f$.
+
+>! Errore tipico: $\displaystyle\int_a^b|f|=\left|\int_a^bf\right|$. È falso appena $f$ cambia segno.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $f(x)=x^2-1$ su $[-2,2]$',
+          problem: String.raw`Calcola l'area tra il grafico di $f(x)=x^2-1$ e l'asse $x$ su $[-2,2]$.`,
+          steps: [
+            String.raw`Zeri: $x^2-1=0$ per $x=\pm1$. Segno: $f\geq0$ per $|x|\geq1$, $f\leq0$ per $|x|\leq1$.`,
+            String.raw`Spezzo: $\text{Area}=\displaystyle\int_{-2}^{-1}(x^2-1)\,dx-\int_{-1}^{1}(x^2-1)\,dx+\int_1^2(x^2-1)\,dx$.`,
+            {
+              text: String.raw`Il pezzo centrale è negativo: calcolo $\int_{-1}^1(x^2-1)\,dx$ con la primitiva $F(x)=\frac{x^3}{3}-x$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_{-1}^{1}(x^2-1)\,dx$?`, answer: '-4/3', _int: ['x^2-1', -1, 1], explain: String.raw`$F(1)-F(-1)=\left(\frac13-1\right)-\left(-\frac13+1\right)=-\frac23-\frac23=-\frac43$.` },
+            },
+            String.raw`Gli altri due pezzi valgono $\frac43$ ciascuno (con $F$: $F(-1)-F(-2)=\frac43$ e $F(2)-F(1)=\frac43$). Area $=\frac43+\frac43+\frac43=4$.`,
+          ],
+          result: String.raw`$\text{Area}=4$`,
+          plot: { fns: ['x^2-1'], x: [-2.5, 2.5], y: [-1.5, 3.5] },
+        },
+        {
+          id: 's11.aree.L1.e1', type: 'num', level: 1,
+          prompt: String.raw`$\displaystyle\int_0^{2\pi}\sin x\,dx$`,
+          answer: '0', _int: ['sin(x)', 0, '2*pi'],
+          explain: String.raw`Le due metà si cancellano: $\int_0^\pi\sin x=2$ e $\int_\pi^{2\pi}\sin x=-2$. Il risultato è $0$, ma questo **non** è l'area.`,
+        },
+        {
+          id: 's11.aree.L1.e2', type: 'num', level: 1,
+          prompt: String.raw`Area tra il grafico di $\sin x$ e l'asse $x$ su $[0,2\pi]$.`,
+          answer: '4', _int: ['abs(sin(x))', 0, '2*pi'],
+          explain: String.raw`$\text{Area}=\int_0^{2\pi}|\sin x|\,dx=\int_0^\pi\sin x\,dx+\int_\pi^{2\pi}(-\sin x)\,dx=2+2=4$.`,
+        },
+        {
+          id: 's11.aree.L1.e3', type: 'mcq', level: 1,
+          prompt: String.raw`Per ogni $f$ integrabile su $[a,b]$, quale relazione è sempre vera tra l'area $A$ tra $f$ e l'asse $x$ e l'integrale?`,
+          options: [String.raw`$A\geq\left|\displaystyle\int_a^bf\right|$`, String.raw`$A=\displaystyle\int_a^bf$`, String.raw`$A\leq\left|\displaystyle\int_a^bf\right|$`, String.raw`$A=\left|\displaystyle\int_a^bf\right|$`],
+          answer: 0,
+          explain: String.raw`$\int|f|\geq\left|\int f\right|$: il valore assoluto non può far diminuire il contributo di ogni pezzo. Uguaglianza solo se $f$ non cambia segno. Le altre tre affermazioni sono false in generale.`,
+        },
+        {
+          id: 's11.aree.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Se $\displaystyle\int_a^b f=0$, allora l'area tra $f$ e l'asse $x$ su $[a,b]$ è $0$.`,
+          answer: false,
+          explain: String.raw`Falso: $\sin x$ su $[0,2\pi]$ ha integrale $0$ e area $4$. L'integrale nullo significa solo che le aree positive e negative si compensano.`,
+        },
+        {
+          id: 's11.aree.L1.e5', type: 'num', level: 2,
+          prompt: String.raw`Area tra il grafico di $x^3-x$ e l'asse $x$ su $[-1,1]$.`,
+          answer: '1/2', _int: ['abs(x^3-x)', -1, 1],
+          explain: String.raw`Zeri in $-1,0,1$. Su $[-1,0]$ la funzione è $\geq0$, su $[0,1]$ è $\leq0$. Per simmetria ($|f|$ è pari): area $=2\int_0^1(x-x^3)\,dx=2\left(\frac12-\frac14\right)=\frac12$.`,
+        },
+        {
+          id: 's11.aree.L1.e6', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^1\left|x-\frac12\right|\,dx$`,
+          answer: '1/4', _int: ['abs(x-1/2)', 0, 1],
+          explain: String.raw`Il valore assoluto cambia nel punto $x=\frac12$. Ottengo due triangoli di base $\frac12$ e altezza $\frac12$: area $2\cdot\frac12\cdot\frac12\cdot\frac12=\frac14$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.aree.L2',
+      title: 'Area tra due grafici',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Sopra meno sotto',
+          body: String.raw`Se $f\geq g$ su $[a,b]$, la regione tra i due grafici ha area
+$$\text{Area}=\int_a^b\big(f(x)-g(x)\big)\,dx.$$
+
+Idea: su ogni $x$ la distanza verticale tra i grafici è $f(x)-g(x)$, e la regione è unione di segmenti verticali di quella lunghezza.
+
+Se non so chi sta sopra, **trovo le intersezioni** $f=g$, che danno gli estremi, e studio il segno di $f-g$ in ogni intervallo. Poi integro $|f-g|$ spezzando nei punti di intersezione.`,
+          plot: { fns: ['x^2', '2-x'], x: [-2.5, 1.5], y: [-1, 4] },
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $y=x^2$ e $y=2-x$',
+          problem: String.raw`Calcola l'area della regione compresa tra $y=x^2$ e $y=2-x$.`,
+          steps: [
+            String.raw`Intersezioni: $x^2=2-x$, cioè $x^2+x-2=0$, quindi $(x+2)(x-1)=0$: $x=-2$ e $x=1$.`,
+            String.raw`Punto di prova $x=0$: $2-0=2\geq0=0^2$. Quindi su $(-2,1)$ la retta sta sopra la parabola.`,
+            {
+              text: String.raw`Area $=\displaystyle\int_{-2}^{1}\big((2-x)-x^2\big)\,dx$. Primitiva $F(x)=2x-\frac{x^2}2-\frac{x^3}3$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_{-2}^{1}(2-x-x^2)\,dx$?`, answer: '9/2', _int: ['2-x-x^2', -2, 1], explain: String.raw`$F(1)=2-\frac12-\frac13=\frac76$; $F(-2)=-4-2+\frac83=-\frac{10}3$. Differenza: $\frac76+\frac{10}3=\frac92$.` },
+            },
+            String.raw`Risultato: l'area è $\dfrac92$.`,
+          ],
+          result: String.raw`$\text{Area}=\dfrac92$`,
+        },
+        {
+          id: 's11.aree.L2.e1', type: 'num', level: 2,
+          prompt: String.raw`Area tra $y=x$ e $y=x^2$ su $[0,1]$.`,
+          answer: '1/6', _int: ['x-x^2', 0, 1],
+          explain: String.raw`Su $[0,1]$ si ha $x\geq x^2$: area $=\int_0^1(x-x^2)\,dx=\frac12-\frac13=\frac16$.`,
+        },
+        {
+          id: 's11.aree.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`Area tra $y=\sqrt x$ e $y=x^2$ (la regione con $0\leq x\leq1$).`,
+          answer: '1/3', _int: ['sqrt(x)-x^2', 0, 1],
+          explain: String.raw`Le curve si incontrano in $0$ e $1$, e su $(0,1)$ si ha $\sqrt x\geq x^2$. Area $=\int_0^1(\sqrt x-x^2)\,dx=\frac23-\frac13=\frac13$.`,
+        },
+        {
+          id: 's11.aree.L2.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Quale integrale dà l'area della regione tra $y=x+2$ e $y=x^2$?`,
+          options: [String.raw`$\displaystyle\int_{-1}^{2}(x+2-x^2)\,dx$`, String.raw`$\displaystyle\int_{-1}^{2}(x^2-x-2)\,dx$`, String.raw`$\displaystyle\int_{-2}^{1}(x+2-x^2)\,dx$`, String.raw`$\displaystyle\int_{-1}^{2}|x+2|\,dx$`],
+          answer: 0,
+          explain: String.raw`Intersezioni: $x^2-x-2=0$, quindi $x=-1$ e $x=2$. Su $(-1,2)$ la retta sta sopra. Errore tipico: invertire il segno (secondo distrattore) o usare gli estremi sbagliati (terzo).`,
+        },
+        {
+          id: 's11.aree.L2.e4', type: 'num', level: 2,
+          prompt: String.raw`Area tra $y=2x$ e $y=x^2$.`,
+          answer: '4/3', _int: ['2*x-x^2', 0, 2],
+          explain: String.raw`Intersezioni in $x=0$ e $x=2$. Su $(0,2)$ la retta sta sopra: $\int_0^2(2x-x^2)\,dx=4-\frac83=\frac43$.`,
+        },
+        {
+          id: 's11.aree.L2.e5', type: 'cloze', level: 2,
+          prompt: 'Completa la formula.',
+          text: String.raw`Se $f\geq g$ su $[a,b]$, l'area tra i due grafici è $\displaystyle\int_a^b$ [[0]] $\,dx$.`,
+          blanks: [
+            { options: [String.raw`$(f(x)-g(x))$`, String.raw`$(g(x)-f(x))$`, String.raw`$(|f(x)|+|g(x)|)$`], answer: 0 },
+          ],
+          explain: String.raw`Dove $f\geq g$ la distanza verticale è $f-g\geq0$. Scambiare $f$ e $g$ dà un integrale negativo.`,
+        },
+        {
+          id: 's11.aree.L2.e6', type: 'num', level: 2,
+          prompt: String.raw`Area tra $y=\sqrt{x}$ e l'asse $x$ su $[0,4]$.`,
+          answer: '16/3', _int: ['sqrt(x)', 0, 4],
+          explain: String.raw`$\int_0^4\sqrt x\,dx=\left[\frac23x^{3/2}\right]_0^4=\frac23\cdot8=\frac{16}3$.`,
+        },
+        {
+          id: 's11.aree.L2.e7', type: 'problem', level: 3, points: 3,
+          prompt: String.raw`Sia $f(x)=x\log x$ su $(0,1]$. Calcola l'area tra il grafico di $f$ e l'asse $x$ su $(0,1]$.`,
+          parts: [
+            { type: 'expr', prompt: String.raw`Una primitiva di $x\log x$ per $x>0$.`, answer: 'x^2/2*log(x)-x^2/4', vars: ['x'], domain: [0.3, 2.7], upToConstant: true, _f: 'x*log(x)', explain: String.raw`Per parti con $\log x$ e $x$: $\frac{x^2}{2}\log x-\int\frac{x}{2}\,dx=\frac{x^2}{2}\log x-\frac{x^2}{4}$.` },
+            { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_0^1 x\log x\,dx$ (il limite per $x\to0^+$ della primitiva è $0$)?`, answer: '-1/4', explain: String.raw`In $1$ la primitiva vale $-\frac14$; per $x\to0^+$ sia $\frac{x^2}{2}\log x$ sia $\frac{x^2}4$ tendono a $0$. Quindi $-\frac14$.` },
+            { type: 'num', prompt: String.raw`Quanto vale l'area richiesta?`, answer: '1/4', explain: String.raw`Su $(0,1]$ si ha $x\log x\leq0$: l'area è $-\int_0^1x\log x\,dx=\frac14$.` },
+          ],
+          solution: String.raw`Su $(0,1]$ si ha $x\log x\leq0$, quindi l'area è $\text{Area}=\displaystyle\int_0^1|x\log x|\,dx=-\int_0^1x\log x\,dx$.
+
+Primitiva: $\frac{x^2}2\log x-\frac{x^2}4$. Valutata tra $0^+$ e $1$ dà $-\frac14$. Quindi $\text{Area}=\frac14$.
+
+>! Attenzione: senza il segno meno l'area verrebbe negativa, che non ha senso geometrico.`,
+          source: 'Appello 15/01/2026 · Parte B',
+        },
+      ],
+    },
+    {
+      id: 's11.aree.L3',
+      title: 'Metodo completo ed esempi d\'esame',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il metodo in quattro passi',
+          body: String.raw`Per calcolare un'area tra grafici e asse $x$:
+
+1. trovo **zeri** e **intersezioni** (le radici sono i punti in cui cambia il segno);
+2. studio il **segno** di $f$ (o di $f-g$) su ogni intervallo, con un punto di prova;
+3. scrivo l'area come **somma di integrali** con il segno giusto (dove la funzione è negativa, cambio il segno dell'integrale);
+4. controllo: l'area deve essere $\geq0$ e $\geq\left|\displaystyle\int_a^b f\right|$.
+
+Se la funzione è **pari** o **dispari**, la simmetria dimezza il conto: $|f|$ è sempre pari, quindi $\text{Area}_{[-a,a]}=2\displaystyle\int_0^a|f|$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $f(x)=x^3-4x$ su $[-2,2]$',
+          problem: String.raw`Calcola l'area tra $f(x)=x^3-4x$ e l'asse $x$ su $[-2,2]$.`,
+          steps: [
+            String.raw`Zeri: $x(x^2-4)=0$ per $x=-2,0,2$. La funzione è dispari, quindi $|f|$ è pari.`,
+            String.raw`Su $(0,2)$ si ha $f\leq0$ (ad esempio $f(1)=-3$). Quindi $\text{Area}=2\displaystyle\int_0^2(4x-x^3)\,dx$.`,
+            {
+              text: String.raw`Calcolo $\int_0^2(4x-x^3)\,dx$ con la primitiva $2x^2-\frac{x^4}{4}$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_0^2(4x-x^3)\,dx$?`, answer: '4', _int: ['4*x-x^3', 0, 2], explain: String.raw`$\left[2x^2-\frac{x^4}4\right]_0^2=8-4=4$.` },
+            },
+            String.raw`Area $=2\cdot4=8$.`,
+          ],
+          result: String.raw`$\text{Area}=8$`,
+        },
+        {
+          id: 's11.aree.L3.e1', type: 'num', level: 2,
+          prompt: String.raw`Area tra $y=\sin x$ e $y=\cos x$ su $[0,\pi]$.`,
+          answer: '2*sqrt(2)', _int: ['abs(sin(x)-cos(x))', 0, 'pi'],
+          explain: String.raw`Le curve si incontrano in $x=\frac\pi4$. Su $[0,\frac\pi4]$ vale $\cos x\geq\sin x$: $\int_0^{\pi/4}(\cos x-\sin x)\,dx=\sqrt2-1$. Su $[\frac\pi4,\pi]$ vale $\sin x\geq\cos x$: $\int_{\pi/4}^{\pi}(\sin x-\cos x)\,dx=1+\sqrt2$. Totale $2\sqrt2$.`,
+        },
+        {
+          id: 's11.aree.L3.e2', type: 'num', level: 3,
+          prompt: String.raw`Area tra $y=e^{-x}\sin x$ e l'asse $x$ su $[0,\pi]$.`,
+          answer: '(1+e^(-pi))/2', _int: ['abs(exp(-x)*sin(x))', 0, 'pi'],
+          explain: String.raw`Su $[0,\pi]$ la funzione è $\geq0$. Primitiva $-\frac12e^{-x}(\sin x+\cos x)$: tra $0$ e $\pi$ vale $\frac12e^{-\pi}+\frac12$, cioè $\frac{1+e^{-\pi}}2$.`,
+        },
+        {
+          id: 's11.aree.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Se $\displaystyle\int_0^4 f=3$, $\displaystyle\int_0^2 f=-1$, $f\leq0$ su $[0,2]$ e $f\geq0$ su $[2,4]$, quale è l'area tra $f$ e l'asse $x$ su $[0,4]$?`,
+          options: [String.raw`$5$`, String.raw`$3$`, String.raw`$1$`, String.raw`$-1$`],
+          answer: 0,
+          explain: String.raw`Su $[0,2]$ l'area è $-\int_0^2f=1$. Su $[2,4]$ è $\int_2^4f=\int_0^4f-\int_0^2f=3-(-1)=4$. Totale $5$. Errore tipico: rispondere $3$, cioè l'integrale complessivo con il segno.`,
+        },
+        {
+          id: 's11.aree.L3.e4', type: 'cloze', level: 2,
+          prompt: 'Completa la formula.',
+          text: String.raw`Se $f\geq0$ su $[a,c]$ e $f\leq0$ su $[c,b]$, l'area tra $f$ e l'asse $x$ su $[a,b]$ è [[0]].`,
+          blanks: [
+            { options: [String.raw`$\displaystyle\int_a^bf$`, String.raw`$\displaystyle\int_a^cf-\int_c^bf$`, String.raw`$\displaystyle\int_a^cf+\int_c^bf$`], answer: 1 },
+          ],
+          explain: String.raw`Il pezzo negativo $\int_c^bf$ va sottratto. Con $\int_a^b f$ si ottiene la differenza delle aree, non la loro somma.`,
+        },
+        {
+          id: 's11.aree.L3.e5', type: 'open', level: 3, points: 2,
+          prompt: String.raw`Si spieghi perché $\displaystyle\int_a^b f=0$ non implica che l'area tra $f$ e l'asse $x$ sia nulla, e come si calcola correttamente l'area.`,
+          answer: String.raw`L'integrale è un'area con segno: le parti sopra l'asse contano $+$, quelle sotto $-$. Se $f$ cambia segno, i contributi possono annullarsi (esempio: $\sin x$ su $[0,2\pi]$). L'area geometrica è $\int_a^b|f|$: si trovano gli zeri di $f$, si spezza $[a,b]$ nei punti dove $f$ cambia segno, e su ciascun intervallo si integra $f$ se $f\geq0$ oppure $-f$ se $f\leq0$.`,
+          rubric: ['Distingue integrale con segno e area', 'Porta un esempio con integrale nullo e area positiva', 'Usa il valore assoluto o spezza negli zeri', 'Scrive la somma con i segni giusti'],
+        },
+        {
+          id: 's11.aree.L3.e6', type: 'problem', level: 3, points: 4,
+          prompt: String.raw`Sia $f(x)=e^{-x}\sin x$. Calcola l'area tra il grafico di $f$ e l'asse $x$ su $[0,2\pi]$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`Quanto vale lo zero di $f$ interno a $(0,2\pi)$? (Suggerimento: $e^{-x}>0$ sempre.)`, answer: 'pi', explain: String.raw`$f(x)=0$ solo se $\sin x=0$, cioè $x=k\pi$. In $(0,2\pi)$ c'è solo $\pi$.` },
+            { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_0^\pi e^{-x}\sin x\,dx$?`, answer: '(1+e^(-pi))/2', _int: ['exp(-x)*sin(x)', 0, 'pi'], explain: String.raw`Primitiva $-\frac12e^{-x}(\sin x+\cos x)$: tra $0$ e $\pi$ dà $\frac{1+e^{-\pi}}2$.` },
+            { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_\pi^{2\pi} e^{-x}\sin x\,dx$?`, answer: '-(e^(-pi)+e^(-2*pi))/2', _int: ['exp(-x)*sin(x)', 'pi', '2*pi'], explain: String.raw`Stessa primitiva tra $\pi$ e $2\pi$: $-\frac12e^{-2\pi}-\frac12e^{-\pi}$. È negativo, perché $\sin x\leq0$ su $[\pi,2\pi]$.` },
+          ],
+          solution: String.raw`Su $[0,\pi]$ la funzione è positiva, su $[\pi,2\pi]$ è negativa. L'area è
+$$\text{Area}=\int_0^\pi e^{-x}\sin x\,dx-\int_\pi^{2\pi}e^{-x}\sin x\,dx=\frac{1+e^{-\pi}}{2}+\frac{e^{-\pi}+e^{-2\pi}}{2}=\frac12\left(1+e^{-\pi}\right)^2.$$
+
+Valore numerico: circa $0{,}5\cdot1{,}0432^2\approx0{,}544$.`,
+          source: 'Appello 06/07/2026 · Parte B',
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's11.aree.p1', type: 'mcq', level: 1,
+      prompt: String.raw`Se $f\leq0$ su $[a,b]$, quale integrale dà l'area tra $f$ e l'asse $x$?`,
+      options: [String.raw`$\displaystyle\int_a^b f$`, String.raw`$-\displaystyle\int_a^b f$`, String.raw`$\displaystyle\int_a^b f^2$`, String.raw`$\displaystyle\int_a^b (f+1)$`],
+      answer: 1,
+      explain: String.raw`Con $f\leq0$ l'integrale è negativo: l'area è il suo opposto, $-\int_a^bf=\int_a^b|f|$. $\int f^2$ non è un'area di questo tipo, e $\int(f+1)$ sposta solo la curva.`,
+    },
+    {
+      id: 's11.aree.p2', type: 'tf', level: 1,
+      prompt: String.raw`Se $f\geq0$ su $[a,b]$, allora $\displaystyle\int_a^b|f|=\int_a^bf$.`,
+      answer: true,
+      explain: String.raw`Vero: il valore assoluto non cambia nulla dove $f\geq0$.`,
+    },
+    {
+      id: 's11.aree.p3', type: 'cloze', level: 1,
+      prompt: 'Completa l\'area di $|\\cos x|$ su $[0,\\pi]$.',
+      text: String.raw`L'area tra $\cos x$ e l'asse $x$ su $[0,\pi]$ è $\displaystyle\int_0^{\pi/2}$ [[0]] $\,dx+\displaystyle\int_{\pi/2}^{\pi}$ [[1]] $\,dx$.`,
+      blanks: [
+        { options: [String.raw`$\sin x$`, String.raw`$-\cos x$`, String.raw`$\cos x$`], answer: 2 },
+        { options: [String.raw`$\cos x$`, String.raw`$-\cos x$`, String.raw`$\sin x$`], answer: 1 },
+      ],
+      explain: String.raw`Su $[0,\frac\pi2]$ il coseno è positivo, su $[\frac\pi2,\pi]$ è negativo: lì serve $-\cos x$. Il risultato è $1+1=2$.`,
+    },
+    {
+      id: 's11.aree.p4', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per l'area tra $y=\sin x$ e l'asse $x$ su $[0,2\pi]$. Scarta i passi sbagliati.`,
+      steps: [
+        String.raw`Zeri in $[0,2\pi]$: $x=0$, $x=\pi$, $x=2\pi$.`,
+        String.raw`Segno: $\sin x\geq0$ su $[0,\pi]$, $\sin x\leq0$ su $[\pi,2\pi]$.`,
+        String.raw`Area $=\displaystyle\int_0^\pi\sin x\,dx-\int_\pi^{2\pi}\sin x\,dx=2+2$.`,
+        String.raw`Risultato: $4$.`,
+      ],
+      distractors: [String.raw`Calcolo $\displaystyle\int_0^{2\pi}\sin x\,dx=0$ e lo prendo come area.`, String.raw`Uso $\displaystyle\int_0^\pi\sin x\,dx$ come area di tutto l'intervallo.`],
+      explain: String.raw`L'integrale su $[0,2\pi]$ dà $0$ perché le gobbe si compensano. Per l'area bisogna cambiare segno alla parte negativa, dopo aver spezzato nel punto $\pi$.`,
+    },
+    {
+      id: 's11.aree.p5', type: 'num', level: 2,
+      prompt: String.raw`Area tra il grafico di $x^2-4$ e l'asse $x$ su $[0,3]$.`,
+      answer: '23/3', _int: ['abs(x^2-4)', 0, 3],
+      explain: String.raw`Zero in $x=2$. Su $[0,2]$ la funzione è $\leq0$: $\int_0^2(4-x^2)\,dx=\frac{16}3$. Su $[2,3]$ è $\geq0$: $\int_2^3(x^2-4)\,dx=\frac73$. Totale $\frac{23}3$.`,
+    },
+    {
+      id: 's11.aree.p6', type: 'tf', level: 1,
+      prompt: String.raw`L'area tra il grafico di una funzione e l'asse $x$ è sempre maggiore o uguale a zero.`,
+      answer: true,
+      explain: String.raw`Vero: l'area è un integrale di $|f|$, e $|f|\geq0$.`,
+    },
+    {
+      id: 's11.aree.p7', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\int_0^\pi|\cos x|\,dx$`,
+      answer: '2', _int: ['abs(cos(x))', 0, 'pi'],
+      explain: String.raw`Il valore assoluto cambia in $x=\frac\pi2$: $\int_0^{\pi/2}\cos x\,dx+\int_{\pi/2}^{\pi}(-\cos x)\,dx=1+1=2$.`,
+    },
+    {
+      id: 's11.aree.p8', type: 'num', level: 2,
+      prompt: String.raw`Area tra $y=\sqrt x$ e l'asse $x$ su $[0,4]$.`,
+      answer: '16/3', _int: ['sqrt(x)', 0, 4],
+      explain: String.raw`È lo stesso esercizio della seconda lezione: $\int_0^4\sqrt x\,dx=\frac{16}3$.`,
+    },
+    {
+      id: 's11.aree.p9', type: 'mcq', level: 2,
+      prompt: String.raw`Area di $f$ su $[0,4]$, con $\displaystyle\int_0^4 f=3$, $\displaystyle\int_0^2 f=-1$, $f\leq0$ su $[0,2]$ e $f\geq0$ su $[2,4]$?`,
+      options: [String.raw`$5$`, String.raw`$3$`, String.raw`$1$`, String.raw`$2$`],
+      answer: 0,
+      explain: String.raw`$\int_2^4 f=3-(-1)=4$ e $\int_0^2|f|=1$: totale $5$. Errore tipico: sommare $3$, cioè l'integrale con il segno.`,
+    },
+    {
+      id: 's11.aree.gen-parabola', type: 'gen', level: 1,
+      gen: (R) => {
+        const s = R.int(1, 4);
+        return {
+          type: 'num',
+          prompt: String.raw`Area della regione compresa tra la parabola $y=x^2$ e la retta $y=${s * s}$.`,
+          answer: H.fracStr(4 * s * s * s, 3), _int: [`${s * s}-x^2`, -s, s],
+          explain: String.raw`Intersezioni in $x=\pm${s}$. Area $=\displaystyle\int_{-${s}}^{${s}}(${s * s}-x^2)\,dx=\left[${H.coef(s * s)}x-\frac{x^3}3\right]_{-${s}}^{${s}}=\frac{4\cdot${s}^3}{3}=${H.frac(4 * s * s * s, 3)}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.aree.gen-seno', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.int(1, 4);
+        const kx = k === 1 ? 'x' : `${k}x`;
+        const endTex = k === 1 ? String.raw`2\pi` : String.raw`\frac{2\pi}{${k}}`;
+        return {
+          type: 'num',
+          prompt: String.raw`Area compresa tra il grafico di $y=\sin(${kx})$ e l'asse $x$ su $\left[0,${endTex}\right]$.`,
+          answer: H.fracStr(4, k), _int: [`abs(sin(${k}*x))`, 0, `2*pi/${k}`],
+          explain: String.raw`Il periodo è $\frac{2\pi}{${k}}$ e ci sono due archi, ciascuno di area $\int_0^{\pi/${k}}\sin(${kx})\,dx=\frac{2}{${k}}$. Totale $\frac{4}{${k}}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.aree.gen-cubica', type: 'gen', level: 3,
+      gen: (R) => {
+        const c = R.int(1, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Area tra il grafico di $f(x)=${H.poly([1, 0, -c * c, 0])}$ e l'asse $x$ su $[-${c},${c}]$.`,
+          answer: H.fracStr(c ** 4, 2), _int: [`abs(x^3-${c * c}*x)`, -c, c],
+          explain: String.raw`Zeri in $x=0,\pm${c}$. La funzione è dispari, quindi $|f|$ è pari; su $[0,${c}]$ è $\leq0$. Area $=2\displaystyle\int_0^{${c}}\left(${H.coef(c * c)}x-x^3\right)dx=2\left[\frac{${c * c}}{2}x^2-\frac{x^4}4\right]_0^{${c}}=${H.frac(c ** 4, 2)}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.aree.gen-due-curve', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.int(1, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Area della regione tra $y=x^2$ e $y=${H.lin(c, 0)}$.`,
+          answer: H.fracStr(c ** 3, 6), _int: [`${c}*x-x^2`, 0, c],
+          explain: String.raw`Intersezioni in $x=0$ e $x=${c}$. Su $[0,${c}]$ la retta sta sopra: $\displaystyle\int_0^{${c}}\left(${H.lin(c, 0)}-x^2\right)dx=${H.frac(c ** 3, 6)}$.`,
+        };
+      },
+    },
+  ],
+  flashcards: [
+    { id: 's11.aree.fc1', kind: 'def', front: 'Area di una regione tra grafico e asse $x$', back: String.raw`$\displaystyle\text{Area}=\int_a^b|f(x)|\,dx$: l'integrale con segno non basta.` },
+    { id: 's11.aree.fc2', kind: 'formula', front: 'Area tra due grafici', back: String.raw`Se $f\geq g$ su $[a,b]$: $\displaystyle\int_a^b(f-g)\,dx$. In generale spezzo nei punti di intersezione.` },
+    { id: 's11.aree.fc3', kind: 'metodo', front: 'Metodo per le aree', back: String.raw`1) Zeri e intersezioni; 2) segno su ogni intervallo; 3) somma di integrali con il segno giusto; 4) controllo: area $\geq0$.` },
+    { id: 's11.aree.fc4', kind: 'errore', front: 'Errore tipico sull\'area', back: String.raw`$\displaystyle\int_a^b|f|\neq\left|\int_a^bf\right|$ in generale: se $f$ cambia segno, i pezzi si compensano nell'integrale ma non nell'area.` },
+    { id: 's11.aree.fc5', kind: 'thm', front: 'Disuguaglianza tra area e integrale', back: String.raw`$\displaystyle\left|\int_a^bf\right|\leq\int_a^b|f|$, con uguaglianza se $f$ non cambia segno.` },
+    { id: 's11.aree.fc6', kind: 'formula', front: 'Simmetria dell\'area', back: String.raw`$|f|$ è pari se $f$ è pari o dispari: su $[-a,a]$ l'area è $2\displaystyle\int_0^a|f(x)|\,dx$.` },
+  ],
+};
+
 export default {
   id: 's11',
   title: 'Integrali',
   subtitle: 'Riemann, primitive, tecniche di integrazione, aree',
   intro: String.raw`All'esame c'è quasi sempre un integrale: una primitiva per parti o di una razionale, un'area, o un integrale improprio. Qui costruisci tutto: dal significato di area fino alle tecniche di calcolo.`,
-  skills: [riemann, immediati, parti, sost, razionali],
+  skills: [riemann, immediati, parti, sost, razionali, aree],
 };
