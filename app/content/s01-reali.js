@@ -788,3 +788,347 @@ Per $\Z$: $f(n)=\frac n2$ se $n$ è pari, $f(n)=-\frac{n+1}2$ se $n$ è dispari.
     { id: 's01.irrazionali.fc8', kind: 'errore', front: 'Errori tipici con gli irrazionali', back: String.raw`Prodotto o somma di irrazionali può essere razionale ($\sqrt2\cdot\sqrt2=2$, $\sqrt2+(-\sqrt2)=0$). Un'approssimazione decimale non prova l'irrazionalità.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s01.relazioni
+// ---------------------------------------------------------------------------
+const relPropsNames = ['riflessiva', 'simmetrica', 'antisimmetrica', 'transitiva'];
+
+S.push({
+  id: 's01.relazioni',
+  title: "Relazioni di equivalenza e d'ordine",
+  summary: String.raw`Saprai riconoscere le proprietà di una relazione, le relazioni di equivalenza (con le loro classi) e quelle d'ordine.`,
+  prereq: ['s00.insiemi', 's00.logica'],
+  examRefs: [],
+  lessons: [
+    {
+      id: 's01.relazioni.L1',
+      title: 'Relazioni e loro proprietà',
+      cards: [
+        { type: 'learn', title: 'Che cos\'è una relazione',
+          body: String.raw`Il **prodotto cartesiano** $A\times B$ è l'insieme delle coppie ordinate $(a,b)$ con $a\in A$, $b\in B$. Se $A$ ha $m$ elementi e $B$ ne ha $n$, $A\times B$ ne ha $mn$.
+
+>* Una **relazione** su $A$ è un sottoinsieme $\mathcal R\subseteq A\times A$. Si scrive $a\,\mathcal R\,b$ se $(a,b)\in\mathcal R$.
+
+Proprietà possibili (per ogni $a,b,c\in A$):
+- **riflessiva**: $a\,\mathcal R\,a$;
+- **simmetrica**: $a\,\mathcal R\,b\Rightarrow b\,\mathcal R\,a$;
+- **antisimmetrica**: $a\,\mathcal R\,b$ e $b\,\mathcal R\,a\Rightarrow a=b$;
+- **transitiva**: $a\,\mathcal R\,b$ e $b\,\mathcal R\,c\Rightarrow a\,\mathcal R\,c$.
+
+>! Simmetrica e antisimmetrica **non** sono una la negazione dell'altra: l'uguaglianza le ha entrambe.` },
+        { id: 's01.relazioni.L1.e1', type: 'num', level: 1,
+          prompt: String.raw`Se $A$ ha $3$ elementi e $B$ ne ha $4$, quanti elementi ha $A\times B$?`,
+          answer: '12',
+          explain: String.raw`Per ogni scelta del primo elemento ($3$ modi) ci sono $4$ scelte del secondo: $3\cdot4=12$. Non $3+4$: si contano coppie, non elementi.` },
+        { id: 's01.relazioni.L1.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Siano $A=\{1,2\}$ e $B=\{a,b,c\}$. Quale coppia appartiene ad $A\times B$?`,
+          options: [String.raw`$(2,c)$`, String.raw`$(c,2)$`, String.raw`$(1,2)$`, String.raw`$(a,b)$`],
+          answer: 0,
+          explain: String.raw`In $A\times B$ il primo elemento sta in $A$, il secondo in $B$. $(c,2)$ ha l'ordine scambiato: sta in $B\times A$. Le coppie sono **ordinate**.` },
+        { id: 's01.relazioni.L1.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Quali proprietà ha la relazione $x<y$ su $\R$? (più risposte)`,
+          options: relPropsNames.map((p) => p[0].toUpperCase() + p.slice(1)),
+          answer: [2, 3],
+          explain: String.raw`Non è riflessiva ($1<1$ è falso), non è simmetrica ($1<2$ ma non $2<1$). È transitiva. È **antisimmetrica** perché l'ipotesi "$x<y$ e $y<x$" non è mai vera, quindi l'implicazione è vera "a vuoto". Trappola frequente.` },
+        { type: 'example', title: 'Verificare le proprietà su un insieme finito',
+          problem: String.raw`Su $A=\{1,2,3\}$ sia $\mathcal R=\{(1,1),(2,2),(3,3),(1,2),(2,1)\}$. Che proprietà ha?`,
+          steps: [
+            String.raw`Riflessiva: ci sono $(1,1),(2,2),(3,3)$. Sì.`,
+            String.raw`Simmetrica: l'unica coppia "fuori diagonale" $(1,2)$ ha anche la sua inversa $(2,1)$. Sì.`,
+            String.raw`Transitiva: da $(1,2)$ e $(2,1)$ serve $(1,1)$, presente; da $(2,1)$ e $(1,2)$ serve $(2,2)$, presente. Le altre combinazioni coinvolgono la diagonale. Sì.`,
+            { text: String.raw`Antisimmetrica: no, perché $1\,\mathcal R\,2$ e $2\,\mathcal R\,1$ ma $1\neq2$.`,
+              ask: { type: 'mcq', prompt: String.raw`$\mathcal R$ è antisimmetrica?`, options: ['No: $(1,2)$ e $(2,1)$ con $1\\neq2$', 'Sì, perché è riflessiva', 'Sì, perché è simmetrica'], answer: 0,
+                explain: String.raw`Per l'antisimmetria, $a\,\mathcal R\,b$ e $b\,\mathcal R\,a$ deve forzare $a=b$: qui non succede.` } },
+          ],
+          result: String.raw`$\mathcal R$ è riflessiva, simmetrica e transitiva: è una **relazione di equivalenza** (classi $\{1,2\}$ e $\{3\}$).` },
+        { id: 's01.relazioni.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`La relazione "$a$ divide $b$" su $\N\setminus\{0\}$ è simmetrica.`,
+          answer: false,
+          explain: String.raw`$2$ divide $4$ ma $4$ non divide $2$. È invece riflessiva, antisimmetrica e transitiva.` },
+        { id: 's01.relazioni.L1.e5', type: 'mcq', level: 2,
+          prompt: String.raw`Su $\R$ sia $x\,\mathcal R\,y\iff|x-y|\le1$. Quali proprietà ha? (più risposte)`,
+          options: relPropsNames.map((p) => p[0].toUpperCase() + p.slice(1)),
+          answer: [0, 1],
+          explain: String.raw`Riflessiva ($|x-x|=0\le1$) e simmetrica ($|x-y|=|y-x|$). Non transitiva: $0\,\mathcal R\,1$ e $1\,\mathcal R\,2$ ma $|0-2|=2>1$. Non antisimmetrica: $0\,\mathcal R\,\frac12$ e $\frac12\,\mathcal R\,0$ con $0\neq\frac12$.` },
+        { id: 's01.relazioni.L1.e6', type: 'tf', level: 2,
+          prompt: String.raw`Una relazione può essere contemporaneamente simmetrica e antisimmetrica.`,
+          answer: true,
+          explain: String.raw`L'uguaglianza $x=y$ è simmetrica e antisimmetrica (anche riflessiva e transitiva). In generale una relazione è simmetrica e antisimmetrica se e solo se contiene solo coppie $(a,a)$.` },
+        { id: 's01.relazioni.L1.e7', type: 'mcq', level: 1,
+          prompt: String.raw`Per dimostrare che una relazione **non** è transitiva, che cosa basta?`,
+          options: [
+            String.raw`Trovare $a,b,c$ con $a\,\mathcal R\,b$, $b\,\mathcal R\,c$ ma non $a\,\mathcal R\,c$.`,
+            String.raw`Trovare $a,b$ con $a\,\mathcal R\,b$ ma non $b\,\mathcal R\,a$.`,
+            String.raw`Trovare $a$ con $a$ non in relazione con sé stesso.`,
+            'Verificare che non è riflessiva.',
+          ],
+          answer: 0,
+          explain: String.raw`La negazione di "$\forall a,b,c\ (a\mathcal Rb\wedge b\mathcal Rc\Rightarrow a\mathcal Rc)$" è "$\exists a,b,c$: $a\mathcal Rb$, $b\mathcal Rc$, non $a\mathcal Rc$": un controesempio. Le altre risposte negano simmetria e riflessività.` },
+      ],
+    },
+    {
+      id: 's01.relazioni.L2',
+      title: 'Relazioni di equivalenza e classi',
+      cards: [
+        { type: 'learn', title: 'Equivalenza = "stessa caratteristica"',
+          body: String.raw`>* Una relazione **riflessiva, simmetrica e transitiva** si dice **relazione di equivalenza** (simbolo tipico $\sim$).
+
+La **classe di equivalenza** di $a$ è $[a]=\{b\in A: b\sim a\}$.
+
+Fatti chiave:
+- due classi sono **uguali o disgiunte**;
+- le classi ricoprono $A$: formano una **partizione** di $A$;
+- l'insieme delle classi si chiama **insieme quoziente** $A/\!\sim$.
+
+Esempio: su $\Z$, $a\sim b\iff a-b$ è pari. Le classi sono due: i pari e i dispari.` },
+        { type: 'example', title: 'Congruenza modulo 3',
+          problem: String.raw`Su $\Z$ sia $a\equiv b\pmod3\iff3\mid(a-b)$. Descrivi le classi.`,
+          steps: [
+            String.raw`È un'equivalenza: $3\mid0$ (riflessiva); se $3\mid a-b$ allora $3\mid b-a$ (simmetrica); se $3\mid a-b$ e $3\mid b-c$ allora $3\mid(a-b)+(b-c)=a-c$ (transitiva).`,
+            String.raw`Due interi sono equivalenti se e solo se hanno lo **stesso resto** nella divisione per $3$.`,
+            { text: String.raw`Le classi sono $[0]=\{\dots,-3,0,3,6,\dots\}$, $[1]=\{\dots,-2,1,4,\dots\}$, $[2]=\{\dots,-1,2,5,\dots\}$. Il numero $14=3\cdot4+2$ sta in $[2]$.`,
+              ask: { type: 'num', prompt: String.raw`$14$ sta nella classe $[r]$ con $r\in\{0,1,2\}$. Quanto vale $r$?`, answer: '2', explain: String.raw`$14=3\cdot4+2$: resto $2$.` } },
+          ],
+          result: String.raw`$\Z/\!\equiv_3=\{[0],[1],[2]\}$: tre classi.` },
+        { id: 's01.relazioni.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Quante classi di equivalenza ha la congruenza modulo $5$ su $\Z$?`,
+          answer: '5',
+          explain: String.raw`Una per ogni resto possibile: $[0],[1],[2],[3],[4]$.` },
+        { id: 's01.relazioni.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`Qual è il rappresentante $r\in\{0,1,2,3\}$ della classe di $-7$ modulo $4$?`,
+          answer: '1',
+          explain: String.raw`$-7=4\cdot(-2)+1$, quindi $-7\equiv1\pmod 4$. Controllo: $-7-1=-8$ è multiplo di $4$. Errore tipico: rispondere $3$ (resto di $7$) cambiando solo il segno.` },
+        { id: 's01.relazioni.L2.e3', type: 'tf', level: 1,
+          prompt: String.raw`Due classi di equivalenza distinte possono avere elementi in comune.`,
+          answer: false,
+          explain: String.raw`Se $c\in[a]\cap[b]$ allora $c\sim a$ e $c\sim b$; per simmetria e transitività $a\sim b$, quindi $[a]=[b]$. Classi diverse sono disgiunte.` },
+        { id: 's01.relazioni.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Su $\R^2$ sia $(x_1,y_1)\sim(x_2,y_2)\iff x_1^2+y_1^2=x_2^2+y_2^2$. Come sono fatte le classi?`,
+          options: [
+            String.raw`Circonferenze di centro l'origine, più l'origine da sola.`,
+            String.raw`Rette passanti per l'origine.`,
+            String.raw`Rette parallele all'asse $x$.`,
+            String.raw`Un'unica classe: tutto $\R^2$.`,
+          ],
+          answer: 0,
+          explain: String.raw`Due punti sono equivalenti se hanno la **stessa distanza dall'origine** ($\sqrt{x^2+y^2}$). Quindi la classe di un punto a distanza $r>0$ è la circonferenza di raggio $r$; la classe dell'origine è $\{(0,0)\}$.` },
+        { id: 's01.relazioni.L2.e5', type: 'mcq', level: 3,
+          prompt: String.raw`Su $\Z\times(\Z\setminus\{0\})$ sia $(p,q)\sim(r,s)\iff ps=qr$. Che cosa rappresentano le classi?`,
+          options: [
+            String.raw`I numeri razionali: la classe di $(p,q)$ è la frazione $\frac pq$.`,
+            String.raw`I numeri interi.`,
+            String.raw`I punti di una retta.`,
+            String.raw`Non è una relazione di equivalenza.`,
+          ],
+          answer: 0,
+          explain: String.raw`$ps=qr\iff\frac pq=\frac rs$: coppie equivalenti sono frazioni equivalenti, come $(1,2)\sim(2,4)$. È proprio così che si costruisce $\Q$ a partire da $\Z$. (La transitività usa $q,s\neq0$.)` },
+        { id: 's01.relazioni.L2.e6', type: 'tf', level: 2,
+          prompt: String.raw`Su $\R$ la relazione $x\sim y\iff x-y\in\Z$ è di equivalenza.`,
+          answer: true,
+          explain: String.raw`$x-x=0\in\Z$; se $x-y\in\Z$ anche $y-x\in\Z$; se $x-y$, $y-z\in\Z$ la somma $x-z\in\Z$. Le classi sono gli insiemi $\{t+k: k\in\Z\}$, uno per ogni $t\in[0,1)$ (la "parte decimale").` },
+        { id: 's01.relazioni.L2.e7', type: 'cloze', level: 1,
+          prompt: 'Completa la definizione.',
+          text: String.raw`Una relazione di equivalenza è una relazione [[0]], [[1]] e [[2]].`,
+          blanks: [
+            { options: ['riflessiva', 'antisimmetrica', 'totale'], answer: 0 },
+            { options: ['simmetrica', 'antisimmetrica', 'iniettiva'], answer: 0 },
+            { options: ['transitiva', 'suriettiva', 'limitata'], answer: 0 },
+          ],
+          explain: String.raw`R-S-T. Con "antisimmetrica" al posto di "simmetrica" si ottiene invece una relazione d'ordine.` },
+        { id: 's01.relazioni.L2.e8', type: 'open', level: 2,
+          prompt: String.raw`Dai la definizione di relazione di equivalenza e di classe di equivalenza, con un esempio.`,
+          answer: String.raw`Una relazione $\sim$ su $A$ è di equivalenza se è riflessiva ($a\sim a$), simmetrica ($a\sim b\Rightarrow b\sim a$) e transitiva ($a\sim b,\ b\sim c\Rightarrow a\sim c$). La classe di $a$ è $[a]=\{b\in A: b\sim a\}$; le classi formano una partizione di $A$.
+
+Esempio: su $\Z$, $a\sim b\iff a-b$ pari; le classi sono i pari e i dispari.`,
+          rubric: ['Le tre proprietà scritte correttamente', 'Definizione di classe $[a]$', 'Osserva che le classi sono disgiunte e ricoprono $A$', 'Esempio corretto con le sue classi'] },
+      ],
+    },
+    {
+      id: 's01.relazioni.L3',
+      title: "Relazioni d'ordine",
+      cards: [
+        { type: 'learn', title: 'Ordinare',
+          body: String.raw`>* Una relazione **riflessiva, antisimmetrica e transitiva** si dice **relazione d'ordine** (simbolo tipico $\preceq$).
+
+È **totale** se due elementi qualsiasi sono confrontabili ($a\preceq b$ oppure $b\preceq a$), altrimenti **parziale**.
+
+Esempi:
+- $\le$ su $\R$: ordine totale;
+- $\subseteq$ sui sottoinsiemi di un insieme: ordine parziale ($\{1\}$ e $\{2\}$ non sono confrontabili);
+- "$a$ divide $b$" su $\N\setminus\{0\}$: ordine parziale ($2$ e $3$ non sono confrontabili).
+
+Le relazioni come $<$ (non riflessive) si dicono ordini **stretti**.` },
+        { id: 's01.relazioni.L3.e1', type: 'mcq', level: 1,
+          prompt: String.raw`La relazione "$a$ divide $b$" su $\N\setminus\{0\}$ è un ordine totale?`,
+          options: [
+            String.raw`No: per esempio $2$ e $3$ non sono confrontabili.`,
+            'Sì, perché è riflessiva, antisimmetrica e transitiva.',
+            'No, perché non è transitiva.',
+            'Non è nemmeno una relazione d\'ordine.',
+          ],
+          answer: 0,
+          explain: String.raw`È un ordine (R, A, T) ma **parziale**: $2\nmid3$ e $3\nmid2$. Essere un ordine non basta per essere totale.` },
+        { id: 's01.relazioni.L3.e2', type: 'tf', level: 1,
+          prompt: String.raw`L'inclusione $\subseteq$ sui sottoinsiemi di $\{1,2\}$ è un ordine totale.`,
+          answer: false,
+          explain: String.raw`$\{1\}\not\subseteq\{2\}$ e $\{2\}\not\subseteq\{1\}$: sono due elementi non confrontabili. È un ordine parziale.` },
+        { id: 's01.relazioni.L3.e3', type: 'match', level: 2,
+          prompt: 'Abbina ogni relazione al suo tipo.',
+          pairs: [
+            [String.raw`$x\le y$ su $\R$`, "ordine totale"],
+            [String.raw`$A\subseteq B$ sui sottoinsiemi di $X$`, "ordine parziale"],
+            [String.raw`$a\equiv b\pmod 3$ su $\Z$`, 'equivalenza'],
+            [String.raw`$x<y$ su $\R$`, 'ordine stretto (non riflessiva)'],
+          ],
+          explain: String.raw`$\le$ e $\subseteq$ sono R-A-T; solo $\le$ rende confrontabili tutte le coppie. La congruenza è R-S-T. $<$ è antisimmetrica e transitiva ma non riflessiva.` },
+        { id: 's01.relazioni.L3.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Su $\R$ sia $x\,\mathcal R\,y\iff x^2\le y^2$. È una relazione d'ordine?`,
+          options: [
+            String.raw`No: non è antisimmetrica ($1\,\mathcal R\,{-1}$ e $-1\,\mathcal R\,1$ ma $1\neq-1$).`,
+            String.raw`Sì, è un ordine totale.`,
+            String.raw`No: non è riflessiva.`,
+            String.raw`No: non è transitiva.`,
+          ],
+          answer: 0,
+          explain: String.raw`È riflessiva e transitiva (eredita le proprietà di $\le$ su $x^2$), ma due numeri opposti sono in relazione in entrambi i versi senza essere uguali.` },
+        { type: 'example', title: "La divisibilità è un ordine su $\\N\\setminus\\{0\\}$",
+          problem: String.raw`Verifica che "$a\mid b$" è una relazione d'ordine su $\N\setminus\{0\}$.`,
+          steps: [
+            String.raw`Riflessiva: $a=1\cdot a$, quindi $a\mid a$.`,
+            String.raw`Antisimmetrica: se $b=ha$ e $a=kb$ con $h,k\in\N$, allora $a=(kh)a$. Poiché $a\neq0$, $kh=1$, quindi $h=k=1$ e $a=b$.`,
+            { text: String.raw`Transitiva: se $b=ha$ e $c=kb$ allora $c=(kh)a$, quindi $a\mid c$.`,
+              ask: { type: 'mcq', prompt: String.raw`Su $\Z\setminus\{0\}$ la divisibilità è ancora antisimmetrica?`,
+                options: [String.raw`No: $2\mid-2$ e $-2\mid2$ ma $2\neq-2$.`, 'Sì, come su $\\N$.', 'Sì, perché è transitiva.'], answer: 0,
+                explain: String.raw`Con i negativi $kh=1$ ammette anche $h=k=-1$: si perde l'antisimmetria.` } },
+          ],
+          result: String.raw`Su $\N\setminus\{0\}$ la divisibilità è un ordine parziale.` },
+        { id: 's01.relazioni.L3.e5', type: 'num', level: 2,
+          prompt: String.raw`Quanti sottoinsiemi $B$ soddisfano $\{1\}\subseteq B\subseteq\{1,2,3\}$?`,
+          answer: '4',
+          explain: String.raw`$B$ deve contenere $1$; per $2$ e $3$ scelgo liberamente se metterli: $2\cdot2=4$ ($\{1\},\{1,2\},\{1,3\},\{1,2,3\}$).` },
+        { id: 's01.relazioni.L3.e6', type: 'tf', level: 2,
+          prompt: String.raw`In un ordine totale, se $a\not\preceq b$ allora $b\preceq a$.`,
+          answer: true,
+          explain: String.raw`Totale significa che per ogni coppia vale $a\preceq b$ oppure $b\preceq a$: se la prima è falsa, vale la seconda. In un ordine parziale invece potrebbero essere false entrambe.` },
+        { id: 's01.relazioni.L3.e7', type: 'open', level: 2,
+          prompt: String.raw`Dai la definizione di relazione d'ordine e spiega la differenza tra ordine totale e parziale, con un esempio per ciascuno.`,
+          answer: String.raw`Una relazione $\preceq$ su $A$ è d'ordine se è riflessiva, antisimmetrica ($a\preceq b$ e $b\preceq a\Rightarrow a=b$) e transitiva. È totale se per ogni $a,b$ vale $a\preceq b$ oppure $b\preceq a$; altrimenti è parziale.
+
+Esempi: $\le$ su $\R$ è totale; $\subseteq$ sui sottoinsiemi di $\{1,2\}$ è parziale perché $\{1\}$ e $\{2\}$ non sono confrontabili.`,
+          rubric: ['Tre proprietà corrette (con antisimmetria scritta bene)', 'Definizione di ordine totale', 'Esempio di ordine totale', 'Esempio di ordine parziale con coppia non confrontabile'] },
+        { id: 's01.relazioni.L3.e8', type: 'mcq', level: 3,
+          prompt: String.raw`Su $\R$ sia $x\sim y\iff x-y\in\Q$. Quale affermazione è vera?`,
+          options: [
+            String.raw`Non è di equivalenza: non è transitiva.`,
+            String.raw`È di equivalenza con una sola classe, $\R$, perché $\Q$ è denso.`,
+            String.raw`È di equivalenza con classi finite.`,
+            String.raw`È di equivalenza; ogni classe è numerabile, ma le classi sono in numero non numerabile.`,
+          ],
+          answer: 3,
+          explain: String.raw`Riflessiva e simmetrica sono immediate; la transitività vale perché $\Q$ è chiuso per somma e differenza. Ogni classe $x+\Q$ è numerabile, ma $\R$ non è numerabile (vedi la skill sull'irrazionalità), quindi le classi sono non numerabili in numero. Densità di $\Q$ non significa una sola classe: $\sqrt2\not\sim0$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's01.relazioni.p.gen-mod', type: 'gen', level: 1,
+      gen: (R) => {
+        const n = R.int(3, 9), a = R.nz(-60, 60);
+        const r = ((a % n) + n) % n, q = (a - r) / n;
+        return { type: 'num',
+          prompt: String.raw`Qual è il rappresentante $r\in\{0,\dots,${n - 1}\}$ della classe di $${a}$ modulo $${n}$?`,
+          answer: String(r),
+          explain: String.raw`$${a}=${n}\cdot${q < 0 ? `(${q})` : q}+${r}$ con $0\le${r}<${n}$, quindi $${a}\equiv${r}\pmod{${n}}$.` };
+      } },
+    { id: 's01.relazioni.p.gen-cong', type: 'gen', level: 1,
+      gen: (R) => {
+        const n = R.int(3, 9), a = R.int(-40, 40);
+        const same = R.chance(0.5);
+        const b = same ? a + n * R.nz(-5, 5) : a + n * R.int(-4, 4) + R.int(1, n - 1);
+        const d = a - b;
+        return { type: 'tf',
+          prompt: String.raw`Vale $${a}\equiv${b}\pmod{${n}}$?`,
+          answer: d % n === 0,
+          explain: d % n === 0
+            ? String.raw`$${a}-(${b})=${d}=${n}\cdot${d / n < 0 ? `(${d / n})` : d / n}$ è multiplo di $${n}$: sono congrui.`
+            : String.raw`$${a}-(${b})=${d}$ non è multiplo di $${n}$: non sono congrui.` };
+      } },
+    { id: 's01.relazioni.p.gen-props', type: 'gen', level: 2,
+      gen: (R) => {
+        const A = [1, 2, 3];
+        const all = [];
+        for (const a of A) for (const b of A) all.push([a, b]);
+        let rel = all.filter(() => R.chance(0.35));
+        if (R.chance(0.5)) for (const a of A) if (!rel.some((p) => p[0] === a && p[1] === a)) rel.push([a, a]);
+        if (!rel.length) rel.push([1, 2]);
+        rel.sort((p, q) => p[0] - q[0] || p[1] - q[1]);
+        const has = (a, b) => rel.some((p) => p[0] === a && p[1] === b);
+        const why = [];
+        const missD = A.find((a) => !has(a, a));
+        const refl = missD === undefined;
+        why.push(refl ? 'riflessiva: ci sono tutte le coppie $(a,a)$' : `non riflessiva: manca $(${missD},${missD})$`);
+        const ns = rel.find(([a, b]) => !has(b, a));
+        why.push(ns ? `non simmetrica: c'è $(${ns[0]},${ns[1]})$ ma non $(${ns[1]},${ns[0]})$` : 'simmetrica: ogni coppia ha la sua inversa');
+        const na = rel.find(([a, b]) => a !== b && has(b, a));
+        why.push(na ? `non antisimmetrica: ci sono $(${na[0]},${na[1]})$ e $(${na[1]},${na[0]})$` : 'antisimmetrica: nessuna coppia $(a,b)$ con $a\\neq b$ ha la sua inversa');
+        let nt = null;
+        for (const [a, b] of rel) for (const [c, d] of rel) if (!nt && b === c && !has(a, d)) nt = [a, b, d];
+        why.push(nt ? `non transitiva: $(${nt[0]},${nt[1]})$ e $(${nt[1]},${nt[2]})$ ci sono, $(${nt[0]},${nt[2]})$ no` : 'transitiva: ogni "catena" $(a,b),(b,c)$ ha anche $(a,c)$');
+        const flags = [refl, !ns, !na, !nt];
+        const ans = flags.map((f, i) => (f ? i : -1)).filter((i) => i >= 0);
+        const options = relPropsNames.map((p) => p[0].toUpperCase() + p.slice(1)).concat(['Nessuna delle quattro']);
+        return { type: 'mcq', noShuffle: true,
+          prompt: String.raw`Su $A=\{1,2,3\}$ sia $\mathcal R=\{${rel.map((p) => `(${p[0]},${p[1]})`).join(',')}\}$. Quali proprietà ha $\mathcal R$? (più risposte)`,
+          options,
+          answer: ans.length ? ans : [4],
+          explain: why.map((w) => '- ' + w[0].toUpperCase() + w.slice(1) + '.').join('\n') };
+      } },
+    { id: 's01.relazioni.p.gen-card', type: 'gen', level: 1,
+      gen: (R) => {
+        const m = R.int(2, 6), n = R.int(2, 6), s = R.int(2, 3);
+        if (R.chance(0.5))
+          return { type: 'num', prompt: String.raw`$|A|=${m}$ e $|B|=${n}$. Quanti elementi ha $A\times B$?`, answer: String(m * n),
+            explain: String.raw`$|A\times B|=|A|\cdot|B|=${m}\cdot${n}=${m * n}$.` };
+        return { type: 'num', prompt: String.raw`$|A|=${s}$. Quante relazioni su $A$ esistono (cioè quanti sottoinsiemi di $A\times A$)?`, answer: `2^${s * s}`,
+          explain: String.raw`$A\times A$ ha $${s}^2=${s * s}$ elementi, e un insieme con $k$ elementi ha $2^k$ sottoinsiemi: $2^{${s * s}}$.` };
+      } },
+    { id: 's01.relazioni.p.1', type: 'mcq', level: 2,
+      prompt: String.raw`Su $\Z$ sia $a\,\mathcal R\,b\iff a+b$ è pari. Che tipo di relazione è?`,
+      options: ['Di equivalenza, con due classi (pari e dispari)', "D'ordine totale", 'Né riflessiva né simmetrica', 'Di equivalenza, con infinite classi'],
+      answer: 0,
+      explain: String.raw`$a+a=2a$ è pari (R); $a+b=b+a$ (S); se $a+b$ e $b+c$ sono pari, $a+c=(a+b)+(b+c)-2b$ è pari (T). $a+b$ pari significa $a,b$ con la stessa parità: due classi.` },
+    { id: 's01.relazioni.p.2', type: 'tf', level: 1,
+      prompt: String.raw`Ogni relazione d'ordine è anche simmetrica.`,
+      answer: false,
+      explain: String.raw`Un ordine è antisimmetrico; è anche simmetrico solo nel caso banale dell'uguaglianza. Esempio: $1\le2$ ma non $2\le1$.` },
+    { id: 's01.relazioni.p.3', type: 'cloze', level: 1,
+      prompt: "Completa la definizione di relazione d'ordine.",
+      text: String.raw`Una relazione d'ordine è riflessiva, [[0]] e transitiva. È totale se [[1]].`,
+      blanks: [
+        { options: ['antisimmetrica', 'simmetrica', 'iniettiva'], answer: 0 },
+        { options: ['due elementi qualsiasi sono confrontabili', 'è anche simmetrica', 'ha un elemento massimo'], answer: 0 },
+      ],
+      explain: String.raw`R-A-T; "totale" = ogni coppia è confrontabile.` },
+    { id: 's01.relazioni.p.4', type: 'mcq', level: 2,
+      prompt: String.raw`Sui sottoinsiemi di $\{1,2,3\}$ con l'ordine $\subseteq$, quale coppia NON è confrontabile?`,
+      options: [String.raw`$\{1,2\}$ e $\{2,3\}$`, String.raw`$\{1\}$ e $\{1,3\}$`, String.raw`$\emptyset$ e $\{2\}$`, String.raw`$\{1,2,3\}$ e $\{3\}$`],
+      answer: 0,
+      explain: String.raw`Nessuno dei due contiene l'altro. Negli altri casi c'è inclusione ($\emptyset$ è contenuto in ogni insieme).` },
+    { id: 's01.relazioni.p.5', type: 'open', level: 2,
+      prompt: String.raw`Dimostra che la congruenza modulo $n$ su $\Z$ ($a\equiv b\iff n\mid a-b$) è una relazione di equivalenza.`,
+      answer: String.raw`Riflessiva: $a-a=0=n\cdot0$. Simmetrica: se $a-b=nk$ allora $b-a=n(-k)$. Transitiva: se $a-b=nk$ e $b-c=nh$ allora $a-c=(a-b)+(b-c)=n(k+h)$.`,
+      rubric: ['Riflessività', 'Simmetria', 'Transitività sommando le due differenze'] },
+    { id: 's01.relazioni.p.6', type: 'num', level: 2,
+      prompt: String.raw`Su $A=\{1,2,3,4,5,6\}$ sia $a\sim b\iff a\equiv b\pmod3$. Quanti elementi ha la classe $[2]$?`,
+      answer: '2',
+      explain: String.raw`$[2]\cap A=\{2,5\}$: i numeri di $A$ con resto $2$ nella divisione per $3$.` },
+  ],
+  flashcards: [
+    { id: 's01.relazioni.fc1', kind: 'def', front: 'Relazione su un insieme $A$', back: String.raw`Un sottoinsieme $\mathcal R\subseteq A\times A$; si scrive $a\,\mathcal R\,b$ se $(a,b)\in\mathcal R$.` },
+    { id: 's01.relazioni.fc2', kind: 'def', front: 'Proprietà riflessiva, simmetrica, antisimmetrica, transitiva', back: String.raw`R: $a\mathcal Ra$. S: $a\mathcal Rb\Rightarrow b\mathcal Ra$. A: $a\mathcal Rb\wedge b\mathcal Ra\Rightarrow a=b$. T: $a\mathcal Rb\wedge b\mathcal Rc\Rightarrow a\mathcal Rc$.` },
+    { id: 's01.relazioni.fc3', kind: 'def', front: 'Relazione di equivalenza; classe; quoziente', back: String.raw`R + S + T. Classe $[a]=\{b: b\sim a\}$. Le classi sono disgiunte e ricoprono $A$ (partizione); il loro insieme è $A/\!\sim$.` },
+    { id: 's01.relazioni.fc4', kind: 'def', front: "Relazione d'ordine; totale e parziale", back: String.raw`R + A + T. Totale se ogni coppia è confrontabile ($\le$ su $\R$), altrimenti parziale ($\subseteq$, divisibilità).` },
+    { id: 's01.relazioni.fc5', kind: 'formula', front: 'Congruenza modulo $n$', back: String.raw`$a\equiv b\pmod n\iff n\mid a-b\iff$ stesso resto nella divisione per $n$. $n$ classi: $[0],\dots,[n-1]$.` },
+    { id: 's01.relazioni.fc6', kind: 'errore', front: 'Trappole sulle proprietà', back: String.raw`Simmetrica e antisimmetrica non sono opposte (l'uguaglianza è entrambe). $<$ è antisimmetrica "a vuoto". Una proprietà "per ogni" si nega con **un** controesempio.` },
+  ],
+});
