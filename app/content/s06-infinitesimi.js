@@ -642,3 +642,608 @@ Il punto chiave è la seconda regola: un fattore $x^m$ fuori da un $o$ alza l'es
     },
   ],
 });
+
+// ===========================================================================
+// s06.ordine · Ordine e parte principale (anche con parametro)
+// ===========================================================================
+SKILLS.push({
+  id: 's06.ordine',
+  title: 'Ordine e parte principale',
+  summary: String.raw`Trovare l'ordine di infinitesimo e la parte principale di una funzione, anche quando compare un parametro $\alpha$ da studiare caso per caso.`,
+  prereq: ['s06.o', 's05.notevoli'],
+  examRefs: ['Itinere 15/01/2026 · Es. B2', 'Appello 15/01/2026 · Es. B4'],
+  lessons: [
+    {
+      id: 's06.ordine.L1',
+      title: 'Ordine di infinitesimo e parte principale',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quanto è piccolo un infinitesimo',
+          body: String.raw`Una funzione $f$ infinitesima per $x\to0$ ha **ordine** $\alpha>0$ se esiste $c\neq0$ con
+$$f(x)\sim c\,x^{\alpha}, \qquad\text{cioè}\qquad f(x)=c\,x^{\alpha}+o(x^{\alpha}).$$
+
+Il termine $c\,x^{\alpha}$ è la **parte principale** di $f$: è ciò che resta quando si trascurano gli infinitesimi di ordine superiore.
+
+Esempio: $f(x)=3x^2-x^3$ ha ordine $2$ e parte principale $3x^2$, perché $x^3=o(x^2)$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Vince l\'esponente più piccolo',
+          body: String.raw`Vicino a $0$ la potenza con esponente più piccolo è la più grande: $x$ è più grande di $x^2$, che è più grande di $x^3$. Quindi, se $f$ è una somma di potenze di $x$, domina il termine di grado minore:
+$$x^{a}=o(x^{b})\qquad\text{se } a>b.$$
+
+Per trovare ordine e parte principale si scrive l'equivalente di ogni addendo e si guarda quello di grado più basso.`,
+        },
+        {
+          type: 'learn',
+          title: 'Prima di concludere: controlla le cancellazioni',
+          body: String.raw`>! Attenzione: se il termine di grado minore si **annulla**, conta il primo termine che non si annulla.
+
+Esempio: $\sin 2x$ e $2x$ sono entrambi $\sim 2x$, ma la differenza $\sin 2x-2x$ ha ordine $3$ (vale $-\dfrac{4}{3}x^3+o(x^3)$, con lo sviluppo di Taylor di s10). Due addendi dello stesso ordine possono quindi cancellarsi.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Determina ordine e parte principale per $x\to0$ di $f(x)=\log(1+2x)+x^2$.`,
+          steps: [
+            String.raw`Il primo addendo è $\log(1+2x)\sim 2x$. Il secondo è $x^2=o(x)$, quindi è trascurabile.`,
+            {
+              text: String.raw`Quindi $f(x)\sim 2x$: il termine dominante ha grado $1$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Qual è l'ordine di infinitesimo di $f$?`,
+                answer: '1',
+                explain: String.raw`L'ordine è l'esponente del termine dominante: $2x$ ha esponente $1$.`,
+              },
+            },
+            String.raw`La parte principale è il termine dominante, cioè $2x$.`,
+          ],
+          result: String.raw`$f(x)=\log(1+2x)+x^2$ ha ordine $1$ e parte principale $2x$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L1.e1',
+          level: 1,
+          prompt: String.raw`Qual è l'ordine di infinitesimo per $x\to0$ di $f(x)=x^3+4x$?`,
+          answer: '1',
+          explain: String.raw`Il termine $4x$ domina $x^3$, perché $x^3=o(x)$. L'ordine è $1$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.ordine.L1.e2',
+          level: 1,
+          prompt: String.raw`Qual è la parte principale per $x\to0$ di $f(x)=\sin(5x)-x$?`,
+          options: [String.raw`$4x$`, String.raw`$5x$`, String.raw`$-x$`],
+          answer: 0,
+          explain: String.raw`$\sin 5x-x\sim 5x-x=4x$. Sbagliata $5x$: dimentica il secondo addendo. Sbagliata $-x$: considera un solo addendo.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.ordine.L1.e3',
+          level: 1,
+          prompt: String.raw`La funzione $\log(1+x^2)+x$ ha ordine $1$ e parte principale $x$.`,
+          answer: true,
+          explain: String.raw`$\log(1+x^2)\sim x^2=o(x)$, quindi $f(x)=x+o(x)$: parte principale $x$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L1.e4',
+          level: 2,
+          prompt: String.raw`Qual è l'ordine per $x\to0$ di $f(x)=1-\cos(3x)+x$?`,
+          answer: '1',
+          explain: String.raw`$1-\cos 3x\sim\dfrac{9x^2}{2}=o(x)$. Quindi $f\sim x$ e l'ordine è $1$.`,
+        },
+        {
+          type: 'expr',
+          id: 's06.ordine.L1.e5',
+          level: 2,
+          prompt: String.raw`Scrivi la parte principale per $x\to0$ di $f(x)=1-\cos(2x)+x^3$.`,
+          answer: '2*x^2',
+          vars: ['x'],
+          explain: String.raw`$1-\cos 2x\sim\dfrac{(2x)^2}{2}=2x^2$, mentre $x^3=o(x^2)$. Parte principale: $2x^2$.`,
+        },
+        {
+          type: 'order',
+          id: 's06.ordine.L1.e6',
+          level: 2,
+          prompt: String.raw`Metti in ordine i passi per determinare ordine e parte principale di una somma di infinitesimi.`,
+          steps: [
+            String.raw`Scrivo l'equivalente $c\,x^{\alpha}$ di ogni addendo.`,
+            String.raw`Confronto gli esponenti e tengo quello più piccolo.`,
+            String.raw`Se due esponenti coincidono, sommo i coefficienti (se non si annullano).`,
+            String.raw`Scrivo l'ordine $\alpha$ e la parte principale $c\,x^{\alpha}$.`,
+          ],
+          distractors: [String.raw`Scelgo il termine di grado più alto come parte principale.`],
+          explain: String.raw`Vicino a $0$ domina il grado più basso, non quello più alto.`,
+        },
+        {
+          type: 'problem',
+          id: 's06.ordine.L1.e7',
+          level: 2,
+          points: 3,
+          prompt: String.raw`Sia $f(x)=\sin(3x)-\log(1+x)$. Per $x\to0$ determina ordine e parte principale.`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`Ordine di $f$.`,
+              answer: '1',
+              explain: String.raw`$\sin 3x\sim3x$ e $\log(1+x)\sim x$: non ci sono cancellazioni, il termine dominante è di grado $1$.`,
+            },
+            {
+              type: 'expr',
+              prompt: String.raw`Parte principale di $f$.`,
+              answer: '2*x',
+              vars: ['x'],
+              explain: String.raw`$f(x)\sim 3x-x=2x$.`,
+            },
+          ],
+          solution: String.raw`$f(x)=3x-x+o(x)=2x+o(x)$: l'ordine è $1$ e la parte principale è $2x$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.ordine.L1.e8',
+          level: 1,
+          prompt: String.raw`Se $f(x)\sim 2x^3$ per $x\to0$, allora $f$ ha ordine $3$.`,
+          answer: true,
+          explain: String.raw`La definizione di ordine chiede $f\sim c\,x^{\alpha}$ con $c\neq0$: qui $c=2$ e $\alpha=3$.`,
+        },
+      ],
+    },
+    {
+      id: 's06.ordine.L2',
+      title: 'Ordine con un parametro α',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quando l\'esponente dipende da α',
+          body: String.raw`Se un addendo è $x^{\alpha}$ con $\alpha$ incognito, il suo ordine dipende da $\alpha$. Il metodo è sempre lo stesso:
+
+1. scrivi ogni addendo come $c\,x^{\text{esponente}(\alpha)}$;
+2. confronta gli esponenti **in funzione di $\alpha$**;
+3. studia i casi: un esponente più piccolo domina; due esponenti uguali si sommano nei coefficienti;
+4. verifica che la funzione sia infinitesima: il termine dominante deve avere esponente $>0$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Esponenti uguali: si sommano i coefficienti',
+          body: String.raw`>* Se due addendi hanno lo stesso esponente $\beta$, con coefficienti $c_1$ e $c_2$, la parte principale è $(c_1+c_2)\,x^{\beta}$.
+
+Se $c_1+c_2=0$, il termine si annulla: bisogna guardare il termine successivo, cioè andare a un ordine più alto.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto (con un passo da completare)',
+          problem: String.raw`Sia $f(x)=1+x^{\alpha}\sin(2x)-\cos x$. Per $x\to0$ determina ordine e parte principale, per $-1<\alpha<1$.`,
+          steps: [
+            String.raw`Separo la funzione in due parti: $f(x)=x^{\alpha}\sin(2x)+(1-\cos x)$. Con $\sin 2x\sim 2x$ si ha $x^{\alpha}\sin(2x)\sim 2x^{\alpha+1}$, e $1-\cos x\sim\dfrac{x^2}{2}$.`,
+            {
+              text: String.raw`Quindi $f(x)\sim 2x^{\alpha+1}+\dfrac{x^2}{2}$. Per $\alpha=0$ la funzione diventa $1+\sin 2x-\cos x$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Se $\alpha=0$, qual è l'ordine di $f$?`,
+                answer: '1',
+                explain: String.raw`Con $\alpha=0$ si ha $f\sim 2x+\dfrac{x^2}{2}\sim 2x$: ordine $1=\alpha+1$.`,
+              },
+            },
+            String.raw`Per $-1<\alpha<1$ si ha $\alpha+1<2$: il termine $2x^{\alpha+1}$ domina $\dfrac{x^2}{2}$.`,
+          ],
+          result: String.raw`Per $-1<\alpha<1$: ordine $\alpha+1$ e parte principale $2x^{\alpha+1}$.`,
+        },
+        {
+          type: 'interval',
+          id: 's06.ordine.L2.e1',
+          level: 2,
+          prompt: String.raw`Per quali $\alpha$ la funzione $f(x)=1+x^{\alpha}\sin(2x)-\cos x$ è infinitesima per $x\to0$?`,
+          answer: '(-1,+inf)',
+          explain: String.raw`Serve $\alpha+1>0$, cioè che il termine $2x^{\alpha+1}$ vada a $0$. Per $\alpha=-1$ si ha $f\to2$; per $\alpha<-1$ la $f$ non tende a $0$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.ordine.L2.e2',
+          level: 2,
+          prompt: String.raw`Per $\alpha=1$, qual è l'ordine di $f(x)=1+x\sin(2x)-\cos x$?`,
+          options: ['$1$', '$2$', '$3$'],
+          answer: 1,
+          explain: String.raw`$x\sin 2x\sim 2x^2$ e $1-\cos x\sim\dfrac{x^2}{2}$: entrambi hanno esponente $2=\alpha+1$, quindi l'ordine è $2$. Sbagliata $1$: confonde $\alpha$ con $\alpha+1$. Sbagliata $3$: scambia $x\sin 2x$ per $x^3$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L2.e3',
+          level: 2,
+          prompt: String.raw`Per $\alpha=1$ la parte principale di $f(x)=1+x\sin(2x)-\cos x$ è $c\,x^2$. Quanto vale $c$?`,
+          answer: '5/2',
+          explain: String.raw`$2x^2+\dfrac{x^2}{2}=\dfrac52x^2$: i coefficienti si sommano perché gli esponenti coincidono.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L2.e4',
+          level: 2,
+          prompt: String.raw`Per $\alpha>1$ la parte principale di $f(x)=1+x^{\alpha}\sin(2x)-\cos x$ è $c\,x^2$. Quanto vale $c$?`,
+          answer: '1/2',
+          explain: String.raw`Ora $\alpha+1>2$: il termine $2x^{\alpha+1}$ è $o(x^2)$, quindi resta solo $\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'expr',
+          id: 's06.ordine.L2.e5',
+          level: 2,
+          prompt: String.raw`Scrivi la parte principale per $x\to0$ di $f(x)=1+x^{3}\sin(2x)-\cos x$.`,
+          answer: 'x^2/2',
+          vars: ['x'],
+          explain: String.raw`Con $\alpha=3$ il termine $x^3\sin 2x\sim 2x^4=o(x^2)$. Resta $\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.ordine.L2.e6',
+          level: 2,
+          prompt: String.raw`Per $\alpha=\tfrac12$ la funzione $1+x^{\alpha}\sin(2x)-\cos x$ ha parte principale $2x^{3/2}$.`,
+          answer: true,
+          explain: String.raw`Con $\alpha=\tfrac12$ si ha $\alpha+1=\tfrac32<2$: il termine $2x^{3/2}$ domina $\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'problem',
+          id: 's06.ordine.L2.e7',
+          level: 3,
+          source: 'Itinere 15/01/2026 · Es. B2',
+          points: 4,
+          prompt: String.raw`Sia $f(x)=1+x^{\alpha}\sin(2x)-\cos x$. Determinare per quali $\alpha$ è infinitesima per $x\to0$, l'ordine e la parte principale.`,
+          parts: [
+            {
+              type: 'interval',
+              prompt: String.raw`Valori di $\alpha$ per cui $f$ è infinitesima.`,
+              answer: '(-1,+inf)',
+              explain: String.raw`$f\sim 2x^{\alpha+1}+\dfrac{x^2}{2}$: serve $\alpha+1>0$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`Se $-1<\alpha<1$, l'ordine di infinitesimo è:`,
+              options: [String.raw`$\alpha+1$`, String.raw`$2$`, String.raw`$\alpha$`],
+              answer: 0,
+              explain: String.raw`Il termine $2x^{\alpha+1}$ domina $\dfrac{x^2}{2}$ quando $\alpha+1<2$, cioè $\alpha<1$.`,
+            },
+          ],
+          solution: String.raw`$f$ è infinitesima per $\alpha>-1$. Per $-1<\alpha<1$: ordine $\alpha+1$, parte principale $2x^{\alpha+1}$. Per $\alpha=1$: ordine $2$, parte principale $\dfrac52x^2$. Per $\alpha>1$: ordine $2$, parte principale $\dfrac12x^2$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.ordine.L2.e8',
+          level: 3,
+          prompt: String.raw`Per $\alpha=1$ l'ordine e la parte principale di $1+x^{\alpha}\sin(2x)-\cos x$ sono quelli di:`,
+          options: [String.raw`ordine $1$, parte principale $2x$`, String.raw`ordine $2$, parte principale $\dfrac52x^2$`, String.raw`ordine $2$, parte principale $2x^2$`],
+          answer: 1,
+          explain: String.raw`Con $\alpha=1$ i due addendi hanno esponente $2$ e coefficienti $2$ e $\dfrac12$: la somma è $\dfrac52$. Sbagliata $2x^2$: dimentica il coefficiente $\dfrac12$ di $1-\cos x$.`,
+        },
+      ],
+    },
+    {
+      id: 's06.ordine.L3',
+      title: 'Cancellazioni e parametri: il secondo ordine',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Gli sviluppi al secondo ordine',
+          body: String.raw`Quando il primo ordine si cancella serve il secondo. Per $x\to0$ valgono:
+
+- $\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$
+- $e^x-1=x+\dfrac{x^2}{2}+o(x^2)$
+- $\sin x=x+o(x^2)$
+- $1-\cos x=\dfrac{x^2}{2}+o(x^2)$
+
+Questi bastano per la maggior parte degli esercizi d'esame di questa sezione. Gli sviluppi completi sono in s10.`,
+        },
+        {
+          type: 'learn',
+          title: 'Parametro che cancella il primo ordine',
+          body: String.raw`Se $f(x)=(1-a)x-\dfrac{x^2}{2}+o(x^2)$, la parte principale dipende da $a$:
+
+- se $a\neq1$, il termine in $x$ non si annulla: ordine $1$ e parte principale $(1-a)x$;
+- se $a=1$, il termine in $x$ sparisce: ordine $2$ e parte principale $-\dfrac{x^2}{2}$.
+
+>! Errore tipico: fermarsi al primo ordine e scrivere "parte principale $0$" per $a=1$, dimenticando che il termine successivo non è nullo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Sia $f(x)=\log(1+x)-ax$, con $a\in\mathbb R$. Determina ordine e parte principale per $x\to0$.`,
+          steps: [
+            String.raw`Uso $\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$: quindi $f(x)=(1-a)x-\dfrac{x^2}{2}+o(x^2)$.`,
+            {
+              text: String.raw`Il comportamento dipende da $a$. Prendo come esempio $a=3$: il termine in $x$ diventa $(1-3)x=-2x$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Per $a=3$, qual è l'ordine di $f$?`,
+                answer: '1',
+                explain: String.raw`Con $a=3$ si ha $f=-2x-\dfrac{x^2}{2}+o(x^2)$: il termine $-2x$ domina, quindi l'ordine è $1$.`,
+              },
+            },
+            String.raw`Per $a=1$ il termine in $x$ si annulla: $f(x)=-\dfrac{x^2}{2}+o(x^2)$, ordine $2$ e parte principale $-\dfrac{x^2}{2}$.`,
+          ],
+          result: String.raw`Ordine $1$ e parte principale $(1-a)x$ se $a\neq1$; ordine $2$ e parte principale $-\dfrac{x^2}{2}$ se $a=1$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.ordine.L3.e1',
+          level: 2,
+          prompt: String.raw`Per $a=2$, qual è la parte principale per $x\to0$ di $f(x)=\log(1+x)-2x$?`,
+          options: [String.raw`$-x$`, String.raw`$-\dfrac{x^2}{2}$`, String.raw`$x$`],
+          answer: 0,
+          explain: String.raw`$f=x-\dfrac{x^2}{2}-2x+o(x^2)=-x-\dfrac{x^2}{2}+o(x^2)$: parte principale $-x$. Sbagliata $-\dfrac{x^2}{2}$: vale solo per $a=1$. Sbagliata $x$: dimentica il $-2$.`,
+        },
+        {
+          type: 'interval',
+          id: 's06.ordine.L3.e2',
+          level: 2,
+          prompt: String.raw`Per quali $a\in\mathbb R$ la funzione $f(x)=\log(1+x)-ax$ ha ordine $1$?`,
+          answer: '(-inf,1)U(1,inf)',
+          explain: String.raw`Ordine $1$ significa termine in $x$ non nullo: $1-a\neq0$, cioè $a\neq1$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L3.e3',
+          level: 2,
+          prompt: String.raw`Per $a=1$ la parte principale di $\log(1+x)-x$ è $c\,x^2$. Quanto vale $c$?`,
+          answer: '-1/2',
+          explain: String.raw`$\log(1+x)-x=-\dfrac{x^2}{2}+o(x^2)$, quindi $c=-\dfrac12$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.ordine.L3.e4',
+          level: 2,
+          prompt: String.raw`Per $x\to0$, la funzione $\sin x-\log(1+x)$ ha ordine:`,
+          options: ['$1$', '$2$', '$3$'],
+          answer: 1,
+          explain: String.raw`Il primo ordine si cancella ($x-x=0$). Con $\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$ e $\sin x=x+o(x^2)$ si ha $\sin x-\log(1+x)=\dfrac{x^2}{2}+o(x^2)$: ordine $2$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.ordine.L3.e5',
+          level: 2,
+          prompt: String.raw`Per $x\to0$, $\sin x-\log(1+x)=c\,x^2+o(x^2)$. Quanto vale $c$?`,
+          answer: '1/2',
+          explain: String.raw`Dalla differenza dei due sviluppi, $c=\dfrac12$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.ordine.L3.e6',
+          level: 1,
+          prompt: String.raw`Per $x\to0$ vale $e^x-1=x+\dfrac{x^2}{2}+o(x^2)$.`,
+          answer: true,
+          explain: String.raw`È lo sviluppo al secondo ordine dell'esponenziale: il termine $\dfrac{x^2}{2}$ è il secondo addendo.`,
+        },
+        {
+          type: 'order',
+          id: 's06.ordine.L3.e7',
+          level: 3,
+          prompt: String.raw`Metti in ordine i passi per trovare l'ordine di $f(x)=\log(1+x)-ax$ al variare di $a$.`,
+          steps: [
+            String.raw`Sviluppo ogni addendo fino all'ordine necessario.`,
+            String.raw`Scrivo $f$ come $(1-a)x+c\,x^2+o(x^2)$.`,
+            String.raw`Studio il caso $1-a\neq0$: ordine $1$.`,
+            String.raw`Studio il caso $a=1$: il primo termine si annulla e l'ordine è $2$.`,
+          ],
+          distractors: [String.raw`Scelgo subito $a=1$ senza studiare i casi.`],
+          explain: String.raw`Il caso $a=1$ va studiato dopo quello generale, non al posto suo.`,
+        },
+        {
+          type: 'open',
+          id: 's06.ordine.L3.e8',
+          level: 3,
+          points: 2,
+          prompt: String.raw`Perché due addendi dello stesso ordine possono dare una somma di ordine più alto? Fai un esempio.`,
+          answer: String.raw`Se $f=c_1x^{\beta}+c_2x^{\beta}+\dots$, la parte principale è $(c_1+c_2)x^{\beta}$. Se $c_1+c_2=0$ il termine si annulla e l'ordine sale. Esempio: $\log(1+x)-\sin x=\left(x-\dfrac{x^2}{2}\right)-x+o(x^2)=-\dfrac{x^2}{2}+o(x^2)$: il primo ordine si cancella e l'ordine è $2$.`,
+          rubric: [
+            'Se i coefficienti dello stesso esponente sommano a zero il termine sparisce',
+            'In quel caso l\'ordine di infinitesimo cresce',
+            'Esempio corretto (per esempio log(1+x) - sin x)',
+            'Risultato corretto: ordine 2 con parte principale -x^2/2',
+          ],
+        },
+        {
+          type: 'problem',
+          id: 's06.ordine.L3.e9',
+          level: 3,
+          points: 4,
+          prompt: String.raw`Sia $f(x)=\log(1+x)-ax$, con $a\in\mathbb R$. (a) Per quali $a$ l'ordine di infinitesimo è $1$? (b) Per $a=1$ determina ordine e parte principale.`,
+          parts: [
+            {
+              type: 'interval',
+              prompt: String.raw`(a) Valori di $a$ con ordine $1$.`,
+              answer: '(-inf,1)U(1,inf)',
+              explain: String.raw`Serve $1-a\neq0$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`(b) Ordine di $f$ per $a=1$.`,
+              options: ['$1$', '$2$', '$3$'],
+              answer: 1,
+              explain: String.raw`Con $a=1$ il primo ordine si annulla e $f=-\dfrac{x^2}{2}+o(x^2)$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`(b) Coefficiente $c$ della parte principale $c\,x^2$.`,
+              answer: '-1/2',
+              explain: String.raw`$c=-\dfrac12$.`,
+            },
+          ],
+          solution: String.raw`(a) $1-a\neq0$, cioè $a\neq1$. (b) Per $a=1$: $f(x)=-\dfrac{x^2}{2}+o(x^2)$: ordine $2$, parte principale $-\dfrac{x^2}{2}$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's06.ordine.gen-parametro', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.pick([-3, -2, -1, 2, 3]);
+        const sgn = a < 0 ? '+' : '-';
+        const mag = Math.abs(a) === 1 ? '' : String(Math.abs(a));
+        return {
+          type: 'expr',
+          prompt: String.raw`Per $x\to0$ determina la parte principale di $f(x)=\log(1+x)${sgn}${mag}x$.`,
+          answer: `${1 - a}*x`,
+          vars: ['x'],
+          explain: String.raw`Con $\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$ si ha $f(x)=${lx(1 - a)}+o(x)$: l'ordine è $1$ e la parte principale è $${lx(1 - a)}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.ordine.gen-potenze', type: 'gen', level: 2,
+      gen: (R) => {
+        const q = R.int(0, 3);
+        let p = R.int(1, 4);
+        if (p === q + 1) p += 1;
+        const k = R.nz(-3, 3);
+        const ord = Math.min(p, q + 1);
+        return {
+          type: 'num',
+          prompt: String.raw`Determina l'ordine di infinitesimo per $x\to0$ di $f(x)=${xk(p)}${sg(k)}${H.coef(k)}${xk(q)}\sin x$.`,
+          answer: String(ord),
+          explain: String.raw`Il secondo addendo è $\sim ${H.coef(k)}${xk(q + 1)}$, perché $\sin x\sim x$. Vince l'esponente più piccolo: $\min(${p},${q + 1})=${ord}$, quindi l'ordine è $${ord}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.ordine.gen-coseno', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.int(0, 3);
+        const b = R.nz(-3, 3);
+        const c = H.frac(b * b, 2);
+        return {
+          type: 'num',
+          prompt: String.raw`Determina l'ordine di infinitesimo per $x\to0$ di $f(x)=${xk(k)}\left(1-\cos(${lx(b)})\right)$.`,
+          answer: String(k + 2),
+          explain: String.raw`$1-\cos(${lx(b)})\sim\dfrac{(${lx(b)})^2}{2}=${c}x^2$, quindi $f\sim ${c}${xk(k + 2)}$: ordine $${k + 2}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.ordine.gen-somma', type: 'gen', level: 2,
+      gen: (R) => {
+        const A = R.nz(-3, 3), a = R.nz(-3, 3), B = R.nz(-3, 3);
+        let b = R.nz(-3, 3);
+        const Bc = A * a + B * b === 0 ? 2 * B : B;
+        const L = A * a + Bc * b;
+        return {
+          type: 'expr',
+          prompt: String.raw`Per $x\to0$ determina la parte principale di $f(x)=${H.coef(A)}\sin(${lx(a)})${sg(Bc)}${H.coef(Bc)}\log(1${sg(b)}${lx(b)})$.`,
+          answer: `${L}*x`,
+          vars: ['x'],
+          explain: String.raw`$\sin(${lx(a)})\sim ${lx(a)}$ e $\log(1${sg(b)}${lx(b)})\sim ${lx(b)}$: $f(x)\sim ${L}x$. L'ordine è $1$ e la parte principale è $${lx(L)}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.ordine.p1', type: 'mcq', level: 1,
+      prompt: String.raw`Qual è l'ordine di infinitesimo di $f(x)=x^3+4x$ per $x\to0$?`,
+      options: [String.raw`$1$`, String.raw`$3$`, String.raw`$\dfrac12$`],
+      answer: 0,
+      explain: String.raw`Il termine $4x$ domina $x^3$: l'ordine è $1$ e la parte principale è $4x$.`,
+    },
+    {
+      id: 's06.ordine.p2', type: 'num', level: 1,
+      prompt: String.raw`Qual è l'ordine per $x\to0$ di $\sin(5x)-x$?`,
+      answer: '1',
+      explain: String.raw`$\sin 5x-x\sim 4x$: ordine $1$.`,
+    },
+    {
+      id: 's06.ordine.p3', type: 'tf', level: 1,
+      prompt: String.raw`La funzione $\log(1+x^2)+x$ ha ordine $1$ e parte principale $x$.`,
+      answer: true,
+      explain: String.raw`$\log(1+x^2)\sim x^2=o(x)$, quindi $f=x+o(x)$.`,
+    },
+    {
+      id: 's06.ordine.p4', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi la parte principale per $x\to0$ di $1-\cos(2x)+x^3$.`,
+      answer: '2*x^2',
+      vars: ['x'],
+      explain: String.raw`$1-\cos 2x\sim\dfrac{(2x)^2}{2}=2x^2$, mentre $x^3=o(x^2)$.`,
+    },
+    {
+      id: 's06.ordine.p5', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni funzione alla sua parte principale per $x\to0$.`,
+      pairs: [
+        [String.raw`$x^3+2x$`, String.raw`$2x$`],
+        [String.raw`$\sin^2x+x^4$`, String.raw`$x^2$`],
+        [String.raw`$\log(1+x)+x^2$`, String.raw`$x$`],
+        [String.raw`$e^{x^3}-1+3x^2$`, String.raw`$3x^2$`],
+      ],
+      explain: String.raw`Ogni termine di grado più alto è $o$ del termine dominante: $\sin^2x\sim x^2$, $\log(1+x)\sim x$, $e^{x^3}-1\sim x^3=o(x^2)$.`,
+    },
+    {
+      id: 's06.ordine.p6', type: 'mcq', level: 2,
+      prompt: String.raw`Per $\alpha=2$, qual è l'ordine di $f(x)=1+x^{\alpha}\sin(2x)-\cos x$?`,
+      options: ['$1$', '$2$', '$3$'],
+      answer: 1,
+      explain: String.raw`$x^2\sin 2x\sim 2x^3=o(x^2)$ e $1-\cos x\sim\dfrac{x^2}{2}$: l'ordine è $2$, con parte principale $\dfrac{x^2}{2}$.`,
+    },
+    {
+      id: 's06.ordine.p7', type: 'num', level: 2,
+      prompt: String.raw`Per $\alpha=1$ la parte principale di $1+x\sin(2x)-\cos x$ è $c\,x^2$. Quanto vale $c$?`,
+      answer: '5/2',
+      explain: String.raw`$2x^2+\dfrac{x^2}{2}=\dfrac52x^2$.`,
+    },
+    {
+      id: 's06.ordine.p8', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha$ la funzione $1+x^{\alpha}\sin(2x)-\cos x$ è infinitesima per $x\to0$?`,
+      answer: '(-1,+inf)',
+      explain: String.raw`Serve $\alpha+1>0$: per $\alpha=-1$ la funzione tende a $2$.`,
+    },
+    {
+      id: 's06.ordine.p9', type: 'cloze', level: 1,
+      text: String.raw`Per $x\to0^+$, la funzione $f(x)=\sqrt{x}+x^3$ ha ordine [[0]].`,
+      blanks: [
+        { options: [String.raw`$\dfrac12$`, String.raw`$1$`, String.raw`$3$`], answer: 0 },
+      ],
+      explain: String.raw`$\sqrt x=x^{1/2}$ domina $x^3$: l'ordine è $\dfrac12$.`,
+    },
+    {
+      id: 's06.ordine.p10', type: 'tf', level: 2,
+      prompt: String.raw`Se $f=o(x^2)$ per $x\to0$, allora $f+3x^2$ ha parte principale $3x^2$.`,
+      answer: true,
+      explain: String.raw`$f+3x^2=3x^2+o(x^2)$: la parte principale è $3x^2$.`,
+    },
+    {
+      id: 's06.ordine.p11', type: 'mcq', level: 3,
+      prompt: String.raw`Per $a=1$, la funzione $\log(1+x)-x$ ha:`,
+      options: [
+        String.raw`ordine $1$, parte principale $-x$`,
+        String.raw`ordine $2$, parte principale $-\dfrac{x^2}{2}$`,
+        String.raw`ordine $2$, parte principale $\dfrac{x^2}{2}$`,
+      ],
+      answer: 1,
+      explain: String.raw`Il termine in $x$ si cancella: $\log(1+x)-x=-\dfrac{x^2}{2}+o(x^2)$.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's06.ordine.fc1', kind: 'def',
+      front: String.raw`Che cosa significa che $f$ ha ordine $\alpha$ per $x\to0$?`,
+      back: String.raw`Che esiste $c\neq0$ con $f(x)\sim c\,x^{\alpha}$ (con $\alpha>0$). Il termine $c\,x^{\alpha}$ è la parte principale.`,
+    },
+    {
+      id: 's06.ordine.fc2', kind: 'metodo',
+      front: String.raw`Come si trova l'ordine di una somma di infinitesimi?`,
+      back: String.raw`Si scrive l'equivalente di ogni addendo. Vince l'esponente più piccolo. Se due esponenti coincidono si sommano i coefficienti (se la somma è zero, si va all'ordine successivo).`,
+    },
+    {
+      id: 's06.ordine.fc3', kind: 'formula',
+      front: String.raw`Sviluppi al secondo ordine per $x\to0$`,
+      back: String.raw`$\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$; $e^x-1=x+\dfrac{x^2}{2}+o(x^2)$; $\sin x=x+o(x^2)$; $1-\cos x=\dfrac{x^2}{2}+o(x^2)$.`,
+    },
+    {
+      id: 's06.ordine.fc4', kind: 'metodo',
+      front: String.raw`Procedura per l'ordine con un parametro $\alpha$`,
+      back: String.raw`1) Scrivi ogni addendo come $c\,x^{\text{esponente}(\alpha)}$. 2) Confronta gli esponenti in funzione di $\alpha$. 3) Studia i casi di uguaglianza. 4) Verifica che il termine dominante abbia esponente positivo.`,
+    },
+    {
+      id: 's06.ordine.fc5', kind: 'errore',
+      front: String.raw`Errore tipico: parte principale nulla quando due termini si annullano`,
+      back: String.raw`Se $\log(1+x)-x$ ha il primo ordine nullo, la parte principale non è $0$: l'ordine sale a $2$ e la parte principale è $-\dfrac{x^2}{2}$.`,
+    },
+    {
+      id: 's06.ordine.fc6', kind: 'formula',
+      front: String.raw`Ordine di $1-\cos(bx)$ per $x\to0$ ($b\neq0$)`,
+      back: String.raw`Ordine $2$, parte principale $\dfrac{b^2}{2}x^2$.`,
+    },
+  ],
+});
