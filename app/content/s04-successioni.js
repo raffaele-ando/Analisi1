@@ -337,3 +337,348 @@ Se esiste il massimo, allora $\max=\sup$; se esiste il minimo, allora $\min=\inf
     { id: 's04.def.fc8', kind: 'errore', front: String.raw`Errori tipici sulle successioni`, back: String.raw`Limitata non implica convergente: $(-1)^n$. Monotona non implica limitata: $n^2$. Il sup non è sempre un termine: $\dfrac{n}{n+1}$ non raggiunge $1$.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s04.limiti
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's04.limiti',
+  title: 'Limiti di successioni: convergenza, algebra, confronto, unicità',
+  summary: String.raw`Saprai verificare un limite con la definizione (con $\varepsilon$ e $N$), calcolare limiti di rapporti di polinomi, riconoscere le forme indeterminate, usare il confronto e dimostrare l'unicità del limite.`,
+  prereq: ['s04.def', 's00.esplog'],
+  examRefs: ['Itinere 11/11/2025 · B4', 'Appello 15/01/2026 · A1'],
+  lessons: [
+    {
+      id: 's04.limiti.L1',
+      title: 'Convergenza e divergenza',
+      cards: [
+        {
+          type: 'learn',
+          title: 'L\'idea di limite',
+          body: String.raw`Scriviamo $\displaystyle\lim_{n\to+\infty}a_n=L$, o $a_n\to L$, se i termini si avvicinano a $L$ **quanto si vuole**, da un certo punto in poi. Con $\varepsilon>0$ come "precisione":
+
+$$a_n\to L\iff \forall\,\varepsilon>0\ \exists\,N\in\N:\ |a_n-L|<\varepsilon\ \text{ per ogni } n\ge N.$$
+
+Si legge: per ogni precisione $\varepsilon$ esiste un indice $N$ da cui in poi tutti i termini distano da $L$ meno di $\varepsilon$. Se un tale $L$ esiste, la successione **converge** a $L$.
+
+Esempio: $a_n=\dfrac1n\to0$. Dato $\varepsilon$, basta $N>\dfrac1\varepsilon$.`,
+          plot: { fns: [{ f: '1', label: 'limite 1' }], x: [0.5, 7], y: [0.5, 2.5], points: [[1, 2], [2, 1.5], [3, 1.3333], [4, 1.25], [5, 1.2], [6, 1.1667]] },
+        },
+        {
+          type: 'example',
+          title: 'Verificare un limite con ε',
+          problem: String.raw`Sia $a_n=\dfrac{2n+1}{n+1}$. Dimostra con la definizione che $a_n\to2$, trovando $N$ per $\varepsilon=\dfrac1{10}$.`,
+          steps: [
+            String.raw`Calcolo la distanza dal limite: $a_n-2=\dfrac{2n+1-2(n+1)}{n+1}=\dfrac{-1}{n+1}$.`,
+            { text: String.raw`Quindi $|a_n-2|=\dfrac{1}{n+1}$.`,
+              ask: { type: 'expr', vars: ['n'], prompt: String.raw`Scrivi $|a_n-2|$ come espressione in $n$, con $n\ge1$.`, answer: '1/(n+1)', explain: String.raw`Il numeratore $-1$ diventa $1$ con il valore assoluto: $|a_n-2|=\dfrac{1}{n+1}$.` } },
+            String.raw`Voglio $\dfrac{1}{n+1}<\dfrac{1}{10}$, cioè $n+1>10$, cioè $n>9$.`,
+            { text: String.raw`Quindi per ogni $n\ge10$ vale $|a_n-2|<\dfrac1{10}$: $N=10$ va bene.`,
+              ask: { type: 'num', prompt: String.raw`Qual è il più piccolo $N$ che va bene per $\varepsilon=\dfrac1{10}$?`, answer: '10', explain: String.raw`Per $n=9$ si ha $|a_9-2|=\dfrac1{10}$, che non è strettamente minore. Da $n=10$ in poi vale.` } },
+          ],
+          result: String.raw`Per ogni $\varepsilon>0$ si trova $N$ con $\dfrac{1}{n+1}<\varepsilon$ per $n\ge N$: quindi $a_n\to2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Divergenza e irregolarità',
+          body: String.raw`Una successione **diverge a $+\infty$** se per ogni $M>0$ esiste $N$ tale che $a_n>M$ per ogni $n\ge N$: i termini superano definitivamente ogni soglia. Si scrive $a_n\to+\infty$. Analogamente $a_n\to-\infty$ se $a_n<-M$ definitivamente.
+
+Una successione che non converge e non diverge a $\pm\infty$ è **irregolare** (o oscillante): non ha limite.
+
+Esempi: $a_n=n^2\to+\infty$. La successione $a_n=(-1)^n$ è irregolare. Anche $a_n=(-1)^n\,n$ è irregolare: i termini pari crescono verso $+\infty$ e quelli dispari verso $-\infty$.`,
+        },
+        {
+          type: 'mcq', level: 1,
+          prompt: String.raw`Quale comportamento ha $a_n=(-1)^n\,n$?`,
+          options: [String.raw`Converge a $0$`, String.raw`Diverge a $+\infty$`, String.raw`Diverge a $-\infty$`, String.raw`È irregolare: non ha limite`],
+          answer: 3,
+          explain: String.raw`I termini pari tendono a $+\infty$ e quelli dispari a $-\infty$: non si avvicinano a nessun valore e non restano definitivamente sopra una soglia positiva. Errore tipico: "converge a $0$", pensando a $\dfrac1n$. Il segno alterno rende il limite inesistente.`,
+          id: 's04.limiti.L1.e1',
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{n\to+\infty}\dfrac{1}{\sqrt n}$?`,
+          answer: '0',
+          explain: String.raw`Il denominatore $\sqrt n$ cresce senza limite, quindi la frazione tende a $0$.`,
+          id: 's04.limiti.L1.e2',
+        },
+        {
+          type: 'tf', level: 1,
+          prompt: String.raw`Se $a_n\to L$, allora $L$ è uguale ad almeno un termine $a_n$.`,
+          answer: false,
+          explain: String.raw`Falso. Per $a_n=\dfrac1n\to0$ nessun termine vale $0$. Il limite può non essere un termine della successione.`,
+          id: 's04.limiti.L1.e3',
+        },
+        {
+          type: 'learn',
+          title: 'Il limite dipende dalla coda',
+          body: String.raw`Il limite dipende solo dalla **coda** della successione, cioè da quello che succede per $n$ grande. Se due successioni coincidono definitivamente, hanno lo stesso limite (o nessuno dei due). Cambiare i primi $100$ termini non cambia il limite.`,
+        },
+        {
+          type: 'tf', level: 1,
+          prompt: String.raw`Cambiando i primi $100$ termini di una successione convergente, il limite non cambia.`,
+          answer: true,
+          explain: String.raw`Vero: la definizione chiede $|a_n-L|<\varepsilon$ solo da un $N$ in poi. I primi termini possono essere qualsiasi.`,
+          id: 's04.limiti.L1.e4',
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(n^2-3n\right)$ (scrivi inf se diverge a più infinito).`,
+          answer: 'inf',
+          explain: String.raw`Il termine $n^2$ domina su $3n$ e cresce senza limite: il limite è $+\infty$.`,
+          id: 's04.limiti.L1.e5',
+        },
+        {
+          type: 'mcq', level: 2,
+          prompt: String.raw`Per $a_n=\dfrac1n$ e $\varepsilon=\dfrac1{100}$, qual è il più piccolo $N$ tale che $|a_n|<\varepsilon$ per ogni $n\ge N$?`,
+          options: [String.raw`$N=101$`, String.raw`$N=100$`, String.raw`$N=10$`, String.raw`$N=1000$`],
+          answer: 0,
+          explain: String.raw`$|a_n|<\dfrac1{100}$ equivale a $n>100$. Per $n=100$ la distanza vale esattamente $\dfrac1{100}$, e la disuguaglianza è stretta: $N=100$ non basta. $N=10$ è troppo piccolo. $N=1000$ funziona, ma non è il più piccolo.`,
+          id: 's04.limiti.L1.e6',
+        },
+        {
+          type: 'open', level: 1,
+          prompt: String.raw`Scrivi la definizione di limite finito $a_n\to L$ per una successione, usando $\varepsilon$ e $N$.`,
+          answer: String.raw`$a_n\to L$ se per ogni $\varepsilon>0$ esiste $N\in\N$ tale che $|a_n-L|<\varepsilon$ per ogni $n\ge N$.`,
+          rubric: ["Quantificatori nell'ordine corretto: per ogni ε esiste N", String.raw`Disuguaglianza stretta $|a_n-L|<\varepsilon$`, String.raw`Vale per ogni $n\ge N$`],
+          id: 's04.limiti.L1.e7',
+        },
+      ],
+    },
+    {
+      id: 's04.limiti.L2',
+      title: 'Algebra dei limiti, confronto e unicità',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Algebra dei limiti',
+          body: String.raw`Se $a_n\to L$ e $b_n\to M$ con $L,M\in\R$, allora:
+
+- $a_n+b_n\to L+M$, $\;a_nb_n\to LM$, $\;\lambda a_n\to\lambda L$ per ogni $\lambda\in\R$;
+- se $M\ne0$, $\;\dfrac{a_n}{b_n}\to\dfrac{L}{M}$;
+- $|a_n|\to|L|$ e, se $a_n\ge0$, $\sqrt{a_n}\to\sqrt L$.
+
+Con i limiti infiniti valgono regole come $+\infty+c=+\infty$ e $c\cdot(+\infty)=+\infty$ per $c>0$, oppure $\dfrac{c}{\pm\infty}=0$.
+
+Restano le **forme indeterminate**: $\infty-\infty$, $0\cdot\infty$, $\dfrac00$, $\dfrac{\infty}{\infty}$, $1^\infty$, $0^0$, $\infty^0$. Per queste il risultato non si può prevedere: bisogna trasformare l'espressione.`,
+        },
+        {
+          type: 'learn',
+          title: 'Termine dominante',
+          body: String.raw`Per un rapporto di polinomi in $n$ basta guardare i termini di grado più alto. Si divide numeratore e denominatore per la potenza più alta di $n$ che compare.
+
+Siano $a_kn^k$ e $b_hn^h$ i termini di grado massimo di numeratore e denominatore:
+- se $k=h$, il limite è $\dfrac{a_k}{b_h}$;
+- se $k<h$, il limite è $0$;
+- se $k>h$, il limite è $+\infty$ o $-\infty$, secondo il segno di $\dfrac{a_k}{b_h}$.`,
+        },
+        {
+          type: 'example',
+          title: 'Limite razionale',
+          problem: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\frac{3n^2+n}{n^2+5}$.`,
+          steps: [
+            String.raw`Divido numeratore e denominatore per $n^2$, la potenza più alta: $\dfrac{3+\dfrac1n}{1+\dfrac{5}{n^2}}$.`,
+            { text: String.raw`Per $n\to+\infty$ i termini $\dfrac1n$ e $\dfrac{5}{n^2}$ tendono a $0$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale il limite del numeratore $3+\dfrac1n$?`, answer: '3', explain: String.raw`Il termine $\dfrac1n$ tende a $0$, quindi il numeratore tende a $3$.` } },
+            String.raw`Il denominatore tende a $1+0=1$. Per l'algebra dei limiti il quoziente tende a $\dfrac{3}{1}$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{n\to+\infty}\frac{3n^2+n}{n^2+5}=3$.`,
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{2n^3-n}{4n^3+7}$.`,
+          answer: '1/2',
+          explain: String.raw`Grado $3$ sia sopra sia sotto: il limite è il rapporto dei coefficienti di grado massimo, $\dfrac{2}{4}=\dfrac12$.`,
+          id: 's04.limiti.L2.e1',
+        },
+        {
+          type: 'mcq', level: 1,
+          prompt: String.raw`Quale tra queste espressioni è una forma indeterminata?`,
+          options: [String.raw`$\dfrac{1}{\infty}$`, String.raw`$\dfrac{\infty}{\infty}$`, String.raw`$\infty+5$`, String.raw`$2\cdot\infty$`],
+          answer: 1,
+          explain: String.raw`$\dfrac{\infty}{\infty}$ non si può decidere senza studiare i termini. Le altre danno un risultato certo: $\dfrac{1}{\infty}=0$, $\infty+5=\infty$, $2\cdot\infty=\infty$.`,
+          id: 's04.limiti.L2.e2',
+        },
+        {
+          type: 'tf', level: 2,
+          prompt: String.raw`Se $a_n\to+\infty$ e $b_n\to-\infty$, allora $a_n+b_n\to0$.`,
+          answer: false,
+          explain: String.raw`Falso: è la forma $\infty-\infty$. Con $a_n=n^2$, $b_n=-n$ la somma tende a $+\infty$; con $a_n=n$, $b_n=-n$ tende a $0$; con $a_n=n$, $b_n=-n-1$ tende a $-1$.`,
+          id: 's04.limiti.L2.e3',
+        },
+        {
+          type: 'learn',
+          title: 'Teorema del confronto',
+          body: String.raw`Il confronto permette di calcolare limiti "a sandwich".
+
+>* **Teorema del confronto.** Se $a_n\le c_n\le b_n$ definitivamente e $a_n\to L$, $b_n\to L$, allora $c_n\to L$.
+
+Caso utile: se $|c_n|\le b_n$ e $b_n\to0$, allora $c_n\to0$. Ad esempio $\left|\dfrac{\sin n}{n}\right|\le\dfrac1n\to0$.
+
+>! Il confronto richiede la disuguaglianza valida definitivamente, non solo per qualche $n$.`,
+        },
+        {
+          type: 'example',
+          title: 'Confronto con il seno',
+          problem: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{\sin n}{n}$.`,
+          steps: [
+            String.raw`Il seno è limitato: $-1\le\sin n\le1$ per ogni $n$.`,
+            { text: String.raw`Dividendo per $n>0$: $-\dfrac1n\le\dfrac{\sin n}{n}\le\dfrac1n$.`,
+              ask: { type: 'mcq', prompt: String.raw`Quanto vale il limite di $-\dfrac1n$ per $n\to+\infty$?`, options: [String.raw`$0$`, String.raw`$-1$`, String.raw`$-\infty$`, 'non esiste'], answer: 0, explain: String.raw`Il numeratore è costante e il denominatore cresce senza limite: la frazione tende a $0$.` } },
+            String.raw`Entrambi i bordi tendono a $0$: per il teorema del confronto $\dfrac{\sin n}{n}\to0$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{n\to+\infty}\frac{\sin n}{n}=0$.`,
+        },
+        {
+          type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{\cos n}{n^2+1}$.`,
+          answer: '0',
+          explain: String.raw`Poiché $|\cos n|\le1$, si ha $\left|\dfrac{\cos n}{n^2+1}\right|\le\dfrac{1}{n^2+1}\to0$: per il confronto il limite è $0$.`,
+          id: 's04.limiti.L2.e4',
+        },
+        {
+          type: 'order', level: 2,
+          prompt: String.raw`Riordina i passi della dimostrazione: se $a_n\to L_1$ e $a_n\to L_2$, allora $L_1=L_2$.`,
+          steps: [
+            String.raw`Sia $\varepsilon>0$ arbitrario.`,
+            String.raw`Per la definizione di limite esistono $N_1$ e $N_2$ tali che $|a_n-L_1|<\varepsilon$ per $n\ge N_1$ e $|a_n-L_2|<\varepsilon$ per $n\ge N_2$.`,
+            String.raw`Per $n\ge\max(N_1,N_2)$ vale $|L_1-L_2|\le|L_1-a_n|+|a_n-L_2|<2\varepsilon$.`,
+            String.raw`Poiché $\varepsilon$ è arbitrario, $|L_1-L_2|=0$, cioè $L_1=L_2$.`,
+          ],
+          distractors: [
+            String.raw`Per $n\ge\max(N_1,N_2)$ vale $|L_1-L_2|\ge|a_n-L_1|+|a_n-L_2|$, quindi $|L_1-L_2|$ è grande.`,
+            String.raw`Si ha $L_1-L_2=(a_n-L_2)-(a_n-L_1)$, quindi $L_1-L_2=0$ già per $n=1$.`,
+          ],
+          explain: String.raw`La disuguaglianza triangolare e la scelta di un $\varepsilon$ arbitrario sono i passi chiave. Il primo distrattore inverte la disuguaglianza triangolare. Il secondo ricava $L_1=L_2$ da un'identità valida per ogni $n$, ma l'identità non basta: serve che le distanze siano piccole da un certo $N$ in poi.`,
+          id: 's04.limiti.L2.e5',
+        },
+        {
+          type: 'open', level: 3,
+          prompt: String.raw`Enuncia e dimostra il teorema di unicità del limite per le successioni.`,
+          answer: String.raw`Se $a_n\to L_1$ e $a_n\to L_2$, allora $L_1=L_2$. Dimostrazione: fissato $\varepsilon>0$, per $n\ge\max(N_1,N_2)$ si ha $|L_1-L_2|\le|L_1-a_n|+|a_n-L_2|<2\varepsilon$. Poiché $\varepsilon$ è arbitrario, $|L_1-L_2|=0$.`,
+          rubric: ['Enunciato corretto: se il limite esiste, è unico', String.raw`Uso della disuguaglianza triangolare con $2\varepsilon$`, String.raw`Conclusione $L_1=L_2$ dall'arbitrarietà di $\varepsilon$`],
+          source: 'Appello 15/01/2026 · A1',
+          id: 's04.limiti.L2.e6',
+        },
+        {
+          type: 'tf', level: 2,
+          prompt: String.raw`Se $a_n\to L$ con $L>0$, allora $a_n>0$ definitivamente.`,
+          answer: true,
+          explain: String.raw`Vero. Con $\varepsilon=\dfrac L2$ si ha $|a_n-L|<\dfrac L2$ da un certo $N$ in poi, quindi $a_n>L-\dfrac L2=\dfrac L2>0$. Se invece $L=0$, il confronto con il segno non dà informazioni.`,
+          id: 's04.limiti.L2.e7',
+        },
+        {
+          type: 'problem', level: 3,
+          prompt: String.raw`Calcola i limiti delle successioni $a_n=\dfrac{\log(n^2+1)}{\sqrt n}$, $b_n=\left(1+\dfrac3n\right)^{n/2}$ e $c_n=n\left(\sqrt{1+\dfrac2n}-1\right)$.`,
+          parts: [
+            { type: 'num', prompt: 'Limite di $a_n$.', answer: '0', explain: String.raw`Il logaritmo cresce più lentamente di ogni potenza positiva di $n$: il rapporto con $\sqrt n$ tende a $0$.` },
+            { type: 'num', prompt: 'Limite di $b_n$.', answer: 'e^(3/2)', explain: String.raw`Scrivo $b_n=\left[\left(1+\dfrac3n\right)^n\right]^{1/2}$. Dentro la parentesi il limite notevole dà $e^3$, quindi $b_n\to\left(e^3\right)^{1/2}=e^{3/2}$.` },
+            { type: 'num', prompt: 'Limite di $c_n$.', answer: '1', explain: String.raw`Razionalizzando: $c_n=\dfrac{2}{\sqrt{1+\frac2n}+1}\to\dfrac22=1$.` },
+          ],
+          solution: String.raw`$a_n\to0$; $b_n\to e^{3/2}$; $c_n\to1$. Per $c_n$ si moltiplica e si divide per il coniugato: $c_n=n\cdot\dfrac{2/n}{\sqrt{1+2/n}+1}=\dfrac{2}{\sqrt{1+2/n}+1}$.`,
+          id: 's04.limiti.L2.e8',
+        },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's04.limiti.p-razionale', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.nz(-6, 6), s = R.nz(-6, 6), q = R.int(-5, 5), r = R.int(-5, 5), t = R.nz(-5, 5);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${H.poly([p, q, r], 'n')}}{${H.poly([s, t], 'n')}}$.`,
+          answer: `(${p})/(${s})`,
+          explain: String.raw`Il termine di grado massimo domina: numeratore $${p}n^{2}$, denominatore $${s}n^{2}$. Il limite è $\dfrac{${p}}{${s}}$.`,
+        };
+      } },
+    { id: 's04.limiti.p-grado', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.nz(-5, 5), c = R.nz(-4, 4);
+        const k = R.pick([1, 2, 3]);
+        const h = R.pick([1, 2, 3].filter((x) => x !== k));
+        const pw = (e) => (e === 1 ? 'n' : `n^{${e}}`);
+        const ans = k < h ? '0' : (a / b > 0 ? 'inf' : '-inf');
+        const verso = a / b > 0 ? '+\\infty' : '-\\infty';
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${H.coef(a)}${pw(k)}${H.signed(c)}}{${H.coef(b)}${pw(h)}+1}$ (scrivi inf o -inf se diverge).`,
+          answer: ans,
+          explain: k < h
+            ? String.raw`Il denominatore ha grado $${h}$, superiore a quello del numeratore ($${k}$): il limite è $0$.`
+            : String.raw`Il numeratore ha grado $${k}$, superiore a quello del denominatore ($${h}$): il rapporto tende a $${verso}$.`,
+        };
+      } },
+    { id: 's04.limiti.p-eps', type: 'gen', level: 1,
+      gen: (R) => {
+        const k = R.int(2, 20);
+        return {
+          type: 'num',
+          prompt: String.raw`Per $a_n=\dfrac1n$ e $\varepsilon=\dfrac{1}{${k}}$, qual è il più piccolo $N$ tale che $|a_n|<\varepsilon$ per ogni $n\ge N$?`,
+          answer: String(k + 1),
+          explain: String.raw`$|a_n|<\dfrac{1}{${k}}$ equivale a $n>${k}$. Per $n=${k}$ la distanza vale esattamente $\dfrac{1}{${k}}$, non è strettamente minore. Il primo $N$ che va bene è $${k + 1}$.`,
+        };
+      } },
+    { id: 's04.limiti.p1', type: 'mcq', level: 2,
+      prompt: String.raw`Quanto vale $\displaystyle\lim_{n\to+\infty}\dfrac{n^2+n}{n+1}$?`,
+      options: [String.raw`$1$`, String.raw`$+\infty$`, String.raw`$0$`, 'non esiste'],
+      answer: 1,
+      explain: String.raw`$\dfrac{n^2+n}{n+1}=\dfrac{n(n+1)}{n+1}=n\to+\infty$. Errore tipico: rispondere $1$ confrontando solo i termini $\dfrac{n^2}{n^2}$, ma il denominatore ha grado $1$, non $2$.` },
+    { id: 's04.limiti.p2', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{3n-1}{n+4}$.`,
+      answer: '3',
+      explain: String.raw`Grado $1$ sopra e sotto: il limite è $\dfrac31=3$.` },
+    { id: 's04.limiti.p3', type: 'tf', level: 1,
+      prompt: String.raw`Ogni successione divergente a $+\infty$ è illimitata superiormente.`,
+      answer: true,
+      explain: String.raw`Se $a_n\to+\infty$, da un certo punto in poi $a_n$ supera qualunque $M$. Quindi non può essere limitata superiormente.` },
+    { id: 's04.limiti.p4', type: 'tf', level: 2,
+      prompt: String.raw`Se $a_n\to0$ e $b_n$ è limitata, allora $a_nb_n\to0$.`,
+      answer: true,
+      explain: String.raw`Se $|b_n|\le M$, allora $|a_nb_n|\le M|a_n|\to0$. Per il confronto $a_nb_n\to0$.` },
+    { id: 's04.limiti.p5', type: 'match', level: 1,
+      prompt: 'Abbina ogni successione al suo limite.',
+      pairs: [
+        [String.raw`$a_n=\dfrac{n+1}{n}$`, String.raw`$1$`],
+        [String.raw`$a_n=\sqrt n$`, String.raw`$+\infty$`],
+        [String.raw`$a_n=\dfrac{(-1)^n}{n}$`, String.raw`$0$`],
+      ],
+      explain: String.raw`$\dfrac{n+1}{n}=1+\dfrac1n\to1$. $\sqrt n$ cresce senza limite. $\dfrac{(-1)^n}{n}$ tende a $0$ per il confronto con $\dfrac1n$.` },
+    { id: 's04.limiti.p6', type: 'cloze', level: 1,
+      text: String.raw`La successione $a_n=\dfrac{(-1)^n}{n}$ è [[0]] a $0$, mentre $a_n=(-1)^n$ è [[1]].`,
+      blanks: [
+        { options: ['convergente', 'irregolare'], answer: 0 },
+        { options: ['convergente', 'irregolare'], answer: 1 },
+      ],
+      explain: String.raw`Il valore assoluto $\dfrac1n$ tende a $0$, quindi la successione converge a $0$. La successione $(-1)^n$ oscilla tra $-1$ e $1$: è irregolare.` },
+    { id: 's04.limiti.p7', type: 'open', level: 2,
+      prompt: String.raw`Dimostra con la definizione che $\dfrac1n\to0$.`,
+      answer: String.raw`Fissato $\varepsilon>0$, scelgo $N>\dfrac1\varepsilon$ (esiste per la proprietà archimedea). Per $n\ge N$ si ha $\left|\dfrac1n-0\right|=\dfrac1n\le\dfrac1N<\varepsilon$.`,
+      rubric: ['Scelta esplicita di N in funzione di ε', 'Uso della proprietà archimedea', String.raw`Stima $\dfrac1n<\varepsilon$ per ogni $n\ge N$`] },
+    { id: 's04.limiti.p8', type: 'mcq', level: 1,
+      prompt: 'Quale successione è irregolare?',
+      options: [String.raw`$\dfrac1n$`, String.raw`$\dfrac{n}{n+1}$`, String.raw`$(-1)^n$`, String.raw`$\sqrt n$`],
+      answer: 2,
+      explain: String.raw`$\dfrac1n\to0$, $\dfrac{n}{n+1}\to1$, $\sqrt n\to+\infty$: sono tutte regolari. $(-1)^n$ oscilla tra $-1$ e $1$ senza limite.` },
+    { id: 's04.limiti.p9', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{\log n}{n}$.`,
+      answer: '0',
+      explain: String.raw`Il logaritmo cresce più lentamente di ogni potenza positiva di $n$: il rapporto tende a $0$.` },
+    { id: 's04.limiti.p10', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(\sqrt{n+1}-\sqrt n\right)$.`,
+      answer: '0',
+      explain: String.raw`Razionalizzando: $\sqrt{n+1}-\sqrt n=\dfrac{1}{\sqrt{n+1}+\sqrt n}\to0$.` },
+  ],
+  flashcards: [
+    { id: 's04.limiti.fc1', kind: 'def', front: String.raw`Successione convergente (definizione con ε)`, back: String.raw`$a_n\to L$ se per ogni $\varepsilon>0$ esiste $N$ tale che $|a_n-L|<\varepsilon$ per ogni $n\ge N$.` },
+    { id: 's04.limiti.fc2', kind: 'def', front: String.raw`Divergenza a $+\infty$`, back: String.raw`$a_n\to+\infty$ se per ogni $M>0$ esiste $N$ tale che $a_n>M$ per ogni $n\ge N$. Analogamente per $-\infty$.` },
+    { id: 's04.limiti.fc3', kind: 'def', front: String.raw`Successione irregolare`, back: String.raw`Una successione che non converge e non diverge a $\pm\infty$. Non ha limite. Esempio: $(-1)^n$.` },
+    { id: 's04.limiti.fc4', kind: 'thm', front: String.raw`Teorema di unicità del limite`, back: String.raw`Se $a_n\to L_1$ e $a_n\to L_2$, allora $L_1=L_2$. Il limite di una successione, se esiste, è unico.` },
+    { id: 's04.limiti.fc5', kind: 'dim', front: String.raw`Idea della dimostrazione dell'unicità`, back: String.raw`Fisso $\varepsilon>0$. Da un certo $N$ in poi, $a_n$ dista meno di $\varepsilon$ sia da $L_1$ sia da $L_2$. Per la disuguaglianza triangolare $|L_1-L_2|<2\varepsilon$. Poiché $\varepsilon$ è arbitrario, $L_1=L_2$.` },
+    { id: 's04.limiti.fc6', kind: 'thm', front: String.raw`Permanenza del segno`, back: String.raw`Se $a_n\to L$ con $L>0$, allora $a_n>0$ definitivamente. Analogamente per $L<0$. Se $L=0$ non si conclude nulla sul segno.` },
+    { id: 's04.limiti.fc7', kind: 'thm', front: String.raw`Teorema del confronto`, back: String.raw`Se $a_n\le c_n\le b_n$ definitivamente e $a_n\to L$, $b_n\to L$, allora $c_n\to L$.` },
+    { id: 's04.limiti.fc8', kind: 'thm', front: String.raw`Successioni convergenti sono limitate`, back: String.raw`Se $a_n\to L$ finito, esiste $M$ con $|a_n|\le M$ per ogni $n$: i termini definitivamente stanno in $(L-1,L+1)$, e i finitamente molti restanti sono limitati. Il viceversa è falso: $(-1)^n$.` },
+    { id: 's04.limiti.fc9', kind: 'metodo', front: String.raw`Limite di un rapporto di polinomi`, back: String.raw`Si divide per la potenza più alta di $n$. Il limite dipende solo dai termini di grado massimo: stesso grado, rapporto dei coefficienti; grado maggiore sopra, $\pm\infty$; grado maggiore sotto, $0$.` },
+    { id: 's04.limiti.fc10', kind: 'errore', front: String.raw`Forme indeterminate`, back: String.raw`$\infty-\infty$, $0\cdot\infty$, $\dfrac00$, $\dfrac\infty\infty$, $1^\infty$, $0^0$, $\infty^0$. Non si può concludere subito: bisogna trasformare l'espressione.` },
+  ],
+});
