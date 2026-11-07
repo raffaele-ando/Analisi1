@@ -1055,7 +1055,9 @@ Esempio tipico: $(z-1)^2=2i$. Con $w=z-1$ si ha $w^2=2i$, cioè $w=\pm(1+i)$, e 
             { type: 'set', prompt: 'Il centro della circonferenza è una soluzione: scrivilo.', answer: ['-i'],
               explain: String.raw`Il fattore $z+i$ si annulla in $z=-i$, che quindi va aggiunto alle soluzioni.` },
           ],
-          solution: String.raw`Con $z=x+iy$: $(z+i)(x^2+y^2+2y)=0$. Il secondo fattore dà la circonferenza $x^2+(y+1)^2=1$, di centro $-i$ e raggio $1$. Il primo fattore dà $z=-i$, che è il centro della circonferenza ed è soluzione: va aggiunto all'insieme.` },
+          solution: String.raw`Con $z=x+iy$: $(z+i)(x^2+y^2+2y)=0$. Il secondo fattore dà la circonferenza $x^2+(y+1)^2=1$, di centro $-i$ e raggio $1$. Il primo fattore dà $z=-i$, che è il centro della circonferenza ed è soluzione: va aggiunto all'insieme.
+
+>! Nota: nella sintesi di docs/ESERCIZI_ESAME.md la soluzione riporta solo la circonferenza. Il centro $z=-i$ annulla il fattore $z+i$ e va incluso tra le soluzioni.` },
       ],
     },
     {
