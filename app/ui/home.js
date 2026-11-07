@@ -43,15 +43,10 @@ export function Home({ go }) {
   let nodeIndex = 0;
 
   return html`<div class="wrap stack pad-top">
-    <header class="screen-title">
-      <h1>${name}</h1>
-      <p class="muted">Dalle basi al 30 e lode, una lezione alla volta.</p>
-    </header>
-
     <section class="card hero-today" aria-labelledby="today-h">
       <${Ring} value=${today} max=${goal} label=${String(today)} sub=${'/' + goal} color=${today >= goal ? 'var(--success)' : 'var(--accent)'} />
       <div class="stack-sm" style="min-width:0">
-        <p class="eyebrow" id="today-h">${today >= goal ? 'Obiettivo di oggi raggiunto' : 'Obiettivo di oggi'}</p>
+        <p class="eyebrow" id="today-h">${today >= goal ? 'Obiettivo raggiunto' : 'Prossima lezione'}</p>
         ${curSk && curLesson
           ? html`<p style="font-weight:600">${curSk.title}</p><p class="small muted">${curLesson.title}</p>`
           : html`<p style="font-weight:600">Tutte le lezioni completate</p>`}
@@ -77,8 +72,8 @@ export function Home({ go }) {
           <div class="top">
             <h2>${sec.title}</h2>
           </div>
-          <div class="row"><span class="count">${done} di ${sec.skills.length} completate</span><span class="spacer"></span>
-            ${firstLocked && html`<button class="btn quiet sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Salta con un test</button>`}</div>
+          <div class="row"><span class="count">${done}/${sec.skills.length}</span><span class="spacer"></span>
+            ${firstLocked && html`<button class="btn quiet sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Fai il test</button>`}</div>
           <div class="bar blue" role="progressbar" aria-label=${'Progresso ' + sec.title} aria-valuemin="0" aria-valuemax="100" aria-valuenow=${Math.round(pct * 100)}><i style=${`width:${pct * 100}%`}></i></div>
         </div>
         <div class="path">
@@ -130,9 +125,7 @@ export function SkillSheet({ skillId, go, onClose }) {
         <div class="row small"><span>Padronanza</span><span class="spacer"></span><b class="tnum">${Math.round(m * 100)}%</b></div>
         <div class="bar"><i style=${`width:${m * 100}%`}></i></div>
       </div>
-      ${(sk.examRefs || []).length > 0 && html`<div class="row-wrap">${sk.examRefs.slice(0, 6).map((r) => html`<span class="chip">${r}</span>`)}</div>`}
-      ${!unlocked && html`<div class="callout">Si sblocca completando la sezione precedente, oppure con un test.
-        <div class="row-wrap mt"><button class="btn sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Fai il test</button></div></div>`}
+      ${!unlocked && html`<p class="small muted">Si sblocca completando la sezione precedente.</p>`}
       <div class="list">
         ${(sk.lessons || []).map((le, i) => {
           const ok = done.has(le.id);
@@ -143,11 +136,10 @@ export function SkillSheet({ skillId, go, onClose }) {
           </div>`;
         })}
       </div>
-      <div class="row-wrap">
-        <button class="btn green" style="flex:1" disabled=${!anyDone} onClick=${() => go({ name: 'practice', skillId })}><${I.target} /> Allenati</button>
-        <button class="btn ghost" style="flex:1" disabled=${!nFlash} onClick=${() => go({ name: 'flash', skillId })}><${I.book} /> Teoria (${nFlash})</button>
-      </div>
-      ${!anyDone && unlocked && html`<p class="caption faint">L'allenamento si sblocca dopo la prima lezione.</p>`}
+      ${anyDone
+        ? html`<button class="btn block" onClick=${() => go({ name: 'practice', skillId })}><${I.target} /> Allenati</button>`
+        : html`<p class="small faint">L'allenamento si sblocca dopo la prima lezione.</p>`}
+      ${nFlash > 0 && html`<button class="btn quiet block" onClick=${() => go({ name: 'flash', skillId })}>Teoria · ${nFlash} schede</button>`}
     </div>
   </div>`;
 }

@@ -5,10 +5,15 @@ import { loadAll } from './content/index.js';
 import { buildCourse } from './engine/course.js';
 import { CloudSync } from './sync/cloud.js';
 import { ai } from './ui/ai.js';
+import { initMath } from './engine/check.js';
 import { App } from './ui/app.js';
 
 async function boot() {
   const root = document.getElementById('app');
+  // La correzione delle risposte usa math.js (caricato da cdnjs nella pagina). Senza, ogni risposta
+  // numerica o simbolica risulterebbe sbagliata: meglio fermarsi con un messaggio chiaro.
+  if (!window.math) throw new Error('math.js non caricato: la correzione non è disponibile');
+  initMath(window.math);
   const content = await loadAll();
   store.course = buildCourse(content);
   const sync = new CloudSync({

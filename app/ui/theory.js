@@ -26,30 +26,20 @@ function fmtInterval(days) {
   return `${Math.round(days / 30)} mesi`;
 }
 
-export function TheoryHub({ go }) {
+/** Teoria: un elenco di sezioni. Tocchi una sezione e ripassi le sue schede. */
+export function TheoryList({ go }) {
   const { course, st } = store;
-  const [kind, setKind] = useState(0);
-  const [sec, setSec] = useState('');
-  const due = flashDueCount(course, st);
-  const total = [...course.items.values()].filter((i) => i.kind === 'flash').length;
-  const seen = [...course.items.entries()].filter(([id, i]) => i.kind === 'flash' && getItem(st, id)).length;
-  return html`<div class="wrap stack pad-top">
-    <div class="stack-sm"><h1>Teoria</h1><p class="muted">Definizioni, enunciati e dimostrazioni della Parte A. Prova a ricordare la risposta prima di girare la scheda: è il recupero attivo che fissa la memoria.</p></div>
-    <div class="tiles">
-      <div class="tile"><span class="v">${due}</span><span class="k">schede da ripassare</span></div>
-      <div class="tile"><span class="v">${seen}<span class="faint" style="font-size:1rem"> / ${total}</span></span><span class="k">schede viste</span></div>
-    </div>
-    <div class="stack-sm"><span class="eyebrow">Tipo</span><div class="seg">${KINDS.map(([k, l], i) => html`<button class=${kind === i ? 'on' : ''} onClick=${() => setKind(i)}>${l}</button>`)}</div></div>
-    <div class="field"><label for="th-sec">Sezione</label>
-      <select id="th-sec" class="input" style="font-family:var(--f-ui)" value=${sec} onChange=${(e) => setSec(e.currentTarget.value)}>
-        <option value="">Tutte le sezioni sbloccate</option>
-        ${course.sections.map((s) => html`<option value=${s.id}>${s.title}</option>`)}
-      </select></div>
-    <div class="row-wrap">
-      <button class="btn" style="flex:1" onClick=${() => go({ name: 'flash', kinds: KINDS[kind][0], sectionId: sec || null })}><${I.play} /> Ripassa le schede</button>
-      <button class="btn ghost" style="flex:1" disabled=${!sec} onClick=${() => go({ name: 'formulary', sectionId: sec })}><${I.book} /> Formulario</button>
-    </div>
-    ${!sec && html`<p class="small faint">Scegli una sezione per consultare il formulario completo.</p>`}
+  const rows = course.sections.map((sec) => {
+    const cards = sec.skills.flatMap((sk) => (sk.flashcards || []).map((f) => f.id));
+    const seen = cards.filter((id) => getItem(st, id)).length;
+    const due = cards.filter((id) => (getItem(st, id)?.due || Infinity) <= Date.now()).length;
+    return { sec, n: cards.length, seen, due };
+  }).filter((r) => r.n > 0);
+  return html`<div class="stack-sm">
+    ${rows.map((r) => html`<button class="section-row" onClick=${() => go({ name: 'flash', sectionId: r.sec.id })}>
+      <span class="grow" style="flex:1;min-width:0"><b>${r.sec.title}</b><span class="caption faint" style="display:block">${r.n} schede${r.due ? ` · ${r.due} da ripassare` : ''}</span></span>
+      <span aria-hidden="true" style="color:var(--ink-3);display:grid"><${I.arrow} /></span>
+    </button>`)}
   </div>`;
 }
 

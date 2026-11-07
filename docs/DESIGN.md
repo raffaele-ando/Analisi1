@@ -42,6 +42,22 @@ Non copio il testo di Apple nel repository: lo cito e ne applico i principi.
 - **Sessioni a tutto schermo con una X per uscire** [verificata, HIG `modality`: «Always give people an obvious way to dismiss a modal view»].
 - **Conferma prima di chiudere un modale se si perde lavoro dell'utente** [verificata, HIG `modality`]. Applicato: uscita da una lezione con risposte date e da una prova d'esame in corso.
 
+## 3b. Semplicità: regole e applicazione
+
+Queste regole sono verificate sul testo dell'HIG (copia verbatim citata sopra). Sono anche quelle che avevo
+trascurato nella prima revisione, come la barra con cinque voci.
+
+- **Poche voci nella barra di navigazione** [verificata, HIG `tab-bars`: «it's generally easier to navigate among fewer tabs»]. Applicato: quattro voci (Percorso, Ripasso, Esami, Profilo). "Teoria" è dentro Ripasso, dove si ripassa già.
+- **Non sovraffollare la barra degli strumenti** [verificata, HIG `toolbars`: «Choose items deliberately to avoid overcrowding»]. Applicato: la barra superiore ha solo il titolo, la serie di giorni e lo stato di sincronizzazione.
+- **Modali semplici, brevi, senza gerarchie annidate** [verificata, HIG `modality`: «Aim to keep modal tasks simple, short, and streamlined»]. Applicato: una sessione è un solo compito, con una sola uscita.
+- **Testo delle liste breve** [verificata, HIG `lists-and-tables`: «Keep item text succinct»]. Applicato: righe con una sola informazione e una freccia se aprono qualcosa.
+- **Un'azione principale per schermata** [conoscenza, coerente con il principio di chiarezza]. Applicato: "Continua" in Percorso, "Ripassa" in Ripasso, "Nuova simulazione" in Esami.
+- **Nessun dato che non serve in quella schermata** [conoscenza]. Applicato: gli XP non compaiono in barra né durante una lezione; stanno nel Profilo come riga di dettaglio.
+
+Errore corretto durante la revisione: la correzione delle risposte usava math.js, che non veniva mai caricato
+nel browser. Tutte le risposte numeriche e simboliche sarebbero risultate sbagliate. Ora math.js viene caricato da
+cdnjs e l'app si ferma con un messaggio chiaro se manca. Verificato nel browser con risposte giuste e sbagliate.
+
 ## 4. Onboarding e impostazioni
 
 - **Insegnare con l'interazione** [verificata, HIG `onboarding`: «Teach through interactivity»]. Applicato: l'onboarding dà subito la prima lezione.

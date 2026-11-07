@@ -36,6 +36,7 @@ const fragment = `<title>Analisi 1 · Percorso</title>
 ${css}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/13.2.0/math.min.js"></script>
 <div id="app"></div>
 <noscript>Per usare l'app serve JavaScript.</noscript>
 <script type="module" src="app/main.js"></script>

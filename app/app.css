@@ -129,7 +129,7 @@ p { margin: 0; }
 .sync-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); flex: none; }
 .sync-chip.ok .dot { background: var(--success); }
 .sync-chip.busy .dot { background: var(--accent); animation: pulse 1s infinite alternate; }
-.sync-chip.local .dot { background: var(--streak); }
+.sync-chip.local .dot { background: var(--ink-3); }
 .sync-chip.err .dot { background: var(--danger); }
 .sync-chip-wrap .sync-chip .label { display: none; }
 @keyframes pulse { from { opacity: 0.35; } to { opacity: 1; } }
@@ -404,5 +404,8 @@ svg.ico { width: 24px; height: 24px; flex: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .topbar-title { font-size: 1.0625rem; line-height: 1.5rem; font-weight: 600; margin: 0; letter-spacing: 0; }
-.topbar-title { opacity: 0; transition: opacity 0.15s ease; }
-.topbar-title.on { opacity: 1; }
+
+/* riga-scheda cliccabile (elenchi di sezioni): testo con margine e freccia */
+.section-row { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; min-height: 64px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); color: var(--ink); }
+.section-row:active { background: var(--surface-2); }
+.section-row .caption { display: block; }

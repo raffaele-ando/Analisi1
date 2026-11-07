@@ -111,7 +111,6 @@ export function Player({ title, cards, mode = 'lesson', skillId, lessonId, onExi
     <div class="player-top"><div class="wrap">
       <button class="x-btn" aria-label="Esci" onClick=${() => (stats.total > 0 && mode === 'lesson' ? setConfirmExit(true) : onExit())}><${I.x} /></button>
       <div class="bar blue" style="flex:1" role="progressbar" aria-valuenow=${Math.round(progress * 100)}><i style=${`width:${progress * 100}%`}></i></div>
-      <span class="stat bolt small"><${I.bolt} />${stats.xp}</span>
     </div></div>
     ${confirmExit &&
     html`<div class="wrap"><div class="confirm-box">
@@ -187,7 +186,7 @@ function AskBlock({ ex, onDone, skillId }) {
       <b>${ok ? 'Giusto.' : 'Non proprio.'}</b> ${!ok && answerTex(ex) ? html`Risposta: <span dangerouslySetInnerHTML=${{ __html: tex(answerTex(ex)) }}></span>` : ''}
       ${ex.explain && html`<${Md} text=${ex.explain} />`}
     </div>
-    <button class="btn sm green" onClick=${onDone}>Mostra il passo</button>`}
+    <button class="btn sm green" onClick=${onDone}>Continua</button>`}
   </div>`;
 }
 
@@ -245,7 +244,7 @@ function CheckFooter({ card, ready, result, onCheck, onNext, explain, setExplain
   };
   return html`<div class=${'footer-check ' + (ok ? 'ok' : 'ko')} role="status"><div class="wrap">
     <div class="fb-head">${ok ? html`<${I.check} />` : html`<${I.x} />`}<span>${ok ? result.praise : card.type === 'open' ? 'Da ripassare' : result.score > 0 ? 'Quasi: rivedi i passaggi' : 'Non è corretto'}</span>
-      <span class="spacer"></span><span class="stat bolt small"><${I.bolt} />+${result.xp}</span></div>
+      </div>
     <div class="fb-body stack-sm">
       ${result.feedback && html`<p class="small">${result.feedback}</p>`}
       ${ans && html`<p>Risposta corretta: <span dangerouslySetInnerHTML=${{ __html: tex(ans) }}></span></p>`}
@@ -267,7 +266,7 @@ function Summary({ title, stats, finished, mode, onClose }) {
       ${finished.perfect && mode === 'lesson' && html`<p><span class="chip hl"><${I.star} /> Lezione perfetta</span></p>`}
     </div>
     <div class="tiles">
-      <div class="tile"><span class="v" style="color:var(--accent)">+${stats.xp + finished.bonus}</span><span class="k">XP guadagnati</span></div>
+      <div class="tile"><span class="v">${stats.correct}/${stats.total}</span><span class="k">risposte giuste</span></div>
       <div class="tile"><span class="v" style=${`color:${acc >= 80 ? 'var(--success)' : acc >= 50 ? 'var(--streak)' : 'var(--danger)'}`}>${acc}%</span><span class="k">Precisione</span></div>
       <div class="tile"><span class="v">${Math.floor(finished.secs / 60)}:${String(finished.secs % 60).padStart(2, '0')}</span><span class="k">Tempo</span></div>
     </div>

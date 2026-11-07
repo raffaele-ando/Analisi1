@@ -73,10 +73,10 @@ export function ExamsHub({ go }) {
   const best = (examId) => attempts.filter((a) => a.done && a.examId === examId).reduce((m, a) => Math.max(m, a.score), -1);
   return html`<div class="wrap stack pad-top">
     <div class="stack-sm"><h1>Simulazione d'esame</h1>
-      <p class="muted">Come in aula: tempo limitato, niente aiuti, prima la teoria (Parte A) poi gli esercizi (Parte B). Alla consegna correggi la teoria con la rubrica e ottieni il voto e gli argomenti da ripassare.</p></div>
+      <p class="muted">Due ore, come in aula.</p></div>
     <div class="card stack-sm">
       <h3>Tema generato</h3>
-      <p class="small muted">5 domande di teoria + 6 esercizi sugli argomenti che escono più spesso (studio di funzione, complessi, Taylor, integrali, serie, geometria). Ogni volta diverso.</p>
+      <p class="small muted">Teoria e esercizi dagli argomenti più frequenti. Ogni volta diverso.</p>
       <button class="btn" onClick=${() => go({ name: 'exam', exam: generateExam(course) })}><${I.play} /> Inizia (2 ore)</button>
     </div>
     ${inProgress.length > 0 &&
