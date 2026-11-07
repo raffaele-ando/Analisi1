@@ -2095,10 +2095,602 @@ Il viceversa è falso: la serie $\sum\frac{(-1)^{n+1}}{n}$ converge ma i moduli 
   ],
 };
 
+// =====================================================================
+// s13.parametri — serie con parametri: stime asintotiche, esponenti, Taylor
+// =====================================================================
+const PAR = {
+  id: 's13.parametri',
+  title: 'Serie con parametri',
+  summary: String.raw`Trovi per quali valori del parametro $\alpha$ una serie converge, usando equivalenze asintotiche e sviluppi di Taylor.`,
+  prereq: ['s13.positivi', 's13.alterni', 's06.ordine', 's10.sviluppi'],
+  examRefs: ['Appello 10/02/2026 · Parte B', 'Appello 11/06/2026 · Parte B', 'Appello 03/09/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's13.parametri.L1',
+      title: 'Il parametro e la velocità',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Un parametro, un esponente',
+          body: String.raw`Con un parametro $\alpha$ il termine generale cambia con $\alpha$. Il trucco è trovare un termine **equivalente**
+
+$$a_n\sim\frac{c}{n^{\beta(\alpha)}},\qquad c\neq0,$$
+
+e poi leggere soltanto l'esponente $\beta(\alpha)$.
+
+>* **Regola.** Se $a_n\ge0$ definitivamente e $a_n\sim\frac{c}{n^{\beta}}$ con $c>0$, la serie $\sum a_n$ ha lo stesso carattere di $\sum\frac1{n^\beta}$: converge sse $\beta>1$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Le stime da ricordare',
+          body: String.raw`Le stime seguenti valgono per $x\to0$. Si usano quando l'argomento è un infinitesimo, per esempio $x=\frac1{n^\alpha}$ con $\alpha>0$:
+
+- $\sin x\sim x$, $\tan x\sim x$, $\log(1+x)\sim x$, $e^x-1\sim x$
+- $1-\cos x\sim\frac{x^2}{2}$
+- $(1+x)^a-1\sim a\,x$
+
+Per esempio $\log\left(1+\frac1{n^2}\right)\sim\frac1{n^2}$: l'esponente si legge direttamente dall'argomento.`,
+        },
+        {
+          id: 's13.parametri.L1.c3', type: 'example', title: 'Il seno di una potenza',
+          problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\sin\frac1{n^{\alpha}}$?`,
+          steps: [
+            String.raw`Se $\alpha\le0$ il termine non tende a $0$: per $\alpha=0$ vale $\sin1\neq0$, per $\alpha<0$ l'argomento $n^{|\alpha|}$ cresce e il seno non tende a $0$. Quindi la serie diverge.`,
+            {
+              text: String.raw`Per $\alpha>0$ l'argomento $x=\frac1{n^\alpha}$ tende a $0$ e $\sin x\sim x$: quindi $a_n\sim\frac1{n^{\alpha}}$.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`Quale stima è giusta per $\sin x$ quando $x\to0$?`,
+                options: [String.raw`$\sin x\sim x$`, String.raw`$\sin x\sim x^2$`, String.raw`$\sin x\sim1$`],
+                answer: 0,
+                explain: String.raw`Lo sviluppo è $\sin x=x-\frac{x^3}6+o(x^3)$: il primo termine è $x$.`,
+              },
+            },
+            String.raw`Per il criterio dell'armonica generalizzata la serie converge sse $\alpha>1$.`,
+          ],
+          result: String.raw`Converge sse $\alpha>1$: l'intervallo è $(1,+\infty)$.`,
+        },
+        {
+          id: 's13.parametri.L1.c4', type: 'example', title: 'Coseno vicino a uno',
+          problem: String.raw`Per quali $\alpha>0$ converge $\displaystyle\sum_{n\ge1}\left(1-\cos\frac1{n^{\alpha}}\right)$?`,
+          steps: [
+            String.raw`L'argomento $x=\frac1{n^\alpha}$ tende a $0$ per $\alpha>0$: la differenza $1-\cos x$ è piccola.`,
+            {
+              text: String.raw`Usando la stima $1-\cos x\sim\frac{x^2}{2}$, si ha $1-\cos\frac1{n^\alpha}\sim\frac1{2n^{2\alpha}}$.`,
+              ask: {
+                type: 'expr', prompt: String.raw`Scrivi l'equivalente di $1-\cos x$ per $x\to0$ come espressione in $x$.`,
+                answer: 'x^2/2', vars: ['x'],
+                explain: String.raw`È la stima fondamentale del coseno: $1-\cos x\sim\frac{x^2}2$.`,
+              },
+            },
+            String.raw`L'esponente è $2\alpha$: la serie converge sse $2\alpha>1$, cioè $\alpha>\frac12$.`,
+          ],
+          result: String.raw`Converge sse $\alpha>\frac12$.`,
+        },
+        {
+          id: 's13.parametri.L1.c5', type: 'mcq', level: 1,
+          prompt: String.raw`Per $\alpha>0$, quale stima vale per $a_n=\log\left(1+\frac1{n^{\alpha}}\right)$?`,
+          options: [String.raw`$a_n\sim\frac1{n^{\alpha}}$`, String.raw`$a_n\sim\frac1{n^{2\alpha}}$`, String.raw`$a_n\sim\log n$`],
+          answer: 0,
+          explain: String.raw`Con $x=\frac1{n^\alpha}\to0$, $\log(1+x)\sim x$. L'esponente $2\alpha$ è sbagliato: il logaritmo non eleva al quadrato. $\log n$ è una stima di $\log n$ stesso, non di $a_n$.`,
+        },
+        {
+          id: 's13.parametri.L1.c6', type: 'tf', level: 1,
+          prompt: String.raw`Vero o falso: se $a_n\ge0$ e $a_n\sim\frac{3}{n^2}$, la serie $\sum a_n$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: $\beta=2>1$, e la costante $3>0$ non cambia il carattere. Per confronto asintotico con $\sum\frac1{n^2}$, converge.`,
+        },
+        {
+          id: 's13.parametri.L1.c7', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\alpha>0$, per quali $\alpha$ converge $\displaystyle\sum_{n\ge1}\left(1-\cos\frac1{n^{\alpha}}\right)$?`,
+          options: [String.raw`$\alpha>\frac12$`, String.raw`$\alpha>1$`, String.raw`$\alpha>0$`],
+          answer: 0,
+          explain: String.raw`$1-\cos\frac1{n^\alpha}\sim\frac1{2n^{2\alpha}}$: converge sse $2\alpha>1$. Con $\alpha>1$ si sbaglia l'esponente (si dimentica il $2$); con $\alpha>0$ si confonde la condizione necessaria con la convergenza.`,
+        },
+        {
+          id: 's13.parametri.L1.c8', type: 'num', level: 2,
+          prompt: String.raw`Quale esponente $\beta$ compare in $\displaystyle\log\left(1+\frac1{n^2}\right)\sim\frac{1}{n^{\beta}}$?`,
+          answer: '2',
+          explain: String.raw`$\log(1+x)\sim x$ con $x=\frac1{n^2}$: quindi $\beta=2$.`,
+        },
+        {
+          id: 's13.parametri.L1.c9', type: 'learn',
+          title: 'Prima la condizione necessaria',
+          body: String.raw`>! **Errore tipico:** applicare subito le stime con $\alpha\le0$. Se $\alpha\le0$ l'argomento $\frac1{n^\alpha}$ non tende a $0$, e le stime $\sim x$ non valgono.
+
+Ordine di lavoro: prima controlla che il termine vada a $0$ (cioè la condizione necessaria), poi usa le stime con $\alpha$ dove servono.`,
+        },
+        {
+          id: 's13.parametri.L1.c10', type: 'expr', level: 2,
+          prompt: String.raw`Scrivi l'esponente $\beta$ tale che $\displaystyle n^{\alpha}\sin\frac1{n^2}\sim\frac{c}{n^{\beta}}$, in funzione di $\alpha$.`,
+          answer: '2-alpha', vars: ['alpha'],
+          explain: String.raw`$\sin\frac1{n^2}\sim\frac1{n^2}$, quindi il termine è $\sim n^{\alpha-2}=\frac1{n^{2-\alpha}}$: $\beta=2-\alpha$.`,
+        },
+        {
+          id: 's13.parametri.L1.c11', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: per $\alpha=\frac12$, la serie $\displaystyle\sum_{n\ge1}\left(1-\cos\frac1{\sqrt n}\right)$ converge.`,
+          answer: false,
+          explain: String.raw`Falso: $1-\cos\frac1{\sqrt n}\sim\frac1{2n}$, e l'esponente $1$ non è $>1$. La serie diverge (armonica).`,
+        },
+        {
+          id: 's13.parametri.L1.c12', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: per $\alpha\le0$ la serie $\displaystyle\sum_{n\ge1}\sin\frac1{n^{\alpha}}$ converge.`,
+          answer: false,
+          explain: String.raw`Falso: per $\alpha\le0$ il termine non tende a $0$ e la serie diverge (condizione necessaria non soddisfatta).`,
+        },
+        {
+          id: 's13.parametri.L1.c13', type: 'mcq', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{n^2+1}$?`,
+          options: [String.raw`$\alpha<1$`, String.raw`$\alpha<-1$`, String.raw`$\alpha>1$`],
+          answer: 0,
+          explain: String.raw`Il termine è $\sim n^{\alpha-2}$: converge sse $\alpha-2<-1$, cioè $\alpha<1$. Con $\alpha>1$ l'esponente è ancora positivo o nullo quando diverge.`,
+        },
+      ],
+    },
+    {
+      id: 's13.parametri.L2',
+      title: 'Esponenti che si sommano',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Prodotti e quozienti',
+          body: String.raw`Se $a_n\sim c\,n^{\beta}$ e $b_n\sim d\,n^{\gamma}$, con $c,d\neq0$, allora
+
+$$a_nb_n\sim cd\,n^{\beta+\gamma},\qquad \frac{a_n}{b_n}\sim\frac cd\,n^{\beta-\gamma}.$$
+
+Gli esponenti si **sommano** nel prodotto e si **sottraggono** nel quoziente. Attenzione: queste regole valgono per prodotti e quozienti, non per somme e differenze (lo vedrai nella lezione 3).`,
+        },
+        {
+          id: 's13.parametri.L2.c2', type: 'example', title: 'Potenza per seno',
+          problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}n^{\alpha}\sin\frac1{n^2}$?`,
+          steps: [
+            String.raw`Il termine è positivo per ogni $n$: $n^\alpha>0$ e $\sin\frac1{n^2}>0$. Posso usare i criteri per termini positivi.`,
+            {
+              text: String.raw`Per $n\to\infty$, $\sin\frac1{n^2}\sim\frac1{n^2}$.`,
+              ask: {
+                type: 'expr', prompt: String.raw`Scrivi l'esponente della potenza di $n$ in $n^{\alpha}\cdot\frac1{n^2}$ come espressione in $\alpha$.`,
+                answer: 'alpha-2', vars: ['alpha'],
+                explain: String.raw`Gli esponenti si sommano: $\alpha+(-2)=\alpha-2$.`,
+              },
+            },
+            String.raw`Quindi $a_n\sim\frac1{n^{2-\alpha}}$: converge sse $2-\alpha>1$, cioè $\alpha<1$.`,
+          ],
+          result: String.raw`Converge sse $\alpha<1$: intervallo $(-\infty,1)$.`,
+        },
+        {
+          id: 's13.parametri.L2.c3', type: 'example', title: 'Potenza per differenza',
+          problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}n^{\alpha}\left(1-\cos\frac1{\sqrt n}\right)$?`,
+          steps: [
+            String.raw`Il termine è positivo, perché $1-\cos x\ge0$.`,
+            {
+              text: String.raw`Usando $1-\cos x\sim\frac{x^2}2$ con $x=\frac1{\sqrt n}$: $1-\cos\frac1{\sqrt n}\sim\frac1{2n}$.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`Perché $x^2=\frac1{n}$ con $x=\frac1{\sqrt n}$?`,
+                options: [String.raw`Perché $\left(\frac1{\sqrt n}\right)^2=\frac1n$`, String.raw`Perché $\left(\frac1{\sqrt n}\right)^2=\frac1{\sqrt n}$`, String.raw`Perché $\left(\frac1{\sqrt n}\right)^2=\frac1{n^2}$`],
+                answer: 0,
+                explain: String.raw`Il quadrato di $\frac1{\sqrt n}$ è $\frac1{n}$: gli esponenti si moltiplicano per $2$, $-\frac12\cdot2=-1$.`,
+              },
+            },
+            String.raw`Quindi $a_n\sim\frac{n^{\alpha}}{2n}=\frac12n^{\alpha-1}$: converge sse $\alpha-1<-1$, cioè $\alpha<0$.`,
+          ],
+          result: String.raw`Converge sse $\alpha<0$: intervallo $(-\infty,0)$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Radici e potenze di polinomi',
+          body: String.raw`Il grado dominante dà l'esponente. Per esempio $\sqrt{n^2+1}\sim n$ e $(n^2+1)^{\alpha}\sim n^{2\alpha}$. In generale, per un polinomio $p(n)$ di grado $k$ con coefficiente $c\ne0$, $\,p(n)^{\alpha}\sim c^{\alpha}\,n^{k\alpha}$.
+
+Per le radici $\sqrt[m]{p(n)}\sim n^{k/m}$: basta dividere il grado per l'indice.`,
+        },
+        {
+          id: 's13.parametri.L2.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{\sqrt{n^3+1}}$?`,
+          options: [String.raw`$\alpha<\frac12$`, String.raw`$\alpha<\frac32$`, String.raw`$\alpha<-\frac12$`],
+          answer: 0,
+          explain: String.raw`$\sqrt{n^3+1}\sim n^{3/2}$: il termine è $\sim n^{\alpha-3/2}$, converge sse $\alpha-\frac32<-1$, cioè $\alpha<\frac12$.`,
+        },
+        {
+          id: 's13.parametri.L2.c6', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac{\sqrt[3]{n}}{n^2}$ converge.`,
+          answer: true,
+          explain: String.raw`Il termine è $\sim n^{1/3-2}=n^{-5/3}$, con esponente $\frac53>1$: converge.`,
+        },
+        {
+          id: 's13.parametri.L2.c7', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{n^3+1}$?`,
+          answer: '(-inf,2)',
+          explain: String.raw`$a_n\sim n^{\alpha-3}$: converge sse $3-\alpha>1$, cioè $\alpha<2$.`,
+        },
+        {
+          id: 's13.parametri.L2.c8', type: 'num', level: 2,
+          prompt: String.raw`Esponente $\beta$ tale che $(2n^3+n^2)^{1/5}\sim c\,n^{\beta}$. Scrivi la frazione.`,
+          answer: '3/5',
+          explain: String.raw`Il grado dominante è $3$, e la radice quinta dà $\frac35$: $(2n^3+n^2)^{1/5}\sim2^{1/5}n^{3/5}$.`,
+        },
+        {
+          id: 's13.parametri.L2.c9', type: 'expr', level: 2,
+          prompt: String.raw`Scrivi l'esponente $\beta$ tale che $\displaystyle\frac{n^{\alpha}}{n^2+n}\sim\frac{c}{n^{\beta}}$, in funzione di $\alpha$.`,
+          answer: '2-alpha', vars: ['alpha'],
+          explain: String.raw`Il denominatore è $\sim n^2$: il termine è $\sim n^{\alpha-2}=\frac1{n^{2-\alpha}}$.`,
+        },
+        {
+          id: 's13.parametri.L2.c10', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}n^{\alpha}\cdot\frac{1}{n^{3}}$ converge per ogni $\alpha<2$.`,
+          answer: true,
+          explain: String.raw`Il termine è $\frac{1}{n^{3-\alpha}}$: converge sse $3-\alpha>1$, cioè $\alpha<2$. Quindi la frase è vera.`,
+        },
+        {
+          id: 's13.parametri.L2.c11', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\alpha\in\R$, quale condizione dà la convergenza di $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{n+1}$?`,
+          options: [String.raw`$\alpha<0$`, String.raw`$\alpha<1$`, String.raw`$\alpha<2$`],
+          answer: 0,
+          explain: String.raw`$a_n\sim n^{\alpha-1}$: converge sse $1-\alpha>1$, cioè $\alpha<0$. Con $\alpha<1$ si ha solo la condizione necessaria $a_n\to0$.`,
+        },
+      ],
+    },
+    {
+      id: 's13.parametri.L3',
+      title: 'Differenze e sviluppi di Taylor',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quando i termini si annullano',
+          body: String.raw`A volte il termine generale è una **differenza** di due quantità quasi uguali, come $\frac1{n^\alpha}-\sin\frac1{n^\alpha}$. Al primo ordine le due parti si cancellano e la stima $\sim x$ non basta: ciò che resta è di ordine superiore.
+
+Per $x\to0$ si ha $\sin x=x-\frac{x^3}{6}+o(x^3)$, quindi $x-\sin x\sim\frac{x^3}{6}$. Con $x=\frac1{n^{\alpha}}$ il termine diventa $\sim\frac1{6n^{3\alpha}}$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Sviluppi da ricordare',
+          body: String.raw`Gli sviluppi di McLaurin al secondo e terzo ordine che servono qui, per $x\to0$:
+
+- $e^x=1+x+\frac{x^2}{2}+o(x^2)$
+- $\cos x=1-\frac{x^2}2+o(x^2)$, quindi $1-\cos x\sim\frac{x^2}2$
+- $\sin x=x-\frac{x^3}6+o(x^3)$, quindi $x-\sin x\sim\frac{x^3}6$
+- $\log(1+x)=x-\frac{x^2}2+o(x^2)$
+
+Regola: scegli l'ordine in cui la differenza smette di annullarsi.`,
+        },
+        {
+          id: 's13.parametri.L3.c3', type: 'example', title: 'Seno meno argomento',
+          problem: String.raw`Per quali $\alpha>0$ converge $\displaystyle\sum_{n\ge1}\left(\frac1{n^{\alpha}}-\sin\frac1{n^{\alpha}}\right)$?`,
+          steps: [
+            String.raw`Il termine è positivo: $x-\sin x>0$ per $x>0$. Con $x=\frac1{n^\alpha}\to0$.`,
+            {
+              text: String.raw`Al primo ordine $x-\sin x\sim x-x=0$ non dà informazione: serve il termine successivo.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`Quale stima vale per $x-\sin x$ con $x\to0$?`,
+                options: [String.raw`$x-\sin x\sim\frac{x^3}{6}$`, String.raw`$x-\sin x\sim x$`, String.raw`$x-\sin x\sim\frac{x^2}{2}$`],
+                answer: 0,
+                explain: String.raw`Dallo sviluppo $\sin x=x-\frac{x^3}6+o(x^3)$ segue $x-\sin x=\frac{x^3}{6}+o(x^3)$.`,
+              },
+            },
+            String.raw`Quindi $a_n\sim\frac1{6n^{3\alpha}}$: converge sse $3\alpha>1$, cioè $\alpha>\frac13$.`,
+          ],
+          result: String.raw`Converge sse $\alpha>\frac13$. Per $\alpha\le0$ diverge perché il termine non tende a $0$.`,
+        },
+        {
+          id: 's13.parametri.L3.c4', type: 'example', title: 'Esponenziale meno Taylor',
+          problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}n^{\alpha}\left(e^{1/n}-1-\frac1n\right)$?`,
+          steps: [
+            String.raw`Il termine è positivo, perché $e^x-1-x>0$ per $x\neq0$.`,
+            {
+              text: String.raw`Con $x=\frac1n$ lo sviluppo $e^x-1-x=\frac{x^2}{2}+o(x^2)$ dà $e^{1/n}-1-\frac1n\sim\frac1{2n^2}$.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`Quale stima vale per $e^x-1-x$ con $x\to0$?`,
+                options: [String.raw`$\frac{x^2}{2}$`, String.raw`$x$`, String.raw`$0$`],
+                answer: 0,
+                explain: String.raw`Il primo termine dello sviluppo di $e^x$ che sopravvive dopo aver tolto $1+x$ è $\frac{x^2}{2}$.`,
+              },
+            },
+            String.raw`Quindi $a_n\sim\frac12n^{\alpha-2}$: converge sse $2-\alpha>1$, cioè $\alpha<1$.`,
+          ],
+          result: String.raw`Converge sse $\alpha<1$: intervallo $(-\infty,1)$.`,
+        },
+        {
+          id: 's13.parametri.L3.c6', type: 'mcq', level: 2,
+          prompt: String.raw`Perché per $\alpha\le0$ la serie $\displaystyle\sum_{n\ge1}\left(\frac1{n^{\alpha}}-\sin\frac1{n^{\alpha}}\right)$ diverge?`,
+          options: [
+            String.raw`Perché il termine non tende a $0$`,
+            String.raw`Perché il termine è negativo`,
+            String.raw`Perché il criterio del confronto non si applica`,
+          ],
+          answer: 0,
+          explain: String.raw`Per $\alpha=0$ il termine vale $1-\sin1\neq0$; per $\alpha<0$ l'argomento $x=n^{|\alpha|}\to+\infty$ e $x-\sin x\to+\infty$. Il termine è positivo, e il confronto si applica benissimo.`,
+        },
+        {
+          id: 's13.parametri.L3.c7', type: 'num', level: 2,
+          prompt: String.raw`Per $a_n=\frac1{\sqrt n}-\sin\frac1{\sqrt n}$, quale esponente $\beta$ vale in $a_n\sim\frac c{n^{\beta}}$? Scrivi la frazione.`,
+          answer: '3/2',
+          explain: String.raw`Con $x=\frac1{\sqrt n}$: $x-\sin x\sim\frac{x^3}6=\frac1{6n^{3/2}}$, quindi $\beta=\frac32$.`,
+        },
+        {
+          id: 's13.parametri.L3.c8', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\left(\frac1{\sqrt n}-\sin\frac1{\sqrt n}\right)$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: il termine è $\sim\frac1{6n^{3/2}}$, con esponente $\frac32>1$. Converge.`,
+        },
+        {
+          id: 's13.parametri.L3.c9', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: se $a_n\sim b_n$ allora $a_n-b_n\to0$.`,
+          answer: false,
+          explain: String.raw`Falso: $a_n=n+1$ e $b_n=n$ danno $\frac{a_n}{b_n}\to1$, quindi $a_n\sim b_n$, ma $a_n-b_n=1\not\to0$. Le stime non si sottraggono.`,
+        },
+        {
+          id: 's13.parametri.L3.c10', type: 'mcq', level: 3,
+          prompt: String.raw`Sia $a_n=\sqrt{1+\frac2n}-1-\frac1n$. Quale stima è corretta?`,
+          options: [String.raw`$a_n\sim-\frac{1}{2n^2}$`, String.raw`$a_n\sim\frac1n$`, String.raw`$a_n\sim0$`],
+          answer: 0,
+          explain: String.raw`Con $u=\frac2n$: $\sqrt{1+u}=1+\frac u2-\frac{u^2}8+o(u^2)$, quindi $\sqrt{1+\frac2n}=1+\frac1n-\frac1{2n^2}+o\left(\frac1{n^2}\right)$ e $a_n\sim-\frac1{2n^2}$. Il termine $\frac1n$ si cancella.`,
+        },
+        {
+          id: 's13.parametri.L3.c11', type: 'open', level: 3, points: 2,
+          prompt: String.raw`Spiega perché la stima al primo ordine non basta per studiare $\displaystyle\sum\left(\frac1{n^{\alpha}}-\sin\frac1{n^{\alpha}}\right)$.`,
+          answer: String.raw`Al primo ordine $\sin x\sim x$ e il termine $x-\sin x$ diventa $x-x=0$: la stima non dà il comportamento del termine. Serve lo sviluppo $\sin x=x-\frac{x^3}6+o(x^3)$, da cui $x-\sin x\sim\frac{x^3}6$. Con $x=\frac1{n^\alpha}$ si ottiene $\frac1{6n^{3\alpha}}$, e la serie converge sse $3\alpha>1$.`,
+          rubric: [
+            String.raw`Osserva che al primo ordine la differenza si annulla`,
+            String.raw`Usa lo sviluppo di Taylor di ordine successivo`,
+            String.raw`Ottiene $x-\sin x\sim\frac{x^3}{6}$ e l'esponente $3\alpha$`,
+          ],
+        },
+        {
+          id: 's13.parametri.L3.c12', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\alpha>0$, per quali $\alpha$ converge $\displaystyle\sum_{n\ge1}\left(e^{1/n^{\alpha}}-1-\frac1{n^{\alpha}}\right)$?`,
+          options: [String.raw`$\alpha>\frac12$`, String.raw`$\alpha>\frac13$`, String.raw`$\alpha>1$`],
+          answer: 0,
+          explain: String.raw`$e^x-1-x\sim\frac{x^2}2$ con $x=\frac1{n^\alpha}$: il termine è $\sim\frac1{2n^{2\alpha}}$, converge sse $2\alpha>1$. Il $\frac13$ viene dal seno cubico, non dall'esponenziale.`,
+        },
+        {
+          id: 's13.parametri.L3.c13', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: per $\alpha=1$ la serie $\displaystyle\sum_{n\ge1}\left(1-\cos\frac1{n}\right)$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: $1-\cos\frac1n\sim\frac1{2n^2}$, con esponente $2>1$.`,
+        },
+      ],
+    },
+    {
+      id: 's13.parametri.L4',
+      title: 'Livello d\'esame',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Schema per i parametri',
+          body: String.raw`Per una serie con parametro, all'esame procedi così:
+
+1. **Dominio del parametro.** Dove il termine è definito e positivo? Separa i casi dove serve (per esempio $\alpha\le0$).
+2. **Condizione necessaria.** Per quali $\alpha$ il termine tende a $0$?
+3. **Equivalente.** Trova $a_n\sim\frac{c}{n^{\beta(\alpha)}}$ con gli sviluppi giusti. Se la differenza si annulla, sali di ordine.
+4. **Soglia.** Risolvi $\beta(\alpha)>1$ (o il criterio adatto) e scrivi l'intervallo.`,
+        },
+        {
+          id: 's13.parametri.L4.c2', type: 'example', title: 'Radice e potenza',
+          problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{\sqrt{n^3+1}}$?`,
+          steps: [
+            String.raw`Il termine è positivo per ogni $\alpha$. Il numeratore è $n^\alpha$.`,
+            {
+              text: String.raw`Il denominatore ha grado $3$ sotto radice: $\sqrt{n^3+1}\sim n^{3/2}$.`,
+              ask: {
+                type: 'expr', prompt: String.raw`Scrivi l'esponente della potenza di $n$ nel termine $\frac{n^{\alpha}}{n^{3/2}}$, in funzione di $\alpha$.`,
+                answer: 'alpha-3/2', vars: ['alpha'],
+                explain: String.raw`$n^{\alpha}/n^{3/2}=n^{\alpha-3/2}$.`,
+              },
+            },
+            String.raw`Converge sse $\frac32-\alpha>1$, cioè $\alpha<\frac12$.`,
+          ],
+          result: String.raw`Converge sse $\alpha<\frac12$: intervallo $(-\infty,\frac12)$.`,
+        },
+        {
+          id: 's13.parametri.L4.c3', type: 'problem', level: 3, source: 'Appello 03/09/2026 · Parte B', points: 5,
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}\frac{\sqrt[3]{n}\,\sin\left(n^{-\alpha}\right)}{\log\frac{n^3+1}{n^3}}$, con $\alpha>0$.`,
+          parts: [
+            {
+              type: 'expr', prompt: String.raw`Scrivi l'esponente $\beta$ di un equivalente $a_n\sim c\,n^{\beta}$, in funzione di $\alpha$.`,
+              answer: '10/3-alpha', vars: ['alpha'],
+              explain: String.raw`$\sin(n^{-\alpha})\sim n^{-\alpha}$ e $\log\frac{n^3+1}{n^3}=\log\left(1+\frac1{n^3}\right)\sim\frac1{n^3}$. Quindi $a_n\sim\frac{n^{1/3}n^{-\alpha}}{n^{-3}}=n^{10/3-\alpha}$.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha>0$ la serie converge?`,
+              answer: '(13/3,inf)',
+              explain: String.raw`Converge sse $\alpha-\frac{10}3>1$, cioè $\alpha>\frac{13}3$. Il termine tende a $0$ sse $\alpha>\frac{10}3$, che è solo condizione necessaria.`,
+            },
+          ],
+          solution: String.raw`Per $\alpha>0$: $\sin(n^{-\alpha})\sim n^{-\alpha}$ e $\log\left(1+\frac1{n^3}\right)\sim\frac1{n^3}$, quindi $a_n\sim n^{10/3-\alpha}$. Converge sse $\alpha>\frac{13}3$; la condizione necessaria $\alpha>\frac{10}3$ non basta.`,
+        },
+        {
+          id: 's13.parametri.L4.c4', type: 'problem', level: 3, source: 'Appello 10/02/2026 · Parte B', points: 5,
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}\left[(2n^3+n^2)^{1/5}-(2n^3)^{1/5}\right]}{\log\left(1+\tan\frac2{n^2}\right)}$, con $\alpha\in\R$.`,
+          parts: [
+            {
+              type: 'expr', prompt: String.raw`Scrivi l'esponente $\beta$ di un equivalente $a_n\sim c\,n^{\beta}$, in funzione di $\alpha$.`,
+              answer: 'alpha+8/5', vars: ['alpha'],
+              explain: String.raw`$(2n^3+n^2)^{1/5}-(2n^3)^{1/5}=(2n^3)^{1/5}\left[(1+\frac1{2n})^{1/5}-1\right]\sim(2n^3)^{1/5}\frac1{10n}\sim\frac{2^{1/5}}{10}n^{-2/5}$. Il denominatore è $\sim\frac2{n^2}$. Il rapporto è $\sim\frac{2^{1/5}}{20}n^{8/5}$ e l'esponente totale è $\alpha+\frac85$.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha$ converge la serie?`,
+              answer: '(-inf,-13/5)',
+              explain: String.raw`Converge sse $\alpha+\frac85<-1$, cioè $\alpha<-\frac{13}5$.`,
+            },
+          ],
+          solution: String.raw`La differenza tra radici si stima con $(1+x)^{1/5}-1\sim\frac x5$ con $x=\frac1{2n}$. Il denominatore si stima con $\tan\frac2{n^2}\sim\frac2{n^2}$. Termine $\sim\frac{2^{1/5}}{20}n^{\alpha+8/5}$: converge sse $\alpha<-\frac{13}5$.`,
+        },
+        {
+          id: 's13.parametri.L4.c5', type: 'problem', level: 3, source: 'Appello 11/06/2026 · Parte B', points: 5,
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}\left(1-\cos\log\left(1+\frac1{\sqrt n}\right)\right)\sin\frac1{n^{\alpha}}$, con $\alpha>0$.`,
+          parts: [
+            {
+              type: 'expr', prompt: String.raw`Scrivi l'esponente $\beta$ di un equivalente $a_n\sim\frac c{n^{\beta}}$, in funzione di $\alpha$.`,
+              answer: 'alpha+1', vars: ['alpha'],
+              explain: String.raw`$\log(1+\frac1{\sqrt n})\sim\frac1{\sqrt n}$, quindi $1-\cos(\cdot)\sim\frac1{2n}$. E $\sin\frac1{n^\alpha}\sim\frac1{n^\alpha}$. Il prodotto è $\sim\frac1{2n^{1+\alpha}}$.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha>0$ converge la serie?`,
+              answer: '(0,inf)',
+              explain: String.raw`Converge sse $1+\alpha>1$, cioè $\alpha>0$: per ogni $\alpha>0$.`,
+            },
+          ],
+          solution: String.raw`Con $\alpha>0$: $a_n\sim\frac1{2n^{1+\alpha}}$, serie convergente per ogni $\alpha>0$.`,
+        },
+        {
+          id: 's13.parametri.L4.c6', type: 'problem', level: 2, source: 'Appello 03/09/2026 · Parte B', points: 3,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\left(\sqrt{n^2+1}-n\right)^{\alpha}$?`,
+          parts: [
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha\in\R$ converge?`,
+              answer: '(1,inf)',
+              explain: String.raw`$\sqrt{n^2+1}-n=\frac1{\sqrt{n^2+1}+n}\sim\frac1{2n}$, quindi il termine è $\sim\frac{1}{(2n)^{\alpha}}$. Per $\alpha\le0$ il termine non tende a $0$; per $\alpha>0$ converge sse $\alpha>1$.`,
+            },
+          ],
+          solution: String.raw`$\sqrt{n^2+1}-n\sim\frac1{2n}$. Per $\alpha\le0$ il termine non tende a $0$; per $\alpha>0$ il termine è $\sim\frac1{2^\alpha n^\alpha}$, convergente sse $\alpha>1$.`,
+        },
+        {
+          id: 's13.parametri.L4.c7', type: 'open', level: 3, source: 'Appello 11/06/2026 · Parte A', points: 3,
+          prompt: String.raw`Scrivi il procedimento completo per stabilire per quali $\alpha$ converge una serie con termine $a_n$ che dipende da un parametro, e dove può fallire.`,
+          answer: String.raw`Si verifica prima la condizione necessaria $a_n\to0$, che restringe i valori di $\alpha$. Poi si trova un equivalente $a_n\sim\frac{c}{n^{\beta(\alpha)}}$ con $c\neq0$, usando gli sviluppi di Taylor se il primo ordine si annulla. Infine si studia $\beta(\alpha)>1$ (per termini di segno fisso) e si scrive l'intervallo. Il procedimento fallisce se si sostituiscono stime dentro una differenza che si annulla, o se si applicano le stime a valori di $\alpha$ per cui l'argomento non tende a $0$.`,
+          rubric: [
+            String.raw`Applica prima la condizione necessaria $a_n\to0$`,
+            String.raw`Trova un equivalente $c/n^{\beta(\alpha)}$ con $c\neq0$`,
+            String.raw`Ricava la soglia $\beta(\alpha)>1$ e scrive l'intervallo`,
+            String.raw`Segnala il rischio di stime dentro differenze o per $\alpha$ fuori dal dominio delle stime`,
+          ],
+        },
+        {
+          id: 's13.parametri.L4.c8', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: se $a_n\ge0$ e $a_n\sim\frac{c}{n^{\beta}}$ con $c>0$, allora $\sum a_n$ converge sse $\beta>1$.`,
+          answer: true,
+          explain: String.raw`Vero: è la regola del confronto asintotico con la serie armonica generalizzata.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's13.parametri.p1', type: 'tf', level: 1,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac1{n^{\alpha}}$ converge per $\alpha>1$.`,
+      answer: true,
+      explain: String.raw`Armonica generalizzata: converge sse l'esponente è $>1$.`,
+    },
+    {
+      id: 's13.parametri.p2', type: 'num', level: 1,
+      prompt: String.raw`Esponente $\beta$ tale che $\displaystyle\log\left(1+\frac1{n^{2}}\right)\sim\frac{c}{n^{\beta}}$?`,
+      answer: '2',
+      explain: String.raw`$\log(1+x)\sim x$ con $x=\frac1{n^2}$: $\beta=2$.`,
+    },
+    {
+      id: 's13.parametri.p3', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha>0$ converge $\displaystyle\sum_{n\ge1}\log\left(1+\frac{1}{n^{\alpha}}\right)$?`,
+      answer: '(1,inf)',
+      explain: String.raw`Per $\alpha>0$ l'argomento $\frac1{n^\alpha}$ tende a $0$ e $\log(1+x)\sim x$: $a_n\sim\frac1{n^{\alpha}}$. Converge sse $\alpha>1$.`,
+    },
+    {
+      id: 's13.parametri.p4', type: 'tf', level: 2,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\left(1-\cos\frac1n\right)$ converge.`,
+      answer: true,
+      explain: String.raw`$1-\cos\frac1n\sim\frac1{2n^2}$: converge.`,
+    },
+    {
+      id: 's13.parametri.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Per $\alpha>0$, per quali $\alpha$ converge $\displaystyle\sum_{n\ge1}\left(e^{1/n^{\alpha}}-1\right)$?`,
+      options: [String.raw`$\alpha>1$`, String.raw`$\alpha>\frac12$`, String.raw`$\alpha>0$`],
+      answer: 0,
+      explain: String.raw`$e^x-1\sim x$ con $x=\frac1{n^\alpha}$: il termine è $\sim\frac1{n^\alpha}$, converge sse $\alpha>1$.`,
+    },
+    {
+      id: 's13.parametri.p6', type: 'cloze', level: 2,
+      text: String.raw`Se $a_n\ge0$ e $a_n\sim\frac{c}{n^{\beta}}$ con $c>0$, la serie converge sse [[0]]. Un termine con $\beta=1$ dà una serie [[1]].`,
+      blanks: [
+        { options: [String.raw`$\beta>1$`, String.raw`$\beta>0$`, String.raw`$\beta<1$`], answer: 0 },
+        { options: ['convergente', 'divergente', 'indeterminata'], answer: 1 },
+      ],
+      explain: String.raw`La regola dell'armonica generalizzata: converge sse $\beta>1$. Con $\beta=1$ si ottiene la serie armonica, che diverge.`,
+    },
+    {
+      id: 's13.parametri.p7', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi l'esponente $\beta$ tale che $\displaystyle\frac{n^{\alpha}}{n^2+n}\sim\frac{c}{n^{\beta}}$, in funzione di $\alpha$.`,
+      answer: '2-alpha', vars: ['alpha'],
+      explain: String.raw`Il denominatore è $\sim n^2$: il termine è $\sim n^{\alpha-2}=\frac1{n^{2-\alpha}}$.`,
+    },
+    {
+      id: 's13.parametri.p8', type: 'tf', level: 2,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\left(\frac1{\sqrt n}-\sin\frac1{\sqrt n}\right)$ converge.`,
+      answer: true,
+      explain: String.raw`Il termine è $\sim\frac1{6n^{3/2}}$: converge.`,
+    },
+    {
+      id: 's13.parametri.p9', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Scrivi le stime per $x\to0$ di $\sin x$, $1-\cos x$ e $\log(1+x)$, e indica quale ordine serve per $x-\sin x$.`,
+      answer: String.raw`$\sin x\sim x$, $1-\cos x\sim\frac{x^2}2$, $\log(1+x)\sim x$. Per $x-\sin x$ il primo ordine si annulla: serve $x-\sin x\sim\frac{x^3}6$.`,
+      rubric: [
+        String.raw`Scrive le tre stime corrette al primo ordine`,
+        String.raw`Indica che $x-\sin x$ richiede l'ordine 3, con $\frac{x^3}{6}$`,
+      ],
+    },
+    {
+      id: 's13.parametri.p10', type: 'mcq', level: 2,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{n^2+n}$?`,
+      options: [String.raw`$\alpha<1$`, String.raw`$\alpha<-1$`, String.raw`$\alpha>1$`],
+      answer: 0,
+      explain: String.raw`Il termine è $\sim n^{\alpha-2}$: converge sse $\alpha<1$.`,
+    },
+    {
+      id: 's13.parametri.gen-potenze', type: 'gen', level: 2,
+      gen: (R) => {
+        // a_n ~ n^(alpha - e/2): converge sse alpha < (e-2)/2
+        const e = R.int(2, 8);
+        const c = R.int(1, 5);
+        const pow = e === 2 ? 'n' : e % 2 === 0 ? `n^{${e / 2}}` : String.raw`\sqrt{n^{${e}}}`;
+        const den = `${pow}+${c}`;
+        const thr = H.reduce(e - 2, 2);
+        return {
+          type: 'interval',
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}}{${den}}$?`,
+          answer: `(-inf,${qstr(thr)})`,
+          explain: String.raw`Il denominatore è $\sim n^{${qstr(H.reduce(e, 2))}}$, quindi $a_n\sim n^{\alpha-${qstr(H.reduce(e, 2))}}$. Armonica generalizzata: converge sse $${qstr(H.reduce(e, 2))}-\alpha>1$, cioè $\alpha<${qstr(thr)}$.`,
+        };
+      },
+    },
+    {
+      id: 's13.parametri.gen-cancel', type: 'gen', level: 3,
+      gen: (R) => {
+        // (x - sin x) con x = n^(-k alpha): ~ x^3/6, converge sse 3k alpha > 1
+        const k = R.pick([1, 2, 3]);
+        const ka = k === 1 ? String.raw`\alpha` : String.raw`${k}\alpha`;
+        return {
+          type: 'interval',
+          prompt: String.raw`Per quali $\alpha>0$ converge $\displaystyle\sum_{n\ge1}\left(\frac{1}{n^{${ka}}}-\sin\frac{1}{n^{${ka}}}\right)$?`,
+          answer: `(${qstr([1, 3 * k])},inf)`,
+          explain: String.raw`Con $x=\frac1{n^{${ka}}}\to0$: $x-\sin x\sim\frac{x^3}6=\frac1{6n^{${3 * k}\alpha}}$. Converge sse $${3 * k}\alpha>1$, cioè $\alpha>${qstr([1, 3 * k])}$.`,
+        };
+      },
+    },
+    {
+      id: 's13.parametri.gen-bsin', type: 'gen', level: 3,
+      gen: (R) => {
+        // a_n = n^b sin(1/n^alpha) ~ n^(b - alpha): converge sse alpha > b + 1
+        const b = R.int(0, 3);
+        const nb = b === 0 ? '' : b === 1 ? 'n' : `n^{${b}}`;
+        return {
+          type: 'interval',
+          prompt: String.raw`Per quali $\alpha>0$ converge $\displaystyle\sum_{n\ge1}${nb}\sin\frac{1}{n^{\alpha}}$?`,
+          answer: `(${b + 1},inf)`,
+          explain: String.raw`Per $\alpha>0$, $\sin\frac1{n^{\alpha}}\sim\frac1{n^{\alpha}}$, quindi $a_n\sim\frac{${nb || '1'}}{n^{\alpha}}$. Converge sse ${b === 0 ? String.raw`$\alpha>1$` : String.raw`$\alpha-${b}>1$, cioè $\alpha>${b + 1}$`}.`,
+        };
+      },
+    },
+  ],
+  flashcards: [
+    { id: 's13.parametri.fc1', kind: 'metodo', front: String.raw`Come trovare la soglia di un parametro`, back: String.raw`1) Condizione necessaria $a_n\to0$. 2) Equivalente $a_n\sim\frac{c}{n^{\beta(\alpha)}}$. 3) Soglia $\beta(\alpha)>1$.` },
+    { id: 's13.parametri.fc2', kind: 'formula', front: String.raw`Equivalenti per $x\to0$`, back: String.raw`$\sin x\sim x$, $\tan x\sim x$, $\log(1+x)\sim x$, $e^x-1\sim x$, $1-\cos x\sim\frac{x^2}2$, $(1+x)^a-1\sim ax$.` },
+    { id: 's13.parametri.fc3', kind: 'formula', front: String.raw`Sviluppo di $x-\sin x$`, back: String.raw`$\sin x=x-\frac{x^3}6+o(x^3)$, quindi $x-\sin x\sim\frac{x^3}6$: il primo ordine si annulla.` },
+    { id: 's13.parametri.fc4', kind: 'formula', front: String.raw`Sviluppo di $e^x-1-x$`, back: String.raw`$e^x=1+x+\frac{x^2}2+o(x^2)$, quindi $e^x-1-x\sim\frac{x^2}2$.` },
+    { id: 's13.parametri.fc5', kind: 'errore', front: String.raw`Le stime non si sottraggono`, back: String.raw`$a_n\sim b_n$ non implica $a_n-b_n\to0$: esempio $n+1$ e $n$. Per una differenza serve uno sviluppo di ordine maggiore.` },
+    { id: 's13.parametri.fc6', kind: 'errore', front: String.raw`Stime per $\alpha\le0$`, back: String.raw`Le stime $\sim x$ valgono solo se $x\to0$. Per $\alpha\le0$ l'argomento $\frac1{n^\alpha}$ non tende a $0$: controlla prima la condizione necessaria.` },
+    { id: 's13.parametri.fc7', kind: 'metodo', front: String.raw`Esponenti: prodotto e quoziente`, back: String.raw`Nel prodotto gli esponenti si sommano; nel quoziente si sottraggono. Per una somma conta solo il termine dominante.` },
+  ],
+};
+
 export default {
   id: 's13',
   title: 'Serie numeriche',
   subtitle: 'Somme parziali, criteri di convergenza, serie con parametri',
   intro: String.raw`Le serie compaiono in ogni tema: in Parte A (condizione necessaria, criterio del confronto, vero/falso sulle somme) e in Parte B (carattere di una serie con parametro, 2–4 punti). Qui impari a sommare infiniti termini e a decidere se la somma esiste.`,
-  skills: [DEF, NEC, POS, ALT],
+  skills: [DEF, NEC, POS, ALT, PAR],
 };
