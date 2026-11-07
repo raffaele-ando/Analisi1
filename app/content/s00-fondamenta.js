@@ -1444,3 +1444,355 @@ Trova i punti stazionari (dove $f'(x) = 0$), ricordando che ogni formula vale so
     { id: 's00.equazioni.fc8', kind: 'metodo', front: 'Sistemi lineari 2×2', back: 'Sostituzione (ricavo una variabile e la sostituisco) o riduzione (combino le equazioni per eliminarne una). Verifico sempre in entrambe.' },
   ],
 });
+
+// =====================================================================
+// s00.disequazioni
+// =====================================================================
+S.push({
+  id: 's00.disequazioni',
+  title: 'Disequazioni',
+  summary: String.raw`Saprai risolvere disequazioni lineari, di secondo grado, fratte, con valore assoluto e sistemi, e calcolare il dominio di una funzione. Lo studio del segno serve per il dominio e per gli intervalli di crescenza.`,
+  prereq: ['s00.equazioni'],
+  examRefs: ['Itinere 11/11/2025 · Parte B (dominio di una radice)', 'Appello 15/01/2026 · Parte B (dominio di una funzione)', 'Appello 10/02/2026 · Parte B (segno della derivata)'],
+  lessons: [
+    {
+      id: 's00.disequazioni.L1',
+      title: 'Il segno di una disequazione lineare',
+      cards: [
+        { type: 'learn', title: 'Una disequazione chiede un segno', body: String.raw`Una **disequazione** confronta due espressioni con $<$, $\le$, $>$ o $\ge$. Per esempio $2x - 3 > 0$ chiede: **per quali $x$ il numero $2x-3$ è positivo?**
+
+Le soluzioni non sono di solito un solo numero, ma un **intervallo** (o un'unione di intervalli). Notazione:
+
+- $(a,b)$: gli estremi $a$ e $b$ **non** sono inclusi (tondo, come $<$ e $>$);
+- $[a,b]$: gli estremi **sono** inclusi (quadra, come $\le$ e $\ge$);
+- $(a,+\infty)$ e $(-\infty,a)$: l'infinito non è mai incluso, quindi la parentesi è sempre tonda;
+- $\R$ indica tutti i reali; $\emptyset$ indica nessuna soluzione.` },
+        { type: 'learn', title: 'Il segno di $x - 3$', body: String.raw`Il segno di $x - 3$ cambia **una sola volta**, nel punto che lo annulla, $x = 3$:
+
+- per $x < 3$ è **negativo** (esempio: $x = 0$ dà $0 - 3 = -3$);
+- per $x = 3$ vale **zero**;
+- per $x > 3$ è **positivo** (esempio: $x = 5$ dà $5 - 3 = 2$).
+
+>* **Regola pratica.** Per $ax + b > 0$ trovo lo zero $x_0 = -\dfrac{b}{a}$ e decido da che parte sta la soluzione. Se $a$ è **negativo**, dividendo per $a$ il verso della disuguaglianza **si inverte**.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $2x - 3 > 0$.`,
+          steps: [
+            String.raw`Sposto il termine noto a destra: $2x > 3$.`,
+            { text: String.raw`Divido per $2$, che è positivo: il verso resta. Quindi $x > \frac{3}{2}$.`,
+              ask: { type: 'mcq', prompt: String.raw`Divido $2x > 3$ per $-2$ invece che per $2$. Che verso ha la disuguaglianza finale?`, options: [String.raw`$x > -\frac{3}{2}$`, String.raw`$x < -\frac{3}{2}$`], answer: 1, explain: String.raw`Dividendo per un numero **negativo** il verso si inverte: $x < -\frac{3}{2}$.` } },
+          ],
+          result: String.raw`$2x - 3 > 0 \iff x > \frac{3}{2}$, cioè $\left(\frac{3}{2},+\infty\right)$.` },
+        { id: 's00.disequazioni.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Qual è la soluzione di $-x + 2 > 0$?`,
+          options: [String.raw`$x > 2$`, String.raw`$x < 2$`, String.raw`$x \ge 2$`, String.raw`$x \le -2$`],
+          answer: 1,
+          explain: String.raw`Porto $2$ a destra: $-x > -2$. Divido per $-1 < 0$, quindi il verso si inverte: $x < 2$. L'errore tipico è $x > 2$: si dimentica il cambio di verso. $x \ge 2$ e $x \le -2$ sbagliano anche il verso del tipo di estremo: qui la disuguaglianza è stretta e il $2$ non è incluso.` },
+        { id: 's00.disequazioni.L1.e2', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $3x - 6 \le 0$.`,
+          answer: '(-inf,2]',
+          explain: String.raw`Aggiungo $6$: $3x \le 6$. Divido per $3 > 0$: $x \le 2$. Il $2$ è incluso, quindi $(-\infty,2]$.` },
+        { id: 's00.disequazioni.L1.e3', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $-2x + 5 > 0$.`,
+          answer: '(-inf,5/2)',
+          explain: String.raw`Sposto $5$: $-2x > -5$. Divido per $-2 < 0$: il verso si inverte, $x < \frac{5}{2}$.` },
+        { id: 's00.disequazioni.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Se $a < 0$, la disequazione $ax > b$ ha soluzioni $x > \dfrac{b}{a}$.`,
+          answer: false,
+          explain: String.raw`Falso. Dividendo per $a < 0$ il verso si inverte: $x < \frac{b}{a}$. Esempio: $-x > 2$ dà $x < -2$. Verifica con $x = -3$: $3 > 2$ è vero, e $-3 < -2$.` },
+        { id: 's00.disequazioni.L1.e5', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $\dfrac{x}{2} - 1 < \dfrac{x}{3}$.`,
+          answer: '(-inf,6)',
+          explain: String.raw`Moltiplico per $6 > 0$ (il verso resta): $3x - 6 < 2x$, cioè $x < 6$.` },
+        { type: 'learn', title: 'Il segno di un prodotto', body: String.raw`Un prodotto è **positivo** se i fattori hanno lo stesso segno, **negativo** se hanno segni opposti, **nullo** se un fattore è nullo. Per $(x-1)(x-3)$ i punti $x = 1$ e $x = 3$ dividono la retta in tre parti, e in ciascuna il segno è costante:
+
+- per $x < 1$ entrambi i fattori sono negativi: il prodotto è **positivo**;
+- per $1 < x < 3$ il primo è positivo e il secondo negativo: il prodotto è **negativo**;
+- per $x > 3$ entrambi sono positivi: il prodotto è **positivo**.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $(x-1)(x-3) < 0$.`,
+          steps: [
+            String.raw`Gli zeri dei fattori sono $x = 1$ e $x = 3$: sono i punti in cui il prodotto può cambiare segno.`,
+            { text: String.raw`Scelgo un punto di prova nell'intervallo centrale, $x = 2$: $(2-1)(2-3) = -1 < 0$. Quindi il segno è negativo in $(1,3)$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $(x-1)(x-3)$ per $x = 0$?`, answer: '3', explain: String.raw`$(0-1)(0-3) = (-1)(-3) = 3 > 0$: fuori da $[1,3]$ il prodotto è positivo.` } },
+            String.raw`Gli estremi $1$ e $3$ non sono inclusi, perché la disuguaglianza è stretta. Soluzione: $(1,3)$.`,
+          ],
+          result: String.raw`$(x-1)(x-3) < 0 \iff 1 < x < 3$.` },
+        { id: 's00.disequazioni.L1.e6', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $(x+2)(x-4) > 0$.`,
+          answer: '(-inf,-2)U(4,inf)',
+          explain: String.raw`Zeri: $-2$ e $4$. Il prodotto è positivo fuori dalle radici (fattori dello stesso segno): $x < -2$ oppure $x > 4$. Gli estremi sono esclusi perché la disuguaglianza è stretta.` },
+        { id: 's00.disequazioni.L1.e7', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è l'insieme delle soluzioni di $(x-2)(x+5) \ge 0$?`,
+          options: [String.raw`$(-5,2)$`, String.raw`$(-\infty,-5]\cup[2,+\infty)$`, String.raw`$(-\infty,-5)\cup(2,+\infty)$`, String.raw`$[-5,2]$`],
+          answer: 1,
+          explain: String.raw`Il prodotto è $\ge 0$ fuori dalle radici **e** sulle radici: $x \le -5$ oppure $x \ge 2$. $(-5,2)$ è dove il prodotto è negativo. $[-5,2]$ è il suo opposto. $(-\infty,-5)\cup(2,+\infty)$ dimentica che la disuguaglianza è larga, quindi le radici sono soluzioni.` },
+        { id: 's00.disequazioni.L1.e8', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $(3-x)(x+1) < 0$.`,
+          answer: '(-inf,-1)U(3,inf)',
+          explain: String.raw`Zeri: $3$ e $-1$. Il prodotto è negativo tra le radici se il coefficiente di $x^2$ è positivo, ma qui è $-1$: il segno è invertito. Quindi è negativo **fuori** dalle radici, $x < -1$ oppure $x > 3$.` },
+        { id: 's00.disequazioni.L1.e9', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $2x - 1 > 3x + 4$.`,
+          answer: '(-inf,-5)',
+          explain: String.raw`Porto le $x$ a sinistra: $-5 > x$, cioè $x < -5$. Il segno di $x$ non cambia in nessun passaggio, quindi il verso resta.` },
+      ],
+    },
+    {
+      id: 's00.disequazioni.L2',
+      title: 'Secondo grado e fratte',
+      cards: [
+        { type: 'learn', title: 'Il segno del trinomio', body: String.raw`Il trinomio $ax^2 + bx + c$ con $a > 0$ ha il segno della parabola con concavità verso l'alto:
+
+- se $\Delta > 0$ ci sono due radici $x_1 < x_2$: il trinomio è **negativo tra le radici** e **positivo fuori**;
+- se $\Delta = 0$ c'è una radice doppia: il trinomio è sempre $\ge 0$ e vale zero solo in $x_1$;
+- se $\Delta < 0$ non ci sono radici: il trinomio è **sempre positivo**.
+
+Se $a < 0$ il segno si inverte: conviene moltiplicare per $-1$ e cambiare il verso.
+
+>* **Formula delle radici.** $x_{1,2} = \dfrac{-b \pm \sqrt{\Delta}}{2a}$, con $\Delta = b^2 - 4ac$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $x^2 - 5x + 6 > 0$.`,
+          steps: [
+            String.raw`Scompongo: $x^2 - 5x + 6 = (x-2)(x-3)$, perché $2 + 3 = 5$ e $2\cdot 3 = 6$. Controllo con $\Delta = 25 - 24 = 1$: $x = \frac{5 \pm 1}{2}$, cioè $2$ e $3$.`,
+            { text: String.raw`Il coefficiente di $x^2$ è $1 > 0$: il trinomio è positivo **fuori** dalle radici.`,
+              ask: { type: 'num', prompt: String.raw`Qual è la radice più grande di $(x-2)(x-3)$?`, answer: '3', explain: String.raw`Le radici sono $2$ e $3$: la maggiore è $3$.` } },
+            String.raw`Le radici non sono soluzioni, perché la disuguaglianza è stretta. Soluzione: $x < 2$ oppure $x > 3$.`,
+          ],
+          result: String.raw`$x^2 - 5x + 6 > 0 \iff x \in(-\infty,2)\cup(3,+\infty)$.` },
+        { id: 's00.disequazioni.L2.e1', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $x^2 - 3x - 4 < 0$.`,
+          answer: '(-1,4)',
+          explain: String.raw`$x^2 - 3x - 4 = (x-4)(x+1)$, con radici $-1$ e $4$. Il coefficiente di $x^2$ è positivo: il trinomio è negativo **tra** le radici.` },
+        { id: 's00.disequazioni.L2.e2', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $x^2 + 4x + 4 \ge 0$.`,
+          answer: 'R',
+          explain: String.raw`$x^2 + 4x + 4 = (x+2)^2$ è un quadrato, quindi è sempre $\ge 0$. Il $\Delta$ è zero: la radice doppia $-2$ è soluzione, e per gli altri $x$ il valore è positivo.` },
+        { id: 's00.disequazioni.L2.e3', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $x^2 - 2x + 3 < 0$.`,
+          answer: 'vuoto',
+          explain: String.raw`$\Delta = 4 - 12 = -8 < 0$: il trinomio è sempre positivo, quindi non è mai negativo. Nessuna soluzione.` },
+        { id: 's00.disequazioni.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è l'insieme delle soluzioni di $x^2 - 4x + 4 > 0$?`,
+          options: [String.raw`$\R$`, String.raw`$\R\setminus\{2\}$`, String.raw`$(2,+\infty)$`, String.raw`$\emptyset$`],
+          answer: 1,
+          explain: String.raw`$x^2 - 4x + 4 = (x-2)^2$ vale zero solo in $x = 2$ ed è positivo altrove, anche per $x < 2$. $(2,+\infty)$ dimentica i valori $x < 2$. $\R$ dimentica che in $x = 2$ il trinomio vale zero. $\emptyset$ confonde questo caso con una disuguaglianza impossibile.` },
+        { type: 'learn', title: 'Disequazioni fratte: il metodo', body: String.raw`Per risolvere $\dfrac{N(x)}{D(x)} \ge 0$:
+
+1. trovo gli zeri di **numeratore** e **denominatore**;
+2. studio il segno di $N$ e di $D$ su ciascun intervallo;
+3. il quoziente ha il segno del prodotto: stessi segni danno positivo, segni opposti danno negativo;
+4. gli zeri del **denominatore sono sempre esclusi**, anche con $\le$ o $\ge$. Gli zeri del numeratore sono inclusi solo se la disuguaglianza è larga.
+
+>! **Errore tipico.** Moltiplicare per $D(x)$ senza sapere se è positivo. Il segno di $D$ dipende da $x$: il verso cambia solo se $D < 0$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $\dfrac{x-1}{x+2} \le 0$.`,
+          steps: [
+            String.raw`Il numeratore si annulla in $x = 1$, incluso perché la disuguaglianza è larga. Il denominatore si annulla in $x = -2$, sempre escluso.`,
+            { text: String.raw`Per $x > 1$ numeratore e denominatore sono positivi: il quoziente è positivo, quindi non va bene. Per $-2 < x < 1$ il numeratore è negativo e il denominatore positivo: il quoziente è negativo, va bene.`,
+              ask: { type: 'mcq', prompt: String.raw`Per $x = 0$ il quoziente $\dfrac{x-1}{x+2}$ è:`, options: ['positivo', 'negativo', 'nullo'], answer: 1, explain: String.raw`$\dfrac{0-1}{0+2} = -\dfrac{1}{2} < 0$.` } },
+            String.raw`Per $x < -2$ numeratore e denominatore sono negativi, quindi il quoziente è positivo: non va bene. Soluzione: $(-2,1]$.`,
+          ],
+          result: String.raw`$\dfrac{x-1}{x+2} \le 0 \iff -2 < x \le 1$.` },
+        { id: 's00.disequazioni.L2.e5', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\dfrac{2x-4}{x+3} > 0$.`,
+          answer: '(-inf,-3)U(2,inf)',
+          explain: String.raw`Zeri: $x = 2$ (numeratore, escluso perché stretta) e $x = -3$ (denominatore, escluso). Il quoziente è positivo quando numeratore e denominatore hanno lo stesso segno: $x < -3$ (entrambi negativi) oppure $x > 2$ (entrambi positivi).` },
+        { id: 's00.disequazioni.L2.e6', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\dfrac{x+1}{x-3} \ge 0$.`,
+          answer: '(-inf,-1]U(3,inf)',
+          explain: String.raw`Il numeratore si annulla in $-1$, incluso perché la disuguaglianza è larga. Il denominatore si annulla in $3$, sempre escluso. Per $x = 0$ il quoziente vale $-\frac{1}{3} < 0$: quindi $(-1,3)$ non è soluzione.` },
+        { id: 's00.disequazioni.L2.e7', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è l'insieme delle soluzioni di $\dfrac{x-1}{x+2} \ge 0$?`,
+          options: [String.raw`$(-\infty,-2)\cup[1,+\infty)$`, String.raw`$(-\infty,-2]\cup[1,+\infty)$`, String.raw`$[-2,1]$`, String.raw`$(-2,1]$`],
+          answer: 0,
+          explain: String.raw`$-2$ annulla il denominatore, quindi è escluso; $1$ annulla il numeratore e la disuguaglianza è larga, quindi è incluso: $x < -2$ oppure $x \ge 1$. Il secondo distrattore include $-2$, che non è ammesso. $[-2,1]$ e $(-2,1]$ sono i valori in cui il quoziente è negativo: hanno il segno sbagliato.` },
+        { id: 's00.disequazioni.L2.e8', type: 'tf', level: 1,
+          prompt: String.raw`La disequazione $\dfrac{1}{x} > 0$ ha come soluzione $x > 0$.`,
+          answer: true,
+          explain: String.raw`Vero: il numeratore $1$ è sempre positivo, quindi il quoziente ha il segno di $x$.` },
+        { id: 's00.disequazioni.L2.e9', type: 'interval', level: 3,
+          prompt: String.raw`Risolvi $\dfrac{x^2-4}{x} \le 0$.`,
+          answer: '(-inf,-2]U(0,2]',
+          explain: String.raw`Scompongo $x^2 - 4 = (x-2)(x+2)$. Il numeratore si annulla in $\pm 2$ (inclusi); il denominatore in $0$ (escluso). Il quoziente è negativo per $x < -2$ e per $0 < x < 2$, e vale zero in $\pm 2$.` },
+        { id: 's00.disequazioni.L2.e10', type: 'interval', level: 3,
+          prompt: String.raw`Risolvi $\dfrac{1}{x-2} < 1$.`,
+          answer: '(-inf,2)U(3,inf)',
+          explain: String.raw`Non posso moltiplicare per $x-2$ senza conoscerne il segno. Porto tutto a sinistra: $\dfrac{1}{x-2} - 1 = \dfrac{3-x}{x-2} < 0$. Il quoziente è negativo per $x < 2$ e per $x > 3$. Verifica: per $x = 2{,}5$ si ha $\frac{1}{0{,}5} = 2$, che non è minore di $1$.` },
+      ],
+    },
+    {
+      id: 's00.disequazioni.L3',
+      title: 'Sistemi, valore assoluto, domini',
+      cards: [
+        { type: 'learn', title: 'Sistemi: si intersecano le soluzioni', body: String.raw`Un **sistema di disequazioni** richiede che tutte le disuguaglianze siano vere insieme. Quindi risolvo ciascuna e prendo l'**intersezione**, cioè ciò che hanno in comune.
+
+Esempio: $x > 1$ e $x < 3$ danno $(1,3)$, perché $x$ deve stare a destra di $1$ e a sinistra di $3$. Si scrive $\begin{cases} x > 1 \\ x < 3 \end{cases}$.` },
+        { id: 's00.disequazioni.L3.e1', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi il sistema $\begin{cases} x - 1 > 0 \\ 2x - 6 < 0 \end{cases}$`,
+          answer: '(1,3)',
+          explain: String.raw`Prima disequazione: $x > 1$. Seconda: $2x < 6$, cioè $x < 3$. Intersezione: $(1,3)$.` },
+        { id: 's00.disequazioni.L3.e2', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi il sistema $\begin{cases} x^2 - 4 \ge 0 \\ x < 5 \end{cases}$`,
+          answer: '(-inf,-2]U[2,5)',
+          explain: String.raw`Prima: $x^2 - 4 \ge 0$ vale per $x \le -2$ oppure $x \ge 2$. Seconda: $x < 5$. Intersezione: $(-\infty,-2]\cup[2,5)$.` },
+        { type: 'learn', title: 'Valore assoluto: la distanza dallo zero', body: String.raw`$|A|$ è la distanza di $A$ dallo $0$, quindi è sempre $\ge 0$. Per risolvere:
+
+- $|A| < k$ con $k > 0$ equivale a $-k < A < k$: soluzioni **in mezzo**;
+- $|A| > k$ con $k > 0$ equivale a $A < -k$ oppure $A > k$: soluzioni **fuori**;
+- $|A| < k$ con $k \le 0$ non ha soluzioni; $|A| > k$ con $k < 0$ vale sempre.
+
+>* **Distanza.** $|x - a| < r$ significa $x \in (a-r,\, a+r)$: i punti a distanza minore di $r$ da $a$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $|2x - 1| < 3$.`,
+          steps: [
+            String.raw`Scrivo la doppia disuguaglianza: $-3 < 2x - 1 < 3$.`,
+            { text: String.raw`Aggiungo $1$ a tutte e tre le parti: $-2 < 2x < 4$.`,
+              ask: { type: 'num', prompt: String.raw`Divido $-2 < 2x < 4$ per $2$: quanto vale l'estremo sinistro $-2 : 2$?`, answer: '-1', explain: String.raw`$-2 : 2 = -1$. Si divide per $2 > 0$, quindi il verso non cambia.` } },
+            String.raw`Soluzione: $-1 < x < 2$, cioè $(-1,2)$.`,
+          ],
+          result: String.raw`$|2x-1| < 3 \iff -1 < x < 2$.` },
+        { id: 's00.disequazioni.L3.e3', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $|x + 1| \ge 2$.`,
+          answer: '(-inf,-3]U[1,inf)',
+          explain: String.raw`Due casi: $x + 1 \ge 2$ dà $x \ge 1$; $x + 1 \le -2$ dà $x \le -3$. Gli estremi sono inclusi perché la disuguaglianza è larga.` },
+        { id: 's00.disequazioni.L3.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è l'insieme delle soluzioni di $|x - 3| > 1$?`,
+          options: [String.raw`$(2,4)$`, String.raw`$(-\infty,2)\cup(4,+\infty)$`, String.raw`$[2,4]$`, String.raw`$(-\infty,2]\cup[4,+\infty)$`],
+          answer: 1,
+          explain: String.raw`La distanza da $3$ deve essere maggiore di $1$: sono i punti **fuori** da $(2,4)$. Gli estremi $2$ e $4$ sono esclusi, perché la disuguaglianza è stretta. $(2,4)$ è la soluzione di $<1$ con il segno sbagliato; $[2,4]$ è la soluzione di $\le 1$; l'ultimo distrattore include gli estremi che la disuguaglianza stretta esclude.` },
+        { type: 'learn', title: 'Dominio: le regole', body: String.raw`Il **dominio** di una funzione è l'insieme delle $x$ per cui la formula ha senso. Tre controlli bastano quasi sempre:
+
+- **radice con indice pari**: il radicando deve essere $\ge 0$. Per $\sqrt{A}$ serve $A \ge 0$;
+- **denominatore**: deve essere diverso da zero;
+- **logaritmo** $\log(A)$: serve $A > 0$, perché $\log 0$ non esiste.
+
+Se ci sono più condizioni, il dominio è l'**intersezione** delle soluzioni.` },
+        { id: 's00.disequazioni.L3.e5', type: 'interval', level: 2, source: 'Itinere 11/11/2025 · Parte B (dominio)',
+          prompt: String.raw`Determina il dominio di $f(x) = \dfrac{\sqrt{x-1}}{\sqrt{5-x}}$.`,
+          answer: '[1,5)',
+          explain: String.raw`Serve $x - 1 \ge 0$, cioè $x \ge 1$, e $5 - x > 0$, cioè $x < 5$: il denominatore non può essere zero, quindi $5$ è escluso. Dominio $[1,5)$.` },
+        { id: 's00.disequazioni.L3.e6', type: 'interval', level: 2,
+          prompt: String.raw`Determina il dominio di $\sqrt{x^2 - 3x}$.`,
+          answer: '(-inf,0]U[3,inf)',
+          explain: String.raw`$x^2 - 3x = x(x-3) \ge 0$: il segno è positivo fuori dalle radici $0$ e $3$, e vale zero in entrambe.` },
+        { id: 's00.disequazioni.L3.e7', type: 'interval', level: 2,
+          prompt: String.raw`Determina il dominio di $\log(x^2 - 4)$.`,
+          answer: '(-inf,-2)U(2,inf)',
+          explain: String.raw`Serve $x^2 - 4 > 0$, con argomento del logaritmo strettamente positivo: $(x-2)(x+2) > 0$. Soluzione: $x < -2$ oppure $x > 2$.` },
+        { id: 's00.disequazioni.L3.e8', type: 'mcq', level: 2,
+          prompt: String.raw`Qual è il dominio di $\dfrac{1}{\sqrt{x} - 1}$?`,
+          options: [String.raw`$[0,+\infty)$`, String.raw`$(0,1)\cup(1,+\infty)$`, String.raw`$[0,1)\cup(1,+\infty)$`, String.raw`$\R\setminus\{1\}$`],
+          answer: 2,
+          explain: String.raw`Serve $x \ge 0$ per la radice, e $\sqrt{x} \ne 1$, cioè $x \ne 1$. Dominio: $[0,1)\cup(1,+\infty)$. Lo zero è ammesso, perché $\sqrt{0} - 1 = -1 \ne 0$. $[0,+\infty)$ dimentica il denominatore; $\R\setminus\{1\}$ dimentica la radice.` },
+        { id: 's00.disequazioni.L3.e9', type: 'interval', level: 2,
+          prompt: String.raw`Determina il dominio di $\dfrac{x-1}{2x-3}$.`,
+          answer: '(-inf,3/2)U(3/2,inf)',
+          explain: String.raw`Il denominatore si annulla per $x = \frac{3}{2}$, che è l'unico punto escluso. Dominio: $\R\setminus\{\frac{3}{2}\}$.` },
+        { id: 's00.disequazioni.L3.e10', type: 'interval', level: 3, source: 'Appello 10/02/2026 · Parte B (studio di funzione)',
+          prompt: String.raw`Per $x > 2$, per quali $x$ è $-x^2 + 2x + 3 > 0$? Questo dice dove cresce $(x^2-3)e^{2-x}$ nel tratto $x > 2$.`,
+          answer: '(2,3)',
+          explain: String.raw`$-x^2 + 2x + 3 = -(x-3)(x+1)$. Il segno è positivo tra le radici $-1$ e $3$. Con la condizione $x > 2$ resta $(2,3)$. Dunque la funzione cresce su $(2,3)$ e decresce per $x > 3$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.disequazioni.gen-lineare', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.nz(-4, 4), b = R.int(-9, 9), op = R.pick(['>', '>=', '<', '<=']);
+        const r = pt(-b * Math.sign(a), Math.abs(a));
+        const sol = solveSet((v) => cmp(a * v + b, op), [r]);
+        const flip = a < 0;
+        const rel = flip ? FLIP[op] : op;
+        const lhs = `${cf(a)}x${b === 0 ? '' : ` ${b > 0 ? '+' : '-'} ${Math.abs(b)}`}`;
+        return {
+          type: 'interval',
+          prompt: String.raw`Risolvi $${lhs} ${OPTEX[op]} 0$.`,
+          answer: sol.s,
+          explain: String.raw`Sposto il termine noto: $${cf(a)}x ${OPTEX[op]} ${-b}$. ${flip ? `Divido per $${a} < 0$: il verso si inverte.` : `Divido per $${a} > 0$: il verso resta.`} Quindi $x ${OPTEX[rel]} ${r.t}$, cioè $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.disequazioni.gen-quadratica', type: 'gen', level: 2,
+      gen: (R) => {
+        const [r1, r2] = two(R, -4, 4);
+        const op = R.pick(['>', '>=', '<', '<=']);
+        const sol = solveSet((v) => cmp((v - r1) * (v - r2), op), [pt(r1), pt(r2)]);
+        const b = -(r1 + r2), c = r1 * r2;
+        const quad = `x^2${b === 0 ? '' : ` ${b > 0 ? '+' : '-'} ${Math.abs(b) === 1 ? '' : Math.abs(b)}x`}${c === 0 ? '' : ` ${c > 0 ? '+' : '-'} ${Math.abs(c)}`}`;
+        const larga = op.includes('=') ? 'Nelle radici il trinomio vale zero, quindi sono soluzioni della disuguaglianza larga. ' : '';
+        return {
+          type: 'interval',
+          prompt: String.raw`Risolvi $${quad} ${OPTEX[op]} 0$.`,
+          answer: sol.s,
+          explain: String.raw`Scompongo: $${quad} = (${xm(r1)})(${xm(r2)})$, con radici $${r1}$ e $${r2}$. Il coefficiente di $x^2$ è positivo: il trinomio è negativo tra le radici e positivo fuori. ${larga}Soluzione: $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.disequazioni.gen-fratta', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.int(-5, 5);
+        let q = R.int(-5, 5);
+        while (q === p) q = R.int(-5, 5);
+        const op = R.pick(['>', '>=', '<', '<=']);
+        const sol = solveSet((v) => v !== q && cmp((v - p) / (v - q), op), [pt(p), pt(q)]);
+        return {
+          type: 'interval',
+          prompt: String.raw`Risolvi $\dfrac{${xm(p)}}{${xm(q)}} ${OPTEX[op]} 0$.`,
+          answer: sol.s,
+          explain: String.raw`Il quoziente cambia segno in $x = ${p}$ (numeratore) e in $x = ${q}$ (denominatore). Quest'ultimo punto è **sempre escluso**; $x = ${p}$ è soluzione solo se la disuguaglianza è larga. Soluzione: $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.disequazioni.gen-modulo', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.pick([1, 2, 3]), b = R.int(-5, 5), c = R.int(1, 7), op = R.pick(['<', '<=', '>', '>=']);
+        const pts = [pt(c - b, a), pt(-c - b, a)];
+        const sol = solveSet((v) => cmp(Math.abs(a * v + b) - c, op), pts);
+        const lin = H.lin(a, b);
+        const txt = op[0] === '<'
+          ? `Il valore assoluto è minore di $${c}$: la quantità sta **tra** $-${c}$ e $${c}$. Scrivo $-${c} ${OPTEX[op]} ${lin} ${OPTEX[op]} ${c}$ e isolo $x$.`
+          : `Il valore assoluto è maggiore di $${c}$: la quantità sta **fuori** da $[-${c},${c}]$. Due casi: $${lin} ${OPTEX[op]} ${c}$, oppure $${lin} ${OPTEX[op === '>' ? '<' : '<=']} -${c}$.`;
+        return {
+          type: 'interval',
+          prompt: String.raw`Risolvi $|${lin}| ${OPTEX[op]} ${c}$.`,
+          answer: sol.s,
+          explain: `${txt} Soluzione: $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.disequazioni.p1', type: 'problem', level: 3, source: 'Appello 15/01/2026 · Parte B (dominio di una funzione)', points: 2,
+      prompt: String.raw`Determina il dominio di $f(x) = x\log x$ per $x < 1$ e $f(x) = \dfrac{x-1}{2x-3}$ per $x \ge 1$.`,
+      parts: [
+        { type: 'interval', prompt: String.raw`Dominio del primo ramo ($x < 1$).`, answer: '(0,1)', explain: String.raw`Serve $\log x$ definito, quindi $x > 0$. Con $x < 1$ resta $(0,1)$.` },
+        { type: 'interval', prompt: String.raw`Dominio del secondo ramo ($x \ge 1$).`, answer: '[1,3/2)U(3/2,inf)', explain: String.raw`Il denominatore $2x - 3$ si annulla in $x = \frac{3}{2}$, che è escluso.` },
+      ],
+      solution: String.raw`Primo ramo: $x > 0$ e $x < 1$, quindi $(0,1)$. Secondo ramo: $x \ge 1$ e $x \ne \frac{3}{2}$, quindi $[1,\frac{3}{2})\cup(\frac{3}{2},+\infty)$. Unione: $\operatorname{Dom} f = (0,\tfrac{3}{2})\cup(\tfrac{3}{2},+\infty)$.` },
+    { id: 's00.disequazioni.p2', type: 'interval', level: 1,
+      prompt: String.raw`Risolvi $3 - 2x \ge 1$.`, answer: '(-inf,1]',
+      explain: String.raw`Sposto $3$: $-2x \ge -2$. Divido per $-2 < 0$: il verso si inverte, $x \le 1$.` },
+    { id: 's00.disequazioni.p3', type: 'interval', level: 2,
+      prompt: String.raw`Risolvi $x^2 - 6x + 8 \le 0$.`, answer: '[2,4]',
+      explain: String.raw`$x^2 - 6x + 8 = (x-2)(x-4)$: il trinomio è negativo tra le radici. La disuguaglianza è larga, quindi $2$ e $4$ sono inclusi.` },
+    { id: 's00.disequazioni.p4', type: 'tf', level: 1,
+      prompt: String.raw`Se $x^2 > 4$, allora $x > 2$.`, answer: false,
+      explain: String.raw`Falso: $x = -3$ dà $x^2 = 9 > 4$, ma non è $x > 2$. Le soluzioni sono $x < -2$ oppure $x > 2$.` },
+    { id: 's00.disequazioni.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Qual è il dominio di $\sqrt{4 - x^2}$?`,
+      options: [String.raw`$[-2,2]$`, String.raw`$(-\infty,-2]\cup[2,+\infty)$`, String.raw`$(-2,2)$`, String.raw`$\R$`],
+      answer: 0,
+      explain: String.raw`Serve $4 - x^2 \ge 0$, cioè $x^2 \le 4$: $-2 \le x \le 2$. Il secondo distrattore è il dominio di $\sqrt{x^2-4}$, che ha il segno invertito.` },
+    { id: 's00.disequazioni.p6', type: 'match', level: 1,
+      prompt: String.raw`Abbina ogni disequazione al suo insieme di soluzioni.`,
+      pairs: [
+        [String.raw`$x^2 - 1 > 0$`, String.raw`$(-\infty,-1)\cup(1,+\infty)$`],
+        [String.raw`$x^2 + 1 > 0$`, String.raw`$\R$`],
+        [String.raw`$x^2 + 1 < 0$`, String.raw`$\emptyset$`],
+        [String.raw`$|x| < 1$`, String.raw`$(-1,1)$`],
+      ],
+      explain: String.raw`$x^2 - 1 > 0$ è il prodotto $(x-1)(x+1)$, positivo fuori da $\pm 1$. $x^2 + 1$ è sempre positivo, quindi la disuguaglianza $<0$ è impossibile. $|x| < 1$ significa $-1 < x < 1$.` },
+    { id: 's00.disequazioni.p7', type: 'mcq', level: 1,
+      prompt: String.raw`La disequazione $(x-1)(x+2) < 0$ è soddisfatta da:`,
+      options: [String.raw`$x = 0$`, String.raw`$x = 2$`, String.raw`$x = -3$`, String.raw`$x = 1$`],
+      answer: 0,
+      explain: String.raw`Per $x = 0$: $(0-1)(0+2) = -2 < 0$. Per $x = 2$ il prodotto è $(1)(4) = 4 > 0$, per $x = -3$ è $(-4)(-1) = 4 > 0$, e per $x = 1$ vale zero, quindi la disuguaglianza stretta non è soddisfatta.` },
+  ],
+  flashcards: [
+    { id: 's00.disequazioni.fc1', kind: 'def', front: 'Notazione degli intervalli', back: String.raw`$(a,b)$: estremi esclusi; $[a,b]$: estremi inclusi. L'infinito ha sempre la parentesi tonda: $(-\infty,a]$, $(a,+\infty)$.` },
+    { id: 's00.disequazioni.fc2', kind: 'metodo', front: 'Disequazione di secondo grado', back: String.raw`Scompongo $ax^2+bx+c = a(x-x_1)(x-x_2)$ (se $\Delta \ge 0$). Per $a>0$: negativo tra le radici, positivo fuori. Se $\Delta<0$ il segno è sempre quello di $a$.` },
+    { id: 's00.disequazioni.fc3', kind: 'metodo', front: 'Disequazione fratta', back: String.raw`Trovo gli zeri di $N$ e $D$, studio il segno su ciascun intervallo. Gli zeri di $D$ sono sempre esclusi; gli zeri di $N$ sono inclusi solo se la disuguaglianza è larga.` },
+    { id: 's00.disequazioni.fc4', kind: 'formula', front: String.raw`$|A| < k$ e $|A| > k$ (con $k > 0$)`, back: String.raw`$|A| < k \iff -k < A < k$. $|A| > k \iff A < -k$ oppure $A > k$.` },
+    { id: 's00.disequazioni.fc5', kind: 'metodo', front: 'Dominio: le condizioni', back: String.raw`Radice pari: radicando $\ge 0$. Denominatore: $\ne 0$. Logaritmo: argomento $> 0$. Il dominio è l'intersezione delle condizioni.` },
+    { id: 's00.disequazioni.fc6', kind: 'errore', front: 'Moltiplicare per un termine di segno incerto', back: String.raw`Moltiplicare o dividere per $x$ o per $x-2$ può cambiare il verso. Per evitarlo porto tutto da una parte e studio il segno del quoziente.` },
+    { id: 's00.disequazioni.fc7', kind: 'errore', front: 'Il denominatore nelle disuguaglianze larghe', back: String.raw`Con $\le$ o $\ge$ gli zeri del numeratore sono soluzioni, ma gli zeri del denominatore **no**: la frazione lì non esiste.` },
+  ],
+});
