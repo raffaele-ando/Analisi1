@@ -55,6 +55,7 @@ export function McqInput({ ex, value, onChange, locked, result }) {
       } else if (isSel(i)) cls += ' sel';
       return html`<button class=${cls} disabled=${locked} onClick=${() => toggle(i)} aria-pressed=${isSel(i)}>
         <span class="k">${LETTERS[k]}</span><${Md} text=${ex.options[i]} />
+        ${locked && correct(i) ? html`<span class="state" aria-hidden="true"><${I.check} /></span>` : locked && isSel(i) ? html`<span class="state" aria-hidden="true"><${I.x} /></span>` : ''}
       </button>`;
     })}
   </div>`;
@@ -67,7 +68,8 @@ export function TfInput({ ex, value, onChange, locked }) {
       if (ex.answer === v) cls += ' right';
       else if (value === v) cls += ' wrong';
     } else if (value === v) cls += ' sel';
-    return html`<button class=${cls} disabled=${locked} onClick=${() => onChange(v)}>${label}</button>`;
+    const st = locked && ex.answer === v ? html`<span class="state" aria-hidden="true"><${I.check} /></span>` : locked && value === v ? html`<span class="state" aria-hidden="true"><${I.x} /></span>` : '';
+    return html`<button class=${cls} disabled=${locked} onClick=${() => onChange(v)}>${label}${st}</button>`;
   };
   return html`<div class="tf">${b(true, 'Vero')}${b(false, 'Falso')}</div>`;
 }
@@ -164,7 +166,7 @@ export function OrderInput({ ex, value, onChange, locked }) {
       ${chosen.length === 0 && html`<p class="small faint">Tocca i passi qui sotto nell'ordine giusto.${ex.distractors?.length ? ' Attenzione: alcuni passi sono sbagliati e vanno lasciati fuori.' : ''}</p>`}
       ${chosen.map((k, i) => {
         const bad = locked && k !== i;
-        return html`<div class="order-item" style=${bad ? 'border-color:var(--red)' : locked ? 'border-color:var(--green)' : ''}>
+        return html`<div class="order-item" style=${bad ? 'border-color:var(--danger)' : locked ? 'border-color:var(--success)' : ''}>
           <span class="num">${i + 1}</span><${Md} text=${text(k)} />
           ${!locked &&
           html`<div class="ctl">
@@ -179,7 +181,7 @@ export function OrderInput({ ex, value, onChange, locked }) {
     html`<div class="bank">${remaining.map((p) => html`<button class="opt" onClick=${() => onChange([...chosen, p.k])}><${Md} text=${p.s} /></button>`)}</div>`}
     ${locked &&
     html`<div class="stack-sm"><p class="eyebrow">Ordine corretto</p>${ex.steps.map(
-      (s, i) => html`<div class="order-item" style="border-color:var(--green)"><span class="num" style="background:var(--green)">${i + 1}</span><${Md} text=${s} /></div>`,
+      (s, i) => html`<div class="order-item" style="border-color:var(--success)"><span class="num" style="background:var(--success)">${i + 1}</span><${Md} text=${s} /></div>`,
     )}</div>`}
   </div>`;
 }
@@ -196,7 +198,7 @@ export function ClozeInput({ ex, value, onChange, locked }) {
       const b = ex.blanks[bi];
       const ok = locked && vals[bi] === b.answer;
       const plain = (o) => o.replace(/\$/g, '');
-      return html`<select aria-label=${'Spazio ' + (bi + 1)} disabled=${locked} value=${vals[bi]} style=${locked ? `border-color:${ok ? 'var(--green)' : 'var(--red)'}` : ''}
+      return html`<select aria-label=${'Spazio ' + (bi + 1)} disabled=${locked} value=${vals[bi]} style=${locked ? `border-color:${ok ? 'var(--success)' : 'var(--danger)'}` : ''}
         onChange=${(e) => {
           const v = vals.slice();
           v[bi] = +e.currentTarget.value;
@@ -275,7 +277,7 @@ export function OpenInput({ ex, value, onChange, locked, ai }) {
       <button class="btn ghost sm" onClick=${() => set({ revealed: true, checks: ex.rubric.map(() => false), score: 0 })}><${I.eye} /> Confronta con la risposta modello</button>
       ${ai?.available && v.text.trim().length > 20 && html`<button class="btn ghost sm" disabled=${aiState?.busy} onClick=${askClaude}><${I.ai} /> ${aiState?.busy ? 'Correzione…' : 'Correggi con Claude'}</button>`}
     </div>`}
-    ${aiState?.error && html`<p class="small" style="color:var(--red)">${aiState.error}</p>`}
+    ${aiState?.error && html`<p class="small" style="color:var(--danger)">${aiState.error}</p>`}
     ${v.revealed &&
     html`<div class="stack">
       <div class="card flat tint stack-sm"><p class="eyebrow">Risposta modello</p><${Md} text=${ex.answer} /></div>

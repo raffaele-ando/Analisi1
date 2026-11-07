@@ -41,7 +41,7 @@ export function TheoryHub({ go }) {
     </div>
     <div class="stack-sm"><span class="eyebrow">Tipo</span><div class="seg">${KINDS.map(([k, l], i) => html`<button class=${kind === i ? 'on' : ''} onClick=${() => setKind(i)}>${l}</button>`)}</div></div>
     <div class="field"><label for="th-sec">Sezione</label>
-      <select id="th-sec" class="input" style="font-family:var(--f-body)" value=${sec} onChange=${(e) => setSec(e.currentTarget.value)}>
+      <select id="th-sec" class="input" style="font-family:var(--f-ui)" value=${sec} onChange=${(e) => setSec(e.currentTarget.value)}>
         <option value="">Tutte le sezioni sbloccate</option>
         ${course.sections.map((s) => html`<option value=${s.id}>${s.title}</option>`)}
       </select></div>

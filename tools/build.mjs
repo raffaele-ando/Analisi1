@@ -32,7 +32,6 @@ if (/\burl\(\s*['"]?(?!data:)(?!#)/.test(css.replace(/url\(\s*['"]?data:[^)]*\)/
 
 const fragment = `<title>Analisi 1 · Percorso</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
 ${css}
 </style>

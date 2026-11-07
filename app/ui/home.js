@@ -1,25 +1,33 @@
+// Percorso (schermata principale), scheda di abilità e onboarding.
+// Una sola azione principale per schermata: "Continua" sulla lezione corrente.
 import { html, useState } from '../vendor/preact-htm.js';
 import { store } from '../store.js';
-import { I, SECTION_ICON, SECTION_COLOR } from './icons.js';
+import { I } from './icons.js';
 import { Md } from './widgets.js';
-import { dayXp, streak, getSkill } from '../engine/state.js';
-import { isUnlocked, skillComplete, currentSkill, nextLesson, effectiveMastery, crowns, readiness, gradeLabel, dueCount } from '../engine/course.js';
+import { tex } from './md.js';
+import { dayXp, getSkill } from '../engine/state.js';
+import { isUnlocked, skillComplete, currentSkill, nextLesson, effectiveMastery, crowns, dueCount, flashDueCount } from '../engine/course.js';
 
-export function Ring({ value, max, label, sub, color = 'var(--green)', size = 76 }) {
-  const r = 32;
-  const c = 2 * Math.PI * r;
-  const f = Math.min(1, max ? value / max : 0);
-  return html`<div class="ring" style=${`width:${size}px;height:${size}px`}>
-    <svg viewBox="0 0 76 76"><circle cx="38" cy="38" r=${r} fill="none" stroke="var(--surface-2)" stroke-width="8" />
-      <circle cx="38" cy="38" r=${r} fill="none" stroke=${color} stroke-width="8" stroke-linecap="round" stroke-dasharray=${c} stroke-dashoffset=${c * (1 - f)} /></svg>
-    <div class="lbl"><div>${label}<small>${sub}</small></div></div>
-  </div>`;
+/** Simbolo matematico della sezione, composto con KaTeX (più chiaro di un'icona disegnata a mano). */
+export const SECTION_SYMBOL = {
+  s00: '\\tfrac{a}{b}', s01: '\\mathbb{R}', s02: 'z=a+ib', s03: 'f(x)', s04: '\\{a_n\\}', s05: '\\lim',
+  s06: 'o(x)', s07: 'C^0', s08: "f'", s09: '\\nearrow', s10: 'T_n', s11: '\\int', s12: '\\int^{\\infty}',
+  s13: '\\sum', s14: '\\sum x^n', s15: '\\vec{v}',
+};
+
+export function Sym({ tex: src, class: cls = 'sym' }) {
+  return html`<span class=${cls} aria-hidden="true" dangerouslySetInnerHTML=${{ __html: tex(src) }}></span>`;
 }
 
-function daysTo(dateStr) {
-  if (!dateStr) return null;
-  const d = new Date(dateStr + 'T09:00:00');
-  return Math.ceil((d - new Date()) / 86400000);
+export function Ring({ value, max, label, sub, color = 'var(--success)', size = 72 }) {
+  const r = 31;
+  const c = 2 * Math.PI * r;
+  const f = Math.min(1, max ? value / max : 0);
+  return html`<div class="ring" style=${`width:${size}px;height:${size}px`} role="img" aria-label=${`${label} ${sub}`}>
+    <svg viewBox="0 0 72 72"><circle cx="36" cy="36" r=${r} fill="none" stroke="var(--surface-2)" stroke-width="7" />
+      <circle cx="36" cy="36" r=${r} fill="none" stroke=${color} stroke-width="7" stroke-linecap="round" stroke-dasharray=${c} stroke-dashoffset=${c * (1 - f)} /></svg>
+    <div class="lbl"><div>${label}<small>${sub}</small></div></div>
+  </div>`;
 }
 
 export function Home({ go }) {
@@ -30,62 +38,68 @@ export function Home({ go }) {
   const curLesson = curSk && nextLesson(course, st, cur);
   const today = dayXp(st);
   const goal = st.profile.goal || 50;
-  const due = dueCount(course, st);
-  const rd = readiness(course, st);
-  const dte = daysTo(st.profile.examDate);
-  let globalIdx = 0;
+  const due = dueCount(course, st) + flashDueCount(course, st);
+  const name = st.profile.name ? `Ciao ${st.profile.name}` : 'Percorso';
+  let nodeIndex = 0;
 
   return html`<div class="wrap stack pad-top">
-    <div class="card hero-today">
-      <${Ring} value=${today} max=${goal} label=${today} sub=${'/ ' + goal + ' XP'} color=${today >= goal ? 'var(--green)' : 'var(--blue)'} />
-      <div class="stack-sm">
-        <h2>${st.profile.name ? `Ciao ${st.profile.name}` : 'Il tuo percorso'}</h2>
-        <p class="small muted">${today >= goal ? 'Obiettivo di oggi raggiunto. Un ripasso in più consolida la memoria.' : `Ancora ${goal - today} XP per l'obiettivo di oggi.`}
-          ${dte != null && dte >= 0 ? html` Esame tra <b>${dte}</b> ${dte === 1 ? 'giorno' : 'giorni'}.` : ''}</p>
-        <div class="row-wrap">
-          <span class="chip blue" title="Stima basata su padronanza, memoria e simulazioni">Voto stimato: ${gradeLabel(rd.grade)}</span>
-          ${due > 0 && html`<span class="chip red">${due} da ripassare</span>`}
-        </div>
+    <header class="screen-title">
+      <h1>${name}</h1>
+      <p class="muted">Dalle basi al 30 e lode, una lezione alla volta.</p>
+    </header>
+
+    <section class="card hero-today" aria-labelledby="today-h">
+      <${Ring} value=${today} max=${goal} label=${String(today)} sub=${'/' + goal} color=${today >= goal ? 'var(--success)' : 'var(--accent)'} />
+      <div class="stack-sm" style="min-width:0">
+        <p class="eyebrow" id="today-h">${today >= goal ? 'Obiettivo di oggi raggiunto' : 'Obiettivo di oggi'}</p>
+        ${curSk && curLesson
+          ? html`<p style="font-weight:600">${curSk.title}</p><p class="small muted">${curLesson.title}</p>`
+          : html`<p style="font-weight:600">Tutte le lezioni completate</p>`}
       </div>
-    </div>
-    <div class="row-wrap">
-      ${curSk && curLesson && html`<button class="btn" style="flex:1" onClick=${() => go({ name: 'lesson', skillId: cur, lessonId: curLesson.id })}><${I.play} /> Continua: ${curSk.title}</button>`}
-      ${due > 0 && html`<button class="btn ghost" style="flex:1" onClick=${() => go({ name: 'review' })}><${I.review} /> Ripassa (${due})</button>`}
-    </div>
+      ${curSk && curLesson && html`<button class="btn block" style="grid-column: 1 / -1" onClick=${() => go({ name: 'lesson', skillId: cur, lessonId: curLesson.id })}>
+        <${I.play} /> Continua</button>`}
+    </section>
+
+    ${due > 0 && html`<section class="card flat row" aria-label="Ripasso">
+      <div class="grow" style="flex:1;min-width:0"><p style="font-weight:600">Ripasso pronto</p><p class="small muted">${due} ${due === 1 ? 'elemento' : 'elementi'} da ripassare</p></div>
+      <button class="btn ghost sm" onClick=${() => go({ name: 'review' })}>Ripassa</button>
+    </section>`}
 
     ${course.sections.length === 0 && html`<div class="card"><p>I contenuti non sono stati caricati. Ricarica la pagina.</p></div>`}
 
     ${course.sections.map((sec) => {
-      const color = SECTION_COLOR[sec.id] || 'var(--blue)';
-      const firstLocked = !isUnlocked(course, st, sec.skills[0].id);
+      const first = sec.skills[0];
+      const firstLocked = !isUnlocked(course, st, first.id);
       const done = sec.skills.filter((s) => skillComplete(course, st, s.id)).length;
-      return html`<section class="stack-sm" style=${`--sec:${color}`} aria-label=${sec.title}>
-        <div class="section-band">
-          <div style="flex:1;min-width:0" class="stack-sm">
-            <span class="num">§ ${sec.id.slice(1)} · ${done}/${sec.skills.length}</span>
+      const pct = sec.skills.length ? done / sec.skills.length : 0;
+      return html`<section class="stack-sm" aria-label=${sec.title}>
+        <div class="section-head">
+          <div class="top">
             <h2>${sec.title}</h2>
-            ${sec.subtitle && html`<p>${sec.subtitle}</p>`}
           </div>
-          ${firstLocked && html`<button class="btn" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Salta qui</button>`}
+          <div class="row"><span class="count">${done} di ${sec.skills.length} completate</span><span class="spacer"></span>
+            ${firstLocked && html`<button class="btn quiet sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Salta con un test</button>`}</div>
+          <div class="bar blue" role="progressbar" aria-label=${'Progresso ' + sec.title} aria-valuemin="0" aria-valuemax="100" aria-valuenow=${Math.round(pct * 100)}><i style=${`width:${pct * 100}%`}></i></div>
         </div>
         <div class="path">
           ${sec.skills.map((sk) => {
-            const i = globalIdx++;
+            const i = nodeIndex++;
             const unlocked = isUnlocked(course, st, sk.id);
             const complete = skillComplete(course, st, sk.id);
             const ldone = (getSkill(st, sk.id)?.done || []).length;
             const total = (sk.lessons || []).length || 1;
             const cr = crowns(course, st, sk.id);
-            const dx = Math.round(Math.sin(i * 0.95) * 64);
-            const cls = 'node' + (!unlocked ? ' locked' : complete && cr >= 5 ? ' done' : '') + (sk.id === cur && unlocked ? ' current' : '');
+            const dx = Math.round(Math.sin(i * 0.95) * 44);
+            const isCurrent = sk.id === cur && unlocked;
+            const cls = 'node' + (!unlocked ? ' locked' : complete ? ' done' : '') + (isCurrent ? ' current pulse' : '');
             const frac = ldone / total;
-            const Ico = I[SECTION_ICON[sec.id]] || I.star;
+            const label = !unlocked ? sk.title + ', bloccata' : complete ? sk.title + ', completata' : sk.title + (frac > 0 ? `, ${ldone} di ${total} lezioni` : '');
             return html`<div class=${cls} style=${`--dx:${dx}px`}>
-              <button class="disc" aria-label=${sk.title + (unlocked ? '' : ' (bloccata)')} onClick=${() => setSheet(sk.id)}>
-                ${unlocked ? html`<${Ico} />` : html`<${I.lock} />`}
+              <button class="disc" aria-label=${label} onClick=${() => setSheet(sk.id)}>
+                ${!unlocked ? html`<${I.lock} />` : complete ? html`<${I.check} />` : html`<${Sym} tex=${SECTION_SYMBOL[sec.id] || 'x'} />`}
                 ${unlocked && frac > 0 && frac < 1 &&
-                html`<svg class="prog" viewBox="0 0 92 86"><ellipse cx="46" cy="43" rx="44" ry="41" fill="none" stroke="var(--surface-2)" stroke-width="5"/>
-                  <ellipse cx="46" cy="43" rx="44" ry="41" fill="none" stroke="var(--hl)" stroke-width="5" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset=${100 - frac * 100} transform="rotate(-90 46 43)"/></svg>`}
+                html`<svg class="prog" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="40" fill="none" stroke="var(--surface-2)" stroke-width="3"/>
+                  <circle cx="42" cy="42" r="40" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset=${100 - frac * 100} transform="rotate(-90 42 42)"/></svg>`}
               </button>
               <span class="lbl">${sk.title}</span>
               ${cr > 0 && html`<span class="crowns"><${I.crown} />${cr}/5</span>`}
@@ -108,7 +122,7 @@ export function SkillSheet({ skillId, go, onClose }) {
   const nFlash = (sk.flashcards || []).length;
   const anyDone = done.size > 0;
   return html`<div class="overlay" onClick=${(e) => e.target === e.currentTarget && onClose()}>
-    <div class="sheet stack" role="dialog" aria-label=${sk.title} style=${`--sec:${SECTION_COLOR[sec.id]}`}>
+    <div class="sheet stack" role="dialog" aria-modal="true" aria-label=${sk.title}>
       <div class="row"><span class="eyebrow">${sec.title}</span><span class="spacer"></span><button class="x-btn" aria-label="Chiudi" onClick=${onClose}><${I.x} /></button></div>
       <h2>${sk.title}</h2>
       ${sk.summary && html`<${Md} class="muted" text=${sk.summary} />`}
@@ -116,15 +130,15 @@ export function SkillSheet({ skillId, go, onClose }) {
         <div class="row small"><span>Padronanza</span><span class="spacer"></span><b class="tnum">${Math.round(m * 100)}%</b></div>
         <div class="bar"><i style=${`width:${m * 100}%`}></i></div>
       </div>
-      ${(sk.examRefs || []).length > 0 && html`<div class="row-wrap">${sk.examRefs.slice(0, 6).map((r) => html`<span class="chip hl">${r}</span>`)}</div>`}
-      ${!unlocked && html`<div class="callout"><b>Abilità bloccata.</b> Completa quella precedente, oppure fai il test per saltare alla sezione “${sec.title}”.
-        <div class="row-wrap mt"><button class="btn sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Test per saltare</button></div></div>`}
+      ${(sk.examRefs || []).length > 0 && html`<div class="row-wrap">${sk.examRefs.slice(0, 6).map((r) => html`<span class="chip">${r}</span>`)}</div>`}
+      ${!unlocked && html`<div class="callout">Si sblocca completando la sezione precedente, oppure con un test.
+        <div class="row-wrap mt"><button class="btn sm" onClick=${() => go({ name: 'testout', sectionId: sec.id })}>Fai il test</button></div></div>`}
       <div class="list">
         ${(sk.lessons || []).map((le, i) => {
           const ok = done.has(le.id);
           return html`<div class=${'lesson-row' + (ok ? ' ok' : '')}>
-            <span class="n">${ok ? html`<${I.check} style="width:18px;height:18px" />` : i + 1}</span>
-            <div class="grow"><b>${le.title}</b><div class="small faint">${(le.cards || []).length} schede</div></div>
+            <span class="n">${ok ? html`<${I.check} />` : i + 1}</span>
+            <div class="grow" style="flex:1;min-width:0"><b>${le.title}</b><div class="caption faint">${(le.cards || []).length} schede</div></div>
             <button class=${'btn sm' + (ok ? ' ghost' : '')} disabled=${!unlocked} onClick=${() => go({ name: 'lesson', skillId, lessonId: le.id })}>${ok ? 'Ripeti' : 'Inizia'}</button>
           </div>`;
         })}
@@ -133,59 +147,60 @@ export function SkillSheet({ skillId, go, onClose }) {
         <button class="btn green" style="flex:1" disabled=${!anyDone} onClick=${() => go({ name: 'practice', skillId })}><${I.target} /> Allenati</button>
         <button class="btn ghost" style="flex:1" disabled=${!nFlash} onClick=${() => go({ name: 'flash', skillId })}><${I.book} /> Teoria (${nFlash})</button>
       </div>
-      ${!anyDone && unlocked && html`<p class="small faint">L'allenamento si sblocca dopo la prima lezione.</p>`}
+      ${!anyDone && unlocked && html`<p class="caption faint">L'allenamento si sblocca dopo la prima lezione.</p>`}
     </div>
   </div>`;
 }
 
 export function Onboarding({ onDone }) {
   const p = store.st.profile;
+  const [step, setStep] = useState(0);
   const [name, setName] = useState(p.name || '');
   const [goal, setGoal] = useState(p.goal || 50);
   const [examDate, setExamDate] = useState(p.examDate || '');
-  const [step, setStep] = useState(0);
   const goals = [
-    [20, 'Leggero', '≈ 10 min'],
-    [50, 'Regolare', '≈ 20 min'],
-    [100, 'Intenso', '≈ 40 min'],
-    [150, 'Sessione d\'esame', '≈ 1 ora'],
+    [20, 'Leggero', '10 minuti al giorno'],
+    [50, 'Regolare', '20 minuti al giorno'],
+    [100, 'Intenso', '40 minuti al giorno'],
   ];
   const finish = (start) => {
     store.setProfile({ name: name.trim(), goal, examDate, onboarded: true });
     onDone(start);
   };
-  return html`<div class="wrap stack pad-top" style="padding-bottom:40px">
-    <div class="brand" style="font-size:1.3rem"><span class="mark">∫</span> Analisi 1 · Percorso</div>
-    ${step === 0 &&
-    html`<div class="stack">
-      <h1>Dallo zero al 30 e lode, un passo al giorno.</h1>
-      <p class="muted">Un percorso costruito su 30 temi d'esame di Analisi Matematica 1 e Geometria (Ing. Gestionale, PoliMi): ogni argomento, ogni tipo di esercizio, ogni domanda di teoria che esce davvero.</p>
-      <div class="card flat stack-sm">
-        <p><b>Come funziona.</b></p>
-        <ul class="md" style="padding-left:1.2em;margin:0">
-          <li>Lezioni brevi: un'idea, un esempio svolto, poi esercizi da risolvere tu.</li>
-          <li>Ogni errore riceve una spiegazione e torna nel ripasso quando stai per dimenticarlo.</li>
-          <li>Teoria per la Parte A con schede, dimostrazioni da ricostruire e risposte aperte.</li>
-          <li>Simulazioni d'esame cronometrate con i temi veri.</li>
-          <li>Progressi salvati in automatico nel cloud, su tutti i tuoi dispositivi, con cronologia ripristinabile.</li>
-        </ul>
+  if (step === 0) {
+    return html`<div class="wrap stack" style="padding-top:48px;min-height:80vh;justify-content:space-between">
+      <div class="stack">
+        <div class="brand"><span class="mark" aria-hidden="true">∫</span>Analisi 1</div>
+        <h1>Dalle basi al 30 e lode, una lezione alla volta.</h1>
+        <p class="muted">Lezioni brevi, correzione immediata e ripasso nel momento giusto. Gli esercizi sono quelli dei temi d'esame.</p>
       </div>
-      <button class="btn block" onClick=${() => setStep(1)}>Inizia</button>
-    </div>`}
-    ${step === 1 &&
-    html`<div class="stack">
-      <h2>Come ti chiami?</h2>
-      <div class="field"><label for="ob-name">Nome (facoltativo)</label><input id="ob-name" class="input" style="font-family:var(--f-body)" value=${name} onInput=${(e) => setName(e.currentTarget.value)} /></div>
-      <h2>Quanto vuoi studiare al giorno?</h2>
-      <div class="options">${goals.map(([g, l, t]) => html`<button class=${'opt' + (goal === g ? ' sel' : '')} onClick=${() => setGoal(g)}><b style="flex:1">${l}</b><span class="faint small">${g} XP · ${t}</span></button>`)}</div>
-      <div class="field"><label for="ob-date">Data dell'esame (facoltativa)</label><input id="ob-date" type="date" class="input" value=${examDate} onInput=${(e) => setExamDate(e.currentTarget.value)} /></div>
-      <button class="btn block" onClick=${() => setStep(2)}>Avanti</button>
-    </div>`}
-    ${step === 2 &&
-    html`<div class="stack">
-      <h2>Da dove parti?</h2>
-      <button class="opt" onClick=${() => finish('zero')}><div class="stack-sm" style="flex:1"><b>Parto da zero</b><span class="small muted">Ripartiamo dalle basi: frazioni, equazioni, logaritmi, trigonometria. Consigliato se la matematica delle superiori è un ricordo lontano.</span></div></button>
-      <button class="opt" onClick=${() => finish('test')}><div class="stack-sm" style="flex:1"><b>Conosco già le basi</b><span class="small muted">Un test di 12 domande sulle fondamenta: se lo superi, inizi direttamente dagli insiemi numerici.</span></div></button>
-    </div>`}
+      <div class="card flat center" style="padding:32px 16px" aria-hidden="true">
+        <span style="font-size:30px" dangerouslySetInnerHTML=${{ __html: tex('\\int_0^1 x^2\\,dx=\\tfrac{1}{3}') }}></span>
+      </div>
+      <div class="stack">
+        <button class="btn block" onClick=${() => setStep(1)}>Inizia</button>
+        <button class="btn quiet block" onClick=${() => finish('test')}>Ho già studiato la matematica</button>
+      </div>
+    </div>`;
+  }
+  return html`<div class="wrap stack" style="padding-top:32px;padding-bottom:40px">
+    <div class="stack-sm">
+      <p class="eyebrow">Ultimo passo</p>
+      <h2>Quanto tempo puoi studiare al giorno?</h2>
+    </div>
+    <div class="stack-sm" role="radiogroup" aria-label="Obiettivo giornaliero">
+      ${goals.map(([g, l, t]) => html`<button class=${'opt' + (goal === g ? ' sel' : '')} role="radio" aria-checked=${goal === g} onClick=${() => setGoal(g)}>
+        <span class="stack-sm" style="gap:0;flex:1"><b>${l}</b><span class="small muted">${t}</span></span>
+        ${goal === g && html`<span class="state"><${I.check} /></span>`}
+      </button>`)}
+    </div>
+    <div class="field"><label for="ob-name">Come ti chiami? <span class="faint">(facoltativo)</span></label>
+      <input id="ob-name" class="input" value=${name} onInput=${(e) => setName(e.currentTarget.value)} /></div>
+    <div class="field"><label for="ob-date">Data dell'esame <span class="faint">(facoltativa)</span></label>
+      <input id="ob-date" type="date" class="input" value=${examDate} onInput=${(e) => setExamDate(e.currentTarget.value)} /></div>
+    <div class="stack-sm" style="margin-top:8px">
+      <button class="btn block" onClick=${() => finish('zero')}>Inizia la prima lezione</button>
+      <button class="btn quiet block" onClick=${() => setStep(0)}>Indietro</button>
+    </div>
   </div>`;
 }

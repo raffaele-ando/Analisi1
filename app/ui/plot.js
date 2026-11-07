@@ -2,7 +2,7 @@
 import { compile } from '../engine/check.js';
 import { esc } from './md.js';
 
-const COLORS = ['var(--blue)', 'var(--red)', 'var(--green)', 'var(--flame)'];
+const COLORS = ['var(--accent)', 'var(--danger)', 'var(--success)', 'var(--streak)'];
 
 function niceStep(range) {
   const raw = range / 8;
@@ -40,7 +40,7 @@ export function plotSVG(spec) {
   // griglia
   const stx = niceStep(x1 - x0);
   const sty = niceStep(y1 - y0);
-  out.push('<g stroke="var(--grid)" stroke-width="1">');
+  out.push('<g stroke="var(--line)" stroke-width="1">');
   for (let x = Math.ceil(x0 / stx) * stx; x <= x1 + 1e-9; x += stx) out.push(`<line x1="${sx(x)}" y1="${P}" x2="${sx(x)}" y2="${H - P}"/>`);
   for (let y = Math.ceil(y0 / sty) * sty; y <= y1 + 1e-9; y += sty) out.push(`<line x1="${P}" y1="${sy(y)}" x2="${W - P}" y2="${sy(y)}"/>`);
   out.push('</g>');
@@ -71,7 +71,7 @@ export function plotSVG(spec) {
       const y = f({ x });
       if (Number.isFinite(y)) pts.push(`${sx(x).toFixed(1)},${sy(Math.max(y0, Math.min(y1, y))).toFixed(1)}`);
     }
-    if (pts.length) out.push(`<polygon points="${sx(a.from)},${sy(0)} ${pts.join(' ')} ${sx(a.to)},${sy(0)}" fill="var(--hl)" fill-opacity="0.45" stroke="none"/>`);
+    if (pts.length) out.push(`<polygon points="${sx(a.from)},${sy(0)} ${pts.join(' ')} ${sx(a.to)},${sy(0)}" fill="var(--highlight)" fill-opacity="0.45" stroke="none"/>`);
   }
   // curve
   const span = y1 - y0;

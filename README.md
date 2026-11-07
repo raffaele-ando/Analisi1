@@ -31,10 +31,13 @@ docs/
   CURRICULUM.md       mappa delle sezioni e delle skill (id fissi)
   ESERCIZI_ESAME.md   domande dei temi d'esame con risultati verificati
   PEDAGOGIA.md        basi scientifiche di ogni tecnica usata
+  DESIGN.md           principi di design, regole e ragioni delle scelte
 tools/
   validate.mjs        valida tutti i contenuti (schema, LaTeX, risposte corrette)
   build.mjs           genera dist/ (pagina per l'Artifact e copia locale)
   check-imports.mjs   verifica gli import dei moduli
+  check-contrast.mjs  verifica il contrasto WCAG dei token colore
+  check-contrast.mjs  verifica il contrasto WCAG dei colori
   test-sync.mjs       test della sincronizzazione con database in memoria
 ```
 
@@ -44,6 +47,7 @@ tools/
 npm install                      # katex e mathjs, per validare i contenuti
 node tools/validate.mjs          # valida tutti i contenuti
 node tools/check-imports.mjs     # verifica gli import
+node tools/check-contrast.mjs    # verifica il contrasto WCAG dei colori (chiaro e scuro)
 node tools/test-sync.mjs         # test della sincronizzazione
 node tools/build.mjs             # genera dist/
 cd dist && python3 -m http.server 8000   # poi apri http://localhost:8000/index.html

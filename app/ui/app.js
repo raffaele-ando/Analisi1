@@ -1,15 +1,15 @@
-// Shell dell'app: navigazione a schede, schermate di sessione a tutto schermo, profilo e cronologia.
+// Shell dell'app: barra superiore, navigazione a schede, schermate di sessione a tutto schermo,
+// ripasso e profilo (liste raggruppate, come le impostazioni di iOS e Android).
 import { html, useState, useEffect } from '../vendor/preact-htm.js';
 import { store } from '../store.js';
 import { I } from './icons.js';
-import { Home, Onboarding } from './home.js';
+import { Home, Onboarding, Ring } from './home.js';
 import { Player } from './player.js';
 import { TheoryHub, FlashSession, Formulary } from './theory.js';
 import { ExamsHub, ExamRunner } from './exams.js';
-import { Ring } from './home.js';
 import { lessonCards, skillPracticeQueue, reviewQueue, testOutQueue } from '../engine/session.js';
 import { dueCount, flashDueCount, readiness, gradeLabel } from '../engine/course.js';
-import { streak, dayXp, totalXp, validateImported, emptyState, exportPayload, deviceLabel } from '../engine/state.js';
+import { streak, dayXp, totalXp, validateImported, emptyState, deviceLabel } from '../engine/state.js';
 import { sound } from './sound.js';
 import { ai } from './ai.js';
 
@@ -21,9 +21,12 @@ const TABS = [
   { id: 'profile', label: 'Profilo', icon: 'user' },
 ];
 
-function syncChip(s) {
+/** Stato di sincronizzazione: solo un punto con etichetta accessibile; il testo completo è nel Profilo. */
+function SyncDot({ s }) {
   const kind = s?.kind || 'busy';
-  return html`<span class=${'sync-chip ' + (kind === 'ok' ? 'ok' : kind === 'local' ? 'local' : kind === 'err' ? 'err' : 'busy')} role="status" aria-live="polite"><span class="dot"></span>${s?.text || ''}</span>`;
+  const text = s?.text || '';
+  const cls = kind === 'ok' ? 'ok' : kind === 'local' ? 'local' : kind === 'err' ? 'err' : 'busy';
+  return html`<span class=${'sync-chip ' + cls} role="img" aria-label=${text} title=${text}><span class="dot"></span></span>`;
 }
 
 export function App() {
@@ -36,7 +39,6 @@ export function App() {
       setToast(msg);
       setTimeout(() => setToast((t) => (t === msg ? null : t)), 2600);
     };
-    applyTheme(store.st.settings.theme);
   }, []);
   useEffect(() => applyTheme(store.st.settings.theme), [store.st.settings.theme]);
 
@@ -56,9 +58,9 @@ export function App() {
   const exit = () => setRoute({ name: 'tab', tab: route.from || 'home' });
   const { st, course } = store;
   const due = dueCount(course, st) + flashDueCount(course, st);
-  const dx = dayXp(st);
-  const goal = st.profile.goal || 50;
   const sk = streak(st);
+  const isTabs = route.name === 'tab';
+  const showChrome = isTabs && route.tab !== 'onboarding';
 
   let screen;
   if (route.name === 'lesson') {
@@ -70,7 +72,7 @@ export function App() {
   } else if (route.name === 'review') {
     screen = route.cards?.length
       ? html`<${Player} key=${route.sid} title="Ripasso" cards=${route.cards} mode="review" onExit=${exit} onDone=${exit} />`
-      : html`<${Empty} title="Niente da ripassare adesso" text="Gli esercizi tornano nel ripasso quando stanno per essere dimenticati. Torna più tardi o studia una nuova lezione." onBack=${exit} />`;
+      : html`<${Empty} icon="review" title="Niente da ripassare adesso" text="Gli esercizi tornano qui quando stanno per essere dimenticati." action="Torna al percorso" onAction=${exit} />`;
   } else if (route.name === 'testout') {
     const sec = course.sections.find((s) => s.id === route.sectionId);
     screen = html`<${Player} key=${route.sid} title=${'Test · ' + sec.title} cards=${route.cards} mode="testout" onExit=${exit}
@@ -78,8 +80,8 @@ export function App() {
         const acc = res.total ? res.correct / res.total : 0;
         if (acc >= 0.8) {
           store.passTestOut(route.sectionId);
-          store.toast?.('Sezione sbloccata. Hai dimostrato di conoscerla.');
-        } else store.toast?.('Il test non è superato (serve l\'80%). Studia le lezioni della sezione.');
+          store.toast?.('Sezione sbloccata: hai dimostrato di conoscerla.');
+        } else store.toast?.('Test non superato: serve l\'80% di risposte giuste.');
         exit();
       }} />`;
   } else if (route.name === 'flash') {
@@ -92,26 +94,26 @@ export function App() {
     screen = html`<${TabScreen} tab=${route.tab} go=${go} />`;
   }
 
-  const isTabs = route.name === 'tab';
   return html`<div class="shell">
-    ${isTabs && route.tab !== 'onboarding' && html`<header class="topbar"><div class="wrap">
-      <div class="brand"><span class="mark" aria-hidden="true">∫</span>Analisi 1</div>
+    ${showChrome && html`<header class="topbar"><div class="wrap">
+      <div class="brand"><span class="mark" aria-hidden="true">∫</span><span>Analisi 1</span></div>
       <span class="spacer"></span>
-      <span class=${'stat flame' + (sk ? '' : ' off')} title="Giorni consecutivi di studio"><${I.flame} />${sk}</span>
-      <span class="stat bolt" title="Esperienza totale"><${I.bolt} />${totalXp(st)}</span>
-      <span class="sync-chip-wrap">${syncChip(store.syncStatus)}</span>
+      <span class=${'stat flame' + (sk ? '' : ' off')} title="Giorni consecutivi di studio" aria-label=${`${sk} giorni di fila`}><${I.flame} />${sk}</span>
+      <span class="stat bolt" title="Esperienza totale" aria-label=${`${totalXp(st)} XP`}><${I.bolt} />${totalXp(st)}</span>
+      <span class="sync-chip-wrap"><${SyncDot} s=${store.syncStatus} /></span>
     </div></header>`}
     <main class="main" id="main">
-      ${isTabs && route.tab === 'onboarding'
-        ? html`<${Onboarding} onDone=${(start) => setRoute(start === 'test' ? { name: 'testout', sectionId: 's00' } : { name: 'tab', tab: 'home' })} />`
+      ${route.tab === 'onboarding' && isTabs
+        ? html`<${Onboarding} onDone=${(start) => setRoute(start === 'test' ? { name: 'testout', sectionId: 's00', cards: testOutQueue(store.course, 's00', 12) } : { name: 'tab', tab: 'home' })} />`
         : screen}
     </main>
-    ${isTabs && route.tab !== 'onboarding' && html`<nav class="tabbar" aria-label="Sezioni"><nav>
+    ${showChrome && html`<nav class="tabbar" aria-label="Sezioni"><nav>
       ${TABS.map((t) => {
         const Ico = I[t.icon];
         const badge = t.id === 'review' && due > 0 ? due : 0;
-        return html`<button class=${'tab' + (route.tab === t.id ? ' on' : '')} aria-current=${route.tab === t.id ? 'page' : null} onClick=${() => setRoute({ name: 'tab', tab: t.id })}>
-          <${Ico} />${t.label}${badge > 0 && html`<span class="badge">${badge > 99 ? '99+' : badge}</span>`}</button>`;
+        const on = route.tab === t.id;
+        return html`<button class=${'tab' + (on ? ' on' : '')} aria-current=${on ? 'page' : null} onClick=${() => setRoute({ name: 'tab', tab: t.id })}>
+          <span class="ico-wrap"><${Ico} /></span>${t.label}${badge > 0 && html`<span class="badge" aria-label=${badge + ' da ripassare'}>${badge > 99 ? '99+' : badge}</span>`}</button>`;
       })}
     </nav></nav>`}
     ${toast && html`<div class="toast" role="status">${toast}</div>`}
@@ -132,9 +134,15 @@ function applyTheme(t) {
   else root.removeAttribute('data-theme');
 }
 
-function Empty({ title, text, onBack }) {
-  return html`<div class="wrap stack pad-top center" style="padding-top:48px">
-    <h2>${title}</h2><p class="muted">${text}</p><button class="btn ghost" onClick=${onBack}>Indietro</button></div>`;
+/** Schermata vuota: icona, perché è vuota, cosa fare. Mai una pagina bianca. */
+function Empty({ icon, title, text, action, onAction }) {
+  const Ico = I[icon] || I.star;
+  return html`<div class="wrap empty" style="padding-top:64px">
+    <div class="ico-big"><${Ico} /></div>
+    <h2>${title}</h2>
+    <p class="muted" style="max-width:32ch">${text}</p>
+    ${action && html`<button class="btn ghost" onClick=${onAction}>${action}</button>`}
+  </div>`;
 }
 
 function ReviewHub({ go }) {
@@ -142,19 +150,32 @@ function ReviewHub({ go }) {
   const due = dueCount(course, st);
   const fdue = flashDueCount(course, st);
   const total = due + fdue;
-  return html`<div class="wrap stack pad-top">
-    <div class="stack-sm"><h1>Ripasso</h1><p class="muted">Il ripasso riprende gli argomenti poco prima di dimenticarli: ogni risposta regola quando ricomparirà.</p></div>
-    <div class="card hero-today">
-      <${Ring} value=${Math.min(total, 30)} max=${30} label=${total} sub="da fare" color=${total ? 'var(--red)' : 'var(--green)'} />
-      <div class="stack-sm"><h2>${total ? 'Hai ripassi in sospeso' : 'Tutto in pari'}</h2>
+  if (total === 0) {
+    return html`<div class="wrap stack"><header class="screen-title"><h1>Ripasso</h1></header>
+      <${Empty} icon="review" title="Tutto in ordine" text="Non c'è niente da ripassare adesso. Gli esercizi tornano qui quando stanno per essere dimenticati." action="Vai al percorso" onAction=${() => go({ name: 'lesson' })} /></div>`;
+  }
+  return html`<div class="wrap stack">
+    <header class="screen-title"><h1>Ripasso</h1><p class="muted">Ripassare poco prima di dimenticare è più efficace che ripassare tanto tutto insieme.</p></header>
+    <section class="card hero-today">
+      <${Ring} value=${Math.min(total, 30)} max=${30} label=${String(total)} sub="da fare" color="var(--danger)" />
+      <div class="stack-sm" style="min-width:0"><p style="font-weight:600">${total} ${total === 1 ? 'elemento' : 'elementi'} in sospeso</p>
         <p class="small muted">${due} esercizi · ${fdue} schede di teoria</p></div>
+    </section>
+    <div class="stack-sm">
+      <button class="btn block" disabled=${due === 0} onClick=${() => go({ name: 'review' })}><${I.review} /> Ripassa esercizi (${due})</button>
+      <button class="btn ghost block" disabled=${fdue === 0} onClick=${() => go({ name: 'flash', kinds: null })}><${I.book} /> Schede di teoria (${fdue})</button>
     </div>
-    <div class="row-wrap">
-      <button class="btn" style="flex:1" disabled=${due === 0} onClick=${() => go({ name: 'review' })}><${I.review} /> Ripassa esercizi (${due})</button>
-      <button class="btn ghost" style="flex:1" disabled=${fdue === 0} onClick=${() => go({ name: 'flash', kinds: null })}><${I.book} /> Schede (${fdue})</button>
-    </div>
-    <p class="small faint">Suggerimento: 10 minuti al giorno valgono più di due ore una volta a settimana.</p>
   </div>`;
+}
+
+/** Riga di lista con etichetta, valore opzionale e azione. */
+function Row({ label, value, children, onClick, danger }) {
+  const inner = html`<span class="grow" style=${'flex:1;min-width:0;' + (danger ? 'color:var(--danger-ink)' : '')}>${label}</span>
+    ${value != null && html`<span class="faint tnum small">${value}</span>`}${children}
+    ${onClick && !danger && html`<span aria-hidden="true" style="color:var(--ink-3);display:grid"><${I.arrow} /></span>`}`;
+  return onClick
+    ? html`<button class="list-item" style="width:100%;text-align:left;background:none;border-left:0;border-right:0;border-top:0" onClick=${onClick}>${inner}</button>`
+    : html`<div class="list-item">${inner}</div>`;
 }
 
 function Profile() {
@@ -163,16 +184,17 @@ function Profile() {
   const [snaps, setSnaps] = useState(null);
   const [busy, setBusy] = useState(false);
   const [confirmRestore, setConfirmRestore] = useState(null);
-  const [text, setText] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
+  const [text, setText] = useState('');
+  const [showText, setShowText] = useState(false);
   const rd = readiness(course, st);
+  const lessonsDone = Object.values(st.skills || {}).reduce((n, s) => n + (s.done || []).length, 0);
+  const estimateReady = lessonsDone >= 3;
   const refresh = async () => {
     if (!sync) return setSnaps([]);
     setSnaps(await sync.listSnapshots());
   };
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
   const restore = async (entry) => {
     setBusy(true);
     try {
@@ -188,8 +210,10 @@ function Profile() {
     setBusy(false);
   };
   const exportNow = async () => {
-    const json = JSON.stringify(exportPayload(st), null, 2);
+    const payload = { app: 'analisi1-duo', exportedAt: new Date().toISOString(), device: deviceLabel(), state: st };
+    const json = JSON.stringify(payload, null, 2);
     setText(json);
+    setShowText(true);
     try {
       const c = window.claude && (await window.claude.use('downloads'));
       if (c) await c.save({ filename: 'analisi1-salvataggio.json', data: json });
@@ -206,6 +230,7 @@ function Profile() {
       await sync.restore(target, 'Prima dell\'importazione');
       store.toast?.('Salvataggio importato');
       setText('');
+      setShowText(false);
       refresh();
     } catch (e) {
       store.toast?.('Il testo non è un salvataggio valido');
@@ -214,79 +239,84 @@ function Profile() {
   const setP = (patch) => store.setProfile(patch);
   const setS = (patch) => store.setSettings(patch);
   const cloudOn = sync?.mode === 'cloud';
+  const syncLabel = store.syncStatus?.text || '';
 
-  return html`<div class="wrap stack pad-top" style="padding-bottom:40px">
-    <h1>Profilo</h1>
-    <div class="tiles">
-      <div class="tile"><span class="v">${totalXp(st)}</span><span class="k">XP totali</span></div>
-      <div class="tile"><span class="v">${streak(st)}</span><span class="k">giorni di fila</span></div>
-      <div class="tile"><span class="v">${gradeLabel(rd.grade)}</span><span class="k">voto stimato</span></div>
-      <div class="tile"><span class="v">${Math.round(rd.r * 100)}%</span><span class="k">preparazione</span></div>
-    </div>
+  return html`<div class="wrap stack" style="padding-bottom:40px">
+    <header class="screen-title"><h1>Profilo</h1></header>
 
-    <section class="card stack" aria-labelledby="sync-h">
-      <div class="row"><h2 id="sync-h">Salvataggio</h2><span class="spacer"></span>${syncChip(store.syncStatus)}</div>
-      <p class="small muted">${cloudOn
-        ? 'I progressi sono salvati nel cloud in tempo reale e si sincronizzano con gli altri tuoi dispositivi. Ogni modifica importante crea un\'istantanea ripristinabile.'
-        : 'Il salvataggio su cloud richiede di aprire l\'app da claude.ai con l\'account. Fino ad allora i progressi restano su questo dispositivo, con istantanee locali.'}</p>
-      <div class="row-wrap">
-        <button class="btn ghost sm" disabled=${busy || !sync} onClick=${async () => { setBusy(true); await sync?.snapshot('Manuale'); setBusy(false); refresh(); store.toast?.('Istantanea creata'); }}><${I.cloud} /> Crea istantanea ora</button>
-        <button class="btn ghost sm" onClick=${async () => { await exportNow(); store.toast?.('Salvataggio esportato'); }}><${I.download} /> Esporta</button>
+    <section class="stack-sm" aria-labelledby="g-prog"><p class="group-title" id="g-prog">I tuoi progressi</p>
+      <div class="group">
+        <${Row} label="Esperienza totale" value=${totalXp(st) + ' XP'} />
+        <${Row} label="Giorni di fila" value=${streak(st)} />
+        <${Row} label="Lezioni completate" value=${lessonsDone} />
+        <${Row} label="Voto stimato" value=${estimateReady ? gradeLabel(rd.grade) : 'Dopo 3 lezioni'} />
       </div>
+      ${estimateReady && html`<p class="caption faint">Stima interna basata su padronanza, memoria e simulazioni. Non è un voto ufficiale.</p>`}
     </section>
 
-    <section class="card stack" aria-labelledby="hist-h">
-      <h2 id="hist-h"><span class="row" style="gap:8px"><${I.history} /> Cronologia salvataggi</span></h2>
-      <p class="small muted">Puoi tornare a qualsiasi stato precedente. Il ripristino salva prima lo stato attuale, quindi non si perde nulla.</p>
-      ${snaps === null && html`<p class="small faint">Caricamento…</p>`}
-      ${snaps && snaps.length === 0 && html`<p class="small faint">Nessuna istantanea ancora. Ne vengono create automaticamente ogni 20 minuti di studio.</p>`}
-      <div class="list">
+    <section class="stack-sm" aria-labelledby="g-sync"><p class="group-title" id="g-sync">Salvataggio</p>
+      <div class="group">
+        <${Row} label="Stato" value=${syncLabel} />
+        <${Row} label="Cloud" value=${cloudOn ? 'Attivo' : 'Solo su questo dispositivo'} />
+        <${Row} label="Crea un'istantanea ora" onClick=${async () => { setBusy(true); await sync?.snapshot('Manuale'); setBusy(false); refresh(); store.toast?.('Istantanea creata'); }} />
+        <${Row} label="Esporta il salvataggio" onClick=${exportNow} />
+      </div>
+      <p class="caption faint">${cloudOn
+        ? 'I progressi si salvano nel cloud in tempo reale e si aggiornano su tutti i tuoi dispositivi.'
+        : 'Per il salvataggio nel cloud apri l\'app da claude.ai con il tuo account. Fino ad allora i progressi restano su questo dispositivo.'}</p>
+    </section>
+
+    <section class="stack-sm" aria-labelledby="g-hist"><p class="group-title" id="g-hist">Cronologia</p>
+      <div class="group">
+        ${snaps === null && html`<div class="list-item"><span class="faint">Caricamento…</span></div>`}
+        ${snaps && snaps.length === 0 && html`<div class="list-item"><span class="muted">Nessuna istantanea. Ne vengono create automaticamente ogni 20 minuti di studio.</span></div>`}
         ${(snaps || []).slice(0, 40).map((s) => html`<div class="list-item">
-          <div class="grow stack-sm" style="gap:2px">
-            <b class="small">${new Date(s.at).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' })} · ${s.reason}</b>
-            <span class="small faint">${s.deviceLabel || 'Dispositivo'}${s.where === 'local' ? ' · locale' : ''} · ${s.summary?.xp ?? 0} XP · ${s.summary?.lessons ?? 0} lezioni</span>
-          </div>
+          <div class="grow" style="flex:1;min-width:0"><div style="font-weight:600">${new Date(s.at).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' })} · ${s.reason}</div>
+            <div class="caption faint">${s.deviceLabel || 'Dispositivo'}${s.where === 'local' ? ' · locale' : ''} · ${s.summary?.xp ?? 0} XP</div></div>
           ${confirmRestore === s.id
-            ? html`<div class="row-wrap"><button class="btn red sm" disabled=${busy} onClick=${() => restore(s)}>Ripristina</button><button class="btn ghost sm" onClick=${() => setConfirmRestore(null)}>No</button></div>`
-            : html`<button class="btn ghost sm" onClick=${() => setConfirmRestore(s.id)}>Ripristina</button>`}
+            ? html`<div class="row-wrap"><button class="btn red sm" disabled=${busy} onClick=${() => restore(s)}>Ripristina</button><button class="btn ghost sm" onClick=${() => setConfirmRestore(null)}>Annulla</button></div>`
+            : html`<button class="btn quiet sm" onClick=${() => setConfirmRestore(s.id)}>Ripristina</button>`}
         </div>`)}
       </div>
-      <details><summary class="small"><b>Importa o esporta come testo</b></summary>
-        <div class="stack-sm mt"><textarea class="input" aria-label="Salvataggio in formato JSON" placeholder="Incolla qui un salvataggio esportato" value=${text} onInput=${(e) => setText(e.currentTarget.value)}></textarea>
-        <div class="row-wrap"><button class="btn ghost sm" disabled=${!text.trim()} onClick=${importText}><${I.upload} /> Importa questo testo</button></div></div>
-      </details>
+      <p class="caption faint">Il ripristino salva prima lo stato attuale: non si perde nulla.</p>
     </section>
 
-    <section class="card stack">
-      <h2>Preferenze</h2>
-      <div class="field"><label for="p-name">Nome</label><input id="p-name" class="input" style="font-family:var(--f-body)" value=${st.profile.name} onChange=${(e) => setP({ name: e.currentTarget.value.trim() })} /></div>
-      <div class="field"><label for="p-goal">Obiettivo giornaliero</label>
-        <select id="p-goal" class="input" style="font-family:var(--f-body)" value=${st.profile.goal} onChange=${(e) => setP({ goal: +e.currentTarget.value })}>
-          ${[20, 50, 100, 150].map((g) => html`<option value=${g}>${g} XP al giorno</option>`)}
-        </select></div>
-      <div class="field"><label for="p-date">Data dell'esame</label><input id="p-date" type="date" class="input" value=${st.profile.examDate} onChange=${(e) => setP({ examDate: e.currentTarget.value })} /></div>
-      <div class="field"><label for="p-theme">Tema</label>
-        <select id="p-theme" class="input" style="font-family:var(--f-body)" value=${st.settings.theme} onChange=${(e) => setS({ theme: e.currentTarget.value })}>
-          <option value="system">Come il sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option>
-        </select></div>
-      <label class="row small"><input type="checkbox" checked=${st.settings.sound} onChange=${(e) => { setS({ sound: e.currentTarget.checked }); sound.enabled = e.currentTarget.checked; }} /> Suoni di feedback</label>
-      <p class="small faint">Dispositivo: ${deviceLabel()}</p>
+    <section class="stack-sm" aria-labelledby="g-pref"><p class="group-title" id="g-pref">Preferenze</p>
+      <div class="group">
+        <div class="list-item"><label for="p-name" class="grow" style="flex:1">Nome</label>
+          <input id="p-name" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.profile.name} onChange=${(e) => setP({ name: e.currentTarget.value.trim() })} /></div>
+        <div class="list-item"><label for="p-goal" class="grow" style="flex:1">Obiettivo al giorno</label>
+          <select id="p-goal" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.profile.goal} onChange=${(e) => setP({ goal: +e.currentTarget.value })}>
+            ${[20, 50, 100, 150].map((g) => html`<option value=${g}>${g} XP</option>`)}
+          </select></div>
+        <div class="list-item"><label for="p-date" class="grow" style="flex:1">Data dell'esame</label>
+          <input id="p-date" type="date" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.profile.examDate} onChange=${(e) => setP({ examDate: e.currentTarget.value })} /></div>
+        <div class="list-item"><label for="p-theme" class="grow" style="flex:1">Tema</label>
+          <select id="p-theme" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.settings.theme} onChange=${(e) => setS({ theme: e.currentTarget.value })}>
+            <option value="system">Come il sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option>
+          </select></div>
+        <div class="list-item"><label for="p-sound" class="grow" style="flex:1">Suoni di feedback</label>
+          <input id="p-sound" type="checkbox" style="width:24px;height:24px;accent-color:var(--accent)" checked=${st.settings.sound} onChange=${(e) => { setS({ sound: e.currentTarget.checked }); sound.enabled = e.currentTarget.checked; }} /></div>
+      </div>
+      <p class="caption faint">Dispositivo: ${deviceLabel()}${ai.available ? ' · Tutor con Claude attivo' : ''}</p>
     </section>
 
-    ${ai.available ? html`<p class="small faint"><${I.ai} /> Tutor attivo: Claude può correggere le risposte aperte e spiegare gli errori.</p>` : html`<p class="small faint">Il tutor (correzione con Claude) è disponibile quando l'app è aperta da claude.ai.</p>`}
+    ${showText && html`<section class="stack-sm" aria-labelledby="g-text"><p class="group-title" id="g-text">Importa o esporta come testo</p>
+      <div class="group" style="padding:12px 16px"><textarea class="input" aria-label="Salvataggio in formato JSON" placeholder="Incolla qui un salvataggio esportato" value=${text} onInput=${(e) => setText(e.currentTarget.value)}></textarea>
+        <div class="row-wrap" style="margin-top:8px"><button class="btn ghost sm" disabled=${!text.trim()} onClick=${importText}><${I.upload} /> Importa questo testo</button></div></div>
+    </section>`}
+    ${!showText && html`<button class="btn quiet" style="align-self:flex-start" onClick=${() => setShowText(true)}>Importa un salvataggio da testo</button>`}
 
-    <section class="card stack">
-      <h2>Ricomincia</h2>
-      <p class="small muted">Azzera i progressi. L'istantanea precedente resta nella cronologia.</p>
+    <section class="stack-sm" aria-labelledby="g-danger"><p class="group-title" id="g-danger">Dati</p>
       ${confirmReset
-        ? html`<div class="confirm-box"><b>Azzerare tutti i progressi?</b><span class="small">Il contenuto attuale resta nella cronologia e può essere ripristinato.</span>
+        ? html`<div class="confirm-box"><b>Azzerare tutti i progressi?</b><span class="small">Lo stato attuale resta nella cronologia e può essere ripristinato.</span>
             <div class="row-wrap"><button class="btn red sm" onClick=${async () => {
               await sync?.restore(emptyState(), 'Prima dell\'azzeramento');
               setConfirmReset(false);
               store.toast?.('Progressi azzerati: lo stato precedente è in cronologia');
               refresh();
             }}>Sì, azzera</button><button class="btn ghost sm" onClick=${() => setConfirmReset(false)}>Annulla</button></div></div>`
-        : html`<button class="btn red sm" style="align-self:flex-start" onClick=${() => setConfirmReset(true)}>Azzera i progressi</button>`}
+        : html`<div class="group"><${Row} label="Azzera i progressi" danger=${true} onClick=${() => setConfirmReset(true)} /></div>`}
     </section>
   </div>`;
 }

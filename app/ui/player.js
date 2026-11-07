@@ -173,7 +173,7 @@ function AskBlock({ ex, onDone, skillId }) {
   const [value, setValue] = useState(undefined);
   const [res, setRes] = useState(null);
   const ok = res?.ok;
-  return html`<div class="card flat stack-sm" style="border-color:var(--blue)">
+  return html`<div class="card flat stack-sm" style="border-color:var(--accent)">
     <span class="kind">Completa tu questo passo</span>
     <${Md} text=${ex.prompt} />
     <${ExerciseInput} ex=${ex} value=${value} onChange=${setValue} locked=${!!res} />
@@ -198,7 +198,7 @@ function ProblemCard({ card, value, setValue, result }) {
     <${Plot} spec=${card.plot} />
     ${card.parts.map((p, i) => {
       const r = result?.parts?.[i];
-      return html`<div class="stack-sm" style=${r ? `border-left:4px solid ${r.ok ? 'var(--green)' : 'var(--red)'};padding-left:12px` : ''}>
+      return html`<div class="stack-sm" style=${r ? `border-left:4px solid ${r.ok ? 'var(--success)' : 'var(--danger)'};padding-left:12px` : ''}>
         <span class="eyebrow">Domanda ${i + 1} di ${card.parts.length}</span>
         <${Md} text=${p.prompt} />
         <${ExerciseInput} ex=${p} value=${vals[i]} locked=${!!result} onChange=${(v) => {
@@ -267,8 +267,8 @@ function Summary({ title, stats, finished, mode, onClose }) {
       ${finished.perfect && mode === 'lesson' && html`<p><span class="chip hl"><${I.star} /> Lezione perfetta</span></p>`}
     </div>
     <div class="tiles">
-      <div class="tile"><span class="v" style="color:var(--blue)">+${stats.xp + finished.bonus}</span><span class="k">XP guadagnati</span></div>
-      <div class="tile"><span class="v" style=${`color:${acc >= 80 ? 'var(--green)' : acc >= 50 ? 'var(--flame)' : 'var(--red)'}`}>${acc}%</span><span class="k">Precisione</span></div>
+      <div class="tile"><span class="v" style="color:var(--accent)">+${stats.xp + finished.bonus}</span><span class="k">XP guadagnati</span></div>
+      <div class="tile"><span class="v" style=${`color:${acc >= 80 ? 'var(--success)' : acc >= 50 ? 'var(--streak)' : 'var(--danger)'}`}>${acc}%</span><span class="k">Precisione</span></div>
       <div class="tile"><span class="v">${Math.floor(finished.secs / 60)}:${String(finished.secs % 60).padStart(2, '0')}</span><span class="k">Tempo</span></div>
     </div>
     <p class="muted small">${acc >= 90 ? 'Ottimo: gli esercizi torneranno tra qualche giorno, quando starai per dimenticarli.' : acc >= 60 ? 'Bene. Gli errori torneranno presto nel ripasso: è lì che si consolida la memoria.' : 'Sbagliare adesso aiuta a ricordare dopo. Rileggi le spiegazioni e ripeti la lezione o fai un ripasso.'}</p>

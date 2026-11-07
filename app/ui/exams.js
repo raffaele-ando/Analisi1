@@ -210,7 +210,7 @@ function ExamQuestion({ q, n, value, onChange, review, score }) {
     return html`<div class="card stack">${head}${q.prompt && html`<${Md} text=${q.prompt} />`}<${Plot} spec=${q.plot} />
       ${q.parts.map((p, i) => {
         const r = review ? checkAnswer(p, vals[i]) : null;
-        return html`<div class="stack-sm" style=${r ? `border-left:4px solid ${r.ok ? 'var(--green)' : 'var(--red)'};padding-left:12px` : ''}>
+        return html`<div class="stack-sm" style=${r ? `border-left:4px solid ${r.ok ? 'var(--success)' : 'var(--danger)'};padding-left:12px` : ''}>
           <${Md} text=${p.prompt} />
           <${ExerciseInput} ex=${p} value=${vals[i]} locked=${review} onChange=${(v) => {
             const nv = vals.slice();
@@ -241,7 +241,7 @@ function ExamResult({ att, exam, onExit, go }) {
     <div class="tiles">
       <div class="tile"><span class="v">${Math.round(att.scoreA * 10) / 10}<span class="faint" style="font-size:1rem">/${att.maxA}</span></span><span class="k">Parte A · teoria ${passA ? '' : '(sotto soglia)'}</span></div>
       <div class="tile"><span class="v">${Math.round(att.scoreB * 10) / 10}<span class="faint" style="font-size:1rem">/${att.maxB}</span></span><span class="k">Parte B · esercizi</span></div>
-      <div class="tile"><span class="v" style=${`color:${pass ? 'var(--green)' : 'var(--red)'}`}>${total}<span class="faint" style="font-size:1rem">/32</span></span><span class="k">Totale in trentaduesimi</span></div>
+      <div class="tile"><span class="v" style=${`color:${pass ? 'var(--success)' : 'var(--danger)'}`}>${total}<span class="faint" style="font-size:1rem">/32</span></span><span class="k">Totale in trentaduesimi</span></div>
     </div>
     <p class="muted small">Soglie usate: almeno metà dei punti di teoria e almeno 18 in totale; sopra 30 è lode. Sono le regole della presentazione del corso; il docente può chiedere un orale.</p>
     ${weak.length > 0 &&
