@@ -1132,3 +1132,328 @@ Esempi: $\le$ su $\R$ è totale; $\subseteq$ sui sottoinsiemi di $\{1,2\}$ è pa
     { id: 's01.relazioni.fc6', kind: 'errore', front: 'Trappole sulle proprietà', back: String.raw`Simmetrica e antisimmetrica non sono opposte (l'uguaglianza è entrambe). $<$ è antisimmetrica "a vuoto". Una proprietà "per ogni" si nega con **un** controesempio.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s01.reali
+// ---------------------------------------------------------------------------
+// Helper per i generatori: MCD, frazioni ridotte, LaTeX pulito.
+const gcdN = (x, y) => (y === 0 ? Math.abs(x) : gcdN(y, x % y));
+const fracS = (p, q) => {
+  if (q < 0) { p = -p; q = -q; }
+  const g = gcdN(p, q) || 1;
+  p /= g; q /= g;
+  return q === 1 ? String(p) : `${p}/${q}`;
+};
+const fracTex = (p, q) => {
+  if (q < 0) { p = -p; q = -q; }
+  const g = gcdN(p, q) || 1;
+  p /= g; q /= g;
+  if (q === 1) return String(p);
+  return p < 0 ? `-\\frac{${-p}}{${q}}` : `\\frac{${p}}{${q}}`;
+};
+const linTex = (a, k) => {
+  const c = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+  return k === 0 ? c : k > 0 ? `${c}+${k}` : `${c}-${-k}`;
+};
+
+S.push({
+  id: 's01.reali',
+  title: 'ℝ: ordine, intervalli, intorni, valore assoluto',
+  summary: String.raw`Saprai manipolare le disuguaglianze in $\R$, scrivere insiemi come intervalli, usare intorni e valore assoluto, e risolvere disequazioni con $|\cdot|$.`,
+  prereq: ['s00.disequazioni', 's00.logica', 's01.naturali'],
+  examRefs: [],
+  lessons: [
+    {
+      id: 's01.reali.L1',
+      title: 'Il campo ordinato: regole sulle disuguaglianze',
+      cards: [
+        { type: 'learn', title: 'Ordinare i reali',
+          body: String.raw`I reali $\R$ si sommano, si moltiplicano e si confrontano con $<$ e $\le$, come i razionali. Il confronto rispetta due regole:
+
+- **somma**: se $a<b$, allora $a+c<b+c$ per ogni $c$;
+- **prodotto per un positivo**: se $a<b$ e $c>0$, allora $ac<bc$;
+- **prodotto per un negativo**: se $a<b$ e $c<0$, allora $ac>bc$.
+
+>! Il verso di una disuguaglianza **cambia** solo quando si moltiplica o si divide per un numero **negativo**. Dimenticarlo è l'errore più frequente.` },
+        { id: 's01.reali.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Sia $a<b$. Quale affermazione è vera per ogni $c<0$?`,
+          options: [String.raw`$ac<bc$`, String.raw`$ac>bc$`, String.raw`$ac=bc$`, String.raw`$a+c>b+c$`],
+          answer: 1,
+          explain: String.raw`Moltiplicare per un negativo inverte il verso: $a<b\Rightarrow ac>bc$. La prima risposta dimentica l'inversione. La quarta inverte anche la somma, che invece conserva il verso: $a+c<b+c$.` },
+        { type: 'example', title: 'Disequazione lineare',
+          problem: String.raw`Risolvi $3-2x\ge 7$.`,
+          steps: [
+            String.raw`Sottraggo $3$ a entrambi i membri: $-2x\ge 4$.`,
+            { text: String.raw`Divido per $-2<0$: il verso cambia, quindi $x\le-2$.`,
+              ask: { type: 'interval', prompt: String.raw`Quale insieme è la soluzione di $-2x\ge4$?`, answer: '(-inf,-2]',
+                explain: String.raw`Dividere per $-2$ inverte il verso: $x\le-2$, cioè $(-\infty,-2]$.` } },
+          ],
+          result: String.raw`$S=(-\infty,-2]$: tutti i reali minori o uguali a $-2$.` },
+        { id: 's01.reali.L1.e2', type: 'tf', level: 1,
+          prompt: String.raw`Se $a<b$ e $c<d$, allora $a+c<b+d$.`,
+          answer: true,
+          explain: String.raw`Sommo le due disuguaglianze: $a+c<b+c$ e $b+c<b+d$, quindi $a+c<b+d$ per transitività. Le disuguaglianze si sommano sempre (con lo stesso verso).` },
+        { id: 's01.reali.L1.e3', type: 'tf', level: 2,
+          prompt: String.raw`Se $a<b$ e $c<d$, allora $ac<bd$.`,
+          answer: false,
+          explain: String.raw`Controesempio: $a=-2$, $b=-1$, $c=-2$, $d=-1$. Si ha $a<b$ e $c<d$, ma $ac=4$ e $bd=1$, quindi $ac\not<bd$. Con i negativi il prodotto non conserva il verso.` },
+        { id: 's01.reali.L1.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Quali $x\in\R$ soddisfano $x^2>4$?`,
+          options: [String.raw`$x>2$`, String.raw`$x<-2$ oppure $x>2$`, String.raw`$-2<x<2$`, 'Tutti i reali'],
+          answer: 1,
+          explain: String.raw`$x^2>4\iff|x|>2\iff x<-2$ oppure $x>2$. La risposta $x>2$ dimentica i negativi; $-2<x<2$ è l'insieme in cui $x^2<4$; "tutti" è falso perché $0^2=0$.` },
+        { id: 's01.reali.L1.e5', type: 'num', level: 1,
+          prompt: String.raw`Qual è il più piccolo intero $n$ tale che $n>\frac73$?`,
+          answer: '3',
+          explain: String.raw`$\frac73\approx2{,}33$. Il primo intero maggiore di $2{,}33$ è $3$. Non $2$: $2$ non supera $\frac73$.` },
+        { type: 'example', title: 'Una media sta tra due numeri',
+          problem: String.raw`Siano $a<b$. Dimostra che $a<\frac{a+b}{2}<b$.`,
+          steps: [
+            String.raw`Sommo $a$ a entrambi i membri di $a<b$: $2a<a+b$.`,
+            { text: String.raw`Divido per $2>0$, il verso non cambia: $a<\frac{a+b}{2}$.`,
+              ask: { type: 'expr', prompt: String.raw`Quanto vale $\frac{a+b}{2}-a$? Scrivi in funzione di $a$ e $b$.`, answer: '(b-a)/2', vars: ['a', 'b'],
+                explain: String.raw`$\frac{a+b-2a}{2}=\frac{b-a}{2}$, che è positivo perché $a<b$.` } },
+            String.raw`Con lo stesso ragionamento $\frac{a+b}{2}<b$. Quindi la media sta **strettamente** tra $a$ e $b$.`,
+          ],
+          result: String.raw`Tra due reali distinti c'è sempre un terzo reale: è il primo passo verso la densità di $\Q$ in $\R$.` },
+        { id: 's01.reali.L1.e6', type: 'mcq', level: 1,
+          prompt: String.raw`Sia $a<0<b$. Che segno ha $ab$?`,
+          options: ['Positivo', 'Negativo', 'Zero', 'Non si può dire'],
+          answer: 1,
+          explain: String.raw`Il prodotto di un negativo per un positivo è negativo. Il segno dipende solo dai segni dei fattori, non dal loro valore: $(-1)\cdot 5=-5$ e $(-100)\cdot2=-200$.` },
+      ],
+    },
+    {
+      id: 's01.reali.L2',
+      title: 'Intervalli, intorni e valore assoluto',
+      cards: [
+        { type: 'learn', title: 'Intervalli e intorni',
+          body: String.raw`Un **intervallo** è un insieme di reali "senza buchi". Con $a<b$:
+- $[a,b]=\{x: a\le x\le b\}$ (chiuso), $(a,b)=\{x: a<x<b\}$ (aperto), $[a,b)$ e $(a,b]$ (semiaperti);
+- $(a,+\infty)=\{x: x>a\}$: $+\infty$ **non** è un numero, quindi si scrive sempre con la parentesi tonda.
+
+Un **intorno** di $x_0$ di raggio $\varepsilon>0$ è l'intervallo aperto
+$$I_\varepsilon(x_0)=(x_0-\varepsilon,\;x_0+\varepsilon)=\{x: |x-x_0|<\varepsilon\}.$$
+>* Un intorno di $x_0$ è un intervallo aperto che contiene $x_0$.` },
+        { id: 's01.reali.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Quanto misura l'intervallo $[-3,7]$, cioè $7-(-3)$?`,
+          answer: '10',
+          explain: String.raw`La lunghezza è $7-(-3)=10$. Il meno davanti a $-3$ diventa più: è la distanza tra i due estremi.` },
+        { id: 's01.reali.L2.e2', type: 'interval', level: 1,
+          prompt: String.raw`Scrivi l'insieme $\{x\in\R: 1<x\le4\}$ come intervallo.`,
+          answer: '(1,4]',
+          explain: String.raw`$1$ è escluso (disuguaglianza stretta, parentesi tonda), $4$ è incluso ($\le$, parentesi quadra). Il risultato è $(1,4]$.` },
+        { type: 'example', title: 'Da valore assoluto a intervallo',
+          problem: String.raw`Descrivi $\{x\in\R: |x-2|<3\}$ come intervallo.`,
+          steps: [
+            String.raw`Per definizione, per $c>0$: $|t|<c\iff -c<t<c$.`,
+            { text: String.raw`Con $t=x-2$ e $c=3$: $-3<x-2<3$.`,
+              ask: { type: 'interval', prompt: String.raw`Aggiungo $2$ a tutte e tre le parti di $-3<x-2<3$: quale intervallo risulta per $x$?`, answer: '(-1,5)',
+                explain: String.raw`$-3+2=-1$ e $3+2=5$, quindi $-1<x<5$.` } },
+            String.raw`Quindi l'insieme è $(-1,5)$: è l'intorno di $2$ di raggio $3$.`,
+          ],
+          result: String.raw`$|x-x_0|<r\iff x\in(x_0-r,\,x_0+r)$.` },
+        { id: 's01.reali.L2.e3', type: 'mcq', level: 1,
+          prompt: String.raw`Qual è la definizione di $|x|$?`,
+          options: [
+            String.raw`$|x|=x$ per ogni $x\in\R$`,
+            String.raw`$|x|=x$ se $x\ge0$ e $|x|=-x$ se $x<0$`,
+            String.raw`$|x|=-x$ per ogni $x\in\R$`,
+            String.raw`$|x|=\sqrt{x}$ per ogni $x\in\R$`,
+          ],
+          answer: 1,
+          explain: String.raw`Il valore assoluto è la distanza da $0$, quindi non è negativo. La prima risposta fallisce per $x<0$; la terza è sempre $\le0$; la quarta non è definita per $x<0$.` },
+        { id: 's01.reali.L2.e4', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni $a,b\in\R$ vale $|a-b|=|b-a|$.`,
+          answer: true,
+          explain: String.raw`$a-b=-(b-a)$, e $|-t|=|t|$ per ogni $t$. La distanza tra $a$ e $b$ non dipende dall'ordine.` },
+        { id: 's01.reali.L2.e5', type: 'mcq', level: 2,
+          prompt: String.raw`Quale disuguaglianza vale per ogni $a,b\in\R$?`,
+          options: [
+            String.raw`$|a+b|=|a|+|b|$`,
+            String.raw`$|a+b|\le|a|+|b|$`,
+            String.raw`$|a+b|\ge|a|+|b|$`,
+            String.raw`$|a-b|=|a|-|b|$`,
+          ],
+          answer: 1,
+          explain: String.raw`È la disuguaglianza triangolare. Vale l'uguaglianza solo se $a$ e $b$ hanno lo stesso segno. Con $a=1$, $b=-1$: $|0|=0$, che non è $\ge2$, e $|1-(-1)|=2\ne 0$.` },
+        { id: 's01.reali.L2.e6', type: 'tf', level: 2,
+          prompt: String.raw`Per ogni $a,b\in\R$ vale $\big||a|-|b|\big|\le|a-b|$.`,
+          answer: true,
+          explain: String.raw`Da $|a|=|(a-b)+b|\le|a-b|+|b|$ segue $|a|-|b|\le|a-b|$. Scambiando $a$ e $b$ si ottiene $|b|-|a|\le|a-b|$. Insieme, le due danno la tesi.` },
+        { id: 's01.reali.L2.e7', type: 'num', level: 1,
+          prompt: String.raw`Calcola $|3-7|-|-2|$.`,
+          answer: '2',
+          explain: String.raw`$|3-7|=|-4|=4$ e $|-2|=2$, quindi $4-2=2$. Attenzione: prima si calcola il valore assoluto, poi si sottrae.` },
+        { id: 's01.reali.L2.e8', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $|2x-1|<3$ e scrivi le soluzioni come intervallo.`,
+          answer: '(-1,2)',
+          explain: String.raw`$|2x-1|<3\iff-3<2x-1<3\iff-2<2x<4\iff-1<x<2$. Si divide tutto per $2>0$: il verso non cambia.` },
+      ],
+    },
+    {
+      id: 's01.reali.L3',
+      title: 'Disequazioni con valore assoluto (livello d\'esame)',
+      cards: [
+        { type: 'learn', title: 'Le due regole da ricordare',
+          body: String.raw`Con $c>0$ vale:
+- $|t|<c\iff -c<t<c$ (una doppia disuguaglianza, un solo intervallo);
+- $|t|>c\iff t<-c$ **oppure** $t>c$ (due semirette, cioè un'unione).
+
+Con $c<0$: $|t|<c$ non ha soluzioni, mentre $|t|>c$ è vera per ogni $t$.
+
+>! Errore tipico: scrivere $|t|<c\iff t<c$ dimenticando la parte $t>-c$.` },
+        { type: 'example', title: 'Il valore assoluto maggiore di un numero',
+          problem: String.raw`Risolvi $|x+1|>2$.`,
+          steps: [
+            String.raw`Con $c=2>0$: $|t|>2\iff t<-2$ oppure $t>2$. Qui $t=x+1$.`,
+            { text: String.raw`Quindi $x+1<-2$ oppure $x+1>2$.`,
+              ask: { type: 'interval', prompt: String.raw`Risolvendo entrambe e unendo le soluzioni, quale insieme si ottiene?`, answer: '(-inf,-3)U(1,inf)',
+                explain: String.raw`$x<-3$ oppure $x>1$: l'unione è $(-\infty,-3)\cup(1,+\infty)$.` } },
+            String.raw`Non c'è un solo intervallo: la soluzione è un'unione di due semirette.`,
+          ],
+          result: String.raw`$S=(-\infty,-3)\cup(1,+\infty)$.` },
+        { id: 's01.reali.L3.e1', type: 'mcq', level: 2,
+          prompt: String.raw`L'insieme $\{x\in\R: |x-2|\le0\}$ è:`,
+          options: [String.raw`$\{2\}$`, String.raw`$(2,+\infty)$`, 'Vuoto', String.raw`$[0,2]$`],
+          answer: 0,
+          explain: String.raw`Un valore assoluto è sempre $\ge0$, quindi $|x-2|\le0$ richiede $|x-2|=0$, cioè $x=2$. "Vuoto" pensa che il valore assoluto non possa mai essere $0$; $[0,2]$ confonde $x$ con $|x-2|$.` },
+        { id: 's01.reali.L3.e2', type: 'mcq', level: 2,
+          prompt: String.raw`Un errore nel passaggio $|x-2|<5\Rightarrow x-2<5$. Quale?`,
+          options: [
+            String.raw`Manca la parte $x-2>-5$: il valore assoluto obbliga a considerare anche i valori negativi.`,
+            'Nessun errore: il passaggio è corretto.',
+            String.raw`Il verso dovrebbe cambiare.`,
+            String.raw`Bisognava elevare al cubo.`,
+          ],
+          answer: 0,
+          explain: String.raw`Da $|t|<5$ segue $-5<t<5$. Il passaggio scritto dà solo $t<5$: per $x=-100$ la disequazione iniziale è falsa, eppure $x-2<5$ sarebbe vera.` },
+        { id: 's01.reali.L3.e3', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $|2x-1|\ge3$ e scrivi le soluzioni come unione di intervalli.`,
+          answer: '(-inf,-1]U[2,inf)',
+          explain: String.raw`$|2x-1|\ge3\iff 2x-1\ge3$ oppure $2x-1\le-3\iff x\ge2$ oppure $x\le-1$. Le parentesi sono quadre perché la disuguaglianza non è stretta.` },
+        { id: 's01.reali.L3.e4', type: 'mcq', level: 3,
+          prompt: String.raw`Sia $A=\{x\in\R:\ |x-1|<|x+1|\}$. Quale affermazione è vera?`,
+          options: [String.raw`$A=(0,+\infty)$`, String.raw`$A=(-\infty,0)$`, String.raw`$A=(1,+\infty)$`, String.raw`$A=\R$`],
+          answer: 0,
+          explain: String.raw`Entrambi i membri sono $\ge0$: elevo al quadrato. Si ottiene $x^2-2x+1<x^2+2x+1$, cioè $-4x<0$, cioè $x>0$. Controllo: con $x=0.5$, $|-0.5|=0.5<1.5$ (vero); con $x=-1$, $2<0$ (falso).` },
+        { id: 's01.reali.L3.e5', type: 'interval', level: 3,
+          prompt: String.raw`Risolvi $\left|\dfrac{x-1}{x+2}\right|\le1$ e scrivi l'insieme delle soluzioni come intervallo.`,
+          answer: '[-1/2,inf)',
+          explain: String.raw`Il dominio esclude $x=-2$. Per $x\ne-2$ la condizione è $|x-1|\le|x+2|$; elevando al quadrato, $x^2-2x+1\le x^2+4x+4$, cioè $-6x\le3$, cioè $x\ge-\frac12$. Il punto $-2$ non è nel dominio e non appartiene comunque a $[-\frac12,+\infty)$.` },
+        { id: 's01.reali.L3.e6', type: 'problem', level: 3,
+          prompt: String.raw`Sia $A=\{x\in\R:\ |2x-1|\le|x+3|\}$.`,
+          parts: [
+            { type: 'interval', prompt: String.raw`Scrivi $A$ come intervallo.`, answer: '[-2/3,4]',
+              explain: String.raw`Elevo al quadrato: $(2x-1)^2\le(x+3)^2\iff 3x^2-10x-8\le0\iff(3x+2)(x-4)\le0$. Il prodotto è $\le0$ tra le radici: $-\frac23\le x\le4$.` },
+            { type: 'tf', prompt: String.raw`$A$ è limitato superiormente.`, answer: true,
+              explain: String.raw`$A\subseteq(-\infty,4]$, quindi $4$ è un maggiorante.` },
+          ],
+          solution: String.raw`$|2x-1|\le|x+3|\iff(2x-1)^2\le(x+3)^2\iff 3x^2-10x-8\le0\iff(3x+2)(x-4)\le0$. Quindi $A=\left[-\frac23,4\right]$. È limitato, con maggiorante $4$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's01.reali.p.gen-lin', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.int(-9, 9), c = R.int(-9, 9);
+        const d = c - b;
+        const v = fracS(d, a);
+        const pos = a > 0;
+        return { type: 'interval',
+          prompt: String.raw`Risolvi $${linTex(a, b)}<${c}$. Scrivi le soluzioni come intervallo.`,
+          answer: pos ? `(-inf,${v})` : `(${v},inf)`,
+          explain: String.raw`Sposto il termine noto: $${linTex(a, 0)}<${d}$. ${pos ? `Divido per $${a}>0$: il verso resta.` : `Divido per $${a}<0$: il verso cambia.`} Quindi $x${pos ? '<' : '>'}${fracTex(d, a)}$.` };
+      } },
+    { id: 's01.reali.p.gen-abs', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.pick([1, 2, 3, -1, -2, -3]), b = R.int(-7, 7), c = R.int(1, 8);
+        const n1 = (-c - b) / a, n2 = (c - b) / a;
+        const e1 = fracS(-c - b, a), e2 = fracS(c - b, a);
+        const t1 = fracTex(-c - b, a), t2 = fracTex(c - b, a);
+        const [L, H] = n1 < n2 ? [e1, e2] : [e2, e1];
+        const [tL, tH] = n1 < n2 ? [t1, t2] : [t2, t1];
+        const absT = `|${linTex(a, b)}|`;
+        if (R.chance(0.6))
+          return { type: 'interval',
+            prompt: String.raw`Risolvi $${absT}<${c}$. Scrivi le soluzioni come intervallo.`,
+            answer: `(${L},${H})`,
+            explain: String.raw`$${absT}<${c}\iff -${c}<${linTex(a, b)}<${c}$: le soluzioni stanno tra i due valori che annullano la parte di sinistra, cioè $x\in(${tL},\,${tH})$.` };
+        return { type: 'interval',
+          prompt: String.raw`Risolvi $${absT}>${c}$. Scrivi le soluzioni come unione di intervalli.`,
+          answer: `(-inf,${L})U(${H},inf)`,
+          explain: String.raw`$${absT}>${c}$ equivale a $${linTex(a, b)}<-${c}$ oppure $${linTex(a, b)}>${c}$. Le soluzioni sono $x<${tL}$ oppure $x>${tH}$.` };
+      } },
+    { id: 's01.reali.p.gen-sq', type: 'gen', level: 3,
+      gen: (R) => {
+        const a = R.int(-6, 6), b = a + 2 * R.nz(-3, 3);
+        const m = (a + b) / 2;
+        const sh = (k) => (k === 0 ? '' : k > 0 ? `-${k}` : `+${-k}`);
+        return { type: 'interval',
+          prompt: String.raw`Risolvi $|x${sh(a)}|<|x${sh(b)}|$. Scrivi le soluzioni come intervallo.`,
+          answer: b > a ? `(-inf,${m})` : `(${m},inf)`,
+          explain: String.raw`Entrambi i membri sono $\ge0$: elevo al quadrato. Si ottiene $-2ax+a^2<-2bx+b^2$, cioè $2(b-a)x<b^2-a^2$. Dividendo per $2(b-a)$ ${b > a ? 'positivo, il verso resta' : 'negativo, il verso cambia'}: $x${b > a ? '<' : '>'}${m}$, perché $\frac{a+b}{2}=${m}$.` };
+      } },
+    { id: 's01.reali.p.gen-num', type: 'gen', level: 1,
+      gen: (R) => {
+        const p = R.nz(-9, 9), q = R.nz(-9, 9);
+        return { type: 'num',
+          prompt: String.raw`Calcola $|${p}|-|${q}|$.`,
+          answer: String(Math.abs(p) - Math.abs(q)),
+          explain: String.raw`$|${p}|=${Math.abs(p)}$ e $|${q}|=${Math.abs(q)}$, quindi il risultato è $${Math.abs(p) - Math.abs(q)}$.` };
+      } },
+    { id: 's01.reali.p.1', type: 'tf', level: 1,
+      prompt: String.raw`Per ogni $x\in\R$ vale $\sqrt{x^2}=x$.`,
+      answer: false,
+      explain: String.raw`$\sqrt{x^2}=|x|$: per $x=-3$ il risultato è $3$, non $-3$.` },
+    { id: 's01.reali.p.2', type: 'num', level: 1,
+      prompt: String.raw`Quanti interi $n$ soddisfano $|n|\le2$?`,
+      answer: '5',
+      explain: String.raw`Sono $-2,-1,0,1,2$: cinque interi.` },
+    { id: 's01.reali.p.3', type: 'cloze', level: 1,
+      prompt: 'Completa la definizione di intorno.',
+      text: String.raw`Un intorno di $x_0$ è un [[0]] aperto che contiene $x_0$. In particolare $|x-x_0|<\varepsilon$ equivale a $x\in$ [[1]].`,
+      blanks: [
+        { options: ['intervallo', 'numero', 'insieme finito'], answer: 0 },
+        { options: [String.raw`$(x_0-\varepsilon,\,x_0+\varepsilon)$`, String.raw`$[x_0-\varepsilon,\,x_0+\varepsilon]$`, String.raw`$(x_0,\,x_0+\varepsilon)$`], answer: 0 },
+      ],
+      explain: String.raw`Il raggio $\varepsilon$ è strettamente positivo e la disuguaglianza è stretta: estremi esclusi. $(x_0,x_0+\varepsilon)$ dimentica la parte sinistra.` },
+    { id: 's01.reali.p.4', type: 'match', level: 2,
+      prompt: 'Abbina ogni insieme alla sua descrizione come intervallo.',
+      pairs: [
+        [String.raw`$\{x: |x-1|\le1\}$`, String.raw`$[0,2]$`],
+        [String.raw`$\{x: |x|<2\}$`, String.raw`$(-2,2)$`],
+        [String.raw`$\{x: 0\le x<1\}$`, String.raw`$[0,1)$`],
+        [String.raw`$\{x: x\le3\}$`, String.raw`$(-\infty,3]$`],
+      ],
+      explain: String.raw`$|x-1|\le1\iff0\le x\le2$; $|x|<2\iff-2<x<2$. Gli altri due si leggono direttamente: $[0,1)$ include lo zero ed esclude $1$; $x\le3$ include $3$ e non ha estremo inferiore.` },
+    { id: 's01.reali.p.5', type: 'open', level: 2,
+      prompt: String.raw`Dimostra che, per $\varepsilon>0$, $|x|<\varepsilon$ se e solo se $-\varepsilon<x<\varepsilon$.`,
+      answer: String.raw`Caso $x\ge0$: $|x|=x$, quindi $|x|<\varepsilon$ equivale a $x<\varepsilon$, e $-\varepsilon<x$ è automatica perché $x\ge0>-\varepsilon$. Caso $x<0$: $|x|=-x$, quindi $-x<\varepsilon$ equivale a $x>-\varepsilon$, e $x<\varepsilon$ è automatica perché $x<0<\varepsilon$. In entrambi i casi le due condizioni coincidono.`,
+      rubric: ['Distinzione dei casi $x\ge0$ e $x<0$', 'Uso corretto di $|x|=\pm x$ in ciascun caso', 'Conclusione per doppia implicazione'] },
+    { id: 's01.reali.p.6', type: 'order', level: 2,
+      prompt: 'Riordina i passi della dimostrazione di $|a+b|\le|a|+|b|$.',
+      steps: [
+        String.raw`Per ogni $t\in\R$ vale $-|t|\le t\le|t|$.`,
+        String.raw`Applico questo a $t=a$ e a $t=b$ e sommo: $-(|a|+|b|)\le a+b\le|a|+|b|$.`,
+        String.raw`Per la caratterizzazione $|s|\le c\iff -c\le s\le c$, con $s=a+b$ e $c=|a|+|b|$, segue $|a+b|\le|a|+|b|$.`,
+      ],
+      distractors: [
+        String.raw`Elevo al quadrato: $|a+b|^2=a^2+b^2$, quindi la tesi è vera.`,
+        String.raw`Scelgo $a=b=0$: la disuguaglianza è dimostrata.`,
+      ],
+      explain: String.raw`Il primo passo è la definizione di valore assoluto; il secondo somma le due disuguaglianze; il terzo chiude. Le due distrattori sono errori tipici: $|a+b|^2=a^2+2ab+b^2$ (non $a^2+b^2$), e un esempio particolare non dimostra nulla.` },
+  ],
+  flashcards: [
+    { id: 's01.reali.fc1', kind: 'def', front: 'Campo ordinato', back: String.raw`$\R$ è un campo (somma, prodotto, opposti, inversi dei non nulli) con un ordine totale compatibile: $a<b\Rightarrow a+c<b+c$, e $c>0$ conserva il verso mentre $c<0$ lo inverte.` },
+    { id: 's01.reali.fc2', kind: 'def', front: 'Intervallo', back: String.raw`Insieme $I\subseteq\R$ tale che $a,b\in I$ e $a<c<b$ implicano $c\in I$ (nessun "buco"). Forme: $(a,b)$, $[a,b]$, $[a,b)$, $(a,b]$, con $\pm\infty$ sempre tra tonde.` },
+    { id: 's01.reali.fc3', kind: 'def', front: String.raw`Intorno di $x_0$ di raggio $\varepsilon$`, back: String.raw`$I_\varepsilon(x_0)=(x_0-\varepsilon,x_0+\varepsilon)=\{x: |x-x_0|<\varepsilon\}$ con $\varepsilon>0$.` },
+    { id: 's01.reali.fc4', kind: 'def', front: 'Valore assoluto', back: String.raw`$|x|=x$ se $x\ge0$, $|x|=-x$ se $x<0$. È la distanza da $0$: $|x|\ge0$ e $|x|=0\iff x=0$.` },
+    { id: 's01.reali.fc5', kind: 'thm', front: 'Disuguaglianza triangolare (enunciato)', back: String.raw`Per ogni $a,b\in\R$: $|a+b|\le|a|+|b|$.` },
+    { id: 's01.reali.fc6', kind: 'dim', front: 'Dimostrazione della disuguaglianza triangolare', back: String.raw`Per ogni $t$ vale $-|t|\le t\le|t|$. Sommo le due disuguaglianze per $t=a$ e $t=b$: $-(|a|+|b|)\le a+b\le|a|+|b|$, cioè $|a+b|\le|a|+|b|$.` },
+    { id: 's01.reali.fc7', kind: 'thm', front: 'Proprietà archimedea', back: String.raw`Per ogni $x\in\R$ esiste $n\in\N$ con $n>x$. Non esistono numeri "infinitamente grandi" in $\R$.` },
+    { id: 's01.reali.fc8', kind: 'thm', front: 'Densità di $\Q$ in $\R$ (enunciato)', back: String.raw`Tra due reali distinti $a<b$ esiste sempre un razionale $q$ con $a<q<b$ (e quindi anche un irrazionale).` },
+    { id: 's01.reali.fc9', kind: 'metodo', front: 'Disequazioni con valore assoluto', back: String.raw`Con $c>0$: $|t|<c\iff -c<t<c$ (un intervallo); $|t|>c\iff t<-c$ oppure $t>c$ (un'unione). Con $c<0$: $|t|<c$ è impossibile, $|t|>c$ è sempre vera.` },
+    { id: 's01.reali.fc10', kind: 'errore', front: 'Errori tipici con le disuguaglianze', back: String.raw`Il verso cambia solo per moltiplicazione o divisione per un negativo, non per somme. Il valore assoluto non è mai negativo: $|x|\le 0$ dà solo $x=0$. Per $|t|<c$ non basta $t<c$: serve anche $t>-c$.` },
+  ],
+});
