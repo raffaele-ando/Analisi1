@@ -1507,3 +1507,555 @@ Derivate: $D(\sinh x)=\cosh x$, $D(\cosh x)=\sinh x$, $D(\tanh x)=\dfrac{1}{\cos
     },
   ],
 });
+
+// ===========================================================================
+// s08.punti · Derivabile ⇒ continua, derivate laterali, punti singolari
+// ===========================================================================
+SKILLS.push({
+  id: 's08.punti',
+  title: 'Derivabilità: punti angolosi, cuspidi, funzioni a tratti',
+  summary: String.raw`Dimostri che derivabile implica continua, distingui punti angolosi, cuspidi e flessi a tangente verticale, e controlli la derivabilità di una funzione a tratti.`,
+  prereq: ['s08.def', 's08.regole', 's07.def'],
+  examRefs: ['Itinere 11/11/2025 · Parte A', 'Appello 15/01/2026 · Parte B', 'Appello 10/02/2026 · Parte B', 'Appello 06/07/2026 · Parte A'],
+  lessons: [
+    {
+      id: 's08.punti.L1',
+      title: 'Derivabile implica continua',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il teorema',
+          body: String.raw`Se una funzione è derivabile in un punto, è anche continua in quel punto. Il viceversa è falso.
+
+>* **Teorema.** Se $f$ è derivabile in $x_0$, allora $f$ è continua in $x_0$.
+
+Intuizione: derivare vuol dire avere una tangente. Una funzione con tangente in un punto non può avere un salto o un buco lì. Il grafico non può "staccarsi" dal punto $\big(x_0,f(x_0)\big)$ senza che la pendenza esploda.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: dimostrazione',
+          problem: String.raw`Dimostra che se $f$ è derivabile in $x_0$, allora $\lim_{x\to x_0}f(x)=f(x_0)$.`,
+          steps: [
+            String.raw`Per $x\neq x_0$ scrivo $f(x)-f(x_0)=\dfrac{f(x)-f(x_0)}{x-x_0}\cdot(x-x_0)$: ho solo moltiplicato e diviso per $x-x_0\neq0$.`,
+            String.raw`Per ipotesi il fattore $\dfrac{f(x)-f(x_0)}{x-x_0}$ tende a $f'(x_0)$, che è finito.`,
+            String.raw`Il fattore $x-x_0$ tende a $0$. Il limite del prodotto è il prodotto dei limiti: $\lim_{x\to x_0}\big(f(x)-f(x_0)\big)=f'(x_0)\cdot0=0$.`,
+            String.raw`Quindi $\lim_{x\to x_0}f(x)=f(x_0)$: la funzione è continua in $x_0$.`,
+          ],
+          result: String.raw`Derivabile in $x_0$ $\Rightarrow$ continua in $x_0$.`,
+        },
+        {
+          id: 's08.punti.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Se $f$ è derivabile in $x_0$, quale affermazione è sempre vera?`,
+          options: [
+            String.raw`$f$ è continua in $x_0$`,
+            String.raw`$f$ è continua in ogni punto del dominio`,
+            String.raw`$f'(x_0)=f(x_0)$`,
+            String.raw`$f$ è crescente in $x_0$`,
+          ],
+          answer: 0,
+          explain: String.raw`È il teorema: derivabile ⇒ continua. Il secondo non segue: derivabilità in un punto non dice nulla sugli altri. Il terzo confonde la derivata con il valore. Il quarto è falso: derivabile non vuol dire crescente. Per esempio $f(x)=-x^2$ in $0$ ha derivata $0$, ma è un massimo e non è crescente.`,
+        },
+        {
+          id: 's08.punti.L1.q2',
+          type: 'num',
+          prompt: String.raw`Sia $f$ derivabile in $x_0=2$, con $f(2)=5$ e $f'(2)=3$. Quanto vale $\lim_{x\to2}f(x)$?`,
+          answer: '5',
+          explain: String.raw`Per il teorema $f$ è continua in $2$, quindi il limite è $f(2)=5$. La derivata $3$ non entra nel valore del limite: serve per la pendenza.`,
+        },
+        {
+          id: 's08.punti.L1.q3',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $\lim_{x\to x_0}f(x)=f(x_0)$, allora $f$ è derivabile in $x_0$.`,
+          answer: false,
+          explain: String.raw`Falso. Continuità non implica derivabilità: $f(x)=|x|$ è continua in $0$, ma il rapporto incrementale $\frac{|h|}{h}$ non ha limite. Il viceversa, derivabile ⇒ continua, è il teorema.`,
+        },
+        {
+          id: 's08.punti.L1.q4',
+          type: 'order',
+          prompt: String.raw`Riordina i passi della dimostrazione: se $f$ è derivabile in $x_0$, allora $f$ è continua in $x_0$.`,
+          steps: [
+            String.raw`Per $x\neq x_0$ scrivo $f(x)-f(x_0)=\dfrac{f(x)-f(x_0)}{x-x_0}\cdot(x-x_0)$.`,
+            String.raw`Per ipotesi $\dfrac{f(x)-f(x_0)}{x-x_0}\to f'(x_0)$, che è finito.`,
+            String.raw`Il limite del prodotto è il prodotto dei limiti: $\lim_{x\to x_0}\big(f(x)-f(x_0)\big)=f'(x_0)\cdot0=0$.`,
+            String.raw`Quindi $\lim_{x\to x_0}f(x)=f(x_0)$: $f$ è continua in $x_0$.`,
+          ],
+          distractors: [
+            String.raw`Dividendo per $x-x_0$ ottengo $f(x)=f(x_0)+f'(x_0)(x-x_0)$ per ogni $x$: quindi $f$ è una retta.`,
+            String.raw`Quindi $f$ è derivabile anche in ogni punto vicino a $x_0$.`,
+          ],
+          explain: String.raw`La chiave è scrivere la differenza $f(x)-f(x_0)$ come rapporto incrementale per $(x-x_0)$. Quel rapporto è limitato (converge), e $x-x_0\to0$: il prodotto va a zero. I distrattori sono errori tipici: il primo confonde la tangente con la funzione stessa, il secondo prende una conclusione non dimostrata.`,
+        },
+        {
+          id: 's08.punti.L1.q5',
+          type: 'open',
+          points: 2,
+          prompt: String.raw`Enuncia e dimostra: se $f$ è derivabile in $x_0$, allora $f$ è continua in $x_0$.`,
+          answer: String.raw`Enunciato: se $f$ è derivabile in $x_0$, allora $\lim_{x\to x_0}f(x)=f(x_0)$. Dimostrazione: per $x\neq x_0$, $f(x)-f(x_0)=\frac{f(x)-f(x_0)}{x-x_0}(x-x_0)$. Per ipotesi il primo fattore tende a $f'(x_0)\in\R$, mentre $x-x_0\to0$. Il prodotto tende a $f'(x_0)\cdot0=0$, cioè $f(x)\to f(x_0)$: $f$ è continua in $x_0$.`,
+          rubric: [
+            String.raw`Ipotesi: esiste finito il limite del rapporto incrementale`,
+            String.raw`Scrittura $f(x)-f(x_0)=\frac{f(x)-f(x_0)}{x-x_0}(x-x_0)$ per $x\neq x_0$`,
+            String.raw`Limite del prodotto: $f'(x_0)\cdot0=0$`,
+            String.raw`Conclusione: $\lim f(x)=f(x_0)$, quindi continuità in $x_0$`,
+          ],
+        },
+        {
+          type: 'learn',
+          title: 'Il controesempio: il valore assoluto',
+          body: String.raw`La funzione $f(x)=|x|$ è continua in $0$ ma non derivabile. Le due semirette hanno pendenze diverse: a destra la pendenza è $+1$, a sinistra $-1$. Il grafico "fa un angolo" nell'origine.`,
+          plot: { fns: [{ f: 'abs(x)', label: '|x|' }], x: [-2, 2], y: [-0.5, 2.5], points: [[0, 0, 'O']] },
+        },
+        {
+          id: 's08.punti.L1.q6',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=|x|$ in $x_0=0$: quale affermazione è corretta?`,
+          options: [
+            String.raw`È continua, ma non derivabile: ha un punto angoloso`,
+            String.raw`È discontinua`,
+            String.raw`È derivabile con $f'(0)=0$`,
+            String.raw`È derivabile con $f'(0)=1$`,
+          ],
+          answer: 0,
+          explain: String.raw`$|x|\to0$ quando $x\to0$, quindi è continua. Il rapporto incrementale $\frac{|h|}{h}$ vale $+1$ a destra e $-1$ a sinistra: non ha limite, quindi non è derivabile. Gli altri distrattori sbagliano continuità o derivata.`,
+        },
+      ],
+    },
+    {
+      id: 's08.punti.L2',
+      title: 'Derivate laterali e tipi di punto singolare',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Derivate destra e sinistra',
+          body: String.raw`Le **derivate laterali** sono i limiti del rapporto incrementale da un solo lato:
+$$f'_+(x_0)=\lim_{h\to0^+}\frac{f(x_0+h)-f(x_0)}{h},\qquad f'_-(x_0)=\lim_{h\to0^-}\frac{f(x_0+h)-f(x_0)}{h}.$$
+$f$ è derivabile in $x_0$ **se e solo se** le due derivate laterali sono finite e uguali. Il valore comune è $f'(x_0)$.
+
+I punti singolari si classificano così:
+- **punto angolo** (o angoloso): $f'_+$ e $f'_-$ finite e diverse;
+- **cuspide**: $f'_+=\pm\infty$ e $f'_-=\mp\infty$, con segni opposti;
+- **flesso a tangente verticale**: derivate infinite con lo stesso segno (per esempio $+\infty$ e $+\infty$).`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $x\\,|x|$ in $0$',
+          problem: String.raw`Calcola le derivate laterali di $f(x)=x\,|x|$ in $x_0=0$.`,
+          steps: [
+            String.raw`Per $h>0$: $f(h)=h\cdot h=h^2$, quindi $f(h)-f(0)=h^2$ e il rapporto è $\dfrac{h^2}{h}=h$.`,
+            String.raw`Per $h<0$: $|h|=-h$, quindi $f(h)=h\cdot(-h)=-h^2$ e il rapporto è $\dfrac{-h^2}{h}=-h$.`,
+            String.raw`Per $h\to0$ entrambi i rapporti tendono a $0$.`,
+          ],
+          result: String.raw`$f'_+(0)=f'_-(0)=0$, quindi $f$ è derivabile in $0$ con $f'(0)=0$, anche se $f(x)=x|x|$ ha un "fattore" $|x|$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $|x^2-1|$ in $x=1$',
+          problem: String.raw`Calcola le derivate laterali di $f(x)=|x^2-1|$ in $x_0=1$.`,
+          steps: [
+            String.raw`Vicino a $1$ da destra ($x>1$) si ha $x^2-1>0$, quindi $f(x)=x^2-1$.`,
+            {
+              text: String.raw`Calcola $f'_+(1)$ derivando $x^2-1$ e valutando in $x=1$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f'_+(1)$ per $f(x)=x^2-1$?`,
+                answer: '2',
+                explain: String.raw`$D(x^2-1)=2x$, in $x=1$ vale $2$.`,
+              },
+            },
+            {
+              text: String.raw`Vicino a $1$ da sinistra ($x<1$) si ha $x^2-1<0$, quindi $f(x)=1-x^2$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f'_-(1)$ per $f(x)=1-x^2$?`,
+                answer: '-2',
+                explain: String.raw`$D(1-x^2)=-2x$, in $x=1$ vale $-2$. Le derivate sono finite e diverse: $1$ è un punto angoloso.`,
+              },
+            },
+          ],
+          result: String.raw`$f'_+(1)=2\neq-2=f'_-(1)$: il punto $x=1$ è angoloso.`,
+        },
+        {
+          id: 's08.punti.L2.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale è il tipo di punto di $f(x)=\sqrt[3]{x^2}$ in $x_0=0$?`,
+          options: [
+            String.raw`cuspide`,
+            String.raw`punto angoloso con derivate finite`,
+            String.raw`flesso a tangente verticale`,
+            String.raw`punto regolare (derivabile)`,
+          ],
+          answer: 0,
+          explain: String.raw`Il rapporto incrementale è $\frac{\sqrt[3]{h^2}}{h}=\frac{1}{\sqrt[3]{h}}$ (per $h\neq0$): per $h\to0^+$ tende a $+\infty$, per $h\to0^-$ a $-\infty$. Derivate infinite di segno opposto: cuspide.`,
+        },
+        {
+          id: 's08.punti.L2.q2',
+          type: 'mcq',
+          prompt: String.raw`Quale è il tipo di punto di $f(x)=\sqrt[3]{x}$ in $x_0=0$?`,
+          options: [
+            String.raw`flesso a tangente verticale`,
+            String.raw`cuspide`,
+            String.raw`punto angoloso`,
+            String.raw`punto regolare con $f'(0)=0$`,
+          ],
+          answer: 0,
+          explain: String.raw`Il rapporto incrementale è $\frac{\sqrt[3]h}{h}=h^{-2/3}\to+\infty$ da entrambe le parti. Derivate infinite con lo stesso segno: la funzione è crescente e la tangente è verticale. Non è una cuspide, perché il segno non cambia.`,
+        },
+        {
+          id: 's08.punti.L2.q3',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Ogni punto angoloso è una cuspide.`,
+          answer: false,
+          explain: String.raw`Falso. Nel punto angoloso le derivate laterali sono **finite** e diverse (come per $|x|$). Nella cuspide almeno una è infinita, con segni opposti.`,
+        },
+        {
+          id: 's08.punti.L2.q4',
+          type: 'mcq',
+          prompt: String.raw`Quale affermazione definisce un punto angoloso di $f$ in $x_0$?`,
+          options: [
+            String.raw`le derivate laterali $f'_+(x_0)$ e $f'_-(x_0)$ sono finite e diverse`,
+            String.raw`$f$ non è continua in $x_0$`,
+            String.raw`$f'(x_0)=0$ e la derivata cambia segno`,
+            String.raw`le derivate laterali sono infinite con lo stesso segno`,
+          ],
+          answer: 0,
+          explain: String.raw`È la definizione: derivate laterali finite e diverse. Il secondo caso è una discontinuità. Il terzo è un punto critico (possibile massimo o minimo). Il quarto è un flesso a tangente verticale.`,
+        },
+        {
+          id: 's08.punti.L2.q5',
+          type: 'mcq',
+          prompt: String.raw`Sia $f(x)=\sqrt[3]{x^2}$. In $x_0=0$ le derivate laterali sono:`,
+          options: [
+            String.raw`$f'_+(0)=+\infty$ e $f'_-(0)=-\infty$`,
+            String.raw`$f'_+(0)=f'_-(0)=+\infty$`,
+            String.raw`$f'_+(0)=1$ e $f'_-(0)=-1$`,
+            String.raw`$f'_+(0)=f'_-(0)=0$`,
+          ],
+          answer: 0,
+          explain: String.raw`Per $h>0$ il rapporto è $h^{-1/3}\to+\infty$; per $h<0$, $h^{-1/3}$ è negativo e tende a $-\infty$. Il distrattore $+\infty$ da entrambi i lati descrive il flesso verticale, non la cuspide. Gli altri non corrispondono a questa funzione.`,
+        },
+        {
+          id: 's08.punti.L2.q6',
+          type: 'num',
+          prompt: String.raw`Calcola $f'_+(2)$ per $f(x)=|x^2-4|$.`,
+          answer: '4',
+          explain: String.raw`Per $x>2$: $x^2-4>0$, quindi $f=x^2-4$ con $f'=2x$. In $x=2$: $f'_+(2)=4$.`,
+        },
+        {
+          id: 's08.punti.L2.q7',
+          type: 'num',
+          level: 3,
+          source: 'Appello 10/02/2026 · Parte B',
+          prompt: String.raw`Sia $f(x)=(x^2-3)e^{-|2-x|}$. Calcola la derivata destra $f'_+(2)$.`,
+          answer: '3',
+          explain: String.raw`Per $x>2$: $|2-x|=x-2$, quindi $f(x)=(x^2-3)e^{2-x}$. Derivata: $(2x)e^{2-x}-(x^2-3)e^{2-x}$, in $x=2$: $4-1=3$. Nell'esame compare anche $f'_-(2)=5$: il punto è angoloso.`,
+        },
+      ],
+    },
+    {
+      id: 's08.punti.L3',
+      title: 'Funzioni a tratti e parametri',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Come si controlla una funzione a tratti',
+          body: String.raw`In un punto di raccordo $x_0$ di una funzione a tratti servono due controlli, in quest'ordine:
+1. **continuità**: $f(x_0^-)=f(x_0^+)=f(x_0)$;
+2. **derivabilità**: $f'_-(x_0)=f'_+(x_0)$, derivate laterali **finite e uguali**.
+
+Se la continuità fallisce, non ha senso controllare la derivabilità. Per trovare i parametri, scrivi le due condizioni come equazioni.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: parametri per la derivabilità',
+          problem: String.raw`Per quali $a,b$ la funzione $f(x)=\begin{cases}x^2 & x\le1\\ ax+b & x>1\end{cases}$ è derivabile in $x_0=1$?`,
+          steps: [
+            String.raw`Continuità: $f(1)=1^2=1$ e il limite destro è $a+b$. Quindi $a+b=1$.`,
+            String.raw`Derivata sinistra: $D(x^2)=2x$, in $x=1$ vale $2$. Derivata destra: $D(ax+b)=a$.`,
+            String.raw`Uguaglianza delle derivate: $a=2$. Sostituisco nella prima equazione: $2+b=1$, quindi $b=-1$.`,
+          ],
+          result: String.raw`$a=2$, $b=-1$: solo così $f$ è continua e derivabile in $1$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: parametri con l\'esponenziale',
+          problem: String.raw`Per quali $a,b$ la funzione $f(x)=\begin{cases}e^x & x\le0\\ ax+b & x>0\end{cases}$ è derivabile in $0$?`,
+          steps: [
+            String.raw`Continuità in $0$: $f(0)=e^0=1$, quindi il limite destro $b$ deve valere $1$.`,
+            {
+              text: String.raw`Con $b=1$ ora imponi l'uguaglianza delle derivate. Calcola la derivata sinistra $f'_-(0)$ da $e^x$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f'_-(0)$ per $f(x)=e^x$?`,
+                answer: '1',
+                explain: String.raw`$D(e^x)=e^x$, in $x=0$ vale $1$.`,
+              },
+            },
+            {
+              text: String.raw`La derivata destra è $a$. Uguaglianza: $a=f'_-(0)=1$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $a$?`,
+                answer: '1',
+                explain: String.raw`Dall'uguaglianza delle derivate laterali, $a=1$.`,
+              },
+            },
+          ],
+          result: String.raw`$a=1$, $b=1$. Con questi valori $f$ è derivabile in $0$, con $f'(0)=1$.`,
+        },
+        {
+          id: 's08.punti.L3.q1',
+          type: 'problem',
+          level: 3,
+          source: 'Appello 15/01/2026 · Parte B',
+          points: 4,
+          prompt: String.raw`Sia $f(x)=\begin{cases} x\log x & 0<x<1\\ \dfrac{x-1}{2x-3} & x\ge1\end{cases}$. (a) Calcola $f'_-(1)$. (b) Calcola $f'_+(1)$. (c) Di che tipo di punto si tratta in $x=1$?`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`(a) $f'_-(1)$`,
+              answer: '1',
+              explain: String.raw`$D(x\log x)=\log x+1$; in $x=1$ vale $\log 1+1=1$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`(b) $f'_+(1)$`,
+              answer: '-1',
+              explain: String.raw`$D\frac{x-1}{2x-3}=\frac{-1}{(2x-3)^2}$; in $x=1$ vale $\frac{-1}{1}=-1$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`(c) Tipo di punto in $x=1$:`,
+              options: [
+                String.raw`punto angoloso (derivate laterali finite e diverse)`,
+                String.raw`punto regolare (derivabile)`,
+                String.raw`cuspide`,
+                String.raw`flesso a tangente verticale`,
+              ],
+              answer: 0,
+              explain: String.raw`Le derivate $1$ e $-1$ sono finite e diverse: punto angoloso. Anche la funzione è continua in $1$ (entrambi i rami valgono $0$).`,
+            },
+          ],
+          solution: String.raw`La funzione è continua in $1$: $\lim_{x\to1^-}x\log x=0=f(1)=\frac{0}{-1}$. Derivata sinistra: $f'_-(1)=1$. Derivata destra: $f'_+(1)=-1$. Le derivate laterali sono finite e diverse: $x=1$ è un punto angoloso.`,
+        },
+        {
+          id: 's08.punti.L3.q2',
+          type: 'num',
+          prompt: String.raw`Per $f(x)=\begin{cases}x^2 & x\le1\\ ax+b & x>1\end{cases}$ con derivabilità in $1$: quanto vale $a$?`,
+          answer: '2',
+          explain: String.raw`La derivata sinistra in $1$ è $D(x^2)=2$. Per la derivabilità la derivata destra $a$ deve essere uguale: $a=2$.`,
+        },
+        {
+          id: 's08.punti.L3.q3',
+          type: 'num',
+          prompt: String.raw`Nel caso precedente ($a=2$, derivabile in $1$), quanto vale $b$?`,
+          answer: '-1',
+          explain: String.raw`Continuità: $f(1)=1$ e il limite destro è $a+b$. Quindi $2+b=1$, cioè $b=-1$.`,
+        },
+        {
+          id: 's08.punti.L3.q4',
+          type: 'mcq',
+          prompt: String.raw`Quale condizione garantisce che una funzione a tratti sia derivabile in un punto di raccordo $x_0$?`,
+          options: [
+            String.raw`derivate laterali finite e uguali`,
+            String.raw`limiti laterali uguali`,
+            String.raw`$f(x_0)=0$`,
+            String.raw`$f$ è continua in $x_0$`,
+          ],
+          answer: 0,
+          explain: String.raw`Per la derivabilità servono derivate laterali finite e uguali. La continuità è necessaria, ma non sufficiente. $f(x_0)=0$ non è una condizione richiesta.`,
+        },
+        {
+          id: 's08.punti.L3.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $f$ è continua in $x_0$ e le derivate laterali sono **finite** e diverse, allora $x_0$ è un punto angoloso.`,
+          answer: true,
+          explain: String.raw`Vero: è la definizione di punto angoloso. Se le derivate fossero infinite con segni opposti, si tratterebbe di una cuspide.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.punti.p1',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const c = R.pick([-2, -1, 1, 2, 3]);
+        const b = -c * c;
+        return {
+          type: 'num',
+          prompt: String.raw`Sia $f(x)=\begin{cases} x^2 & x\le${c}\\ ax+(${b}) & x>${c}\end{cases}$. Per quale $a$ la funzione è derivabile in $x=${c}$?`,
+          answer: String(2 * c),
+          explain: String.raw`Derivata sinistra in $${c}$: $2\cdot(${c})=${2 * c}$. Deve coincidere con la derivata destra $a$: $a=${2 * c}$. Controlla la continuità: $(${c})^2=${c * c}$ e $a\cdot(${c})+(${b})=${2 * c * c - c * c}=${c * c}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.punti.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const k = R.pick([-3, -2, 2, 3]);
+        return {
+          type: 'num',
+          prompt: String.raw`Sia $f(x)=\begin{cases} e^{${k}x} & x\le0\\ ax+1 & x>0\end{cases}$. Per quale $a$ la funzione è derivabile in $0$?`,
+          answer: String(k),
+          explain: String.raw`Continuità: $f(0)=1$ e il limite destro è $1$, già soddisfatto. Derivata sinistra: $D(e^{${k}x})=${k}e^{${k}x}$, in $0$ vale $${k}$. Quindi $a=${k}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.punti.p3',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const c = R.int(-3, 3), d = R.int(-2, 2);
+        return {
+          type: 'mcq',
+          prompt: String.raw`Il grafico di $f(x)=|x-(${c})|+(${d})$ nel punto di ascissa $x=${c}$ presenta:`,
+          options: [
+            String.raw`un punto angoloso`,
+            String.raw`una cuspide`,
+            String.raw`un flesso a tangente verticale`,
+            String.raw`un punto regolare con tangente orizzontale`,
+          ],
+          answer: 0,
+          explain: String.raw`È un valore assoluto traslato: le derivate laterali sono $+1$ e $-1$, finite e diverse. Quindi è un punto angoloso, non derivabile, anche se continuo.`,
+        };
+      },
+    },
+    {
+      id: 's08.punti.p4',
+      type: 'num',
+      prompt: String.raw`Calcola $f'_-(2)$ per $f(x)=|x^2-4|$.`,
+      answer: '-4',
+      explain: String.raw`Per $x<2$ (vicino a $2$): $x^2-4<0$, quindi $f=4-x^2$ con $f'=-2x$. In $x=2$: $-4$.`,
+    },
+    {
+      id: 's08.punti.p5',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f'(x_0)=0$, allora $x_0$ è un punto di massimo o di minimo.`,
+      answer: false,
+      explain: String.raw`Falso. Per $f(x)=x^3$ in $x_0=0$, $f'(0)=0$, ma $0$ non è né massimo né minimo: la funzione è crescente.`,
+    },
+    {
+      id: 's08.punti.p6',
+      type: 'mcq',
+      prompt: String.raw`Quale è il tipo di punto di $f(x)=\sqrt[3]{x}$ in $x_0=0$?`,
+      options: [
+        String.raw`flesso a tangente verticale`,
+        String.raw`cuspide`,
+        String.raw`punto angoloso`,
+        String.raw`punto regolare`,
+      ],
+      answer: 0,
+      explain: String.raw`Derivate infinite con lo stesso segno ($+\infty$ da entrambi i lati): flesso a tangente verticale.`,
+    },
+    {
+      id: 's08.punti.p7',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Una funzione con un punto angoloso in $x_0$ è derivabile in $x_0$.`,
+      answer: false,
+      explain: String.raw`Falso: nel punto angoloso le derivate laterali sono diverse, quindi non esiste la derivata.`,
+    },
+    {
+      id: 's08.punti.p8',
+      type: 'num',
+      prompt: String.raw`Calcola $f'(0)$ se $f(x)=x\,|x|$.`,
+      answer: '0',
+      explain: String.raw`I rapporti incrementali sono $h$ (per $h>0$) e $-h$ (per $h<0$): tendono entrambi a $0$. Quindi $f'(0)=0$.`,
+    },
+    {
+      id: 's08.punti.p9',
+      type: 'expr',
+      prompt: String.raw`Per $x>0$ calcola $f'(x)$ se $f(x)=x\,|x|$.`,
+      answer: '2*x',
+      vars: ['x'],
+      domain: [0.3, 2.7],
+      explain: String.raw`Per $x>0$ si ha $|x|=x$, quindi $f(x)=x^2$ e $f'(x)=2x$.`,
+    },
+    {
+      id: 's08.punti.p10',
+      type: 'mcq',
+      prompt: String.raw`Sia $f(x)=\begin{cases}x^2 & x\le1\\ 2x-1 & x>1\end{cases}$. In $x=1$ la funzione è:`,
+      options: [
+        String.raw`derivabile, con $f'(1)=2$`,
+        String.raw`derivabile, con $f'(1)=1$`,
+        String.raw`non derivabile: la derivata destra è diversa dalla sinistra`,
+        String.raw`non continua in $1$`,
+      ],
+      answer: 0,
+      explain: String.raw`Continua: $f(1)=1$ e $2\cdot1-1=1$. Derivate: sinistra $2x=2$, destra $2$. Uguali: derivabile con $f'(1)=2$. Il secondo distrattore sbaglia il valore della derivata; il terzo è falso.`,
+    },
+    {
+      id: 's08.punti.p11',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f$ non è continua in $x_0$, allora $f$ non è derivabile in $x_0$.`,
+      answer: true,
+      explain: String.raw`Vero, per il teorema derivabile ⇒ continua (contronominale): se non c'è continuità, non può esserci derivabilità.`,
+    },
+    {
+      id: 's08.punti.p12',
+      type: 'mcq',
+      prompt: String.raw`Quale funzione ha in $x_0=0$ una cuspide?`,
+      options: [
+        String.raw`$\sqrt[3]{x^2}$`,
+        String.raw`$\sqrt[3]{x}$`,
+        String.raw`$|x|$`,
+        String.raw`$x^2$`,
+      ],
+      answer: 0,
+      explain: String.raw`$\sqrt[3]{x^2}$ ha derivate infinite di segno opposto in $0$: cuspide. $\sqrt[3]x$ è un flesso verticale; $|x|$ ha un punto angoloso; $x^2$ è derivabile.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.punti.fc1',
+      kind: 'thm',
+      front: String.raw`Derivabile ⇒ continua`,
+      back: String.raw`Se $f$ è derivabile in $x_0$, allora $f$ è continua in $x_0$. Il viceversa è falso: $|x|$ è continua in $0$ ma non derivabile.`,
+    },
+    {
+      id: 's08.punti.fc2',
+      kind: 'dim',
+      front: String.raw`Idea della dimostrazione: derivabile ⇒ continua`,
+      back: String.raw`Scrivi $f(x)-f(x_0)=\frac{f(x)-f(x_0)}{x-x_0}\cdot(x-x_0)$. Il primo fattore tende a $f'(x_0)$ (finito), il secondo a $0$. Il prodotto tende a $0$, quindi $f(x)\to f(x_0)$.`,
+    },
+    {
+      id: 's08.punti.fc3',
+      kind: 'def',
+      front: String.raw`Derivate laterali`,
+      back: String.raw`$f'_+(x_0)=\lim_{h\to0^+}\frac{f(x_0+h)-f(x_0)}{h}$ e $f'_-(x_0)=\lim_{h\to0^-}\frac{f(x_0+h)-f(x_0)}{h}$. $f$ è derivabile in $x_0$ sse sono finite e uguali.`,
+    },
+    {
+      id: 's08.punti.fc4',
+      kind: 'def',
+      front: String.raw`Punto angoloso`,
+      back: String.raw`Derivate laterali **finite e diverse**, per esempio $f'_+=1$ e $f'_-=-1$ per $|x|$ in $0$.`,
+    },
+    {
+      id: 's08.punti.fc5',
+      kind: 'def',
+      front: String.raw`Cuspide`,
+      back: String.raw`Derivate laterali **infinite di segno opposto**: $f'_+=+\infty$ e $f'_-=-\infty$, per esempio $\sqrt[3]{x^2}$ in $0$.`,
+    },
+    {
+      id: 's08.punti.fc6',
+      kind: 'def',
+      front: String.raw`Flesso a tangente verticale`,
+      back: String.raw`Derivata infinita **con lo stesso segno** da entrambi i lati, per esempio $+\infty$ da entrambe le parti: $\sqrt[3]{x}$ in $0$. La funzione continua a crescere.`,
+    },
+    {
+      id: 's08.punti.fc7',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "continua ⇒ derivabile"`,
+      back: String.raw`Falso. $|x|$ è continua in $0$ ma non derivabile. Per la derivabilità servono le derivate laterali finite e uguali.`,
+    },
+    {
+      id: 's08.punti.fc8',
+      kind: 'metodo',
+      front: String.raw`Funzione a tratti: controllo in un punto di raccordo`,
+      back: String.raw`1) Continuità: limiti laterali uguali al valore in $x_0$. 2) Derivabilità: derivate laterali finite e uguali. Ogni condizione è un'equazione per i parametri.`,
+    },
+  ],
+});
