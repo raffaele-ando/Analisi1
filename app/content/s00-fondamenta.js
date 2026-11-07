@@ -979,3 +979,468 @@ $$\frac{x^2+3x}{x} = \frac{x(x+3)}{x} = x+3 \quad (x\neq0), \qquad\text{ma}\qqua
     { id: 's00.algebra.fc6', kind: 'def', front: 'Grado di un polinomio', back: String.raw`L'esponente massimo della variabile con coefficiente non nullo. $\deg(PQ) = \deg P + \deg Q$.` },
   ],
 });
+
+// =====================================================================
+// s00.equazioni
+// =====================================================================
+/** "ax + by = c" in LaTeX */
+const eq2 = (a, b, c) => {
+  const t = [];
+  const add = (k, v) => {
+    if (k === 0) return;
+    const abs = Math.abs(k) === 1 ? '' : String(Math.abs(k));
+    t.push(t.length === 0 ? (k < 0 ? '-' : '') + abs + v : (k < 0 ? ' - ' : ' + ') + abs + v);
+  };
+  add(a, 'x');
+  add(b, 'y');
+  return `${t.join('') || '0'} = ${c}`;
+};
+
+S.push({
+  id: 's00.equazioni',
+  title: 'Equazioni e sistemi',
+  summary: String.raw`Saprai risolvere equazioni di primo e secondo grado, biquadratiche, fratte, con modulo e irrazionali semplici, e sistemi lineari 2×2: è ciò che serve per trovare zeri e punti stazionari.`,
+  prereq: ['s00.algebra'],
+  examRefs: ['Appello 10/02/2026 · Parte B (punti stazionari)', 'Appello 06/07/2026 · Parte B (numeri complessi)'],
+  lessons: [
+    {
+      id: 's00.equazioni.L1',
+      title: 'Che cosa vuol dire risolvere',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Un\'equazione è una domanda',
+          body: String.raw`$3x - 5 = 7$ chiede: **per quali numeri $x$ l'uguaglianza è vera?** Quei numeri sono le **soluzioni**. Qui $x = 4$, perché $3\cdot4 - 5 = 7$.
+
+Per trovarle trasformo l'equazione in una **equivalente** (stesse soluzioni) e più semplice:
+
+>* **Principi di equivalenza.** Posso (1) sommare o sottrarre la stessa quantità a entrambi i membri; (2) moltiplicare o dividere entrambi i membri per lo stesso numero **diverso da zero**.
+
+"Portare dall'altra parte cambiando segno" è solo il principio (1) abbreviato. Alla fine **verifico** sostituendo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Risolvi $3x - 5 = 7$.`,
+          steps: [
+            String.raw`Sommo $5$ a entrambi i membri: $3x = 12$.`,
+            { text: String.raw`Divido per $3$: $x = 4$.`,
+              ask: { type: 'num', prompt: String.raw`Da $3x = 12$, quanto vale $x$?`, answer: '4', explain: String.raw`Divido entrambi i membri per $3 \neq 0$.` } },
+            String.raw`Verifica: $3\cdot 4 - 5 = 7$. ✓`,
+          ],
+          result: String.raw`$x = 4$`,
+        },
+        {
+          id: 's00.equazioni.L1.e1', type: 'num', level: 1,
+          prompt: String.raw`Risolvi $2x + 3 = 11$.`,
+          answer: '4',
+          explain: String.raw`$2x = 8$, quindi $x = 4$. Verifica: $8 + 3 = 11$.`,
+        },
+        {
+          id: 's00.equazioni.L1.e2', type: 'num', level: 1,
+          prompt: String.raw`Risolvi $5 - 2x = 3x + 20$.`,
+          answer: '-3',
+          explain: String.raw`Porto le $x$ a destra e i numeri a sinistra: $5 - 20 = 3x + 2x$, cioè $-15 = 5x$, $x = -3$.`,
+        },
+        {
+          id: 's00.equazioni.L1.e3', type: 'num', level: 1,
+          prompt: String.raw`Risolvi $\dfrac{x}{2} + \dfrac{x}{3} = 5$.`,
+          answer: '6',
+          explain: String.raw`Moltiplico tutto per $6$ (mcm): $3x + 2x = 30$, $x = 6$.`,
+        },
+        {
+          id: 's00.equazioni.L1.e4', type: 'mcq', level: 1,
+          prompt: String.raw`L'equazione $2(x+1) = 2x + 2$ ha:`,
+          options: ['infinite soluzioni (è un\'identità)', 'nessuna soluzione', 'la sola soluzione $x = 0$', 'la sola soluzione $x = 1$'],
+          answer: 0,
+          explain: String.raw`Sviluppando: $2x + 2 = 2x + 2$, cioè $0\cdot x = 0$: vera per **ogni** $x$. Se fosse venuto $0\cdot x = 5$ non ci sarebbero soluzioni (equazione impossibile).`,
+        },
+        {
+          id: 's00.equazioni.L1.e5', type: 'tf', level: 2,
+          prompt: String.raw`Moltiplicando entrambi i membri di un'equazione per $x$ si ottiene sempre un'equazione con le stesse soluzioni.`,
+          answer: false,
+          explain: String.raw`Falso: $x$ potrebbe valere $0$, e il principio vale solo per fattori non nulli. Per esempio $x - 1 = 0$ ha solo $x=1$, ma $x(x-1) = 0$ ha anche $x = 0$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Sistemi lineari 2×2',
+          body: String.raw`Un sistema chiede una coppia $(x, y)$ che soddisfi **entrambe** le equazioni.
+
+- **Sostituzione**: ricavo una variabile da un'equazione e la sostituisco nell'altra.
+- **Riduzione**: sommo o sottraggo le equazioni (moltiplicate per numeri opportuni) per eliminare una variabile.
+
+Geometricamente sono due rette: una soluzione = rette incidenti; nessuna = parallele; infinite = coincidenti.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: riduzione',
+          problem: String.raw`Risolvi $\begin{cases} x + y = 5\\ x - y = 1\end{cases}$`,
+          steps: [
+            String.raw`Sommo le due equazioni: $2x = 6$, quindi $x = 3$.`,
+            { text: String.raw`Sostituisco nella prima: $3 + y = 5$, $y = 2$.`,
+              ask: { type: 'num', prompt: String.raw`Con $x = 3$ nella prima equazione, quanto vale $y$?`, answer: '2', explain: String.raw`$3 + y = 5 \Rightarrow y = 2$.` } },
+            String.raw`Verifica nella seconda: $3 - 2 = 1$. ✓`,
+          ],
+          result: String.raw`$(x, y) = (3, 2)$`,
+        },
+        {
+          id: 's00.equazioni.L1.e6', type: 'tuple', level: 1,
+          prompt: String.raw`Risolvi $\begin{cases} 2x + y = 7\\ x - y = -1\end{cases}$`,
+          labels: ['x', 'y'],
+          answer: ['2', '3'],
+          explain: String.raw`Sommo: $3x = 6$, $x = 2$. Dalla seconda $y = x + 1 = 3$. Verifica: $4 + 3 = 7$.`,
+        },
+        {
+          id: 's00.equazioni.L1.e7', type: 'tuple', level: 2,
+          prompt: String.raw`Risolvi $\begin{cases} 3x - 2y = 4\\ x + 2y = 4\end{cases}$`,
+          labels: ['x', 'y'],
+          answer: ['2', '1'],
+          explain: String.raw`Sommo: $4x = 8$, $x = 2$. Poi $2 + 2y = 4$, $y = 1$.`,
+        },
+      ],
+    },
+    {
+      id: 's00.equazioni.L2',
+      title: 'Equazioni di secondo grado',
+      cards: [
+        {
+          type: 'learn',
+          title: 'La formula risolutiva',
+          body: String.raw`$ax^2 + bx + c = 0$ con $a\neq 0$. Prima i casi facili:
+
+- **spuria** ($c = 0$): $x(ax+b) = 0$, quindi $x = 0$ oppure $x = -\frac ba$ (**legge di annullamento del prodotto**: un prodotto è $0$ se e solo se un fattore è $0$);
+- **pura** ($b = 0$): $x^2 = -\frac ca$, con soluzioni $\pm\sqrt{-c/a}$ se $-c/a \ge 0$.
+
+In generale si calcola il **discriminante** $\Delta = b^2 - 4ac$:
+
+>* $\Delta > 0$: due soluzioni $x_{1,2} = \dfrac{-b \pm \sqrt\Delta}{2a}$; $\;\Delta = 0$: una soluzione doppia $x = -\frac{b}{2a}$; $\;\Delta < 0$: nessuna soluzione reale.`,
+        },
+        {
+          type: 'learn',
+          title: 'Da dove viene (completare il quadrato)',
+          body: String.raw`Divido per $a$ e aggiungo e tolgo $\left(\frac{b}{2a}\right)^2$:
+$$x^2 + \frac bax + \frac ca = \left(x + \frac{b}{2a}\right)^2 - \frac{b^2 - 4ac}{4a^2}.$$
+Quindi l'equazione diventa $\left(x + \frac{b}{2a}\right)^2 = \frac{\Delta}{4a^2}$: se $\Delta<0$ un quadrato dovrebbe essere negativo (impossibile), altrimenti $x + \frac{b}{2a} = \pm\frac{\sqrt\Delta}{2a}$.
+
+> Questo trucco serve anche negli integrali: $x^2 - x + 1 = \left(x - \frac12\right)^2 + \frac34$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Risolvi $x^2 - 5x + 6 = 0$.`,
+          steps: [
+            String.raw`$a = 1$, $b = -5$, $c = 6$.`,
+            { text: String.raw`$\Delta = 25 - 24 = 1$.`,
+              ask: { type: 'num', prompt: String.raw`Calcola $\Delta = b^2 - 4ac$.`, answer: '1', explain: String.raw`$(-5)^2 - 4\cdot1\cdot6 = 25 - 24 = 1$. Attento: $(-5)^2 = +25$.` } },
+            String.raw`$x = \frac{5 \pm 1}{2}$, cioè $x = 2$ e $x = 3$.`,
+          ],
+          result: String.raw`$x = 2$, $x = 3$`,
+        },
+        {
+          id: 's00.equazioni.L2.e1', type: 'set', level: 1,
+          prompt: String.raw`Risolvi $x^2 - 9 = 0$ (soluzioni separate da ;).`,
+          answer: ['3', '-3'],
+          explain: String.raw`$x^2 = 9$ ha **due** soluzioni: $\pm3$. Scrivere solo $x = 3$ è l'errore più comune.`,
+        },
+        {
+          id: 's00.equazioni.L2.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Uno studente risolve $x^2 = 4x$ dividendo per $x$ e trova $x = 4$. Cosa ha sbagliato?`,
+          options: ['Ha perso la soluzione $x = 0$', 'Niente, $x = 4$ è l\'unica soluzione', 'Doveva trovare $x = \\pm 4$', 'Doveva trovare $x = 2$'],
+          answer: 0,
+          explain: String.raw`Dividere per $x$ è lecito solo se $x\neq0$. Corretto: $x^2 - 4x = 0 \Rightarrow x(x-4) = 0 \Rightarrow x = 0$ o $x = 4$.`,
+        },
+        {
+          id: 's00.equazioni.L2.e3', type: 'set', level: 1,
+          prompt: String.raw`Risolvi $x^2 + x - 6 = 0$.`,
+          answer: ['2', '-3'],
+          explain: String.raw`$\Delta = 1 + 24 = 25$, $x = \frac{-1\pm5}{2}$: $2$ e $-3$. (Oppure: somma $-1$, prodotto $-6$.)`,
+        },
+        {
+          id: 's00.equazioni.L2.e4', type: 'mcq', level: 1,
+          prompt: String.raw`Quante soluzioni reali ha $x^2 + 2x + 5 = 0$?`,
+          options: ['Nessuna', 'Una', 'Due', 'Infinite'],
+          answer: 0, noShuffle: true,
+          explain: String.raw`$\Delta = 4 - 20 = -16 < 0$. Infatti $x^2+2x+5 = (x+1)^2 + 4 \ge 4$.`,
+        },
+        {
+          id: 's00.equazioni.L2.e5', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $4x^2 - 4x + 1 = 0$.`,
+          answer: ['1/2'],
+          explain: String.raw`$\Delta = 16 - 16 = 0$: soluzione doppia $x = \frac{4}{8} = \frac12$. Infatti $4x^2 - 4x + 1 = (2x-1)^2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Biquadratiche',
+          body: String.raw`$ax^4 + bx^2 + c = 0$ si risolve con la **sostituzione** $t = x^2$: diventa $at^2 + bt + c = 0$. Per ogni soluzione $t \ge 0$ ottengo $x = \pm\sqrt t$; le $t < 0$ non danno soluzioni reali.
+
+Esempio: $x^4 - 5x^2 + 4 = 0 \Rightarrow t^2 - 5t + 4 = 0 \Rightarrow t = 1, 4 \Rightarrow x = \pm1, \pm2$.`,
+        },
+        {
+          id: 's00.equazioni.L2.e6', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $x^4 - 10x^2 + 9 = 0$.`,
+          answer: ['1', '-1', '3', '-3'],
+          explain: String.raw`$t = x^2$: $t^2 - 10t + 9 = 0$, $t = 1$ o $t = 9$. Quindi $x = \pm1$, $x = \pm3$.`,
+        },
+        {
+          id: 's00.equazioni.L2.e7', type: 'mcq', level: 3,
+          source: 'Appello 06/07/2026 · Parte B (numeri complessi)',
+          prompt: String.raw`Quante soluzioni **reali** ha $x^4 - 4x^2 + 13 = 0$?`,
+          options: ['Nessuna', 'Due', 'Quattro', 'Una'],
+          answer: 0,
+          explain: String.raw`Con $t = x^2$: $t^2 - 4t + 13 = 0$, $\Delta = 16 - 52 = -36 < 0$, nessuna $t$ reale, quindi nessuna $x$ reale. All'esame l'equazione era in $\C$: lì $t = 2 \pm 3i$ e ci sono 4 soluzioni complesse (le vedrai nella sezione sui complessi).`,
+        },
+      ],
+    },
+    {
+      id: 's00.equazioni.L3',
+      title: 'Fratte, con modulo, irrazionali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Equazioni fratte',
+          body: String.raw`Se la $x$ compare al denominatore:
+
+1. scrivo le **condizioni di esistenza** (denominatori $\neq0$);
+2. porto tutto a denominatore comune e lo elimino (lecito: è $\neq0$ per le C.E.);
+3. risolvo e **scarto** le soluzioni che violano le C.E.
+
+>! Saltare il passo 3 è l'errore classico: si "trova" una soluzione che rende nullo un denominatore.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: la soluzione da scartare',
+          problem: String.raw`Risolvi $\dfrac{x+1}{x-2} = \dfrac{3}{x-2}$.`,
+          steps: [
+            String.raw`C.E.: $x \neq 2$.`,
+            { text: String.raw`Moltiplico per $x-2$: $x + 1 = 3$, quindi $x = 2$.`,
+              ask: { type: 'num', prompt: String.raw`Quale valore si ottiene da $x + 1 = 3$?`, answer: '2', explain: String.raw`$x = 3 - 1 = 2$.` } },
+            String.raw`Ma $x = 2$ viola le C.E.: va scartato.`,
+          ],
+          result: 'L\'equazione è impossibile (nessuna soluzione).',
+        },
+        {
+          id: 's00.equazioni.L3.e1', type: 'num', level: 1,
+          prompt: String.raw`Risolvi $\dfrac1x + \dfrac{1}{2x} = 3$.`,
+          answer: '1/2',
+          explain: String.raw`C.E. $x\neq0$. Denominatore comune $2x$: $\frac{2+1}{2x} = 3 \Rightarrow 3 = 6x \Rightarrow x = \frac12$, accettabile.`,
+        },
+        {
+          id: 's00.equazioni.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`Risolvi $\dfrac{x}{x-1} - \dfrac{2}{x+1} = 1$.`,
+          answer: '3',
+          explain: String.raw`C.E. $x\neq\pm1$. Moltiplico per $(x-1)(x+1)$: $x(x+1) - 2(x-1) = x^2 - 1$, cioè $x^2 - x + 2 = x^2 - 1$, quindi $x = 3$, accettabile. Verifica: $\frac32 - \frac24 = 1$.`,
+        },
+        {
+          id: 's00.equazioni.L3.e3', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $\dfrac{x^2-4}{x-2} = 0$.`,
+          answer: ['-2'],
+          explain: String.raw`C.E. $x\neq 2$. Una frazione è nulla se e solo se è nullo il numeratore (e il denominatore no): $x^2 = 4$, cioè $x = \pm 2$, ma $x = 2$ è escluso. Resta $x = -2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Modulo e radici',
+          body: String.raw`**Valore assoluto**: $|A| = A$ se $A\ge0$, $|A| = -A$ se $A<0$. È la distanza da $0$, quindi:
+
+>* Per $k > 0$: $|A| = k \iff A = k$ oppure $A = -k$. Se $k < 0$ non ci sono soluzioni.
+
+**Equazioni irrazionali** $\sqrt{A} = B$: elevo al quadrato, ma l'elevamento può **aggiungere** soluzioni false. Quindi impongo $B \ge 0$ (la radice è non negativa) oppure verifico alla fine.`,
+        },
+        {
+          id: 's00.equazioni.L3.e4', type: 'set', level: 1,
+          prompt: String.raw`Risolvi $|2x - 1| = 3$.`,
+          answer: ['2', '-1'],
+          explain: String.raw`$2x - 1 = 3 \Rightarrow x = 2$; $2x - 1 = -3 \Rightarrow x = -1$.`,
+        },
+        {
+          id: 's00.equazioni.L3.e5', type: 'num', level: 2,
+          prompt: String.raw`Risolvi $\sqrt{x+3} = x + 1$.`,
+          answer: '1',
+          explain: String.raw`Serve $x + 1 \ge 0$. Al quadrato: $x + 3 = x^2 + 2x + 1 \Rightarrow x^2 + x - 2 = 0 \Rightarrow x = 1$ o $x = -2$. Ma $x = -2$ dà $\sqrt1 = 1$ contro $-1$: falsa (viola $x+1\ge0$). Unica soluzione $x = 1$.`,
+        },
+        {
+          id: 's00.equazioni.L3.e6', type: 'tf', level: 1,
+          prompt: String.raw`Un'equazione di secondo grado con $\Delta = 0$ non ha soluzioni.`,
+          answer: false,
+          explain: String.raw`Con $\Delta = 0$ c'è **una** soluzione (doppia), $x = -\frac b{2a}$. Nessuna soluzione reale quando $\Delta < 0$.`,
+        },
+        {
+          id: 's00.equazioni.L3.e7', type: 'problem', level: 3,
+          source: 'Appello 10/02/2026 · Parte B (studio di funzione)',
+          prompt: String.raw`Per $f(x) = (x^2-3)e^{-|2-x|}$ si trova
+$$f'(x) = \begin{cases} e^{x-2}(x^2+2x-3) & x < 2\\ -e^{2-x}(x^2-2x-3) & x > 2\end{cases}$$
+Trova i punti stazionari (dove $f'(x) = 0$), ricordando che ogni formula vale solo nel suo intervallo.`,
+          parts: [
+            { type: 'set', prompt: String.raw`Soluzioni di $f'(x) = 0$ con $x < 2$:`, answer: ['-3', '1'], explain: String.raw`$e^{x-2} > 0$, quindi $x^2 + 2x - 3 = 0$: $(x+3)(x-1) = 0$. Entrambe sono $< 2$.` },
+            { type: 'set', prompt: String.raw`Soluzioni di $f'(x) = 0$ con $x > 2$:`, answer: ['3'], explain: String.raw`$x^2 - 2x - 3 = (x-3)(x+1) = 0$: $x = 3$ va bene, $x = -1$ **no** perché non è $> 2$.` },
+          ],
+          solution: String.raw`L'esponenziale non si annulla mai, quindi conta solo il polinomio. Per $x<2$: $x^2+2x-3 = (x+3)(x-1) = 0$ dà $x=-3$ e $x=1$ (entrambi accettabili). Per $x>2$: $x^2-2x-3 = (x-3)(x+1) = 0$ dà $x = 3$ (accettabile) e $x = -1$ (da scartare, fuori dal ramo). Punti stazionari: $-3, 1, 3$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.equazioni.gen-lineare', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.nz(-6, 6);
+        let c = R.int(-6, 6);
+        while (c === a) c = R.int(-6, 6);
+        const b = R.int(-9, 9), p = R.nz(-9, 9);
+        const d = b + p;
+        return {
+          type: 'num',
+          prompt: String.raw`Risolvi $${H.lin(a, b)} = ${H.lin(c, d)}$.`,
+          answer: H.fracStr(p, a - c),
+          explain: String.raw`Porto le $x$ a sinistra e i numeri a destra: $${H.coef(a - c)}x = ${d} ${H.signed(-b)}$, cioè $${H.coef(a - c)}x = ${p}$${a - c === 1 ? '' : `, quindi $x = ${H.frac(p, a - c)}$`}.`,
+        };
+      } },
+    { id: 's00.equazioni.gen-secondo', type: 'gen', level: 2,
+      gen: (R) => {
+        const m = R.pick([1, 1, 1, 2, 3]);
+        let p = R.int(-6, 6);
+        const r = R.int(-5, 5);
+        while (p === m * r || (m > 1 && H.gcd(p, m) !== 1)) p = R.int(-6, 6);
+        const sg0 = R.pick([1, 1, -1]);
+        const co = [sg0 * m, -sg0 * (p + m * r), sg0 * p * r];
+        const D = co[1] ** 2 - 4 * co[0] * co[2];
+        const sq = Math.round(Math.sqrt(D));
+        return {
+          type: 'set',
+          prompt: String.raw`Risolvi $${H.poly(co)} = 0$ (soluzioni separate da ;).`,
+          answer: [H.fracStr(p, m), String(r)],
+          explain: String.raw`$\Delta = (${co[1]})^2 - 4\cdot(${co[0]})\cdot(${co[2]}) = ${D}$, $\sqrt\Delta = ${sq}$. Quindi $x = \frac{${-co[1]} \pm ${sq}}{${2 * co[0]}}$: $x = ${H.frac(p, m)}$ e $x = ${r}$.`,
+        };
+      } },
+    { id: 's00.equazioni.gen-delta', type: 'gen', level: 1,
+      gen: (R) => {
+        const kind = R.pick([0, 1, 2]);
+        let co;
+        if (kind === 0) {
+          const a = R.pick([1, 2, -1]), h = R.int(-4, 4), k = R.int(1, 6);
+          co = [a, -2 * a * h, a * h * h + a * k]; // a[(x-h)^2 + k]
+        } else if (kind === 1) {
+          const a = R.pick([1, 4, 9, -1]), h = R.nz(-4, 4);
+          const s = Math.sqrt(Math.abs(a));
+          co = [a, -2 * Math.sign(a) * s * h, Math.sign(a) * h * h]; // ±(s x - h)^2
+        } else {
+          const [r1, r2] = two(R, -5, 5);
+          const a = R.pick([1, 2, -1]);
+          co = [a, -a * (r1 + r2), a * r1 * r2];
+        }
+        const D = co[1] ** 2 - 4 * co[0] * co[2];
+        const ans = D < 0 ? 0 : D === 0 ? 1 : 2;
+        return {
+          type: 'mcq', noShuffle: true,
+          prompt: String.raw`Quante soluzioni reali ha $${H.poly(co)} = 0$?`,
+          options: ['Nessuna', 'Una (doppia)', 'Due distinte'],
+          answer: ans,
+          explain: String.raw`$\Delta = b^2 - 4ac = (${co[1]})^2 - 4\cdot(${co[0]})\cdot(${co[2]}) = ${D}$${D < 0 ? ' < 0: nessuna soluzione reale' : D === 0 ? ': una soluzione doppia' : ' > 0: due soluzioni distinte'}.`.replace('$ < 0', ' < 0$').replace('$ > 0', ' > 0$'),
+        };
+      } },
+    { id: 's00.equazioni.gen-biquadratica', type: 'gen', level: 2,
+      gen: (R) => {
+        const [p, q] = two(R, 1, 4);
+        const neg = R.chance(0.3);
+        const P2 = p * p, Q2 = q * q;
+        if (neg) {
+          const co = [1, 0, Q2 - P2, 0, -P2 * Q2];
+          return {
+            type: 'set',
+            prompt: String.raw`Trova le soluzioni reali di $${H.poly(co)} = 0$.`,
+            answer: [String(p), String(-p)],
+            explain: String.raw`Con $t = x^2$: $t^2 ${H.signed(Q2 - P2, 't')} - ${P2 * Q2} = 0$, cioè $(t - ${P2})(t + ${Q2}) = 0$. $t = ${P2}$ dà $x = \pm${p}$; $t = -${Q2} < 0$ non dà soluzioni reali.`,
+          };
+        }
+        const co = [1, 0, -(P2 + Q2), 0, P2 * Q2];
+        return {
+          type: 'set',
+          prompt: String.raw`Risolvi $${H.poly(co)} = 0$.`,
+          answer: [String(p), String(-p), String(q), String(-q)],
+          explain: String.raw`Con $t = x^2$: $t^2 - ${P2 + Q2}t + ${P2 * Q2} = 0$, cioè $t = ${P2}$ o $t = ${Q2}$. Quindi $x = \pm${p}$ e $x = \pm${q}$.`,
+        };
+      } },
+    { id: 's00.equazioni.gen-sistema', type: 'gen', level: 2,
+      gen: (R) => {
+        const x = R.int(-5, 5), y = R.int(-5, 5);
+        let a1, b1, a2, b2;
+        do {
+          a1 = R.nz(-4, 4); b1 = R.nz(-4, 4); a2 = R.nz(-4, 4); b2 = R.nz(-4, 4);
+        } while (a1 * b2 - a2 * b1 === 0);
+        const c1 = a1 * x + b1 * y, c2 = a2 * x + b2 * y;
+        const det = a1 * b2 - a2 * b1;
+        return {
+          type: 'tuple',
+          prompt: String.raw`Risolvi $\begin{cases} ${eq2(a1, b1, c1)}\\ ${eq2(a2, b2, c2)}\end{cases}$`,
+          labels: ['x', 'y'],
+          answer: [String(x), String(y)],
+          explain: String.raw`Per riduzione: moltiplico la prima per $${b2}$ e la seconda per $${b1}$ e sottraggo: $${det}x = ${c1 * b2 - c2 * b1}$, quindi $x = ${x}$. Sostituendo nella prima: $y = ${y}$. Verifica: $${a1}\cdot(${x}) + (${b1})\cdot(${y}) = ${c1}$.`,
+        };
+      } },
+    { id: 's00.equazioni.gen-modulo', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.pick([1, 1, 2, 3]), b = R.nz(-6, 6), c = R.int(1, 7);
+        if (R.chance(0.15)) {
+          return {
+            type: 'tf',
+            prompt: String.raw`L'equazione $|${H.lin(a, b)}| = -${c}$ ha almeno una soluzione reale.`,
+            answer: false,
+            explain: String.raw`Un valore assoluto è sempre $\ge 0$: non può valere $-${c}$. Equazione impossibile.`,
+          };
+        }
+        return {
+          type: 'set',
+          prompt: String.raw`Risolvi $|${H.lin(a, b)}| = ${c}$.`,
+          answer: [H.fracStr(c - b, a), H.fracStr(-c - b, a)],
+          explain: String.raw`$${H.lin(a, b)} = ${c} \Rightarrow x = ${H.frac(c - b, a)}$; $\;${H.lin(a, b)} = -${c} \Rightarrow x = ${H.frac(-c - b, a)}$.`,
+        };
+      } },
+    { id: 's00.equazioni.gen-fratta', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.nz(-5, 5);
+        let a = R.int(-6, 6);
+        while (a === -b) a = R.int(-6, 6);
+        let k = R.nz(-4, 4);
+        while (k === 1) k = R.nz(-4, 4);
+        return {
+          type: 'num',
+          prompt: String.raw`Risolvi $\dfrac{${H.lin(1, a)}}{${xm(b)}} = ${k}$.`,
+          answer: H.fracStr(k * b + a, k - 1),
+          explain: String.raw`C.E. $x \neq ${b}$. Moltiplico per $${xm(b)}$: $${H.lin(1, a)} = ${k}(${xm(b)})$, cioè $${H.lin(1 - k, 0)} = ${-k * b - a}$, quindi $x = ${H.frac(k * b + a, k - 1)}$, diverso da $${b}$: accettabile.`,
+        };
+      } },
+    {
+      id: 's00.equazioni.p1', type: 'mcq', level: 2,
+      prompt: String.raw`Per quali $k$ l'equazione $x^2 + 2x + k = 0$ ha due soluzioni reali distinte?`,
+      options: ['$k < 1$', '$k > 1$', '$k \\le 1$', '$k < -1$'],
+      answer: 0,
+      explain: String.raw`Serve $\Delta = 4 - 4k > 0$, cioè $k < 1$. Con $k = 1$ la soluzione è doppia ($\Delta = 0$), quindi $k\le1$ è sbagliato.`,
+    },
+    {
+      id: 's00.equazioni.p2', type: 'set', level: 2,
+      prompt: String.raw`Risolvi $x^3 = 4x$.`,
+      answer: ['0', '2', '-2'],
+      explain: String.raw`$x^3 - 4x = x(x-2)(x+2) = 0$: tre soluzioni. Dividere per $x$ farebbe perdere $x = 0$.`,
+    },
+    {
+      id: 's00.equazioni.p3', type: 'num', level: 2,
+      prompt: String.raw`Risolvi $\sqrt{2x+1} = x - 1$.`,
+      answer: '4',
+      explain: String.raw`Serve $x \ge 1$. Al quadrato: $2x + 1 = x^2 - 2x + 1 \Rightarrow x^2 - 4x = 0 \Rightarrow x = 0$ o $x = 4$. $x = 0$ viola $x\ge1$ (darebbe $1 = -1$). Soluzione: $x = 4$ ($\sqrt9 = 3$ ✓).`,
+    },
+    {
+      id: 's00.equazioni.p4', type: 'open', level: 2,
+      prompt: String.raw`Spiega perché, risolvendo $\sqrt{A(x)} = B(x)$ elevando al quadrato, bisogna controllare le soluzioni trovate. Fai un esempio.`,
+      answer: String.raw`Elevare al quadrato non è un'operazione equivalente: da $A = B^2$ seguono sia $\sqrt A = B$ sia $\sqrt A = -B$. Si possono quindi ottenere soluzioni "estranee" per cui $B < 0$. Esempio: $\sqrt{x+3} = x+1$ porta a $x^2+x-2 = 0$, cioè $x = 1$ o $x = -2$; ma per $x = -2$ si ha $\sqrt1 = 1 \neq -1$. Si risolve imponendo $B(x)\ge0$ oppure verificando le soluzioni.`,
+      rubric: ['Dice che il quadrato non è un passaggio equivalente', 'Spiega che entrano le soluzioni di $\\sqrt A = -B$', 'Indica il rimedio: $B\\ge0$ o verifica', 'Esempio corretto'],
+    },
+  ],
+  flashcards: [
+    { id: 's00.equazioni.fc1', kind: 'thm', front: 'Principi di equivalenza delle equazioni', back: String.raw`Si può sommare la stessa quantità a entrambi i membri e moltiplicarli per lo stesso numero **non nullo**. Moltiplicare per un'espressione che può annullarsi può aggiungere soluzioni.` },
+    { id: 's00.equazioni.fc2', kind: 'formula', front: String.raw`Formula risolutiva di $ax^2+bx+c = 0$`, back: String.raw`$\Delta = b^2-4ac$; se $\Delta\ge0$: $x = \frac{-b\pm\sqrt\Delta}{2a}$. $\Delta<0$: nessuna soluzione reale; $\Delta = 0$: una doppia.` },
+    { id: 's00.equazioni.fc3', kind: 'thm', front: 'Legge di annullamento del prodotto', back: String.raw`$A\cdot B = 0 \iff A = 0$ oppure $B = 0$. Per questo si scompone prima di risolvere.` },
+    { id: 's00.equazioni.fc4', kind: 'metodo', front: 'Biquadratiche', back: String.raw`$ax^4+bx^2+c = 0$: pongo $t = x^2$, risolvo in $t$, tengo solo $t\ge0$ e prendo $x = \pm\sqrt t$.` },
+    { id: 's00.equazioni.fc5', kind: 'metodo', front: 'Equazioni fratte', back: 'C.E. (denominatori ≠ 0) → denominatore comune → risolvo il numeratore → scarto le soluzioni fuori dalle C.E.' },
+    { id: 's00.equazioni.fc6', kind: 'formula', front: String.raw`$|A| = k$`, back: String.raw`Se $k>0$: $A = k$ oppure $A = -k$. Se $k = 0$: $A = 0$. Se $k<0$: impossibile.` },
+    { id: 's00.equazioni.fc7', kind: 'metodo', front: String.raw`Equazione irrazionale $\sqrt A = B$`, back: String.raw`Equivale a $\begin{cases}B\ge0\\A = B^2\end{cases}$ (la condizione $A\ge0$ è automatica).` },
+    { id: 's00.equazioni.fc8', kind: 'metodo', front: 'Sistemi lineari 2×2', back: 'Sostituzione (ricavo una variabile e la sostituisco) o riduzione (combino le equazioni per eliminarne una). Verifico sempre in entrambe.' },
+  ],
+});
