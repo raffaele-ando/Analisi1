@@ -1,0 +1,616 @@
+import { H } from '../engine/tex.js';
+
+// ---------------------------------------------------------------------------
+// s10 · Formula di Taylor
+// Le skill sono aggiunte in fondo con SKILLS.push(...): l'oggetto esportato
+// contiene lo stesso array, quindi le aggiunte successive vi compaiono.
+// ---------------------------------------------------------------------------
+
+const SKILLS = [];
+
+export default {
+  id: 's10',
+  title: 'Formula di Taylor',
+  subtitle: 'Polinomio di Taylor, resti, sviluppi notevoli, limiti',
+  intro: String.raw`Il polinomio di Taylor è la migliore approssimazione polinomiale di una funzione vicino a un punto. All'esame serve in due modi: per calcolare limiti in forma indeterminata senza calcolatrice, e per stimare quanto sbaglia un'approssimazione. Qui impari a costruire il polinomio, a leggere il resto di Peano e quello di Lagrange, a usare gli sviluppi notevoli e a riconoscere l'ordine di infinitesimo.`,
+  skills: SKILLS,
+};
+
+// ---------- helper per i generatori ----------
+
+/** Coefficiente tra parentesi per math.js: -2 -> '(-2)', 3 -> '3' */
+const mj = (c) => (c < 0 ? `(${c})` : `${c}`);
+
+// ===========================================================================
+// s10.formula · Polinomio di Taylor, resto di Peano e di Lagrange, x0 != 0
+// ===========================================================================
+SKILLS.push({
+  id: 's10.formula',
+  title: 'Polinomio di Taylor e resti',
+  summary: String.raw`Costruire $T_n(x)$ in un punto $x_0$ qualsiasi, leggere il resto di Peano $o\big((x-x_0)^n\big)$ e quello di Lagrange per stimare l'errore.`,
+  prereq: ['s08.regole', 's08.convessita'],
+  examRefs: ['Appello 06/07/2026 · Es. B'],
+  lessons: [
+    {
+      id: 's10.formula.L1',
+      title: 'Dalla tangente al polinomio di Taylor',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Una retta non basta',
+          body: String.raw`Vicino a un punto $x_0$ una funzione derivabile si comporta quasi come la sua **retta tangente**:
+$$y=f(x_0)+f'(x_0)\,(x-x_0).$$
+È un polinomio di grado $1$ che passa per il punto $(x_0,f(x_0))$ e ha la stessa pendenza di $f$ in $x_0$.
+
+Per $f(x)=e^x$ in $x_0=0$ la tangente è $y=1+x$. Per $x=0{,}1$ dà $1{,}1$, mentre $e^{0{,}1}\approx 1{,}105$. L'errore è piccolo, ma per approssimare meglio serve un polinomio che imiti anche la **curvatura**, cioè i termini di grado $2$, $3$ e così via. È l'idea della formula di Taylor.`,
+          plot: { fns: ['e^x', '1+x'], x: [-2, 2], y: [-1, 4] },
+        },
+        {
+          type: 'learn',
+          title: 'Derivate successive e definizione',
+          body: String.raw`Il polinomio di Taylor usa le **derivate successive** di $f$ in $x_0$: $f^{(0)}=f$, $f^{(1)}=f'$, $f^{(2)}=f''$, $f^{(3)}=f'''$, e così via. $f^{(k)}(x_0)$ è un numero, il valore della derivata $k$-esima in $x_0$. Serve anche il fattoriale: $0!=1$, $1!=1$, $2!=2$, $3!=6$, $4!=24$.
+
+>* Sia $f$ derivabile $n$ volte in $x_0$. Il **polinomio di Taylor di grado $n$** di $f$ in $x_0$ è
+$$T_n(x)=\sum_{k=0}^{n}\frac{f^{(k)}(x_0)}{k!}\,(x-x_0)^k=f(x_0)+f'(x_0)(x-x_0)+\frac{f''(x_0)}{2!}(x-x_0)^2+\dots+\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n.$$
+
+Il polinomio ha in $x_0$ le stesse derivate di $f$ fino all'ordine $n$. Per $n=1$ si ritrova la tangente.
+
+> Le potenze sono di $(x-x_0)$, non di $x$. Il simbolo $f^{(k)}$ è la derivata $k$-esima, non la potenza $f^k$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: Taylor di $e^x$',
+          problem: String.raw`Scrivi il polinomio di Taylor di grado $3$ di $f(x)=e^x$ in $x_0=0$.`,
+          steps: [
+            String.raw`Tutte le derivate di $e^x$ sono $e^x$, quindi $f^{(k)}(0)=e^0=1$ per ogni $k$.`,
+            String.raw`I coefficienti sono $\dfrac{f^{(k)}(0)}{k!}=\dfrac{1}{k!}$: valgono $1,\ 1,\ \dfrac12,\ \dfrac16$ per $k=0,1,2,3$.`,
+            String.raw`Quindi $T_3(x)=1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}$.`,
+          ],
+          result: String.raw`$T_3(x)=1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: Taylor di $\cos x$',
+          problem: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=\cos x$ in $x_0=0$.`,
+          steps: [
+            String.raw`$f(0)=\cos 0=1$ e $f'(x)=-\sin x$, quindi $f'(0)=0$.`,
+            {
+              text: String.raw`$f''(x)=-\cos x$, quindi $f''(0)=-1$ e il coefficiente di $x^2$ è $\dfrac{-1}{2!}=-\dfrac12$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f''(0)$ per $f(x)=\cos x$?`,
+                answer: '-1',
+                explain: String.raw`$f''(x)=-\cos x$ e $\cos 0=1$, quindi $f''(0)=-1$.`,
+              },
+            },
+          ],
+          result: String.raw`$T_2(x)=1-\dfrac{x^2}{2}$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.formula.L1.q1',
+          level: 1,
+          prompt: String.raw`Qual è il polinomio di Taylor di grado $1$ di $f$ in $x_0$?`,
+          options: [
+            String.raw`$f(x_0)+f'(x_0)\,(x-x_0)$`,
+            String.raw`$f(x_0)+f'(x_0)\,x$`,
+            String.raw`$f'(x_0)+f(x_0)\,(x-x_0)$`,
+            String.raw`$f(x)+f'(x)\,(x-x_0)$`,
+          ],
+          answer: 0,
+          explain: String.raw`Si parte da $f(x_0)$ e si aggiunge la pendenza $f'(x_0)$ moltiplicata per la distanza $(x-x_0)$. Il secondo distrattore dimentica la traslazione: la retta non passa per $(x_0,f(x_0))$. Il terzo scambia $f$ e $f'$. Il quarto valuta le derivate in $x$ invece che in $x_0$: non si ottiene più un polinomio.`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.formula.L1.q2',
+          level: 1,
+          prompt: String.raw`Qual è il polinomio di Taylor di grado $1$ di $f(x)=x\,e^x$ in $x_0=0$?`,
+          options: [
+            String.raw`$x$`,
+            String.raw`$1+x$`,
+            String.raw`$x+x^2$`,
+            String.raw`$1$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f(0)=0$ e $f'(x)=e^x+xe^x$, quindi $f'(0)=1$. Il polinomio è $0+1\cdot x=x$. Il distrattore $1+x$ scambia $f(0)$ con $f'(0)$. Il distrattore $x+x^2$ aggiunge un termine di grado $2$, che la formula di grado $1$ non contiene. Il distrattore $1$ è solo $f(0)$, e dimentica il termine della derivata.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.formula.L1.q3',
+          level: 1,
+          prompt: String.raw`Se $P$ è un polinomio di grado al più $n$, il polinomio di Taylor di grado $n$ di $P$ in un punto $x_0$ coincide con $P$.`,
+          answer: true,
+          explain: String.raw`Dopo $n$ derivate un polinomio di grado al più $n$ dà valori costanti, e la formula restituisce proprio $P$. Esempio: $P(x)=x^2+1$ in $x_0=3$ ha $f(3)=10$, $f'(3)=6$, $\frac{f''(3)}{2}=1$, quindi $T_2(x)=10+6(x-3)+(x-3)^2=x^2+1$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.formula.L1.q4',
+          level: 1,
+          prompt: String.raw`Nel polinomio di Taylor di grado $3$ di $f(x)=\sin x$ in $x_0=0$, qual è il coefficiente di $x^3$?`,
+          answer: '-1/6',
+          explain: String.raw`Il coefficiente di $x^3$ è $\dfrac{f'''(0)}{3!}$. Per $\sin x$ si ha $f'''(x)=-\cos x$, quindi $f'''(0)=-1$ e il coefficiente è $-\dfrac16$. Errore tipico: dimenticare il fattoriale e scrivere $-1$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.formula.L1.q5',
+          level: 2,
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=\log(1+x)$ in $x_0=0$ (senza resto).`,
+          answer: 'x-x^2/2',
+          vars: ['x'],
+          explain: String.raw`$f(0)=\log 1=0$, $f'(x)=\dfrac{1}{1+x}$ quindi $f'(0)=1$, $f''(x)=-\dfrac{1}{(1+x)^2}$ quindi $f''(0)=-1$. Allora $T_2(x)=0+x-\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.formula.L1.q6',
+          level: 2,
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $3$ di $f(x)=e^{2x}$ in $x_0=0$ (senza resto).`,
+          answer: '1+2*x+2*x^2+(4/3)*x^3',
+          vars: ['x'],
+          explain: String.raw`Le derivate di $e^{2x}$ in $0$ valgono $f^{(k)}(0)=2^k$. I coefficienti sono $\dfrac{2^k}{k!}$: $1,\ 2,\ \dfrac{4}{2}=2,\ \dfrac{8}{6}=\dfrac43$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.formula.L1.q7',
+          level: 2,
+          prompt: String.raw`Quanto vale $f''(0)$ per $f(x)=\cos(2x)$?`,
+          answer: '-4',
+          explain: String.raw`$f'(x)=-2\sin(2x)$, $f''(x)=-4\cos(2x)$, quindi $f''(0)=-4$. Ricorda la derivata interna: il $2$ compare due volte.`,
+        },
+      ],
+    },
+    {
+      id: 's10.formula.L2',
+      title: "Quanto sbaglia il polinomio: il resto di Peano",
+      cards: [
+        {
+          type: 'learn',
+          title: "L'errore è trascurabile",
+          body: String.raw`Chiamiamo $R_n(x)=f(x)-T_n(x)$ il **resto**: è quanto sbaglia il polinomio. Il resto è una funzione, non un numero. Perché l'approssimazione sia buona, deve diventare piccolo *più in fretta* di $(x-x_0)^n$.
+
+Il simbolo $o$ esprime questo fatto. Scrivere $R(x)=o\big((x-x_0)^n\big)$ per $x\to x_0$ significa
+$$\lim_{x\to x_0}\frac{R(x)}{(x-x_0)^n}=0.$$
+Si legge "$R$ è o-piccolo di $(x-x_0)^n$": vicino a $x_0$ è trascurabile rispetto a $(x-x_0)^n$.
+
+Esempi per $x\to0$: $x^3=o(x^2)$, perché $\dfrac{x^3}{x^2}=x\to0$. Invece $x^2\neq o(x^2)$, perché il rapporto vale sempre $1$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Il teorema di Peano',
+          body: String.raw`>* **Formula di Taylor con resto di Peano.** Sia $f$ derivabile $n$ volte in $x_0$. Allora
+$$f(x)=T_n(x)+o\big((x-x_0)^n\big)\qquad\text{per } x\to x_0.$$
+
+Il teorema dice che l'errore è trascurabile vicino a $x_0$. **Non** dice quanto è grande: per questo serve il resto di Lagrange (lezione 3).
+
+> Il resto di Peano è locale: vale vicino a $x_0$. Lontano da $x_0$ l'approssimazione può essere pessima.`,
+          plot: { fns: ['sin(x)', 'x-x^3/6'], x: [-3, 3], y: [-2, 2] },
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: Taylor di $\sin x$ con resto',
+          problem: String.raw`Scrivi $\sin x$ con la formula di Taylor di grado $3$ in $x_0=0$, con resto di Peano.`,
+          steps: [
+            String.raw`Derivate di $\sin x$ in $0$: $f(0)=0$, $f'(0)=\cos 0=1$, $f''(0)=-\sin 0=0$, $f'''(0)=-\cos 0=-1$.`,
+            String.raw`I coefficienti sono $\dfrac{0}{0!}=0$, $\dfrac{1}{1!}=1$, $\dfrac{0}{2!}=0$, $\dfrac{-1}{3!}=-\dfrac16$.`,
+            String.raw`Quindi $T_3(x)=x-\dfrac{x^3}{6}$ e vale $\sin x=x-\dfrac{x^3}{6}+o(x^3)$.`,
+          ],
+          result: String.raw`$\sin x=x-\dfrac{x^3}{6}+o(x^3)$ per $x\to0$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: ordine di $x-\sin x$',
+          problem: String.raw`Di che ordine è l'infinitesimo $x-\sin x$ per $x\to0$? Trova anche la sua parte principale.`,
+          steps: [
+            String.raw`Dall'esempio precedente: $\sin x=x-\dfrac{x^3}{6}+o(x^3)$.`,
+            {
+              text: String.raw`Quindi $x-\sin x=\dfrac{x^3}{6}+o(x^3)$: il primo termine non nullo è in $x^3$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Di che ordine è $x-\sin x$ per $x\to0$?`,
+                answer: '3',
+                explain: String.raw`Il primo termine non nullo dello sviluppo è $\dfrac{x^3}{6}$, di grado $3$: l'ordine è $3$.`,
+              },
+            },
+            String.raw`La parte principale è $\dfrac{x^3}{6}$, cioè $x-\sin x\sim\dfrac{x^3}{6}$.`,
+          ],
+          result: String.raw`$x-\sin x=\dfrac{x^3}{6}+o(x^3)$: ordine $3$, parte principale $\dfrac{x^3}{6}$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.formula.L2.q1',
+          level: 1,
+          prompt: String.raw`Quale affermazione è vera per $x\to0$?`,
+          options: [
+            String.raw`$x^3=o(x^2)$`,
+            String.raw`$x^2=o(x^3)$`,
+            String.raw`$x=o(x)$`,
+            String.raw`$\sin x=o(x)$`,
+          ],
+          answer: 0,
+          explain: String.raw`$\dfrac{x^3}{x^2}=x\to0$, quindi $x^3=o(x^2)$. Il secondo è falso: $\dfrac{x^2}{x^3}=\dfrac1x\to\infty$. Il terzo è falso: $\dfrac{x}{x}=1$ non tende a $0$. Il quarto è falso: $\dfrac{\sin x}{x}\to1$, quindi $\sin x$ non è trascurabile rispetto a $x$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.formula.L2.q2',
+          level: 1,
+          prompt: String.raw`Per $x\to0$ vale $o(x^2)+o(x^2)=o(x^2)$.`,
+          answer: true,
+          explain: String.raw`Se $\dfrac{f}{x^2}\to0$ e $\dfrac{g}{x^2}\to0$, allora $\dfrac{f+g}{x^2}\to0$. La somma di due quantità trascurabili rispetto a $x^2$ è trascurabile rispetto a $x^2$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.formula.L2.q3',
+          level: 2,
+          prompt: String.raw`Sia $f$ derivabile tre volte in $0$ e $f(x)=3x^2+x^3+o(x^3)$ per $x\to0$. Quanto vale $f'''(0)$?`,
+          answer: '6',
+          explain: String.raw`Per l'unicità dello sviluppo di Peano, i coefficienti del polinomio sono quelli di Taylor. Il termine in $x^2$ vale $\dfrac{f''(0)}{2}=3$, quindi $f''(0)=6$. Il termine in $x^3$ vale $\dfrac{f'''(0)}{6}=1$, quindi $f'''(0)=6$.`,
+        },
+        {
+          type: 'order',
+          id: 's10.formula.L2.q4',
+          level: 2,
+          prompt: String.raw`Ordina i passi per ottenere $f(x)=T_n(x)+o\big((x-x_0)^n\big)$.`,
+          steps: [
+            String.raw`Calcola $f(x_0),\,f'(x_0),\dots,f^{(n)}(x_0)$.`,
+            String.raw`Divide ogni valore per $k!$, dove $k$ è l'ordine della derivata.`,
+            String.raw`Moltiplica ogni termine per $(x-x_0)^k$ e somma: ottieni $T_n(x)$.`,
+            String.raw`Scrivi $f(x)=T_n(x)+o\big((x-x_0)^n\big)$.`,
+          ],
+          distractors: [
+            String.raw`Sostituisci $x$ con $x_0$ nel polinomio per trovarne il resto.`,
+            String.raw`Divide ogni valore per $k$ invece che per $k!$.`,
+          ],
+          explain: String.raw`Prima servono le derivate, poi i coefficienti $\dfrac{f^{(k)}(x_0)}{k!}$, poi la somma, infine il resto. Il resto di Peano non si ricava sostituendo $x_0$: è un o-piccolo per definizione.`,
+        },
+        {
+          type: 'cloze',
+          id: 's10.formula.L2.q5',
+          level: 2,
+          text: String.raw`Nella formula $f(x)=T_n(x)+o\big((x-x_0)^n\big)$ il resto è un infinitesimo di ordine [[0]] rispetto a $(x-x_0)^n$, e il polinomio $T_n$ ha grado [[1]] $n$.`,
+          blanks: [
+            { options: [String.raw`superiore a $n$`, String.raw`uguale a $n$`, String.raw`inferiore a $n$`], answer: 0 },
+            { options: [String.raw`al più`, String.raw`esattamente`, String.raw`almeno`], answer: 0 },
+          ],
+          explain: String.raw`Un o-piccolo di $(x-x_0)^n$ è trascurabile rispetto a $(x-x_0)^n$, quindi il suo ordine è maggiore di $n$. Il polinomio $T_n$ ha grado al più $n$: il coefficiente di $x^n$ può anche essere nullo.`,
+        },
+        {
+          type: 'open',
+          id: 's10.formula.L2.q6',
+          level: 2,
+          points: 2,
+          prompt: String.raw`Perché il resto di Peano non dà una stima numerica dell'errore, ma è comunque utile per calcolare i limiti?`,
+          answer: String.raw`Il resto di Peano dice solo che $R_n(x)/(x-x_0)^n\to0$ per $x\to x_0$: l'errore è trascurabile vicino a $x_0$, ma non c'è una maggiorazione numerica. Per i limiti basta questo: si possono sostituire le funzioni con i loro polinomi e trascurare i termini di ordine superiore.`,
+          rubric: [
+            String.raw`Definizione: $R_n(x)/(x-x_0)^n\to0$`,
+            'Il resto è trascurabile rispetto al termine di grado n',
+            'Nessuna stima numerica: per quella serve il resto di Lagrange',
+            'Uso nei limiti: sostituire la funzione con il suo polinomio',
+          ],
+        },
+        {
+          type: 'num',
+          id: 's10.formula.L2.q7',
+          level: 2,
+          prompt: String.raw`Di che ordine è l'infinitesimo $x^2-x^2\cos x$ per $x\to0$?`,
+          answer: '4',
+          explain: String.raw`Da $\cos x=1-\dfrac{x^2}{2}+o(x^2)$ segue $1-\cos x=\dfrac{x^2}{2}+o(x^2)$. Quindi $x^2-x^2\cos x=x^2(1-\cos x)=\dfrac{x^4}{2}+o(x^4)$: ordine $4$.`,
+        },
+      ],
+    },
+    {
+      id: 's10.formula.L3',
+      title: 'Il resto di Lagrange e Taylor in un punto qualsiasi',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il resto di Lagrange',
+          body: String.raw`>* **Formula di Taylor con resto di Lagrange.** Sia $f$ derivabile $n+1$ volte su un intervallo $I$ che contiene $x_0$ e $x$. Allora esiste $c$ compreso tra $x_0$ e $x$ tale che
+$$f(x)=T_n(x)+\frac{f^{(n+1)}(c)}{(n+1)!}\,(x-x_0)^{n+1}.$$
+
+Il termine $R_n(x)=\dfrac{f^{(n+1)}(c)}{(n+1)!}(x-x_0)^{n+1}$ è il **resto di Lagrange**. Il punto $c$ dipende da $x$ e in generale non si conosce: il resto serve per **maggiorare** l'errore. Se $|f^{(n+1)}|\le M$ su $I$, allora
+$$|R_n(x)|\le \frac{M}{(n+1)!}\,|x-x_0|^{n+1}.$$`,
+        },
+        {
+          type: 'learn',
+          title: 'Taylor in un punto qualsiasi',
+          body: String.raw`Il polinomio di Taylor in $x_0$ è una somma di potenze di $(x-x_0)$, **non** di $x$. Se $x_0=1$ il termine di grado $1$ è $f'(1)(x-1)$, non $f'(1)\,x$.
+
+Per $f(x)=\log x$ in $x_0=1$ si ha $f(1)=0$, $f'(1)=1$, $f''(1)=-1$. Il polinomio è
+$$T_2(x)=(x-1)-\frac{(x-1)^2}{2}.$$
+Si può sviluppare in potenze di $x$, ma solo se serve davvero: spesso la forma con $(x-x_0)$ è più chiara.`,
+          plot: { fns: ['log(x)', 'x-1-(x-1)^2/2'], x: [0.2, 3], y: [-2, 1.5] },
+        },
+        {
+          type: 'example',
+          title: "Esempio svolto: stima di $e^{1/2}$",
+          problem: String.raw`Approssima $e^{1/2}$ con il polinomio di Taylor di grado $2$ di $e^x$ in $x_0=0$, e stima l'errore con il resto di Lagrange.`,
+          steps: [
+            String.raw`Dallo sviluppo di $e^x$ in $0$: $T_2(x)=1+x+\dfrac{x^2}{2}$.`,
+            {
+              text: String.raw`Quindi $T_2\!\left(\tfrac12\right)=1+\tfrac12+\tfrac18=\dfrac{13}{8}$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $T_2\!\left(\tfrac12\right)$ con $T_2(x)=1+x+\dfrac{x^2}{2}$?`,
+                answer: '13/8',
+                explain: String.raw`$1+\dfrac12+\dfrac18=\dfrac{8+4+1}{8}=\dfrac{13}{8}$.`,
+              },
+            },
+            String.raw`Il resto è $R_2(x)=\dfrac{e^{c}}{3!}x^3$ con $c$ tra $0$ e $x$. Per $x=\tfrac12$ e $0\le c\le\tfrac12$ si ha $e^c\le e^{1/2}$, quindi $|R_2|\le\dfrac{e^{1/2}}{6}\cdot\dfrac18=\dfrac{e^{1/2}}{48}$.`,
+            String.raw`Poiché $e^{1/2}<2$, si ha $|R_2|<\dfrac{2}{48}=\dfrac1{24}$.`,
+          ],
+          result: String.raw`$\dfrac{13}{8}-\dfrac1{24}<e^{1/2}<\dfrac{13}{8}+\dfrac1{24}$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: Taylor di $\log x$ in $1$',
+          problem: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=\log x$ in $x_0=1$.`,
+          steps: [
+            String.raw`$f(1)=\log 1=0$ e $f'(x)=\dfrac1x$, quindi $f'(1)=1$.`,
+            {
+              text: String.raw`$f''(x)=-\dfrac{1}{x^2}$, quindi il coefficiente di $(x-1)^2$ è $\dfrac{-1}{2}$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f''(1)$ per $f(x)=\log x$?`,
+                answer: '-1',
+                explain: String.raw`$f''(x)=-\dfrac{1}{x^2}$ e $f''(1)=-1$.`,
+              },
+            },
+            String.raw`Quindi $T_2(x)=0+1\cdot(x-1)-\dfrac12(x-1)^2$.`,
+          ],
+          result: String.raw`$T_2(x)=(x-1)-\dfrac{(x-1)^2}{2}$`,
+        },
+        {
+          type: 'expr',
+          id: 's10.formula.L3.q1',
+          level: 2,
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $1$ di $f(x)=\sqrt{x}$ in $x_0=4$ (senza resto).`,
+          answer: '2+(x-4)/4',
+          vars: ['x'],
+          domain: [3, 5],
+          explain: String.raw`$f(4)=2$, $f'(x)=\dfrac{1}{2\sqrt x}$ quindi $f'(4)=\dfrac14$. Allora $T_1(x)=2+\dfrac14(x-4)$. Errore tipico: scrivere $\dfrac14x$ dimenticando la traslazione $(x-4)$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.formula.L3.q2',
+          level: 3,
+          source: 'Appello 06/07/2026 · Es. B',
+          prompt: String.raw`Scrivi il polinomio di Taylor di ordine $2$ di $f(x)=x\cos x+\sin x$ in $x_0=\pi$ (senza resto).`,
+          answer: '-pi-2*(x-pi)+(pi/2)*(x-pi)^2',
+          vars: ['x'],
+          explain: String.raw`$f'(x)=\cos x-x\sin x+\cos x=2\cos x-x\sin x$ e $f''(x)=-2\sin x-\sin x-x\cos x=-3\sin x-x\cos x$. In $x_0=\pi$: $f(\pi)=-\pi$, $f'(\pi)=-2$, $f''(\pi)=\pi$. Quindi $T_2(x)=-\pi-2(x-\pi)+\dfrac{\pi}{2}(x-\pi)^2$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.formula.L3.q3',
+          level: 2,
+          prompt: String.raw`Nel resto di Lagrange il punto $c$ sta tra $x_0$ e $x$ e, in generale, il suo valore non è noto.`,
+          answer: true,
+          explain: String.raw`Il teorema garantisce l'esistenza di $c$ senza dire quale sia: per questo il resto di Lagrange serve a maggiorare l'errore, non a calcolarlo esattamente.`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.formula.L3.q4',
+          level: 3,
+          prompt: String.raw`Per $f(x)=\sin x$ in $x_0=0$ e $n=2$, quale maggiorazione del resto di Lagrange vale per ogni $x$?`,
+          options: [
+            String.raw`$|R_2(x)|\le \dfrac{|x|^3}{6}$`,
+            String.raw`$|R_2(x)|\le \dfrac{x^2}{2}$`,
+            String.raw`$|R_2(x)|\le |x|^3$`,
+            String.raw`$R_2(x)=0$`,
+          ],
+          answer: 0,
+          explain: String.raw`$R_2(x)=\dfrac{f'''(c)}{3!}x^3=-\dfrac{\cos c}{6}x^3$ e $|\cos c|\le1$. Il secondo distrattore usa l'ordine sbagliato ($x^2$ invece di $x^3$). Il terzo dimentica il fattoriale $3!$. Il quarto è falso: $\sin x\neq x$, quindi $R_2\neq0$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.formula.L3.q5',
+          level: 3,
+          prompt: String.raw`Sia $f(x)=\cos x$ e $n=3$ in $x_0=0$. Con il resto di Lagrange, qual è la stima $|R_3(x)|\le M$ valida per $|x|\le\tfrac12$? Scrivi $M$.`,
+          answer: '1/384',
+          explain: String.raw`$T_3(x)=1-\dfrac{x^2}{2}$ perché il coefficiente di $x^3$ è nullo. Il resto è $R_3(x)=\dfrac{f^{(4)}(c)}{4!}x^4=\dfrac{\cos c}{24}x^4$, e $|\cos c|\le1$. Quindi $|R_3(x)|\le\dfrac{x^4}{24}\le\dfrac{1}{16\cdot24}=\dfrac{1}{384}$.`,
+        },
+        {
+          type: 'problem',
+          id: 's10.formula.L3.q6',
+          level: 3,
+          source: 'Esercizio di tipo esame',
+          points: 4,
+          prompt: String.raw`Sia $f(x)=\log(1+x)$. (a) Scrivi $T_2$ in $x_0=0$. (b) Stima $|R_2(x)|$ per $x\in\left[0,\tfrac12\right]$ con il resto di Lagrange.`,
+          parts: [
+            {
+              type: 'expr',
+              prompt: String.raw`Polinomio $T_2(x)$ (senza resto).`,
+              answer: 'x-x^2/2',
+              vars: ['x'],
+              explain: String.raw`$f(0)=0$, $f'(x)=\dfrac{1}{1+x}$, $f''(x)=-\dfrac{1}{(1+x)^2}$: $T_2(x)=x-\dfrac{x^2}{2}$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Valore di $f'''(0)$.`,
+              answer: '2',
+              explain: String.raw`$f'''(x)=\dfrac{2}{(1+x)^3}$, quindi $f'''(0)=2$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Il numero $M$ tale che $|R_2(x)|\le M$ per $x\in\left[0,\tfrac12\right]$, con il resto di Lagrange.`,
+              answer: '1/24',
+              explain: String.raw`Per $c\ge0$ si ha $|f'''(c)|=\dfrac{2}{(1+c)^3}\le2$. Quindi $|R_2(x)|\le\dfrac{2}{3!}x^3\le\dfrac13\cdot\dfrac18=\dfrac1{24}$.`,
+            },
+          ],
+          solution: String.raw`$T_2(x)=x-\dfrac{x^2}{2}$. La derivata terza $f'''(x)=\dfrac{2}{(1+x)^3}$ è decrescente, quindi il suo massimo modulo su $\left[0,\tfrac12\right]$ è $f'''(0)=2$. Con Lagrange, $R_2(x)=\dfrac{f'''(c)}{3!}x^3$ e $|R_2(x)|\le\dfrac{2}{6}\cdot\dfrac18=\dfrac{1}{24}$.`,
+        },
+        {
+          type: 'open',
+          id: 's10.formula.L3.q7',
+          level: 3,
+          points: 3,
+          prompt: String.raw`Enuncia la formula di Taylor con resto di Lagrange e spiega cosa aggiunge rispetto al resto di Peano.`,
+          answer: String.raw`Se $f$ è derivabile $n+1$ volte su un intervallo che contiene $x_0$ e $x$, esiste $c$ tra $x_0$ e $x$ con $f(x)=T_n(x)+\dfrac{f^{(n+1)}(c)}{(n+1)!}(x-x_0)^{n+1}$. Rispetto a Peano, Lagrange dà una stima quantitativa: se $|f^{(n+1)}|\le M$ allora $|R_n(x)|\le\dfrac{M}{(n+1)!}|x-x_0|^{n+1}$. Peano dice solo che l'errore è un o-piccolo di $(x-x_0)^n$, cioè un risultato locale.`,
+          rubric: [
+            'Ipotesi: f derivabile n+1 volte su un intervallo che contiene x0 e x',
+            'Tesi: esiste c tra x0 e x con il termine di grado n+1 valutato in c',
+            'Stima: se |f^(n+1)| ≤ M allora |R_n| ≤ M/(n+1)! · |x-x0|^(n+1)',
+            'Confronto con Peano: stima quantitativa contro risultato solo locale',
+          ],
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's10.formula.g1', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=e^{${H.coef(a)}x}$ in $x_0=0$ (senza resto).`,
+          answer: `1+(${a})*x+(${a * a}/2)*x^2`,
+          vars: ['x'],
+          explain: String.raw`Le derivate in $0$ valgono $f^{(k)}(0)=(${a})^k$. I coefficienti sono $\dfrac{(${a})^k}{k!}$: quindi $T_2(x)=1+(${a})x+\dfrac{${a * a}}{2}x^2$.`,
+        };
+      },
+    },
+    {
+      id: 's10.formula.g2', type: 'gen', level: 2,
+      gen: (R) => {
+        const A = R.nz(-3, 3), B = R.int(-3, 3), C = R.int(-4, 4), D = R.int(-3, 3), x0 = R.int(-2, 2);
+        const c0 = A * x0 ** 3 + B * x0 ** 2 + C * x0 + D;
+        const c1 = 3 * A * x0 ** 2 + 2 * B * x0 + C;
+        const c2 = 3 * A * x0 + B;
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=${H.poly([A, B, C, D])}$ in $x_0=${x0}$ (senza resto).`,
+          answer: `${c0}+(${c1})*(x-(${x0}))+(${c2})*(x-(${x0}))^2`,
+          vars: ['x'],
+          explain: String.raw`$f(${x0})=${c0}$, $f'(${x0})=${c1}$, $\dfrac{f''(${x0})}{2}=${c2}$. Quindi $T_2(x)=${c0}+(${c1})(x-(${x0}))+(${c2})(x-(${x0}))^2$.`,
+        };
+      },
+    },
+    {
+      id: 's10.formula.g3', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        const c = -(a ** 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Nel polinomio di Taylor di grado $3$ di $f(x)=\sin(${H.coef(a)}x)$ in $x_0=0$, qual è il coefficiente di $x^3$?`,
+          answer: `${c}/6`,
+          explain: String.raw`Con $u=${H.coef(a)}x$ si ha $\sin u=u-\dfrac{u^3}{6}+\dots$, e $u^3=(${a})^3x^3$. Il coefficiente è $\dfrac{${c}}{6}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.formula.g4', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(2, 5);
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi il polinomio di Taylor di grado $1$ di $f(x)=\log(x+${a})$ in $x_0=0$ (senza resto).`,
+          answer: `log(${a})+x/${a}`,
+          vars: ['x'],
+          explain: String.raw`$f(0)=\log ${a}$ e $f'(x)=\dfrac{1}{x+${a}}$, quindi $f'(0)=\dfrac{1}{${a}}$. Allora $T_1(x)=\log ${a}+\dfrac{x}{${a}}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.formula.p1', type: 'num', level: 1,
+      prompt: String.raw`Quanto vale $f'''(0)$ per $f(x)=\sin x$?`,
+      answer: '-1',
+      explain: String.raw`$f'(x)=\cos x$, $f''(x)=-\sin x$, $f'''(x)=-\cos x$. In $0$: $f'''(0)=-1$.`,
+    },
+    {
+      id: 's10.formula.p2', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi il polinomio di Taylor di grado $2$ di $f(x)=\dfrac{1}{1-x}$ in $x_0=0$ (senza resto).`,
+      answer: '1+x+x^2',
+      vars: ['x'],
+      explain: String.raw`$f(0)=1$, $f'(x)=\dfrac{1}{(1-x)^2}$ quindi $f'(0)=1$, $f''(x)=\dfrac{2}{(1-x)^3}$ quindi $\dfrac{f''(0)}{2}=1$. Allora $T_2(x)=1+x+x^2$.`,
+    },
+    {
+      id: 's10.formula.p3', type: 'mcq', level: 2,
+      prompt: String.raw`Qual è il polinomio di Taylor di grado $2$ di $\cos x$ in $x_0=0$?`,
+      options: [
+        String.raw`$1-\dfrac{x^2}{2}$`,
+        String.raw`$1+\dfrac{x^2}{2}$`,
+        String.raw`$1-x^2$`,
+        String.raw`$x-\dfrac{x^3}{6}$`,
+      ],
+      answer: 0,
+      explain: String.raw`$f(0)=1$, $f'(0)=0$, $f''(0)=-1$: il coefficiente di $x^2$ è $-\dfrac12$. Il secondo distrattore sbaglia il segno di $f''(0)$. Il terzo dimentica il fattoriale $2!$. Il quarto è lo sviluppo di $\sin x$.`,
+    },
+    {
+      id: 's10.formula.p4', type: 'tf', level: 1,
+      prompt: String.raw`Il polinomio di Taylor di grado $n$ di $f$ in $x_0$ dipende solo dai valori di $f$ e delle sue derivate in $x_0$.`,
+      answer: true,
+      explain: String.raw`Ogni coefficiente è costruito con le derivate in $x_0$. Ciò non garantisce però che il polinomio sia buono lontano da $x_0$: di questo si occupa il resto.`,
+    },
+    {
+      id: 's10.formula.p5', type: 'cloze', level: 2,
+      text: String.raw`Il resto di [[0]] richiede che $f$ sia derivabile $n+1$ volte su un intervallo, mentre il resto di [[1]] richiede solo $n$ derivate in $x_0$.`,
+      blanks: [
+        { options: [String.raw`Lagrange`, String.raw`Peano`], answer: 0 },
+        { options: [String.raw`Peano`, String.raw`Lagrange`], answer: 0 },
+      ],
+      explain: String.raw`Il resto di Lagrange dà una stima quantitativa e chiede una derivata in più. Il resto di Peano è più debole: serve solo che $f$ sia derivabile $n$ volte in $x_0$.`,
+    },
+    {
+      id: 's10.formula.p6', type: 'match', level: 1,
+      prompt: String.raw`Abbina ogni termine del polinomio di Taylor al suo grado.`,
+      pairs: [
+        [String.raw`$f(x_0)$`, String.raw`termine di grado $0$`],
+        [String.raw`$f'(x_0)\,(x-x_0)$`, String.raw`termine di grado $1$`],
+        [String.raw`$\dfrac{f''(x_0)}{2}\,(x-x_0)^2$`, String.raw`termine di grado $2$`],
+      ],
+      explain: String.raw`Il grado è l'esponente di $(x-x_0)$: il termine di grado $k$ è $\dfrac{f^{(k)}(x_0)}{k!}(x-x_0)^k$.`,
+    },
+    {
+      id: 's10.formula.p7', type: 'num', level: 2,
+      prompt: String.raw`Quanto vale il coefficiente di $(x-2)^2$ nel polinomio di Taylor di grado $2$ di $f(x)=x^3$ in $x_0=2$?`,
+      answer: '6',
+      explain: String.raw`$f''(x)=6x$, quindi $f''(2)=12$ e il coefficiente è $\dfrac{f''(2)}{2!}=6$.`,
+    },
+    {
+      id: 's10.formula.p8', type: 'order', level: 1,
+      prompt: String.raw`Ordina i passi per trovare $T_2$ di $f$ in $x_0$.`,
+      steps: [
+        String.raw`Calcola $f(x_0)$, $f'(x_0)$ e $f''(x_0)$.`,
+        String.raw`Costruisci i coefficienti $\dfrac{f^{(k)}(x_0)}{k!}$ per $k=0,1,2$.`,
+        String.raw`Scrivi $T_2(x)=f(x_0)+f'(x_0)(x-x_0)+\dfrac{f''(x_0)}{2}(x-x_0)^2$.`,
+      ],
+      explain: String.raw`Prima le derivate nel punto, poi i coefficienti, poi la somma con le potenze di $(x-x_0)$.`,
+    },
+    {
+      id: 's10.formula.p9', type: 'expr', level: 3,
+      prompt: String.raw`Scrivi il polinomio di Taylor di grado $3$ di $f(x)=x\sin x$ in $x_0=0$ (senza resto).`,
+      answer: 'x^2',
+      vars: ['x'],
+      explain: String.raw`$f(0)=0$, $f'(x)=\sin x+x\cos x$ quindi $f'(0)=0$, $f''(x)=2\cos x-x\sin x$ quindi $\dfrac{f''(0)}{2}=1$, $f'''(x)=-3\sin x-x\cos x$ quindi $f'''(0)=0$. Il polinomio è $x^2$.`,
+    },
+    {
+      id: 's10.formula.p10', type: 'num', level: 2,
+      prompt: String.raw`Qual è il coefficiente di $x^4$ nel polinomio di Taylor di grado $4$ di $f(x)=e^{-x}$ in $x_0=0$?`,
+      answer: '1/24',
+      explain: String.raw`Le derivate di $e^{-x}$ in $0$ valgono $(-1)^k$. Il coefficiente di $x^4$ è $\dfrac{(-1)^4}{4!}=\dfrac{1}{24}$.`,
+    },
+    {
+      id: 's10.formula.p11', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Spiega in due righe perché i coefficienti di $T_n$ sono $\dfrac{f^{(k)}(x_0)}{k!}$.`,
+      answer: String.raw`$T_n$ deve avere in $x_0$ le stesse derivate di $f$ fino all'ordine $n$. Derivando $k$ volte $\dfrac{f^{(k)}(x_0)}{k!}(x-x_0)^k$ si ottiene $f^{(k)}(x_0)$ in $x_0$, perché le derivate di ordine minore di $k$ si annullano e quella di ordine $k$ vale $k!\cdot\dfrac{f^{(k)}(x_0)}{k!}$.`,
+      rubric: [
+        'Il polinomio deve avere le stesse derivate di f in x0 fino all\'ordine n',
+        'Derivando k volte il termine di grado k si ottiene k! per il coefficiente',
+        'Il fattore k! compensa la derivazione',
+      ],
+    },
+  ],
+  flashcards: [
+    { id: 's10.formula.fc1', kind: 'def', front: String.raw`Polinomio di Taylor di grado $n$ di $f$ in $x_0$`, back: String.raw`$T_n(x)=\displaystyle\sum_{k=0}^{n}\dfrac{f^{(k)}(x_0)}{k!}(x-x_0)^k$, con $f$ derivabile $n$ volte in $x_0$.` },
+    { id: 's10.formula.fc2', kind: 'def', front: String.raw`Cosa vuol dire $f(x)=o\big(g(x)\big)$ per $x\to x_0$?`, back: String.raw`Che $\dfrac{f(x)}{g(x)}\to0$: vicino a $x_0$, $f$ è trascurabile rispetto a $g$. Esempio: $x^3=o(x^2)$ per $x\to0$.` },
+    { id: 's10.formula.fc3', kind: 'thm', front: String.raw`Formula di Taylor con resto di Peano`, back: String.raw`Se $f$ è derivabile $n$ volte in $x_0$, allora $f(x)=T_n(x)+o\big((x-x_0)^n\big)$ per $x\to x_0$.` },
+    { id: 's10.formula.fc4', kind: 'thm', front: String.raw`Formula di Taylor con resto di Lagrange`, back: String.raw`Se $f$ è derivabile $n+1$ volte su un intervallo che contiene $x_0$ e $x$, esiste $c$ tra $x_0$ e $x$ con $f(x)=T_n(x)+\dfrac{f^{(n+1)}(c)}{(n+1)!}(x-x_0)^{n+1}$.` },
+    { id: 's10.formula.fc5', kind: 'formula', front: String.raw`Coefficiente di $(x-x_0)^k$ in $T_n$`, back: String.raw`$\dfrac{f^{(k)}(x_0)}{k!}$. Per $k=0$ vale $f(x_0)$.` },
+    { id: 's10.formula.fc6', kind: 'metodo', front: String.raw`Come costruire $T_n$ in $x_0$`, back: String.raw`1) Calcola $f^{(k)}(x_0)$ per $k\le n$. 2) Dividi ciascun valore per $k!$. 3) Moltiplica per $(x-x_0)^k$ e somma.` },
+    { id: 's10.formula.fc7', kind: 'errore', front: String.raw`Errore tipico nel polinomio di Taylor`, back: String.raw`Dimenticare la traslazione $(x-x_0)$ o il fattoriale $k!$, e valutare le derivate in $x$ invece che in $x_0$.` },
+    { id: 's10.formula.fc8', kind: 'thm', front: String.raw`Unicità del polinomio di Taylor`, back: String.raw`Se $f(x)=Q(x)+o\big((x-x_0)^n\big)$ con $Q$ di grado al più $n$, allora $Q=T_n$. Quindi i coefficienti di Peano sono quelli di Taylor.` },
+  ],
+});
+
+// @@END
