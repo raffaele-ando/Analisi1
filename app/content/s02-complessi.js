@@ -942,3 +942,272 @@ Per $(z-z_0)^n=c$ si pone $w=z-z_0$, si risolve $w^n=c$ e infine si torna a $z=w
       back: String.raw`Pongo $w=z-z_0$, risolvo $w^n=c$ con la formula, poi $z=w+z_0$.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s02.equazioni
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's02.equazioni',
+  title: 'Equazioni in ℂ: secondo grado, z̄, sostituzioni, biquadratiche',
+  summary: String.raw`Saprai risolvere in $\C$ equazioni di secondo grado, equazioni con $\bar z$ (luoghi con $z=x+iy$), biquadratiche e con parametro, e usare il teorema fondamentale dell'algebra.`,
+  prereq: ['s02.radici', 's00.equazioni'],
+  examRefs: ['Itinere 11/11/2025 · B5', 'Appello 15/01/2026 · B2', 'Appello 06/07/2026 · B6', 'Appello 03/09/2026 · B2'],
+  lessons: [
+    {
+      id: 's02.equazioni.L1',
+      title: 'Secondo grado in ℂ',
+      cards: [
+        { type: 'learn', title: 'La formula risolutiva in ℂ',
+          body: String.raw`Per $az^2+bz+c=0$ con $a,b,c\in\R$ e $a\neq0$ si pone $\Delta=b^2-4ac$. La formula risolutiva resta quella di sempre:
+$$z=\frac{-b\pm\sqrt\Delta}{2a}.$$
+
+Se $\Delta\ge0$ le radici sono reali, come in $\R$. Se $\Delta<0$ si usa $\sqrt\Delta=i\sqrt{|\Delta|}$, e le soluzioni sono **complesse**. In $\C$ non esistono quindi equazioni di secondo grado senza soluzioni.` },
+        { type: 'learn', title: 'Radici coniugate',
+          body: String.raw`>* **Coefficienti reali.** Se $a,b,c\in\R$ e $z_0$ è soluzione di $az^2+bz+c=0$, anche $\bar z_0$ lo è.
+
+Infatti coniugando l'equazione si ottiene $a\bar z_0^{\,2}+b\bar z_0+c=\overline{0}=0$, perché $a,b,c$ sono reali. Le due soluzioni di un secondo grado a coefficienti reali sono quindi complesse coniugate.` },
+        { type: 'example', title: 'Esempio svolto',
+          problem: String.raw`Risolvi in $\C$ l'equazione $z^2+2z+5=0$.`,
+          steps: [
+            String.raw`$\Delta=2^2-4\cdot1\cdot5=4-20=-16<0$: le soluzioni sono complesse.`,
+            { text: String.raw`Calcolo $\sqrt\Delta$: $\sqrt{-16}=\sqrt{16}\,\sqrt{-1}=4i$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\sqrt{-16}$? Scrivi il risultato con i.`, answer: '4i',
+                explain: String.raw`$\sqrt{-16}=\sqrt{16}\,\sqrt{-1}=4i$.` } },
+            String.raw`Quindi $z=\dfrac{-2\pm4i}{2}=-1\pm2i$.`,
+          ],
+          result: String.raw`Le soluzioni sono $z=-1+2i$ e $z=-1-2i$: sono coniugate, come previsto.` },
+        { id: 's02.equazioni.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Le soluzioni in $\C$ di $z^2+1=0$ sono:`,
+          options: [String.raw`$\pm i$`, String.raw`$\pm1$`, String.raw`$\pm\sqrt2\,i$`, String.raw`nessuna`],
+          answer: 0,
+          explain: String.raw`$z^2=-1$ dà $z=\pm i$. Errore tipico: scrivere "nessuna soluzione" perché non esiste la radice quadrata di $-1$ in $\R$.` },
+        { id: 's02.equazioni.L1.e2', type: 'set', level: 1,
+          prompt: String.raw`Risolvi in $\C$ l'equazione $z^2-4z+13=0$. Separa le soluzioni con punto e virgola.`,
+          answer: ['2+3i', '2-3i'],
+          explain: String.raw`$\Delta=16-52=-36$, $\sqrt\Delta=6i$, quindi $z=\dfrac{4\pm6i}{2}=2\pm3i$.` },
+        { id: 's02.equazioni.L1.e3', type: 'set', level: 2,
+          prompt: String.raw`Risolvi in $\C$ l'equazione $z^2+2z+2=0$. Separa le soluzioni con punto e virgola.`,
+          answer: ['-1+i', '-1-i'],
+          explain: String.raw`$\Delta=4-8=-4$, $\sqrt\Delta=2i$, quindi $z=\dfrac{-2\pm2i}{2}=-1\pm i$.` },
+        { id: 's02.equazioni.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Se $a,b,c\in\R$ e $1+i$ è soluzione di $az^2+bz+c=0$, anche $1-i$ lo è.`,
+          answer: true,
+          explain: String.raw`Coefficienti reali: le soluzioni complesse vengono in coppie coniugate.` },
+        { id: 's02.equazioni.L1.g1', type: 'gen', level: 2,
+          gen: (R) => {
+            const r = R.nz(-3, 3), s = R.int(1, 3);
+            const b = -2 * r, c = r * r + s * s;
+            return {
+              type: 'set',
+              answer: [`${r}+${s}*i`, `${r}-${s}*i`],
+              prompt: String.raw`Risolvi in $\C$: $z^2 ${H.signed(b, 'z')} ${H.signed(c)}=0$. Separa le soluzioni con punto e virgola.`,
+              explain: String.raw`$\Delta=b^2-4c=${-4 * s * s}$, $\sqrt\Delta=${2 * s}i$, quindi $z=\dfrac{${-b}\pm${2 * s}i}{2}=${r}\pm${s}i$.`,
+            };
+          } },
+      ],
+    },
+    {
+      id: 's02.equazioni.L2',
+      title: 'Equazioni con z̄ e luoghi',
+      cards: [
+        { type: 'learn', title: 'Il metodo z = x + iy',
+          body: String.raw`Per risolvere un'equazione con $z$ e $\bar z$ si scrive $z=x+iy$, con $x,y\in\R$, e si usano le identità
+$$\bar z=x-iy,\qquad z\bar z=x^2+y^2,\qquad z+\bar z=2x,\qquad z-\bar z=2iy.$$
+
+Si sostituisce, si semplifica e si separa la parte reale da quella immaginaria. Si ottiene un sistema di equazioni reali in $x$ e $y$. Il luogo delle soluzioni è una curva nel piano di Gauss.` },
+        { type: 'learn', title: 'Sostituzione w = z + c',
+          body: String.raw`Quando compare $z+c$ o $z-c$ in una potenza, conviene porre $w=z+c$ (o $w=z-c$). L'equazione diventa più semplice in $w$, si risolve, e alla fine si torna a $z=w-c$.
+
+Esempio tipico: $(z-1)^2=2i$. Con $w=z-1$ si ha $w^2=2i$, cioè $w=\pm(1+i)$, e quindi $z=1\pm(1+i)$.` },
+        { type: 'example', title: 'Esempio svolto: sostituzione',
+          problem: String.raw`Risolvi in $\C$ l'equazione $(z-1)^2=2i$.`,
+          steps: [
+            String.raw`Pongo $w=z-1$: l'equazione diventa $w^2=2i$.`,
+            { text: String.raw`Una radice quadrata di $2i$ è $1+i$, perché $(1+i)^2=2i$. Le radici sono $w=\pm(1+i)$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $(1+i)^2$?`, answer: '2i',
+                explain: String.raw`$(1+i)^2=1+2i+i^2=2i$.` } },
+            String.raw`Torno a $z=w+1$: $z=1+(1+i)=2+i$ oppure $z=1-(1+i)=-i$.`,
+          ],
+          result: String.raw`Le soluzioni sono $z=2+i$ e $z=-i$.` },
+        { id: 's02.equazioni.L2.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Il luogo dei $z\in\C$ con $\bar z=z$ è:`,
+          options: [String.raw`l'asse reale`, String.raw`l'asse immaginario`, String.raw`una circonferenza`, String.raw`un solo punto`],
+          answer: 0,
+          explain: String.raw`$\bar z=z$ con $z=x+iy$ dà $x-iy=x+iy$, quindi $y=0$: l'asse reale.` },
+        { id: 's02.equazioni.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`Il luogo $z\bar z=4$ è una circonferenza di centro $0$. Quale raggio ha?`,
+          answer: '2',
+          explain: String.raw`$z\bar z=|z|^2=4$ dà $|z|=2$: la circonferenza ha raggio $2$.` },
+        { id: 's02.equazioni.L2.P1', type: 'problem', level: 3, source: 'Itinere 11/11/2025 · B5', points: 2,
+          prompt: String.raw`Risolvi in $\C$ l'equazione $(z-1)(\bar z-i)=0$.`,
+          parts: [
+            { type: 'set', prompt: 'Soluzioni, separate da punto e virgola.', answer: ['1', '-i'],
+              explain: String.raw`Dalla legge di annullamento del prodotto: $z=1$, oppure $\bar z=i$, cioè $z=-i$.` },
+          ],
+          solution: String.raw`Dalla legge di annullamento del prodotto: $z=1$, oppure $\bar z=i$, che dà $z=-i$.` },
+        { id: 's02.equazioni.L2.P2', type: 'problem', level: 3, source: 'Appello 15/01/2026 · B2', points: 2,
+          prompt: String.raw`Risolvi in $\C$ l'equazione $z\bar z(z+i)-i(z+i)(z-\bar z)=0$.`,
+          parts: [
+            { type: 'mcq', prompt: 'Luogo delle soluzioni.',
+              options: [String.raw`una circonferenza di centro $-i$ e raggio $1$, più il suo centro $-i$`, String.raw`una retta`, String.raw`solo il punto $z=-i$`],
+              answer: 0,
+              explain: String.raw`Con $z=x+iy$ l'equazione diventa $(z+i)(x^2+y^2+2y)=0$.` },
+            { type: 'set', prompt: 'Il centro della circonferenza è una soluzione: scrivilo.', answer: ['-i'],
+              explain: String.raw`Il fattore $z+i$ si annulla in $z=-i$, che quindi va aggiunto alle soluzioni.` },
+          ],
+          solution: String.raw`Con $z=x+iy$: $(z+i)(x^2+y^2+2y)=0$. Il secondo fattore dà la circonferenza $x^2+(y+1)^2=1$, di centro $-i$ e raggio $1$. Il primo fattore dà $z=-i$, che è il centro della circonferenza ed è soluzione: va aggiunto all'insieme.` },
+      ],
+    },
+    {
+      id: 's02.equazioni.L3',
+      title: 'Biquadratiche, parametri e teorema fondamentale',
+      cards: [
+        { type: 'learn', title: 'Equazioni biquadratiche',
+          body: String.raw`Un'equazione $az^4+bz^2+c=0$ si risolve con la sostituzione $t=z^2$: si ottiene $at^2+bt+c=0$. Ogni valore $t\neq0$ dà due radici $z=\pm\sqrt t$.
+
+In totale si ottengono quattro soluzioni, contate con molteplicità. Per trovare $\pm\sqrt t$ si usa la forma algebrica o esponenziale: si pongono $z=x+iy$ e $z^2=t$.` },
+        { type: 'example', title: 'Esempio svolto d\'esame',
+          problem: String.raw`Risolvi in $\C$ l'equazione $z^4-4z^2+13=0$.`,
+          steps: [
+            String.raw`Pongo $t=z^2$: l'equazione diventa $t^2-4t+13=0$, con $\Delta=16-52=-36$.`,
+            { text: String.raw`Quindi $t=\dfrac{4\pm6i}{2}=2\pm3i$. Ora $z^2=2+3i$.`,
+              ask: { type: 'num', prompt: String.raw`Per $z=x+iy$ con $z^2=2+3i$ vale $x^2+y^2=|2+3i|$. Quanto vale $|2+3i|$?`, answer: 'sqrt(13)',
+                explain: String.raw`$|2+3i|=\sqrt{4+9}=\sqrt{13}$.` } },
+            String.raw`Con $x^2-y^2=2$ e $x^2+y^2=\sqrt{13}$ si ottiene $x^2=\dfrac{\sqrt{13}+2}{2}$ e $y^2=\dfrac{\sqrt{13}-2}{2}$, con $xy>0$.`,
+          ],
+          result: String.raw`Le soluzioni sono $\pm\left(x+iy\right)$ e $\pm\left(x-iy\right)$, con $x=\sqrt{\frac{\sqrt{13}+2}{2}}$ e $y=\sqrt{\frac{\sqrt{13}-2}{2}}$.` },
+        { id: 's02.equazioni.L3.P1', type: 'problem', level: 3, source: 'Appello 06/07/2026 · B6', points: 4,
+          prompt: String.raw`Calcola le soluzioni in $\C$ di $z^4-4z^2+13=0$.`,
+          parts: [
+            { type: 'set', prompt: 'Le quattro soluzioni, separate da punto e virgola: usa sqrt(...) per le radici.',
+              answer: ['sqrt((sqrt(13)+2)/2)+sqrt((sqrt(13)-2)/2)*i', '-sqrt((sqrt(13)+2)/2)-sqrt((sqrt(13)-2)/2)*i', 'sqrt((sqrt(13)+2)/2)-sqrt((sqrt(13)-2)/2)*i', '-sqrt((sqrt(13)+2)/2)+sqrt((sqrt(13)-2)/2)*i'],
+              explain: String.raw`Con $w=z^2$: $w=2\pm3i$. Poi $z=\pm\sqrt{2\pm3i}$, cioè le quattro radici indicate.` },
+          ],
+          solution: String.raw`$z^2=2\pm3i$ e le radici quadrate di ciascuno: quattro soluzioni $\pm\left(x+iy\right)$ e $\pm\left(x-iy\right)$ con $x=\sqrt{\frac{\sqrt{13}+2}2}$ e $y=\sqrt{\frac{\sqrt{13}-2}2}$.` },
+        { id: 's02.equazioni.L3.o1', type: 'open', level: 3, source: 'Appello 03/09/2026 · B2', points: 4,
+          prompt: String.raw`Al variare del parametro reale $k$, risolvi in $\C$ l'equazione $z+\dfrac{\bar z}{iz+1}=ki$.`,
+          answer: String.raw`Con $z=x+iy$ e $iz+1\neq0$ (cioè $z\neq i$): $(2+k)x+ki(y-1)=0$. Per $k\neq0,-2$ l'unica soluzione è $z=i$, da escludere: nessuna soluzione. Per $k=-2$: $y=1$, $z=x+i$ con $x\neq0$. Per $k=0$: $x=0$, $z=iy$ con $y\neq1$.`,
+          rubric: ['Condizione di esistenza $z\\neq i$', 'Equazione reale $(2+k)x+ki(y-1)=0$', 'Casi $k\\neq0,-2$ (nessuna soluzione), $k=-2$, $k=0$ con esclusioni'],
+          explain: String.raw`Le esclusioni contano: la soluzione $z=i$ annulla il denominatore $iz+1$ e va scartata.` },
+        { type: 'learn', title: 'Teorema fondamentale dell\'algebra',
+          body: String.raw`>* **Teorema fondamentale dell'algebra.** Ogni polinomio $p(z)=a_nz^n+\dots+a_1z+a_0$ di grado $n\ge1$ a coefficienti complessi ha almeno una radice in $\C$.
+
+Di conseguenza, contando le radici con molteplicità, $p$ ha **esattamente $n$ radici** in $\C$ e si fattorizza come $p(z)=a_n(z-z_1)\cdots(z-z_n)$.
+
+Non è vero in $\R$: $z^2+1$ non ha radici reali.` },
+        { id: 's02.equazioni.L3.e1', type: 'tf', level: 2,
+          prompt: String.raw`Il polinomio $z^3-1$ ha esattamente tre radici in $\C$, contate con molteplicità.`,
+          answer: true,
+          explain: String.raw`Per il teorema fondamentale: grado $3$, quindi tre radici. Sono $1$, $-\frac12\pm i\frac{\sqrt3}2$.` },
+        { id: 's02.equazioni.L3.e2', type: 'mcq', level: 2,
+          prompt: String.raw`Quante radici in $\C$, contate con molteplicità, ha il polinomio $z^4+1$?`,
+          options: ['$2$', '$3$', '$4$', '$0$'],
+          answer: 2,
+          explain: String.raw`Il grado è $4$, quindi per il teorema fondamentale ci sono $4$ radici complesse. Errore tipico: contare solo le radici reali, che qui sono $0$.` },
+        { id: 's02.equazioni.L3.e3', type: 'num', level: 3,
+          prompt: String.raw`Per le soluzioni di $z^4-4z^2+13=0$, calcola $|z|$. Scrivi il risultato come potenza.`,
+          answer: '13^(1/4)',
+          explain: String.raw`$|z|^2=|z^2|=|2\pm3i|=\sqrt{13}$, quindi $|z|=13^{1/4}$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's02.equazioni.p1', type: 'set', level: 1, prompt: String.raw`Risolvi $z^2+4=0$ in $\C$. Separa le soluzioni con punto e virgola.`, answer: ['2i', '-2i'],
+      explain: String.raw`$z^2=-4$ dà $z=\pm2i$.` },
+    { id: 's02.equazioni.p2', type: 'num', level: 2, prompt: String.raw`Per $z^2-2z+5=0$, calcola la parte immaginaria della soluzione con parte immaginaria positiva.`, answer: '2',
+      explain: String.raw`$\Delta=4-20=-16$, quindi $z=\dfrac{2\pm4i}{2}=1\pm2i$: la parte immaginaria positiva è $2$.` },
+    { id: 's02.equazioni.p3', type: 'tf', level: 1, prompt: String.raw`Se $z_0$ è soluzione di un'equazione con coefficienti reali, anche $\bar z_0$ lo è.`, answer: true,
+      explain: String.raw`Coniugando l'equazione, i coefficienti reali restano uguali.` },
+    { id: 's02.equazioni.p4', type: 'mcq', level: 1, prompt: String.raw`Per $z=x+iy$, il luogo $\operatorname{Im}z=1$ è:`,
+      options: [String.raw`la retta $y=1$`, String.raw`il punto $i$`, String.raw`la circonferenza di raggio $1$`, String.raw`l'asse reale`],
+      answer: 0,
+      explain: String.raw`$\operatorname{Im}z=y$, quindi $y=1$: una retta orizzontale.` },
+    { id: 's02.equazioni.p5', type: 'set', level: 2, prompt: String.raw`Risolvi in $\C$: $z\bar z-2z=0$. Separa le soluzioni con punto e virgola.`, answer: ['0', '2'],
+      explain: String.raw`Con $z=x+iy$: $x^2+y^2=2x+2iy$. La parte immaginaria dà $y=0$, poi $x^2=2x$: $x=0$ o $x=2$.` },
+    { id: 's02.equazioni.p6', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.nz(-3, 3), p = R.nz(-3, 3), q = R.nz(-3, 3);
+        const d1 = p * p - q * q, d2 = 2 * p * q;
+        return {
+          type: 'set',
+          answer: [`(${-c + p})+(${q})*i`, `(${-c - p})+(${-q})*i`],
+          prompt: String.raw`Risolvi in $\C$: $(z ${H.signed(c)})^2=${H.cplx(d1, d2)}$. Separa le soluzioni con punto e virgola.`,
+          explain: String.raw`Pongo $w=z+(${c})$: allora $w^2=${H.cplx(d1, d2)}$, quindi $w=\pm(${H.cplx(p, q)})$ e $z=w-(${c})$.`,
+        };
+      } },
+    { id: 's02.equazioni.p7', type: 'gen', level: 3,
+      gen: (R) => {
+        const vals = [-4, -1, 1, 4, 9];
+        let t1 = R.pick(vals), t2 = R.pick(vals);
+        for (let guard = 0; guard < 50 && (t1 === t2 || t1 + t2 === 0); guard++) {
+          t1 = R.pick(vals);
+          t2 = R.pick(vals);
+        }
+        const b = -(t1 + t2), c = t1 * t2;
+        const roots = [t1, t2].flatMap((t) => (t > 0 ? [`sqrt(${t})`, `-sqrt(${t})`] : [`${Math.sqrt(-t)}i`, `-${Math.sqrt(-t)}i`]));
+        return {
+          type: 'set',
+          answer: roots,
+          prompt: String.raw`Risolvi in $\C$: $z^4 ${H.signed(b, 'z^2')} ${H.signed(c)}=0$. Separa le quattro soluzioni con punto e virgola.`,
+          explain: String.raw`Con $t=z^2$ l'equazione diventa $t^2 ${H.signed(b, 't')} ${H.signed(c)}=0$, con radici $t=${t1}$ e $t=${t2}$. Ogni valore di $t$ dà due radici opposte.`,
+        };
+      } },
+    { id: 's02.equazioni.p8', type: 'gen', level: 2,
+      gen: (R) => {
+        const r = R.nz(-3, 3), s = R.nz(-3, 3), n = r * r + s * s;
+        return {
+          type: 'num',
+          answer: `sqrt(${n})`,
+          prompt: String.raw`Calcola $|z|$ per $z=${H.cplx(r, s)}$.`,
+          explain: String.raw`$|z|=\sqrt{(${r})^2+(${s})^2}=\sqrt{${n}}$.`,
+        };
+      } },
+    { id: 's02.equazioni.p9', type: 'problem', level: 3, source: 'Itinere 11/11/2025 · B5', points: 2,
+      prompt: String.raw`Risolvi in $\C$ l'equazione $(z-1)(\bar z-i)=0$.`,
+      parts: [
+        { type: 'set', prompt: 'Soluzioni, separate da punto e virgola.', answer: ['1', '-i'],
+          explain: String.raw`$z=1$, oppure $\bar z=i$, cioè $z=-i$.` },
+      ],
+      solution: String.raw`$z=1$, oppure $\bar z=i$, cioè $z=-i$.` },
+    { id: 's02.equazioni.p10', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per risolvere $az^2+bz+c=0$ in $\C$, con $a,b,c\in\R$.`,
+      steps: [
+        String.raw`Calcolo $\Delta=b^2-4ac$.`,
+        String.raw`Se $\Delta<0$ scrivo $\sqrt\Delta=i\sqrt{|\Delta|}$.`,
+        String.raw`Applico $z=\dfrac{-b\pm\sqrt\Delta}{2a}$.`,
+        String.raw`Verifico sostituendo una soluzione nell'equazione.`,
+      ],
+      distractors: [String.raw`Se $\Delta<0$ concludo che non ci sono soluzioni in $\C$.`],
+      explain: String.raw`Errore tipico: dire che non ci sono soluzioni se $\Delta<0$. In $\C$ la formula funziona sempre.` },
+    { id: 's02.equazioni.p11', type: 'open', level: 3, points: 3,
+      prompt: String.raw`Risolvi in $\C$ l'equazione $z^2-2iz-1=0$.`,
+      answer: String.raw`$\Delta=(-2i)^2-4(1)(-1)=-4+4=0$: l'unica soluzione è $z=\dfrac{2i}{2}=i$, radice doppia. Infatti $z^2-2iz-1=(z-i)^2$.`,
+      rubric: ['Calcolo di $\\Delta=0$ con coefficienti complessi', 'Soluzione doppia $z=i$'],
+      explain: String.raw`Il coefficiente $b$ è immaginario, ma la formula risolutiva vale lo stesso in $\C$.` },
+    { id: 's02.equazioni.p12', type: 'match', level: 2, prompt: String.raw`Abbina ogni equazione alle sue soluzioni.`,
+      pairs: [
+        [String.raw`$z^2=-1$`, String.raw`$z=\pm i$`],
+        [String.raw`$z^2=1$`, String.raw`$z=\pm1$`],
+        [String.raw`$z^2=4i$`, String.raw`$z=\pm(\sqrt2+\sqrt2\,i)$`],
+      ],
+      explain: String.raw`Per $z^2=4i$: $(\sqrt2+\sqrt2\,i)^2=2+4i-2=4i$, e le soluzioni sono opposte.` },
+  ],
+  flashcards: [
+    { id: 's02.equazioni.fc1', kind: 'formula', front: String.raw`Formula risolutiva in $\C$`,
+      back: String.raw`$z=\dfrac{-b\pm\sqrt\Delta}{2a}$, con $\Delta=b^2-4ac$. Se $\Delta<0$: $\sqrt\Delta=i\sqrt{|\Delta|}$.` },
+    { id: 's02.equazioni.fc2', kind: 'thm', front: String.raw`Radici complesse coniugate`,
+      back: String.raw`Se $a,b,c\in\R$ e $z_0$ è soluzione di $az^2+bz+c=0$, anche $\bar z_0$ lo è.` },
+    { id: 's02.equazioni.fc3', kind: 'metodo', front: String.raw`Equazioni con $\bar z$: come si risolvono`,
+      back: String.raw`Si pone $z=x+iy$, si usano $z\bar z=x^2+y^2$, $z+\bar z=2x$, $z-\bar z=2iy$, e si separano parte reale e immaginaria.` },
+    { id: 's02.equazioni.fc4', kind: 'metodo', front: String.raw`Biquadratica $az^4+bz^2+c=0$`,
+      back: String.raw`Si pone $t=z^2$, si risolve $at^2+bt+c=0$, poi si estrae $z=\pm\sqrt t$ per ciascun $t$.` },
+    { id: 's02.equazioni.fc5', kind: 'thm', front: String.raw`Teorema fondamentale dell'algebra`,
+      back: String.raw`Ogni polinomio di grado $n\ge1$ a coefficienti complessi ha almeno una radice in $\C$. Quindi ha esattamente $n$ radici, contate con molteplicità.` },
+    { id: 's02.equazioni.fc6', kind: 'thm', front: String.raw`Fattorizzazione di un polinomio su $\C$`,
+      back: String.raw`$p(z)=a_n(z-z_1)\cdots(z-z_n)$, dove $z_1,\dots,z_n$ sono le radici contate con molteplicità.` },
+    { id: 's02.equazioni.fc7', kind: 'errore', front: String.raw`Errore tipico: "se $\Delta<0$ non ci sono soluzioni"`,
+      back: String.raw`Falso in $\C$. Con $\Delta<0$ ci sono due soluzioni complesse coniugate.` },
+    { id: 's02.equazioni.fc8', kind: 'metodo', front: String.raw`Sostituzione $w=z+c$ in $(z+c)^n=d$`,
+      back: String.raw`Si pone $w=z+c$, si risolve $w^n=d$ con la formula delle radici n-esime e si torna a $z=w-c$.` },
+  ],
+});
