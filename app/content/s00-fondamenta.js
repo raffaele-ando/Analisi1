@@ -1796,3 +1796,341 @@ Se ci sono più condizioni, il dominio è l'**intersezione** delle soluzioni.` }
     { id: 's00.disequazioni.fc7', kind: 'errore', front: 'Il denominatore nelle disuguaglianze larghe', back: String.raw`Con $\le$ o $\ge$ gli zeri del numeratore sono soluzioni, ma gli zeri del denominatore **no**: la frazione lì non esiste.` },
   ],
 });
+
+// =====================================================================
+// s00.esplog
+// =====================================================================
+S.push({
+  id: 's00.esplog',
+  title: 'Esponenziali e logaritmi',
+  summary: String.raw`Saprai usare esponenziali e logaritmi: proprietà, grafici, equazioni e disequazioni. Sono le funzioni dell'esame: $e^x$ e $\log x$ compaiono in quasi ogni studio di funzione, limite e dominio.`,
+  prereq: ['s00.numeri', 's00.disequazioni'],
+  examRefs: ['Itinere 11/11/2025 · Parte A (teorema degli zeri)', 'Appello 15/01/2026 · Parte B (studio di funzione con esponenziali)', 'Appello 06/07/2026 · Parte B (studio di funzione con esponenziali)'],
+  lessons: [
+    {
+      id: 's00.esplog.L1',
+      title: 'Esponenziali',
+      cards: [
+        { type: 'learn', title: 'Potenze con esponente variabile', body: String.raw`Nell'esponenziale $a^x$ la base $a > 0$ è fissa e l'esponente $x$ è la variabile. Esempi: $2^x$, $\left(\frac{1}{2}\right)^x$, $e^x$.
+
+- se $a > 1$ la funzione è **crescente**: più cresce $x$, più cresce $a^x$;
+- se $0 < a < 1$ la funzione è **decrescente**;
+- $a^x > 0$ per ogni $x$: l'esponenziale **non è mai negativo né nullo**.
+
+La base $e \approx 2{,}718$ è il numero di Nepero: $e^x$ è la funzione esponenziale del corso.` , plot: { fns: ['2^x', '(1/2)^x'], x: [-3, 3], y: [-1, 5] } },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $4^x = 8$.`,
+          steps: [
+            String.raw`Scrivo entrambi i membri come potenze di $2$: $4 = 2^2$ e $8 = 2^3$. Quindi $(2^2)^x = 2^3$, cioè $2^{2x} = 2^3$.`,
+            { text: String.raw`Con la stessa base, gli esponenti devono essere uguali: $2x = 3$, quindi $x = \frac{3}{2}$.`,
+              ask: { type: 'num', prompt: String.raw`Quale esponente ha $4$ in base $2$, cioè $4 = 2^{?}$?`, answer: '2', explain: String.raw`$4 = 2^2$.` } },
+            String.raw`Verifica: $4^{3/2} = (2^2)^{3/2} = 2^3 = 8$.`,
+          ],
+          result: String.raw`$4^x = 8 \iff x = \frac{3}{2}$.` },
+        { id: 's00.esplog.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quale espressione è uguale a $2^{x+3}$?`,
+          options: [String.raw`$2^x + 8$`, String.raw`$8\cdot 2^x$`, String.raw`$2^{3x}$`, String.raw`$6\cdot 2^x$`],
+          answer: 1,
+          explain: String.raw`Con l'esponente che si somma, le potenze si moltiplicano: $2^{x+3} = 2^x\cdot 2^3 = 8\cdot 2^x$. L'errore più comune è $2^x + 8$: la somma va nell'esponente, non fuori.` },
+        { id: 's00.esplog.L1.e2', type: 'num', level: 1,
+          prompt: String.raw`Per $x = 2$, quanto vale $3^{x-1}$?`,
+          answer: '3',
+          explain: String.raw`$x - 1 = 2 - 1 = 1$, quindi $3^1 = 3$.` },
+        { id: 's00.esplog.L1.e3', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni $x \in \R$ vale $(e^x)^2 = e^{x^2}$.`,
+          answer: false,
+          explain: String.raw`Falso: $(e^x)^2 = e^{2x}$, perché si moltiplicano gli esponenti. $e^{x^2}$ è un'altra funzione: per $x = 1$ si ha $e^2$ a sinistra e $e^1 = e$ a destra.` },
+        { id: 's00.esplog.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni $x \in \R$ vale $e^x > 0$.`,
+          answer: true,
+          explain: String.raw`Vero: un esponenziale con base positiva non è mai zero né negativo, qualunque sia l'esponente.` },
+        { id: 's00.esplog.L1.e5', type: 'mcq', level: 1,
+          prompt: String.raw`Quante soluzioni reali ha $e^x = -1$?`,
+          options: [String.raw`$x = 0$`, String.raw`$x = -1$`, String.raw`Nessuna`, String.raw`Infinite`],
+          answer: 2,
+          explain: String.raw`Un esponenziale è sempre positivo, quindi non può valere $-1$. $x = 0$ dà $e^0 = 1$, non $-1$. L'equazione è impossibile.` },
+        { id: 's00.esplog.L1.e6', type: 'num', level: 2,
+          prompt: String.raw`Risolvi $4^{x} = 8$. Scrivi $x$ come frazione.`,
+          answer: '3/2',
+          explain: String.raw`Con base $2$: $2^{2x} = 2^3$, quindi $2x = 3$ e $x = \frac{3}{2}$.` },
+        { id: 's00.esplog.L1.e7', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $2^x > 8$.`,
+          answer: '(3,inf)',
+          explain: String.raw`$8 = 2^3$ e la base è $2 > 1$: la funzione è crescente, il verso resta. Quindi $x > 3$.` },
+        { id: 's00.esplog.L1.e8', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\left(\frac{1}{2}\right)^x > 4$.`,
+          answer: '(-inf,-2)',
+          explain: String.raw`$4 = \left(\frac{1}{2}\right)^{-2}$. La base è $\frac{1}{2} < 1$: la funzione è decrescente, quindi il verso si inverte. Da $x < -2$.` },
+        { id: 's00.esplog.L1.e9', type: 'interval', level: 1,
+          prompt: String.raw`Risolvi $3^x \ge 1$.`,
+          answer: '[0,inf)',
+          explain: String.raw`$1 = 3^0$, e la base $3 > 1$ conserva il verso: $x \ge 0$.` },
+        { type: 'learn', title: 'Disequazioni esponenziali: il verso', body: String.raw`Per confrontare due esponenziali con la stessa base $a > 0$:
+
+- se $a > 1$ il verso **resta**: $a^{f(x)} > a^{g(x)} \iff f(x) > g(x)$;
+- se $0 < a < 1$ il verso **si inverte**: $a^{f(x)} > a^{g(x)} \iff f(x) < g(x)$.
+
+Il caso $0 < a < 1$ è quello in cui si sbaglia più spesso: $\left(\frac{1}{2}\right)^x$ è decrescente.` },
+        { id: 's00.esplog.L1.e10', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $e^{2x-1} < e$.`,
+          answer: '(-inf,1)',
+          explain: String.raw`$e = e^1$ e la base $e > 1$: $2x - 1 < 1$, cioè $x < 1$.` },
+        { id: 's00.esplog.L1.e11', type: 'num', level: 2,
+          prompt: String.raw`Risolvi $e^{2x-1} = e^3$.`,
+          answer: '2',
+          explain: String.raw`Con la stessa base $e$: $2x - 1 = 3$, quindi $2x = 4$ e $x = 2$.` },
+      ],
+    },
+    {
+      id: 's00.esplog.L2',
+      title: 'Logaritmi',
+      cards: [
+        { type: 'learn', title: 'Il logaritmo è un esponente', body: String.raw`Il logaritmo risponde a una domanda: **a quale esponente devo elevare la base per ottenere il numero?**
+
+>* **Definizione.** Con $a > 0$, $a \ne 1$ e $b > 0$:
+$$\log_a b = c \iff a^c = b.$$
+
+Esempi: $\log_2 8 = 3$ perché $2^3 = 8$; $\log_3 \frac{1}{9} = -2$ perché $3^{-2} = \frac{1}{9}$.
+
+Nel corso **$\log$ senza base è il logaritmo naturale**, cioè in base $e$: $\log e = 1$, $\log 1 = 0$.
+
+>! Il logaritmo è definito **solo per argomento strettamente positivo**: $\log 0$ e $\log(-1)$ non esistono.` },
+        { id: 's00.esplog.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Quanto vale $\log_2 32$?`,
+          answer: '5',
+          explain: String.raw`$2^5 = 32$, quindi $\log_2 32 = 5$.` },
+        { id: 's00.esplog.L2.e2', type: 'num', level: 1,
+          prompt: String.raw`Quanto vale $\log_3 \dfrac{1}{9}$?`,
+          answer: '-2',
+          explain: String.raw`$3^{-2} = \frac{1}{9}$. Il segno meno nell'esponente non rende negativo il risultato in modo errato: qui il risultato è davvero negativo.` },
+        { id: 's00.esplog.L2.e3', type: 'mcq', level: 1,
+          prompt: String.raw`Quanto vale $\log 1$?`,
+          options: [String.raw`$0$`, String.raw`$1$`, String.raw`$e$`, String.raw`Non esiste`],
+          answer: 0,
+          explain: String.raw`$e^0 = 1$, quindi $\log 1 = 0$. Errore comune: $\log 1 = 1$, cioè confondere l'argomento con il risultato.` },
+        { type: 'learn', title: 'Le proprietà dei logaritmi', body: String.raw`Per $A, B > 0$ e $k$ reale valgono:
+
+- $\log(AB) = \log A + \log B$;
+- $\log\dfrac{A}{B} = \log A - \log B$;
+- $\log A^k = k \log A$.
+
+>! **Attenzione.** $\log(A+B) \ne \log A + \log B$ e $\log(A-B) \ne \log A - \log B$. Il logaritmo **non** si distribuisce su somme e differenze: il prodotto e il quoziente sì.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Semplifica $\log\left(x^2\sqrt{x}\right)$ per $x > 0$.`,
+          steps: [
+            String.raw`Scrivo $\sqrt{x} = x^{1/2}$ e uso il logaritmo del prodotto: $\log(x^2\cdot x^{1/2}) = \log x^2 + \log x^{1/2}$.`,
+            { text: String.raw`Porto fuori gli esponenti: $2\log x + \frac{1}{2}\log x = \left(2 + \frac{1}{2}\right)\log x$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $2 + \frac{1}{2}$?`, answer: '5/2', explain: String.raw`$2 + \frac{1}{2} = \frac{5}{2}$.` } },
+            String.raw`Risultato: $\log\left(x^2\sqrt{x}\right) = \frac{5}{2}\log x$.`,
+          ],
+          result: String.raw`$\log\left(x^2\sqrt{x}\right) = \frac{5}{2}\log x$ per $x > 0$.` },
+        { id: 's00.esplog.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Scritto come unico logaritmo, $2\log 3 - \log 2$ diventa:`,
+          options: [String.raw`$\log\dfrac{9}{2}$`, String.raw`$\log 7$`, String.raw`$\log\dfrac{3}{2}$`, String.raw`$\log 18$`],
+          answer: 0,
+          explain: String.raw`$2\log 3 = \log 3^2 = \log 9$, poi $\log 9 - \log 2 = \log\frac{9}{2}$. $\log 7$ sbaglia la somma; $\log\frac{3}{2}$ dimentica il quadrato; $\log 18$ trasforma la differenza in prodotto.` },
+        { id: 's00.esplog.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`Quale numero $k$ rende vera l'uguaglianza $\log 8 = k\log 2$?`,
+          answer: '3',
+          explain: String.raw`$\log 8 = \log 2^3 = 3\log 2$, quindi $k = 3$.` },
+        { id: 's00.esplog.L2.e6', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni $a, b > 0$ vale $\log(a+b) = \log a + \log b$.`,
+          answer: false,
+          explain: String.raw`Falso. Con $a = b = 1$: a sinistra $\log 2 \approx 0{,}69$, a destra $\log 1 + \log 1 = 0$. La regola vale per il **prodotto** $\log(ab)$, non per la somma.` },
+        { id: 's00.esplog.L2.e7', type: 'interval', level: 1,
+          prompt: String.raw`Determina il dominio di $\log(x - 3)$.`,
+          answer: '(3,inf)',
+          explain: String.raw`Serve $x - 3 > 0$, cioè $x > 3$. L'argomento deve essere strettamente positivo.` },
+        { id: 's00.esplog.L2.e8', type: 'num', level: 1,
+          prompt: String.raw`Quanto vale $e^{\log 5}$?`,
+          answer: '5',
+          explain: String.raw`L'esponenziale e il logaritmo naturale sono l'uno l'inverso dell'altro: $e^{\log A} = A$ per $A > 0$.` },
+        { id: 's00.esplog.L2.e9', type: 'mcq', level: 2,
+          prompt: String.raw`Le funzioni $\log(x^2)$ e $2\log x$ sono uguali?`,
+          options: [String.raw`Sì, per ogni $x \ne 0$`, String.raw`Sì, per ogni $x$`, String.raw`No, mai`, String.raw`Sì, solo per $x > 0$`],
+          answer: 3,
+          explain: String.raw`Il dominio di $\log(x^2)$ è $x \ne 0$, ma $2\log x$ è definito solo per $x > 0$. Sono uguali solo dove sono entrambe definite e coincidono, cioè per $x > 0$. Per $x<0$ la prima esiste e la seconda no.` },
+        { id: 's00.esplog.L2.e10', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\log(2x - 1) > 0$.`,
+          answer: '(1,inf)',
+          explain: String.raw`Serve prima $2x - 1 > 0$, cioè $x > \frac{1}{2}$. Poi $\log(2x-1) > \log 1$ con base $e > 1$: $2x - 1 > 1$, cioè $x > 1$. La condizione $x > 1$ implica quella del dominio.` },
+        { type: 'learn', title: 'Grafico del logaritmo', body: String.raw`$\log x$ è la funzione inversa di $e^x$: il suo grafico è quello di $e^x$ specchiato rispetto alla bisettrice $y = x$.
+
+- il dominio è $x > 0$: l'asse $y$ è un asintoto verticale;
+- è crescente, con $\log 1 = 0$;
+- cresce **lentamente**: $\log x \to +\infty$ per $x \to +\infty$, ma molto più piano di $x$.` , plot: { fns: ['log(x)'], x: [-1, 4], y: [-3, 2], vlines: [0] } },
+        { id: 's00.esplog.L2.e11', type: 'num', level: 1,
+          prompt: String.raw`Quanto vale $\log_2 16 - \log_2 4$?`,
+          answer: '2',
+          explain: String.raw`Per la differenza di logaritmi con la stessa base si divide: $\log_2\frac{16}{4} = \log_2 4 = 2$. Oppure: $4 - 2 = 2$ perché $\log_2 16 = 4$ e $\log_2 4 = 2$.` },
+      ],
+    },
+    {
+      id: 's00.esplog.L3',
+      title: 'Equazioni e disequazioni con esponenziali e logaritmi',
+      cards: [
+        { type: 'learn', title: 'Equazioni esponenziali', body: String.raw`Ci sono due strategie:
+
+1. **stessa base**: se posso scrivere entrambi i membri come potenze della stessa base $a$, confronto gli esponenti;
+2. **sostituzione**: se compare $e^{2x}$ (o $4^x$) e $e^x$ (o $2^x$), pongo $t = e^x$ (o $t = 2^x$). Risolvo l'equazione in $t$ e torno a $x$, scartando i $t \le 0$.
+
+Per tornare a $x$ da $e^x = c$ con $c > 0$ si usa il logaritmo: $x = \log c$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $e^{2x} - 3e^x + 2 = 0$.`,
+          steps: [
+            String.raw`Noto che $e^{2x} = (e^x)^2$. Pongo $t = e^x$ con $t > 0$: l'equazione diventa $t^2 - 3t + 2 = 0$.`,
+            { text: String.raw`Il $\Delta$ è $9 - 8 = 1$: le radici sono $t = 1$ e $t = 2$, entrambe positive.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $t^2 - 3t + 2$ per $t = 1$?`, answer: '0', explain: String.raw`$1 - 3 + 2 = 0$: $t = 1$ è radice.` } },
+            String.raw`Torno a $x$: $e^x = 1$ dà $x = 0$; $e^x = 2$ dà $x = \log 2$.`,
+          ],
+          result: String.raw`Soluzioni: $x = 0$ e $x = \log 2$.` },
+        { id: 's00.esplog.L3.e1', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $4^{x} - 6\cdot 2^{x} + 8 = 0$. Scrivi le soluzioni separate da ;`,
+          answer: ['1', '2'],
+          explain: String.raw`Con $t = 2^x$ e $4^x = (2^x)^2$: $t^2 - 6t + 8 = 0$, cioè $(t-2)(t-4) = 0$. Quindi $2^x = 2$, $x = 1$; oppure $2^x = 4$, $x = 2$.` },
+        { type: 'learn', title: 'Equazioni logaritmiche: prima il dominio', body: String.raw`Per risolvere $\log(A) = \log(B)$ con $A, B$ contenenti $x$:
+
+1. imposto le **condizioni di esistenza**: $A > 0$ e $B > 0$;
+2. risolvo $A = B$;
+3. tengo solo le soluzioni che rispettano le condizioni.
+
+>! Le soluzioni trovate senza controllare il dominio spesso sono **false**: il passaggio da $\log A + \log B$ a $\log(AB)$ allarga il dominio se non si controlla.` },
+        { id: 's00.esplog.L3.e2', type: 'num', level: 1,
+          prompt: String.raw`Risolvi $\log(x - 1) = \log 4$.`,
+          answer: '5',
+          explain: String.raw`Serve $x - 1 > 0$. Poi $x - 1 = 4$, quindi $x = 5$, che rispetta la condizione.` },
+        { id: 's00.esplog.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Quali soluzioni ha $\log x + \log(x-3) = \log 4$?`,
+          options: [String.raw`$x = 4$`, String.raw`$x = -1$`, String.raw`$x = 4$ e $x = -1$`, String.raw`Nessuna`],
+          answer: 0,
+          explain: String.raw`Serve $x > 0$ e $x - 3 > 0$, cioè $x > 3$. Da $x(x-3) = 4$ si ha $x^2 - 3x - 4 = 0$, con radici $x = 4$ e $x = -1$. Solo $x = 4$ rispetta $x > 3$: $x = -1$ è scartata. Accettare entrambe è l'errore tipico.` },
+        { id: 's00.esplog.L3.e4', type: 'mcq', level: 3, source: 'Itinere 11/11/2025 · Parte A (teorema degli zeri)',
+          prompt: String.raw`L'equazione $\log(2+x) + x = 0$ ha una soluzione in $(-1,1)$?`,
+          options: [String.raw`Sì, per il teorema degli zeri`, String.raw`No: la funzione è crescente, quindi non ha zeri`, String.raw`No: $\log(2+x)$ non è definito in $(-1,1)$`, String.raw`Sì, perché $x = 0$ è soluzione`],
+          answer: 0,
+          explain: String.raw`Sia $f(x) = \log(2+x) + x$, continua su $(-2,+\infty)$. Si ha $f(-1) = \log 1 - 1 = -1 < 0$ e $f(1) = \log 3 + 1 > 0$. Per il teorema degli zeri esiste $c \in (-1,1)$ con $f(c) = 0$. Il secondo distrattore è falso: $f$ è crescente e quindi ha **al più** uno zero, ma questo non esclude che ce ne sia uno. $x = 0$ non è soluzione, perché $f(0) = \log 2 \ne 0$.` },
+        { id: 's00.esplog.L3.e5', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $e^{2x-1} \ge e^{x}$.`,
+          answer: '[1,inf)',
+          explain: String.raw`Base $e > 1$: il verso resta, $2x - 1 \ge x$, cioè $x \ge 1$.` },
+        { id: 's00.esplog.L3.e6', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\log_2(x - 1) \le 3$.`,
+          answer: '(1,9]',
+          explain: String.raw`Serve $x - 1 > 0$. Base $2 > 1$: $x - 1 \le 2^3 = 8$, quindi $x \le 9$. Soluzione: $1 < x \le 9$.` },
+        { id: 's00.esplog.L3.e7', type: 'interval', level: 3, source: 'Appello 15/01/2026 · Parte B (studio di funzione)',
+          prompt: String.raw`Risolvi $\log(x+1) < 2$.`,
+          answer: '(-1,e^2-1)',
+          explain: String.raw`Serve $x + 1 > 0$, cioè $x > -1$. Base $e > 1$: $x + 1 < e^2$, quindi $x < e^2 - 1$.` },
+        { type: 'learn', title: 'Esponenziale e logaritmo sono inversi', body: String.raw`Per $A > 0$ vale $e^{\log A} = A$. Per ogni $x$ vale $\log(e^x) = x$.
+
+Quindi per risolvere $e^{g(x)} = c$ con $c > 0$ basta applicare il logaritmo: $g(x) = \log c$. Se $c \le 0$ l'equazione è impossibile.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.esplog.gen-esp-eq', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.pick([2, 3, 5]), m = R.pick([1, 2, 3]), n = R.int(-3, 3), k = R.int(-4, 6);
+        const lhs = `${m === 1 ? '' : m}x${n === 0 ? '' : ` ${n > 0 ? '+' : '-'} ${Math.abs(n)}`}`;
+        const p = pt(k - n, m);
+        return {
+          type: 'num',
+          prompt: String.raw`Risolvi $${a}^{${lhs}} = ${a}^{${k}}$. Scrivi $x$ come frazione.`,
+          answer: p.s,
+          explain: String.raw`Stessa base $${a}$: gli esponenti sono uguali, $${lhs} = ${k}$. Quindi $${m === 1 ? '' : m}x = ${k - n}$ e $x = ${p.t}$.`,
+        };
+      } },
+    { id: 's00.esplog.gen-esp-disug', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.pick([2, 3]), m = R.nz(-3, 3), n = R.int(-3, 3), k = R.int(-2, 6);
+        const op = R.pick(['>', '>=', '<', '<=']);
+        const p = pt((k - n) * Math.sign(m), Math.abs(m));
+        const sol = solveSet((v) => cmp(m * v + n - k, op), [p]);
+        const lhs = `${m === 1 ? '' : m === -1 ? '-' : m}x${n === 0 ? '' : ` ${n > 0 ? '+' : '-'} ${Math.abs(n)}`}`;
+        const verso = m < 0 ? 'Divido per un coefficiente negativo: il verso si inverte.' : 'Il coefficiente di $x$ è positivo: il verso resta.';
+        return {
+          type: 'interval',
+          prompt: String.raw`Risolvi $${a}^{${lhs}} ${OPTEX[op]} ${a}^{${k}}$.`,
+          answer: sol.s,
+          explain: String.raw`La base $${a} > 1$: la funzione è crescente, quindi basta confrontare gli esponenti: $${lhs} ${OPTEX[op]} ${k}$. ${verso} Soluzione: $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.esplog.gen-log-eq', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.int(1, 4), c = R.int(-3, 5);
+        const arg = c === 0 ? 'x' : `x ${c > 0 ? '+' : '-'} ${Math.abs(c)}`;
+        const sol = 2 ** k - c;
+        return {
+          type: 'num',
+          prompt: String.raw`Risolvi $\log_2(${arg}) = ${k}$.`,
+          answer: String(sol),
+          explain: String.raw`Per definizione di logaritmo: $${arg} = 2^{${k}} = ${2 ** k}$. ${c === 0 ? `Quindi $x = ${sol}$.` : `Quindi $x = ${2 ** k} ${c > 0 ? '-' : '+'} ${Math.abs(c)} = ${sol}$.`} Controllo: l'argomento $${arg}$ vale $${2 ** k}$, che è positivo.`,
+        };
+      } },
+    { id: 's00.esplog.gen-log-somma', type: 'gen', level: 3,
+      gen: (R) => {
+        const d = R.int(1, 4), r = d + R.int(1, 5);
+        const m = r * (r - d);
+        return {
+          type: 'num',
+          prompt: String.raw`Risolvi $\log x + \log(x - ${d}) = \log(${m})$.`,
+          answer: String(r),
+          explain: String.raw`Condizioni: $x > 0$ e $x > ${d}$, cioè $x > ${d}$. Per la proprietà del prodotto: $x(x-${d}) = ${m}$, cioè $x^2 - ${d === 1 ? '' : d}x - ${m} = 0$. Le radici sono $x = ${r}$ e $x = ${d - r}$. Solo $x = ${r}$ rispetta $x > ${d}$: $x = ${d - r}$ è scartata.`,
+        };
+      } },
+    { id: 's00.esplog.gen-exp-quad', type: 'gen', level: 3,
+      gen: (R) => {
+        const i = R.int(0, 3);
+        let j = R.int(0, 3);
+        while (j === i) j = R.int(0, 3);
+        const a = 2 ** i, b = 2 ** j;
+        const lo = Math.min(i, j), hi = Math.max(i, j);
+        return {
+          type: 'set',
+          prompt: String.raw`Risolvi $4^{x} - ${a + b}\cdot 2^{x} + ${a * b} = 0$. Scrivi le soluzioni separate da ;`,
+          answer: [String(lo), String(hi)],
+          explain: String.raw`$4^x = (2^x)^2$. Con $t = 2^x > 0$: $t^2 - ${a + b}t + ${a * b} = 0$, cioè $(t-${a})(t-${b}) = 0$. Quindi $2^x = ${a}$, da cui $x = ${i}$, oppure $2^x = ${b}$, da cui $x = ${j}$.`,
+        };
+      } },
+    { id: 's00.esplog.p1', type: 'problem', level: 3, source: 'Appello 06/07/2026 · Parte B (studio di funzione)', points: 2,
+      prompt: String.raw`Sia $f(x) = \log(x+1) - 1$. Determina il dominio di $f$ e lo zero di $f$.`,
+      parts: [
+        { type: 'interval', prompt: String.raw`Dominio di $f$.`, answer: '(-1,inf)', explain: String.raw`Serve $x + 1 > 0$, cioè $x > -1$.` },
+        { type: 'num', prompt: String.raw`Zero di $f$: il valore di $x$ con $f(x) = 0$.`, answer: 'e-1', explain: String.raw`$\log(x+1) = 1$ dà $x + 1 = e$, quindi $x = e - 1$, che è maggiore di $-1$.` },
+      ],
+      solution: String.raw`Dominio: $x + 1 > 0$, cioè $(-1,+\infty)$. Zero: $\log(x+1) = 1$, quindi $x + 1 = e^1$ e $x = e - 1$. Il punto $e - 1 \approx 1{,}72$ appartiene al dominio.` },
+    { id: 's00.esplog.p2', type: 'tf', level: 2,
+      prompt: String.raw`Per ogni $x \ne 0$ vale $\log(x^2) = 2\log x$.`,
+      answer: false,
+      explain: String.raw`Falso: per $x < 0$ il membro di destra non è definito, mentre $\log(x^2)$ lo è. Per $x > 0$ l'uguaglianza vale. La formula $\log A^k = k\log A$ richiede $A > 0$.` },
+    { id: 's00.esplog.p3', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni espressione alla sua forma equivalente, con $a, b > 0$.`,
+      pairs: [
+        [String.raw`$\log(ab)$`, String.raw`$\log a + \log b$`],
+        [String.raw`$\log\dfrac{a}{b}$`, String.raw`$\log a - \log b$`],
+        [String.raw`$\log a^k$`, String.raw`$k\log a$`],
+        [String.raw`$e^{\log a}$`, String.raw`$a$`],
+      ],
+      explain: String.raw`Il logaritmo trasforma prodotti in somme, quozienti in differenze e potenze in moltiplicazioni. L'esponenziale è l'inverso del logaritmo naturale: $e^{\log a} = a$.` },
+    { id: 's00.esplog.p4', type: 'mcq', level: 1,
+      prompt: String.raw`Quanto vale $\log_3 \sqrt{27}$?`,
+      options: [String.raw`$\dfrac{3}{2}$`, String.raw`$\dfrac{27}{2}$`, String.raw`$\dfrac{1}{2}$`, String.raw`$3$`],
+      answer: 0,
+      explain: String.raw`$\sqrt{27} = 27^{1/2} = 3^{3/2}$, quindi $\log_3 3^{3/2} = \frac{3}{2}$. $3$ dimentica la radice; $\frac{27}{2}$ divide invece di esponenziare.` },
+    { id: 's00.esplog.p5', type: 'interval', level: 1,
+      prompt: String.raw`Risolvi $e^x > 1$.`, answer: '(0,inf)',
+      explain: String.raw`$1 = e^0$ e la base $e > 1$: $x > 0$.` },
+    { id: 's00.esplog.p6', type: 'mcq', level: 2,
+      prompt: String.raw`Qual è la funzione inversa di $f(x) = e^x$?`,
+      options: [String.raw`$\log x$`, String.raw`$\log(-x)$`, String.raw`$\dfrac{1}{e^x}$`, String.raw`$e^{-x}$`],
+      answer: 0,
+      explain: String.raw`L'inversa di $e^x$ è $\log x$: $y = e^x \iff x = \log y$. $\frac{1}{e^x}$ e $e^{-x}$ sono $e^{-x}$ con segni diversi: non invertono l'esponenziale. $\log(-x)$ ha dominio $x<0$.` },
+  ],
+  flashcards: [
+    { id: 's00.esplog.fc1', kind: 'def', front: String.raw`Esponenziale $a^x$ con $a>0$, $a\ne1$`, back: String.raw`Crescente se $a>1$, decrescente se $0<a<1$. Sempre strettamente positivo, con asintoto orizzontale $y = 0$.` },
+    { id: 's00.esplog.fc2', kind: 'def', front: String.raw`Definizione di logaritmo`, back: String.raw`$\log_a b = c \iff a^c = b$, con $a>0$, $a\ne1$, $b>0$. $\log$ senza base è il logaritmo naturale (in base $e$).` },
+    { id: 's00.esplog.fc3', kind: 'formula', front: 'Proprietà dei logaritmi', back: String.raw`$\log(AB) = \log A + \log B$; $\log\frac{A}{B} = \log A - \log B$; $\log A^k = k\log A$. Con $A, B > 0$.` },
+    { id: 's00.esplog.fc4', kind: 'errore', front: String.raw`Il logaritmo della somma`, back: String.raw`$\log(A+B) \ne \log A + \log B$. Il logaritmo si distribuisce sul prodotto, non sulla somma.` },
+    { id: 's00.esplog.fc5', kind: 'metodo', front: 'Disequazione esponenziale', back: String.raw`Confronto gli esponenti. Se la base è maggiore di $1$ il verso resta; se è compresa tra $0$ e $1$ il verso si inverte.` },
+    { id: 's00.esplog.fc6', kind: 'metodo', front: 'Equazione logaritmica', back: String.raw`Imposto le condizioni di esistenza (argomenti $>0$), risolvo, poi scarto le soluzioni che non le rispettano.` },
+    { id: 's00.esplog.fc7', kind: 'formula', front: String.raw`Inverse: $e^{\log A}$ e $\log(e^x)$`, back: String.raw`$e^{\log A} = A$ per $A>0$; $\log(e^x) = x$ per ogni $x$. Il logaritmo è l'inversa dell'esponenziale.` },
+    { id: 's00.esplog.fc8', kind: 'metodo', front: 'Equazione con $e^{2x}$ e $e^x$', back: String.raw`Pongo $t = e^x$ con $t>0$, risolvo l'equazione in $t$ (di solito di secondo grado) e torno a $x = \log t$ per ogni $t>0$.` },
+  ],
+});
