@@ -427,3 +427,364 @@ Nel passo induttivo **supponi** vera $P(n)$ (ipotesi induttiva) e la **usi** per
     { id: 's01.naturali.fc10', kind: 'def', front: 'Gli insiemi $\\N,\\Z,\\Q$', back: String.raw`$\N=\{0,1,2,\dots\}$, $\Z$ interi relativi, $\Q=\{p/q: p\in\Z, q\in\N, q\neq0\}$. $\N\subset\Z\subset\Q\subset\R$. Ogni ampliamento risolve equazioni nuove ($x+3=1$, $2x=1$, $x^2=2$).` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s01.irrazionali
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's01.irrazionali',
+  title: 'Irrazionalità di √2, numerabilità, cardinalità',
+  summary: String.raw`Saprai dimostrare che $\sqrt2\notin\Q$ e spiegare perché $\Z$ e $\Q$ sono numerabili mentre $\R$ non lo è.`,
+  prereq: ['s01.naturali', 's00.logica'],
+  examRefs: [],
+  lessons: [
+    {
+      id: 's01.irrazionali.L1',
+      title: 'Decimali periodici e numeri irrazionali',
+      cards: [
+        { type: 'learn', title: 'Razionali = decimali finiti o periodici',
+          body: String.raw`Ogni razionale ha una scrittura decimale **finita** ($\frac34=0{,}75$) o **periodica** ($\frac13=0{,}\overline3$), e viceversa ogni decimale finito o periodico è una frazione.
+
+Un numero con infinite cifre decimali **non periodiche** si dice **irrazionale**: per esempio $\sqrt2=1{,}41421356\dots$, $\pi$, $e$.
+
+>* $\R$ è formato dai razionali e dagli irrazionali: $\R=\Q\cup(\R\setminus\Q)$.
+
+Il problema storico: la diagonale di un quadrato di lato $1$ misura $\sqrt2$ (Pitagora), ma nessuna frazione al quadrato fa $2$.` },
+        { type: 'example', title: 'Da periodico a frazione',
+          problem: String.raw`Scrivi $x=0{,}\overline{36}$ come frazione.`,
+          steps: [
+            String.raw`Il periodo ha $2$ cifre: moltiplico per $100$. $100x=36{,}\overline{36}$.`,
+            String.raw`Sottraggo: $100x-x=36$, perché le code periodiche si cancellano. Quindi $99x=36$.`,
+            { text: String.raw`$x=\frac{36}{99}=\frac4{11}$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $x=\frac{36}{99}$ ridotta? (scrivi una frazione)`, answer: '4/11', explain: String.raw`$36$ e $99$ hanno MCD $9$: $\frac{36}{99}=\frac4{11}$.` } },
+          ],
+          result: String.raw`$0{,}\overline{36}=\frac4{11}$. Regola: periodo semplice di $k$ cifre $=\frac{\text{periodo}}{\underbrace{9\cdots9}_{k}}$.` },
+        { id: 's01.irrazionali.L1.e1', type: 'num', level: 1,
+          prompt: String.raw`Scrivi $0{,}\overline{3}$ come frazione.`,
+          answer: '1/3',
+          explain: String.raw`$10x-x=3$, quindi $x=\frac39=\frac13$.` },
+        { id: 's01.irrazionali.L1.e2', type: 'num', level: 2,
+          prompt: String.raw`Scrivi $1{,}2\overline{3}$ come frazione.`,
+          answer: '37/30',
+          explain: String.raw`$x=1{,}2333\dots$: $100x=123{,}\overline3$ e $10x=12{,}\overline3$. Sottraendo $90x=111$, quindi $x=\frac{111}{90}=\frac{37}{30}$. Errore tipico: usare $\frac{123}{99}$, che vale per $1{,}\overline{23}$ (periodo diverso).` },
+        { id: 's01.irrazionali.L1.e3', type: 'tf', level: 2,
+          prompt: String.raw`La somma di un numero razionale e di un numero irrazionale è sempre irrazionale.`,
+          answer: true,
+          explain: String.raw`Per assurdo: se $q+r=s$ con $q,s\in\Q$ e $r$ irrazionale, allora $r=s-q\in\Q$ (differenza di razionali), contraddizione.` },
+        { id: 's01.irrazionali.L1.e4', type: 'tf', level: 2,
+          prompt: String.raw`Il prodotto di due numeri irrazionali è sempre irrazionale.`,
+          answer: false,
+          explain: String.raw`Controesempio: $\sqrt2\cdot\sqrt2=2\in\Q$. Per gli irrazionali non vale alcuna "chiusura": somme e prodotti possono essere razionali.` },
+        { id: 's01.irrazionali.L1.e5', type: 'mcq', level: 1,
+          prompt: 'Quale di questi numeri è irrazionale?',
+          options: [String.raw`$\sqrt2+1$`, String.raw`$\sqrt9$`, String.raw`$0{,}\overline{12}$`, String.raw`$\frac{22}7$`],
+          answer: 0,
+          explain: String.raw`$\sqrt2+1$ è razionale + irrazionale, quindi irrazionale. $\sqrt9=3$; $0{,}\overline{12}=\frac{12}{99}$ è periodico; $\frac{22}7$ è un'approssimazione di $\pi$ ma è una frazione.` },
+        { type: 'learn', title: 'Il lemma che serve',
+          body: String.raw`>* **Lemma.** Se $n\in\Z$ e $n^2$ è pari, allora $n$ è pari.
+
+Si dimostra per **contronominale** ($A\Rightarrow B$ equivale a $\lnot B\Rightarrow\lnot A$): se $n$ è dispari, $n=2k+1$, allora
+$$n^2=4k^2+4k+1=2(2k^2+2k)+1$$
+è dispari.` },
+        { id: 's01.irrazionali.L1.e6', type: 'mcq', level: 1,
+          prompt: String.raw`Qual è la contronominale di "se $n^2$ è pari allora $n$ è pari"?`,
+          options: [
+            String.raw`Se $n$ è dispari allora $n^2$ è dispari.`,
+            String.raw`Se $n$ è pari allora $n^2$ è pari.`,
+            String.raw`Se $n^2$ è dispari allora $n$ è dispari.`,
+            String.raw`Se $n^2$ è pari allora $n$ è dispari.`,
+          ],
+          answer: 0,
+          explain: String.raw`La contronominale di $A\Rightarrow B$ è $\lnot B\Rightarrow\lnot A$: si negano **e** si scambiano. "Se $n$ pari allora $n^2$ pari" è l'inversa (vera, ma non equivalente); la terza è la contraria.` },
+        { id: 's01.irrazionali.L1.e7', type: 'expr', level: 1,
+          prompt: String.raw`Scrivi $(2k+1)^2$ nella forma $2m+1$: quanto vale $m$ in funzione di $k$?`,
+          answer: '2k^2+2k', vars: ['k'],
+          explain: String.raw`$(2k+1)^2=4k^2+4k+1=2(2k^2+2k)+1$, quindi $m=2k^2+2k$: il quadrato di un dispari è dispari.` },
+      ],
+    },
+    {
+      id: 's01.irrazionali.L2',
+      title: 'La dimostrazione: √2 non è razionale',
+      cards: [
+        { type: 'learn', title: "L'idea",
+          body: String.raw`>* **Teorema.** Non esiste alcun $x\in\Q$ tale che $x^2=2$; cioè $\sqrt2\notin\Q$.
+
+Si procede **per assurdo**: si suppone che $\sqrt2=\frac pq$ con la frazione **ridotta ai minimi termini** (cioè $p,q$ senza fattori comuni) e si scopre che $p$ e $q$ sono entrambi pari. Contraddizione.
+
+Ogni frazione si può ridurre ai minimi termini dividendo per il MCD: quindi l'ipotesi "ridotta" non toglie generalità.` },
+        { type: 'example', title: 'Dimostrazione completa',
+          problem: String.raw`Dimostra che $\sqrt2\notin\Q$.`,
+          steps: [
+            String.raw`Per assurdo, sia $\sqrt2=\frac pq$ con $p,q\in\N$, $q\neq0$, **primi tra loro**.`,
+            String.raw`Elevo al quadrato: $2=\frac{p^2}{q^2}$, cioè $p^2=2q^2$. Quindi $p^2$ è pari.`,
+            String.raw`Per il lemma, $p$ è pari: $p=2m$.`,
+            String.raw`Sostituisco: $4m^2=2q^2$, cioè $q^2=2m^2$. Quindi $q^2$ è pari e, per il lemma, $q$ è pari.`,
+            String.raw`$p$ e $q$ sono entrambi pari: hanno il fattore comune $2$, contro l'ipotesi.`,
+          ],
+          result: String.raw`L'ipotesi $\sqrt2\in\Q$ è assurda: $\sqrt2$ è irrazionale.` },
+        { id: 's01.irrazionali.L2.e1', type: 'order', level: 2,
+          prompt: String.raw`Riordina la dimostrazione di $\sqrt2\notin\Q$. Scarta i passi sbagliati.`,
+          steps: [
+            String.raw`Per assurdo, $\sqrt2=\frac pq$ con $p,q$ interi positivi primi tra loro.`,
+            String.raw`Allora $p^2=2q^2$, quindi $p^2$ è pari e dunque $p$ è pari.`,
+            String.raw`Scrivo $p=2m$: da $4m^2=2q^2$ segue $q^2=2m^2$.`,
+            String.raw`Quindi $q^2$ è pari e anche $q$ è pari.`,
+            String.raw`$p$ e $q$ sono entrambi pari: contraddizione con l'ipotesi che siano primi tra loro.`,
+          ],
+          distractors: [
+            String.raw`Poiché $p^2=2q^2$, $p$ è dispari.`,
+            String.raw`Calcolo $\sqrt2\approx1{,}414$, che non è una frazione: quindi $\sqrt2\notin\Q$.`,
+          ],
+          explain: String.raw`La catena è: ipotesi di riduzione → $p$ pari → $q$ pari → contraddizione. Un'approssimazione decimale non dimostra nulla: anche $\frac17=0{,}142857\dots$ "sembra" non periodico se guardi poche cifre.` },
+        { id: 's01.irrazionali.L2.e2', type: 'mcq', level: 1,
+          prompt: 'In che cosa consiste la contraddizione finale?',
+          options: [
+            String.raw`$p$ e $q$ risultano entrambi pari, mentre la frazione era ridotta ai minimi termini.`,
+            String.raw`$p^2$ risulta negativo.`,
+            String.raw`$q$ risulta uguale a $0$.`,
+            String.raw`$\sqrt2$ risulta maggiore di $2$.`,
+          ],
+          answer: 0,
+          explain: String.raw`Tutto il ragionamento serve a mostrare che $2$ divide sia $p$ sia $q$. Senza l'ipotesi "primi tra loro" non ci sarebbe contraddizione.` },
+        { id: 's01.irrazionali.L2.e3', type: 'cloze', level: 2,
+          prompt: 'Completa i passaggi chiave.',
+          text: String.raw`Da $\sqrt2=\frac pq$ segue $p^2=$ [[0]]. Allora $p$ è [[1]], $p=2m$, e quindi $q^2=$ [[2]].`,
+          blanks: [
+            { options: [String.raw`$2q^2$`, String.raw`$2q$`, String.raw`$4q^2$`], answer: 0 },
+            { options: ['pari', 'dispari', 'primo'], answer: 0 },
+            { options: [String.raw`$2m^2$`, String.raw`$4m^2$`, String.raw`$m^2$`], answer: 0 },
+          ],
+          explain: String.raw`$p^2=2q^2$; con $p=2m$: $4m^2=2q^2\Rightarrow q^2=2m^2$.` },
+        { id: 's01.irrazionali.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Perché si può supporre che $\frac pq$ sia ridotta ai minimi termini?`,
+          options: [
+            String.raw`Perché ogni frazione si riduce dividendo numeratore e denominatore per il loro MCD, senza cambiarne il valore.`,
+            String.raw`Perché $\sqrt2$ è un numero primo.`,
+            String.raw`Perché $p$ e $q$ sono per forza dispari.`,
+            String.raw`Non si può: è un'ipotesi in più che indebolisce la dimostrazione.`,
+          ],
+          answer: 0,
+          explain: String.raw`Se $\sqrt2$ fosse una frazione, lo sarebbe anche in forma ridotta: la riduzione non perde generalità. $\sqrt2$ non è un intero, tanto meno primo.` },
+        { id: 's01.irrazionali.L2.e5', type: 'tf', level: 2,
+          prompt: String.raw`Ripetendo la stessa dimostrazione con $4$ al posto di $2$ si prova che $\sqrt4\notin\Q$.`,
+          answer: false,
+          explain: String.raw`$\sqrt4=2\in\Q$. Infatti la dimostrazione si blocca: da $p^2=4q^2$ con $p=2m$ si ottiene $m^2=q^2$, che non dice nulla sulla parità di $q$. Il passo cruciale usa che $2$ divide $p^2$ ma $4$ non divide $2q^2$ in generale.` },
+        { type: 'example', title: 'Lo stesso schema per $\\sqrt3$',
+          problem: String.raw`Dimostra che $\sqrt3\notin\Q$.`,
+          steps: [
+            String.raw`Per assurdo $\sqrt3=\frac pq$ ridotta: $p^2=3q^2$, quindi $3\mid p^2$ e, essendo $3$ primo, $3\mid p$.`,
+            { text: String.raw`Scrivo $p=3m$: $9m^2=3q^2$, cioè $q^2=3m^2$.`,
+              ask: { type: 'expr', prompt: String.raw`Da $9m^2=3q^2$, quanto vale $q^2$ in funzione di $m$?`, answer: '3m^2', vars: ['m'], explain: String.raw`Divido per $3$: $q^2=3m^2$.` } },
+            String.raw`Quindi $3\mid q^2$ e $3\mid q$: $p,q$ hanno il fattore comune $3$. Assurdo.`,
+          ],
+          result: String.raw`$\sqrt3\notin\Q$. In generale $\sqrt n\in\Q$ solo se $n$ è un quadrato perfetto.` },
+        { id: 's01.irrazionali.L2.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Che cosa implica il teorema su $\sqrt2$ per l'insieme $\Q$?`,
+          options: [
+            String.raw`$\Q$ "ha dei buchi": l'equazione $x^2=2$ non ha soluzioni razionali, anche se ci sono razionali con quadrato vicino quanto si vuole a $2$.`,
+            String.raw`$\Q$ è finito.`,
+            String.raw`$\Q$ non è chiuso rispetto alla somma.`,
+            String.raw`$\Q$ non contiene numeri maggiori di $\sqrt2$.`,
+          ],
+          answer: 0,
+          explain: String.raw`È la motivazione per introdurre $\R$ con l'assioma di completezza (Dedekind). $\Q$ è infinito, chiuso per $+$ e contiene numeri maggiori di $\sqrt2$ (per esempio $2$).` },
+        { id: 's01.irrazionali.L2.e7', type: 'open', level: 3,
+          prompt: String.raw`Si dimostri che $\sqrt2$ non è un numero razionale.`,
+          answer: String.raw`Supponiamo per assurdo $\sqrt2=\frac pq$ con $p,q\in\N$, $q\neq0$, primi tra loro (ogni frazione si può ridurre ai minimi termini).
+
+Elevando al quadrato: $p^2=2q^2$, quindi $p^2$ è pari. Allora $p$ è pari (se $p$ fosse dispari, $p=2k+1$, sarebbe $p^2=2(2k^2+2k)+1$ dispari). Scriviamo $p=2m$.
+
+Sostituendo: $4m^2=2q^2$, cioè $q^2=2m^2$: anche $q^2$ è pari, e quindi $q$ è pari.
+
+Allora $2$ divide sia $p$ sia $q$, contro l'ipotesi che fossero primi tra loro. L'assurdo prova che $\sqrt2\notin\Q$.`,
+          rubric: ['Impostazione per assurdo con frazione ridotta ai minimi termini', 'Da $p^2=2q^2$ deduce che $p$ è pari (giustificando il lemma)', 'Sostituisce $p=2m$ e ottiene $q^2=2m^2$, quindi $q$ pari', 'Individua esplicitamente la contraddizione e conclude'] },
+      ],
+    },
+    {
+      id: 's01.irrazionali.L3',
+      title: 'Contare gli infiniti: numerabilità',
+      cards: [
+        { type: 'learn', title: 'Stessa cardinalità',
+          body: String.raw`>* Due insiemi $A$ e $B$ sono **equipotenti** (hanno la stessa cardinalità) se esiste una funzione **biiettiva** $f:A\to B$. Un insieme è **numerabile** se è equipotente a $\N$.
+
+Per gli insiemi finiti vuol dire "stesso numero di elementi". Per gli infiniti succedono cose sorprendenti: i numeri pari sono numerabili tramite $n\mapsto2n$, anche se sono "la metà" di $\N$.
+
+Essere numerabile significa poter **elencare** gli elementi in una successione $a_0,a_1,a_2,\dots$ senza dimenticarne nessuno.` },
+        { id: 's01.irrazionali.L3.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quale funzione è una biiezione da $\N$ all'insieme $P$ dei numeri naturali pari?`,
+          options: [String.raw`$n\mapsto2n$`, String.raw`$n\mapsto n^2$`, String.raw`$n\mapsto n+2$`, String.raw`$n\mapsto2n+1$`],
+          answer: 0,
+          explain: String.raw`$2n$ è iniettiva e ogni pari $2k$ è immagine di $k$: è biiettiva. $n^2$ non è suriettiva sui pari (manca $2$); $n+2$ produce anche dispari; $2n+1$ dà i dispari.` },
+        { type: 'learn', title: '$\\Z$ è numerabile',
+          body: String.raw`Elenca gli interi alternando i segni: $0,\,-1,\,1,\,-2,\,2,\,-3,\,3,\dots$ In formula, $f:\N\to\Z$
+$$f(n)=\begin{cases}\dfrac n2 & n\text{ pari}\\[4pt] -\dfrac{n+1}2 & n\text{ dispari}\end{cases}$$
+è biiettiva: $f(0)=0$, $f(1)=-1$, $f(2)=1$, $f(3)=-2$, …` },
+        { id: 's01.irrazionali.L3.e2', type: 'num', level: 1,
+          prompt: String.raw`Con la funzione $f$ appena vista, quanto vale $f(7)$?`,
+          answer: '-4',
+          explain: String.raw`$7$ è dispari: $f(7)=-\frac{7+1}2=-4$.` },
+        { id: 's01.irrazionali.L3.e3', type: 'num', level: 2,
+          prompt: String.raw`Quale $n\in\N$ ha immagine $f(n)=5$?`,
+          answer: '10',
+          explain: String.raw`$5>0$ viene dal ramo pari: $\frac n2=5\Rightarrow n=10$. Il ramo dispari produce solo interi negativi.` },
+        { type: 'learn', title: '$\\Q$ è numerabile, $\\R$ no',
+          body: String.raw`Disponi le frazioni $\frac pq$ ($p,q\geq1$) in una tabella infinita: riga $p$, colonna $q$. Percorrila **a zig-zag lungo le diagonali** ($p+q=2,3,4,\dots$), saltando le frazioni non ridotte: ottieni un elenco di tutti i razionali positivi. Aggiungendo $0$ e i negativi (come per $\Z$):
+
+>* $\Q$ è numerabile (Cantor).
+
+Invece:
+
+>* $\R$ **non** è numerabile (argomento diagonale di Cantor): dato un qualunque elenco di numeri in $(0,1)$, si costruisce un numero che differisce dall'$n$-esimo nella $n$-esima cifra decimale, quindi non è nell'elenco.
+
+Conseguenza: gli irrazionali non sono numerabili; sono "molti di più" dei razionali.` },
+        { id: 's01.irrazionali.L3.e4', type: 'tf', level: 1,
+          prompt: String.raw`Poiché $\N\subsetneq\Q$, l'insieme $\Q$ ha cardinalità maggiore di $\N$.`,
+          answer: false,
+          explain: String.raw`Per gli insiemi infiniti l'inclusione stretta non basta: $\Q$ e $\N$ sono equipotenti (il percorso a zig-zag di Cantor è una biiezione). Lo stesso accade per i pari in $\N$.` },
+        { id: 's01.irrazionali.L3.e5', type: 'mcq', level: 1,
+          prompt: 'Quale di questi insiemi NON è numerabile?',
+          options: [String.raw`$\R$`, String.raw`$\Z$`, String.raw`$\Q$`, String.raw`$\N\times\N$`],
+          answer: 0,
+          explain: String.raw`$\Z$ e $\Q$ sono numerabili; $\N\times\N$ si elenca con lo stesso zig-zag della tabella di Cantor. $\R$ non è numerabile (diagonale di Cantor).` },
+        { id: 's01.irrazionali.L3.e6', type: 'tf', level: 2,
+          prompt: String.raw`L'insieme $\R\setminus\Q$ degli irrazionali è numerabile.`,
+          answer: false,
+          explain: String.raw`Se lo fosse, $\R=\Q\cup(\R\setminus\Q)$ sarebbe unione di due numerabili, quindi numerabile (alterno gli elenchi). Ma $\R$ non è numerabile.` },
+        { id: 's01.irrazionali.L3.e7', type: 'match', level: 2,
+          prompt: 'Abbina ogni insieme al modo di "contarlo".',
+          pairs: [
+            [String.raw`Numeri pari`, String.raw`$n\mapsto2n$`],
+            [String.raw`$\Z$`, String.raw`elenco $0,-1,1,-2,2,\dots$`],
+            [String.raw`$\Q$`, 'zig-zag sulla tabella delle frazioni'],
+            [String.raw`$\R$`, 'non numerabile: diagonale di Cantor'],
+          ],
+          explain: String.raw`I primi tre sono numerabili con una biiezione esplicita; per $\R$ l'argomento diagonale mostra che ogni elenco dimentica qualche numero.` },
+        { id: 's01.irrazionali.L3.e8', type: 'open', level: 2,
+          prompt: String.raw`Che cosa significa che un insieme è numerabile? Dimostra che $\Z$ è numerabile.`,
+          answer: String.raw`Un insieme $A$ è numerabile se esiste una biiezione $f:\N\to A$.
+
+Per $\Z$: $f(n)=\frac n2$ se $n$ è pari, $f(n)=-\frac{n+1}2$ se $n$ è dispari. È iniettiva (i pari vanno in $\{0,1,2,\dots\}$ in modo iniettivo, i dispari in $\{-1,-2,\dots\}$ in modo iniettivo, e i due insiemi immagine sono disgiunti) ed è suriettiva ($k\geq0$ è immagine di $2k$, $k<0$ di $-2k-1$).`,
+          rubric: ['Definizione corretta (biiezione con $\\N$)', 'Biiezione esplicita $\\N\\to\\Z$', 'Verifica iniettività', 'Verifica suriettività'] },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's01.irrazionali.p.gen-periodico', type: 'gen', level: 2,
+      gen: (R) => {
+        if (R.chance(0.5)) {
+          let d1 = R.int(0, 9), d2 = R.int(0, 9);
+          while (d1 === d2) d2 = R.int(0, 9);
+          const P = 10 * d1 + d2;
+          return { type: 'num',
+            prompt: String.raw`Scrivi $0{,}\overline{${d1}${d2}}$ come frazione ridotta.`,
+            answer: H.fracStr(P, 99),
+            explain: String.raw`Periodo di $2$ cifre: $100x-x=${P}$, quindi $x=\frac{${P}}{99}${H.gcd(P, 99) > 1 ? '=' + H.frac(P, 99) : ''}$${H.gcd(P, 99) > 1 ? ` (semplifico per $${H.gcd(P, 99)}$)` : ' (già ridotta)'}.` };
+        }
+        const I = R.int(0, 3), a = R.int(1, 8);
+        let c = R.int(1, 8);
+        while (c === a) c = R.int(1, 8);
+        const num = 9 * a + c; // (10a+c) - a
+        return { type: 'num',
+          prompt: String.raw`Scrivi $${I}{,}${a}\overline{${c}}$ come frazione ridotta.`,
+          answer: H.fracStr(90 * I + num, 90),
+          explain: String.raw`$x=${I}{,}${a}${c}${c}${c}\dots$: $100x=${100 * I + 10 * a + c}{,}\overline{${c}}$ e $10x=${10 * I + a}{,}\overline{${c}}$. Sottraendo, la coda periodica si cancella: $90x=${100 * I + 10 * a + c}-${10 * I + a}=${90 * I + num}$, quindi $x=${H.frac(90 * I + num, 90)}$.` };
+      } },
+    { id: 's01.irrazionali.p.gen-radq', type: 'gen', level: 1,
+      gen: (R) => {
+        const n = R.int(2, 60);
+        const r = Math.round(Math.sqrt(n));
+        const sq = r * r === n;
+        return { type: 'mcq',
+          prompt: String.raw`Il numero $\sqrt{${n}}$ è razionale?`,
+          options: [String.raw`Sì, $\sqrt{${n}}\in\Q$`, String.raw`No, $\sqrt{${n}}\notin\Q$`],
+          noShuffle: true,
+          answer: sq ? 0 : 1,
+          explain: sq
+            ? String.raw`$${n}=${r}^2$ è un quadrato perfetto: $\sqrt{${n}}=${r}\in\Q$.`
+            : String.raw`$${n}$ non è un quadrato perfetto ($${r * r > n ? (r - 1) ** 2 : r * r}<${n}<${r * r > n ? r * r : (r + 1) ** 2}$), e per $n\in\N$ si ha $\sqrt n\in\Q$ solo se $n$ è un quadrato perfetto (stessa dimostrazione di $\sqrt2$, usando un fattore primo che compare in $n$ con esponente dispari).` };
+      } },
+    { id: 's01.irrazionali.p.gen-biiez', type: 'gen', level: 1,
+      gen: (R) => {
+        const n = R.int(3, 40);
+        const v = n % 2 === 0 ? n / 2 : -(n + 1) / 2;
+        if (R.chance(0.5))
+          return { type: 'num',
+            prompt: String.raw`Sia $f:\N\to\Z$, $f(n)=\frac n2$ se $n$ è pari, $f(n)=-\frac{n+1}2$ se $n$ è dispari. Calcola $f(${n})$.`,
+            answer: String(v),
+            explain: n % 2 === 0 ? String.raw`$${n}$ è pari: $f(${n})=\frac{${n}}2=${v}$.` : String.raw`$${n}$ è dispari: $f(${n})=-\frac{${n}+1}2=${v}$.` };
+        return { type: 'num',
+          prompt: String.raw`Sia $f:\N\to\Z$, $f(n)=\frac n2$ se $n$ è pari, $f(n)=-\frac{n+1}2$ se $n$ è dispari. Quale $n$ ha immagine $${v}$?`,
+          answer: String(n),
+          explain: v > 0 ? String.raw`$${v}>0$ viene dal ramo pari: $n=2\cdot${v}=${n}$.` : String.raw`$${v}<0$ viene dal ramo dispari: $-\frac{n+1}2=${v}\Rightarrow n=${n}$.` };
+      } },
+    { id: 's01.irrazionali.p.gen-razirr', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 5), b = R.int(2, 4);
+        const items = [
+          [String.raw`(${a}+\sqrt2)(${a}-\sqrt2)`, true, String.raw`È $${a}^2-2=${a * a - 2}$: prodotto notevole, razionale.`],
+          [String.raw`${a}+\sqrt2`, false, String.raw`Razionale + irrazionale è irrazionale.`],
+          [String.raw`(\sqrt2)^{${2 * b}}`, true, String.raw`$(\sqrt2)^{${2 * b}}=2^{${b}}=${2 ** b}$.`],
+          [String.raw`${a}\sqrt2`, false, String.raw`Se $${a}\sqrt2=q\in\Q$ allora $\sqrt2=q/${a}\in\Q$: assurdo.`],
+          [String.raw`\sqrt{${a * a * 2}}\cdot\sqrt2`, true, String.raw`$\sqrt{${2 * a * a}}\cdot\sqrt2=\sqrt{${4 * a * a}}=${2 * a}$.`],
+          [String.raw`(${a}+\sqrt2)^2`, false, String.raw`$(${a}+\sqrt2)^2=${a * a + 2}+${2 * a}\sqrt2$: razionale + irrazionale.`],
+        ];
+        const [t, rat, why] = R.pick(items);
+        return { type: 'tf',
+          prompt: String.raw`Il numero $${t}$ è razionale.`,
+          answer: rat,
+          explain: why };
+      } },
+    { id: 's01.irrazionali.p.1', type: 'open', level: 3,
+      prompt: String.raw`Enunciare e dimostrare il teorema di irrazionalità di $\sqrt2$.`,
+      answer: String.raw`**Enunciato**: non esiste $x\in\Q$ con $x^2=2$.
+
+**Dimostrazione** (per assurdo): sia $\sqrt2=\frac pq$, $p,q$ interi positivi primi tra loro. Allora $p^2=2q^2$ è pari, quindi $p$ è pari (il quadrato di un dispari è dispari): $p=2m$. Ne segue $q^2=2m^2$, quindi anche $q$ è pari. $p$ e $q$ hanno il fattore comune $2$: assurdo.`,
+      rubric: ['Enunciato corretto', 'Ipotesi per assurdo con frazione ridotta', 'Passaggi $p$ pari e $q$ pari giustificati', 'Contraddizione esplicita'] },
+    { id: 's01.irrazionali.p.2', type: 'order', level: 2,
+      prompt: String.raw`Riordina la dimostrazione del lemma: "se $n^2$ è pari, allora $n$ è pari".`,
+      steps: [
+        String.raw`Dimostro la contronominale: se $n$ è dispari, $n^2$ è dispari.`,
+        String.raw`Sia $n$ dispari: $n=2k+1$ con $k\in\Z$.`,
+        String.raw`Allora $n^2=4k^2+4k+1=2(2k^2+2k)+1$.`,
+        String.raw`Quindi $n^2$ è dispari, e il lemma è dimostrato.`,
+      ],
+      distractors: [String.raw`Sia $n$ pari: $n=2k$, quindi $n^2=4k^2$ è pari.`],
+      explain: String.raw`Il distrattore dimostra l'implicazione inversa ($n$ pari $\Rightarrow n^2$ pari), che è vera ma non è quella richiesta.` },
+    { id: 's01.irrazionali.p.3', type: 'tf', level: 1,
+      prompt: String.raw`Ogni numero con scrittura decimale periodica è razionale.`,
+      answer: true,
+      explain: String.raw`Con il metodo "moltiplico per $10^k$ e sottraggo" si ottiene sempre una frazione. Sono i decimali **non** periodici e infiniti a essere irrazionali.` },
+    { id: 's01.irrazionali.p.4', type: 'mcq', level: 2,
+      prompt: String.raw`Nella dimostrazione di $\sqrt2\notin\Q$, quale passaggio usa il lemma "$n^2$ pari $\Rightarrow n$ pari"?`,
+      options: [
+        String.raw`Sia il passaggio da $p^2=2q^2$ a "$p$ pari", sia quello da $q^2=2m^2$ a "$q$ pari".`,
+        String.raw`Solo il passaggio da $\sqrt2=\frac pq$ a $p^2=2q^2$.`,
+        String.raw`Solo la riduzione ai minimi termini.`,
+        'Nessuno: il lemma non serve.',
+      ],
+      answer: 0,
+      explain: String.raw`Il lemma serve due volte: prima per $p$, poi per $q$. Elevare al quadrato e ridurre la frazione non c'entrano con la parità.` },
+    { id: 's01.irrazionali.p.5', type: 'cloze', level: 1,
+      prompt: 'Completa le definizioni.',
+      text: String.raw`Due insiemi sono equipotenti se esiste una funzione [[0]] tra di essi. Un insieme è numerabile se è equipotente a [[1]].`,
+      blanks: [
+        { options: ['biiettiva', 'iniettiva', 'crescente'], answer: 0 },
+        { options: [String.raw`$\N$`, String.raw`$\R$`, String.raw`$\Q\setminus\Z$`], answer: 0 },
+      ],
+      explain: String.raw`Serve una corrispondenza biunivoca; il modello di riferimento per "numerabile" è $\N$.` },
+    { id: 's01.irrazionali.p.6', type: 'num', level: 2,
+      prompt: String.raw`Scrivi $2{,}\overline{45}$ come frazione ridotta.`,
+      answer: '27/11',
+      explain: String.raw`$0{,}\overline{45}=\frac{45}{99}=\frac5{11}$, quindi $2{,}\overline{45}=2+\frac5{11}=\frac{27}{11}$.` },
+  ],
+  flashcards: [
+    { id: 's01.irrazionali.fc1', kind: 'thm', front: String.raw`Irrazionalità di $\sqrt2$ (enunciato)`, back: String.raw`Non esiste $x\in\Q$ tale che $x^2=2$.` },
+    { id: 's01.irrazionali.fc2', kind: 'dim', front: String.raw`Dimostrazione di $\sqrt2\notin\Q$`, back: String.raw`Per assurdo $\sqrt2=p/q$ ridotta. $p^2=2q^2\Rightarrow p$ pari, $p=2m$. Allora $q^2=2m^2\Rightarrow q$ pari. $p,q$ entrambi pari: contro la riduzione ai minimi termini.` },
+    { id: 's01.irrazionali.fc3', kind: 'thm', front: 'Lemma di parità', back: String.raw`$n^2$ pari $\Rightarrow n$ pari. Per contronominale: $n=2k+1\Rightarrow n^2=2(2k^2+2k)+1$ dispari.` },
+    { id: 's01.irrazionali.fc4', kind: 'def', front: 'Numero irrazionale', back: String.raw`Numero reale non razionale; ha scrittura decimale infinita non periodica (es. $\sqrt2,\pi,e$).` },
+    { id: 's01.irrazionali.fc5', kind: 'metodo', front: 'Da decimale periodico a frazione', back: String.raw`Moltiplico per $10^k$ in modo da allineare le code periodiche e sottraggo. Es. $0{,}\overline{36}$: $99x=36$, $x=\frac4{11}$.` },
+    { id: 's01.irrazionali.fc6', kind: 'def', front: 'Insiemi equipotenti; insieme numerabile', back: String.raw`Equipotenti: esiste una biiezione tra di essi. Numerabile: equipotente a $\N$ (si può elencare come successione).` },
+    { id: 's01.irrazionali.fc7', kind: 'thm', front: String.raw`Numerabilità di $\Z$ e $\Q$; non numerabilità di $\R$`, back: String.raw`$\Z$: elenco $0,-1,1,-2,2,\dots$. $\Q$: zig-zag sulla tabella delle frazioni (Cantor). $\R$ non è numerabile (diagonale di Cantor); quindi neanche $\R\setminus\Q$.` },
+    { id: 's01.irrazionali.fc8', kind: 'errore', front: 'Errori tipici con gli irrazionali', back: String.raw`Prodotto o somma di irrazionali può essere razionale ($\sqrt2\cdot\sqrt2=2$, $\sqrt2+(-\sqrt2)=0$). Un'approssimazione decimale non prova l'irrazionalità.` },
+  ],
+});
