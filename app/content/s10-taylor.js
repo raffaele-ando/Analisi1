@@ -1185,4 +1185,582 @@ Esempio: $\dfrac{x-\sin x}{x^3}$. Con $\sin x=x-\dfrac{x^3}{6}+o(x^3)$ il numera
   ],
 });
 
+// ===========================================================================
+// s10.limiti · Limiti e ordini di infinitesimo con Taylor
+// ===========================================================================
+SKILLS.push({
+  id: 's10.limiti',
+  title: 'Limiti e ordini di infinitesimo con Taylor',
+  summary: String.raw`Calcolare limiti $\frac00$ sviluppando numeratore e denominatore, leggere l'ordine di infinitesimo e la parte principale, evitare la sostituzione sbagliata negli addendi.`,
+  prereq: ['s10.sviluppi', 's06.o'],
+  examRefs: ['Itinere 11/11/2025 · Es. B', 'Appello 10/02/2026 · Es. B', 'Itinere 15/01/2026 · Es. B', 'Appello 11/06/2026 · Es. B'],
+  lessons: [
+    {
+      id: 's10.limiti.L1',
+      title: 'Il limite con lo sviluppo',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il metodo in tre passi',
+          body: String.raw`Se il limite di una frazione dà $\dfrac00$, il risultato sta nei **termini principali** di numeratore e denominatore. Il metodo è:
+
+1. trova l'ordine $k$ del denominatore, cioè il grado del suo primo termine non nullo;
+2. sviluppa il numeratore **fino a $o(x^k)$**, cioè includi il grado $k$;
+3. il limite è il rapporto tra i coefficienti di $x^k$.
+
+Se il numeratore ha ordine maggiore di $k$, il limite è $0$. Se ha ordine minore di $k$, il limite è infinito.`,
+        },
+        {
+          type: 'learn',
+          title: 'Equivalenti sì, ma non nelle somme',
+          body: String.raw`Nei **prodotti** e nei **quozienti** si possono sostituire le funzioni con i loro equivalenti (per esempio $\sin x\sim x$). Nelle **somme** e nelle **differenze** questo non vale in generale: se i termini principali si annullano, la sostituzione cancella proprio ciò che serve.
+
+Esempio: $\dfrac{\sin x-x}{x^3}$. Sostituendo $\sin x\sim x$ al numeratore si ottiene $\dfrac{0}{x^3}$, cioè $0$: sbagliato! Il limite è $-\dfrac16$, come si vede dallo sviluppo $\sin x-x=-\dfrac{x^3}{6}+o(x^3)$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\dfrac{\\sin x-x}{x^3}$',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\sin x-x}{x^3}$.`,
+          steps: [
+            String.raw`Il denominatore è $x^3$, quindi $k=3$: il numeratore va sviluppato fino a $o(x^3)$.`,
+            String.raw`Dallo sviluppo di $\sin x$: $\sin x-x=-\dfrac{x^3}{6}+o(x^3)$.`,
+            String.raw`Quindi $\dfrac{\sin x-x}{x^3}=-\dfrac16+\dfrac{o(x^3)}{x^3}\to-\dfrac16$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\dfrac{\sin x-x}{x^3}=-\dfrac16$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\dfrac{1-\\cos x}{x^2}$',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{1-\cos x}{x^2}$.`,
+          steps: [
+            String.raw`Il denominatore è $x^2$, quindi $k=2$: il numeratore va sviluppato fino a $o(x^2)$.`,
+            {
+              text: String.raw`Dallo sviluppo di $\cos x$: $1-\cos x=\dfrac{x^2}{2}+o(x^2)$. Il coefficiente di $x^2$ è quindi $\dfrac12$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale il coefficiente di $x^2$ in $1-\cos x$?`,
+                answer: '1/2',
+                explain: String.raw`$\cos x=1-\dfrac{x^2}{2}+o(x^2)$, quindi $1-\cos x=\dfrac{x^2}{2}+o(x^2)$: coefficiente $\dfrac12$.`,
+              },
+            },
+            String.raw`Il rapporto dei coefficienti di $x^2$ dà il limite.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\dfrac{1-\cos x}{x^2}=\dfrac12$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.limiti.L1.q1',
+          level: 1,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to0}\dfrac{x-\sin x}{x^2}$?`,
+          options: [
+            String.raw`$0$`,
+            String.raw`$\dfrac16$`,
+            String.raw`$+\infty$`,
+            String.raw`$1$`,
+          ],
+          answer: 0,
+          explain: String.raw`$x-\sin x=\dfrac{x^3}{6}+o(x^3)$: il numeratore è di ordine $3$ e il denominatore di ordine $2$, quindi il rapporto tende a $0$. Il secondo distrattore prende il coefficiente del numeratore e dimentica il grado. Il terzo immagina un numeratore di ordine più basso. Il quarto nasce dalla sostituzione $\sin x\sim x$, che qui non dà nulla di utile.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L1.q2',
+          level: 2,
+          source: 'Itinere 11/11/2025 · Es. B',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\tan x+\log(1+x^2)}{2x}$.`,
+          answer: '1/2',
+          explain: String.raw`$\tan x=x+o(x)$ e $\log(1+x^2)=x^2+o(x^2)=o(x)$. Il numeratore è $x+o(x)$, quindi il rapporto con $2x$ tende a $\dfrac12$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L1.q3',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\sin x-x\cos x}{x^3}$.`,
+          answer: '1/3',
+          explain: String.raw`$\sin x-x\cos x=\left(x-\dfrac{x^3}{6}\right)-x\left(1-\dfrac{x^2}{2}\right)+o(x^3)=\dfrac{x^3}{3}+o(x^3)$. Il limite è $\dfrac13$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.limiti.L1.q4',
+          level: 2,
+          prompt: String.raw`Per calcolare $\displaystyle\lim_{x\to0}\dfrac{\sin x-x}{x^3}$ si può sostituire $\sin x$ con $x$ al numeratore.`,
+          answer: false,
+          explain: String.raw`Sostituendo si ottiene $\dfrac{x-x}{x^3}=0$, che non è il limite. Il limite è $-\dfrac16$: la sostituzione annulla proprio il termine $-\dfrac{x^3}{6}$ che lo determina.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L1.q5',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{e^x-1-x-\frac{x^2}{2}}{x^3}$.`,
+          answer: '1/6',
+          explain: String.raw`$e^x-1-x-\dfrac{x^2}{2}=\dfrac{x^3}{6}+o(x^3)$: il limite è $\dfrac16$.`,
+        },
+        {
+          type: 'problem',
+          id: 's10.limiti.L1.q6',
+          level: 2,
+          source: 'Esercizio di tipo esame',
+          points: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\cos x-e^{-x^2/2}}{x^4}$.`,
+          parts: [
+            {
+              type: 'expr',
+              prompt: String.raw`Sviluppo di $\cos x$ fino a $o(x^4)$ (senza resto).`,
+              answer: '1-x^2/2+x^4/24',
+              vars: ['x'],
+              explain: String.raw`$\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$.`,
+            },
+            {
+              type: 'expr',
+              prompt: String.raw`Sviluppo di $e^{-x^2/2}$ fino a $o(x^4)$ (senza resto).`,
+              answer: '1-x^2/2+x^4/8',
+              vars: ['x'],
+              explain: String.raw`Con $u=-\dfrac{x^2}{2}$: $e^u=1+u+\dfrac{u^2}{2}+o(u^2)$. Qui $u^2=\dfrac{x^4}{4}$, quindi $1-\dfrac{x^2}{2}+\dfrac{x^4}{8}$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Il limite $\displaystyle\lim_{x\to0}\dfrac{\cos x-e^{-x^2/2}}{x^4}$.`,
+              answer: '-1/12',
+              explain: String.raw`Il numeratore è $\left(\dfrac{x^4}{24}\right)-\left(\dfrac{x^4}{8}\right)+o(x^4)=-\dfrac{x^4}{12}+o(x^4)$, perché i termini in $x^2$ si cancellano. Il limite è $-\dfrac{1}{12}$.`,
+            },
+          ],
+          solution: String.raw`Il numeratore ha sviluppo $\left(1-\dfrac{x^2}{2}+\dfrac{x^4}{24}\right)-\left(1-\dfrac{x^2}{2}+\dfrac{x^4}{8}\right)+o(x^4)=-\dfrac{x^4}{12}+o(x^4)$. Dividendo per $x^4$ si ottiene $-\dfrac{1}{12}$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L1.q7',
+          level: 2,
+          source: 'Itinere 11/11/2025 · Es. B',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}n\left(\sqrt{1+\dfrac1n}-1\right)$.`,
+          answer: '1/2',
+          explain: String.raw`Con $t=\dfrac1n\to0$: $\sqrt{1+t}=1+\dfrac t2+o(t)$. Quindi $n\left(\dfrac{1}{2n}+o\left(\dfrac1n\right)\right)\to\dfrac12$.`,
+        },
+      ],
+    },
+    {
+      id: 's10.limiti.L2',
+      title: 'Ordine di infinitesimo e parte principale',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Ordine e parte principale',
+          body: String.raw`Un infinitesimo $f$ per $x\to0$ ha **ordine** $k$ se $f(x)=c\,x^k+o(x^k)$ con $c\neq0$. Il termine $c\,x^k$ è la **parte principale**. Per trovarlo basta lo sviluppo: l'ordine è il grado del primo termine non nullo.
+
+Esempi: $1-\cos x=\dfrac{x^2}{2}+o(x^2)$ ha ordine $2$ e parte principale $\dfrac{x^2}{2}$. Il $\sin x-x=-\dfrac{x^3}{6}+o(x^3)$ ha ordine $3$ e parte principale $-\dfrac{x^3}{6}$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Cancellazioni e ordini',
+          body: String.raw`Gli ordini si combinano così:
+- **somma**: se gli ordini sono diversi vince quello più basso: $x^2+x^3$ ha ordine $2$;
+- **prodotto**: gli ordini si sommano: $x^2\cdot x^3=x^5$ ha ordine $5$;
+- **differenza con la stessa parte principale**: i primi termini si cancellano e l'ordine può salire. Per esempio $\sin^2x-x^2$ ha ordine $4$, non $2$.
+
+Per questo, quando la parte principale si annulla, bisogna sviluppare più a fondo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: ordine di $\\sin^2x-x^2$',
+          problem: String.raw`Di che ordine è l'infinitesimo $\sin^2x-x^2$ per $x\to0$?`,
+          steps: [
+            String.raw`Dallo sviluppo $\sin x=x-\dfrac{x^3}{6}+o(x^3)$ si ottiene $\sin^2x=\left(x-\dfrac{x^3}{6}\right)^2+o(x^4)=x^2-\dfrac{x^4}{3}+o(x^4)$.`,
+            String.raw`Quindi $\sin^2x-x^2=-\dfrac{x^4}{3}+o(x^4)$: i termini in $x^2$ si cancellano.`,
+            String.raw`Il primo termine non nullo è in $x^4$: l'ordine è $4$ e la parte principale è $-\dfrac{x^4}{3}$.`,
+          ],
+          result: String.raw`$\sin^2x-x^2=-\dfrac{x^4}{3}+o(x^4)$: ordine $4$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: ordine di $e^x-1-x$',
+          problem: String.raw`Di che ordine è l'infinitesimo $e^x-1-x$ per $x\to0$? Trova anche la parte principale.`,
+          steps: [
+            String.raw`Dallo sviluppo di $e^x$: $e^x=1+x+\dfrac{x^2}{2}+o(x^2)$.`,
+            {
+              text: String.raw`Quindi $e^x-1-x=\dfrac{x^2}{2}+o(x^2)$: il primo termine non nullo ha grado $2$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Di che ordine è $e^x-1-x$ per $x\to0$?`,
+                answer: '2',
+                explain: String.raw`Costante e termine in $x$ si cancellano, il primo termine non nullo è $\dfrac{x^2}{2}$: ordine $2$.`,
+              },
+            },
+            String.raw`La parte principale è $\dfrac{x^2}{2}$.`,
+          ],
+          result: String.raw`$e^x-1-x=\dfrac{x^2}{2}+o(x^2)$: ordine $2$, parte principale $\dfrac{x^2}{2}$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.limiti.L2.q1',
+          level: 1,
+          prompt: String.raw`Di che ordine è l'infinitesimo $\tan x-x$ per $x\to0$?`,
+          options: [
+            String.raw`$1$`,
+            String.raw`$2$`,
+            String.raw`$3$`,
+            String.raw`$4$`,
+          ],
+          answer: 2,
+          explain: String.raw`$\tan x=x+\dfrac{x^3}{3}+o(x^3)$, quindi $\tan x-x=\dfrac{x^3}{3}+o(x^3)$: ordine $3$. Il grado $1$ è sbagliato: il termine $x$ si cancella. Il grado $2$ è sbagliato perché non c'è un termine $x^2$ nello sviluppo di $\tan x$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L2.q2',
+          level: 2,
+          prompt: String.raw`Di che ordine è l'infinitesimo $1-\cos x-\dfrac{x^2}{2}$ per $x\to0$?`,
+          answer: '4',
+          explain: String.raw`$\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$, quindi $1-\cos x-\dfrac{x^2}{2}=-\dfrac{x^4}{24}+o(x^4)$: ordine $4$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.limiti.L2.q3',
+          level: 2,
+          prompt: String.raw`Scrivi la parte principale di $\sqrt{1+x}-1-\dfrac x2$ per $x\to0$.`,
+          answer: '-x^2/8',
+          vars: ['x'],
+          explain: String.raw`$\sqrt{1+x}=1+\dfrac x2-\dfrac{x^2}{8}+o(x^2)$, quindi $\sqrt{1+x}-1-\dfrac x2=-\dfrac{x^2}{8}+o(x^2)$. La parte principale è $-\dfrac{x^2}{8}$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.limiti.L2.q4',
+          level: 2,
+          prompt: String.raw`Se $f$ ha ordine $2$ e $g$ ha ordine $3$ per $x\to0$, allora $f+g$ ha ordine $2$ con la stessa parte principale di $f$.`,
+          answer: true,
+          explain: String.raw`Nella somma vince il termine di ordine più basso. Il termine di grado $3$ è trascurabile rispetto a $x^2$, quindi la parte principale resta quella di $f$.`,
+        },
+        {
+          type: 'order',
+          id: 's10.limiti.L2.q5',
+          level: 2,
+          prompt: String.raw`Ordina i passi per trovare l'ordine di $1-\cos x-\dfrac{x^2}{2}$.`,
+          steps: [
+            String.raw`Scrivo lo sviluppo di $\cos x$ fino a $o(x^4)$: $\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$.`,
+            String.raw`Sottraggo: $1-\cos x-\dfrac{x^2}{2}=-\dfrac{x^4}{24}+o(x^4)$.`,
+            String.raw`Il primo termine non nullo è in $x^4$: ordine $4$, parte principale $-\dfrac{x^4}{24}$.`,
+          ],
+          distractors: [
+            String.raw`Dichiaro ordine $2$ perché compare un termine $x^2$.`,
+            String.raw`Sostituisco $\cos x\sim1$ e concludo che la differenza è $0$.`,
+          ],
+          explain: String.raw`Si sviluppa fino al grado in cui compare un termine non nullo dopo le cancellazioni. Il termine $x^2$ non appare perché si cancella con $\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'cloze',
+          id: 's10.limiti.L2.q6',
+          level: 2,
+          text: String.raw`Se $f(x)=c\,x^k+o(x^k)$ con $c\neq0$, allora $f$ è infinitesima di ordine [[0]] e la sua parte principale è [[1]].`,
+          blanks: [
+            { options: [String.raw`$k$`, String.raw`$k+1$`, String.raw`$c$`], answer: 0 },
+            { options: [String.raw`$c\,x^k$`, String.raw`$c$`, String.raw`$x^k$`], answer: 0 },
+          ],
+          explain: String.raw`L'ordine è l'esponente $k$ del primo termine non nullo. La parte principale è il termine completo $c\,x^k$, non solo il coefficiente.`,
+        },
+        {
+          type: 'open',
+          id: 's10.limiti.L2.q7',
+          level: 2,
+          points: 2,
+          prompt: String.raw`Spiega perché $\cos x-1+\dfrac{x^2}{2}$ ha ordine maggiore di $2$, nonostante $\cos x-1$ abbia ordine $2$.`,
+          answer: String.raw`Perché il termine di grado $2$ si cancella: $\cos x-1=-\dfrac{x^2}{2}+o(x^2)$, quindi $\cos x-1+\dfrac{x^2}{2}=o(x^2)$. Il primo termine non nullo compare a un grado più alto, $\dfrac{x^4}{24}$. La cancellazione aumenta l'ordine.`,
+          rubric: [
+            'Il termine di grado 2 si cancella con x^2/2',
+            'Il resto è o(x^2), quindi l ordine sale',
+            'Il primo termine non nullo è di grado 4',
+          ],
+        },
+      ],
+    },
+    {
+      id: 's10.limiti.L3',
+      title: 'Limiti d\'esame con Taylor',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quanti termini servono quando si cancellano',
+          body: String.raw`Nei limiti d'esame il denominatore ha spesso ordine alto, perché il numeratore è una differenza con la stessa parte principale. Quando la parte principale si cancella, bisogna sviluppare ciascun addendo fino al primo grado in cui restano diversi.
+
+Se il denominatore è $x^m$, il numeratore va sviluppato fino a $o(x^m)$. Se il denominatore è $x^2$ moltiplicato per una parentesi $P(x)$, basta sviluppare $P(x)$ fino a $o(x^{m-2})$. Non fermarti al primo termine che appare: spesso è uguale nei due addendi e si cancella.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: limite d\'esame con $\\log(1+\\sqrt x)$',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0^+}\dfrac{x\,\big(1-\cos(\log(1+\sqrt x))\big)}{x-\sin(x+x^2)}$.`,
+          steps: [
+            String.raw`Numeratore: $1-\cos\big(\log(1+\sqrt x)\big)=\dfrac x2+o(x)$, come visto nella lezione sugli sviluppi composti. Quindi $x\cdot\big(\dots\big)=\dfrac{x^2}{2}+o(x^2)$.`,
+            String.raw`Denominatore: $\sin(x+x^2)=(x+x^2)+o(x^2)$, perché $o\big((x+x^2)^2\big)=o(x^2)$. Quindi $x-\sin(x+x^2)=-x^2+o(x^2)$.`,
+            String.raw`Rapporto: dividendo numeratore e denominatore per $x^2$ si ottiene $\dfrac{\frac12+o(1)}{-1+o(1)}\to-\dfrac12$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0^+}\dfrac{x\,\big(1-\cos(\log(1+\sqrt x))\big)}{x-\sin(x+x^2)}=-\dfrac12$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\dfrac{f(x)}{\\log(1-x^2)}$',
+          problem: String.raw`Sia $f$ derivabile due volte in $0$, con $f(0)=f'(0)=0$ e $f''(0)=1$. Calcola $\displaystyle\lim_{x\to0}\dfrac{f(x)}{\log(1-x^2)}$.`,
+          steps: [
+            String.raw`Per Taylor con resto di Peano di grado $2$: $f(x)=\dfrac{f''(0)}{2}x^2+o(x^2)=\dfrac{x^2}{2}+o(x^2)$.`,
+            {
+              text: String.raw`Il denominatore: $\log(1-x^2)=-x^2+o(x^2)$, dallo sviluppo $\log(1+t)=t+o(t)$ con $t=-x^2$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Scrivi $\log(1-x^2)$ fino a $o(x^2)$ (senza resto).`,
+                answer: '-x^2',
+                vars: ['x'],
+                explain: String.raw`$\log(1+t)=t+o(t)$ con $t=-x^2$: $\log(1-x^2)=-x^2+o(x^2)$.`,
+              },
+            },
+            String.raw`Il rapporto: $\dfrac{\frac{x^2}{2}+o(x^2)}{-x^2+o(x^2)}\to-\dfrac12$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\dfrac{f(x)}{\log(1-x^2)}=-\dfrac12$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.limiti.L3.q1',
+          level: 3,
+          source: 'Itinere 15/01/2026 · Es. B',
+          prompt: String.raw`Per $x\to0$, qual è l'ordine di $1+x\sin 2x-\cos x$ e la sua parte principale?`,
+          options: [
+            String.raw`ordine $1$`,
+            String.raw`ordine $2$, parte principale $\dfrac{x^2}{2}$`,
+            String.raw`ordine $3$`,
+            String.raw`ordine $2$, parte principale $\dfrac52x^2$`,
+          ],
+          answer: 3,
+          explain: String.raw`$x\sin 2x=2x^2+o(x^2)$ e $1-\cos x=\dfrac{x^2}{2}+o(x^2)$. La somma è $\dfrac52x^2+o(x^2)$: ordine $2$. Il secondo distrattore dimentica $x\sin 2x$. Il primo e il terzo sbagliano il grado.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L3.q2',
+          level: 3,
+          source: 'Itinere 15/01/2026 · Es. B',
+          prompt: String.raw`Per $x\to0^+$, di che ordine è l'infinitesimo $1+\sqrt{x}\,\sin 2x-\cos x$?`,
+          answer: '3/2',
+          explain: String.raw`$\sqrt x\,\sin 2x\sim2x^{3/2}$, mentre $1-\cos x\sim\dfrac{x^2}{2}$ è di ordine $2$. Poiché $\dfrac32<2$, domina il primo termine: ordine $\dfrac32$, parte principale $2x^{3/2}$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.limiti.L3.q3',
+          level: 3,
+          prompt: String.raw`Scrivi la parte principale di $1+\sqrt{x}\,\sin 2x-\cos x$ per $x\to0^+$.`,
+          answer: '2*x^(3/2)',
+          vars: ['x'],
+          explain: String.raw`$\sqrt x\,\sin 2x=\sqrt x\,(2x+o(x))=2x^{3/2}+o(x^{3/2})$. Il termine $1-\cos x$ è di ordine $2$, quindi trascurabile. La parte principale è $2x^{3/2}$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.limiti.L3.q4',
+          level: 2,
+          prompt: String.raw`Se $f(x)=x^2+o(x^3)$ e $g(x)=x^2+x^3$, allora $\displaystyle\lim_{x\to0}\dfrac{f(x)}{g(x)}=1$.`,
+          answer: true,
+          explain: String.raw`$\dfrac{f}{g}=\dfrac{x^2+o(x^3)}{x^2(1+x)}=\dfrac{1+o(x)}{1+x}\to1$: il resto $o(x^3)$ diventa $o(x)$ dopo la divisione per $x^2$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.limiti.L3.q5',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\cos x-e^{x^2}}{x^2}$.`,
+          answer: '-3/2',
+          explain: String.raw`$\cos x=1-\dfrac{x^2}{2}+o(x^2)$ e $e^{x^2}=1+x^2+o(x^2)$. Il numeratore è $-\dfrac{3}{2}x^2+o(x^2)$, quindi il limite è $-\dfrac32$.`,
+        },
+        {
+          type: 'problem',
+          id: 's10.limiti.L3.q6',
+          level: 3,
+          source: 'Appello 10/02/2026 · Es. B',
+          points: 4,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}\dfrac{x^4e^x-x^3\log(1+x)-\frac32x^5}{x^2\left(\frac12\sin x^2-1+\cos x\right)}$.`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`Coefficiente di $x^5$ in $x^4e^x-x^3\log(1+x)$.`,
+              answer: '3/2',
+              explain: String.raw`$x^4e^x=x^4+x^5+\dfrac{x^6}{2}+o(x^6)$ e $x^3\log(1+x)=x^4-\dfrac{x^5}{2}+\dfrac{x^6}{3}+o(x^6)$. Il coefficiente di $x^5$ è $1+\dfrac12=\dfrac32$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Coefficiente di $x^6$ in $x^4e^x-x^3\log(1+x)-\frac32x^5$.`,
+              answer: '1/6',
+              explain: String.raw`Il termine $x^5$ si cancella con $-\dfrac32x^5$. Restano $x^6$ con coefficiente $\dfrac12-\dfrac13=\dfrac16$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Coefficiente di $x^4$ in $\frac12\sin x^2-1+\cos x$.`,
+              answer: '1/24',
+              explain: String.raw`$\dfrac12\sin x^2=\dfrac{x^2}{2}+o(x^4)$ non ha termine in $x^4$. $\cos x-1=-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$. I termini in $x^2$ si cancellano e resta $\dfrac{x^4}{24}$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Il valore del limite.`,
+              answer: '4',
+              explain: String.raw`Numeratore: $\dfrac{x^6}{6}+o(x^6)$. Denominatore: $x^2\left(\dfrac{x^4}{24}+o(x^4)\right)=\dfrac{x^6}{24}+o(x^6)$. Il rapporto è $\dfrac{1/6}{1/24}=4$.`,
+            },
+          ],
+          solution: String.raw`Il numeratore ha sviluppo $\dfrac{x^6}{6}+o(x^6)$, perché i termini in $x^4$ e in $x^5$ si cancellano. Il denominatore è $x^2\left(\dfrac{x^4}{24}+o(x^4)\right)=\dfrac{x^6}{24}+o(x^6)$, perché la parte in $x^2$ dentro la parentesi si annulla. Il limite è $\dfrac{1/6}{1/24}=4$.`,
+        },
+        {
+          type: 'open',
+          id: 's10.limiti.L3.q7',
+          level: 3,
+          points: 2,
+          prompt: String.raw`Spiega perché nel numeratore $\sin x-x$ non si può sostituire $\sin x$ con $x$, anche se $\sin x\sim x$.`,
+          answer: String.raw`$\sin x\sim x$ dice che la differenza $\sin x-x$ è trascurabile rispetto a $x$: i due addendi hanno la stessa parte principale, che si cancella. Sostituendo, la differenza diventa $0$ e si perde il termine $-\dfrac{x^3}{6}$ che determina il limite. Serve lo sviluppo fino a $o(x^3)$, cioè fino al grado del denominatore.`,
+          rubric: [
+            'Sin x ~ x non descrive la differenza sin x - x',
+            'La parte principale dei due addendi si cancella',
+            'Serve lo sviluppo fino al grado del denominatore',
+          ],
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's10.limiti.g1', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\sin(${H.coef(a)}x)-(${H.coef(a)}x)}{x^3}$.`,
+          answer: `${-(a ** 3)}/6`,
+          explain: String.raw`Con $u=${H.coef(a)}x$: $\sin u-u=-\dfrac{u^3}{6}+o(u^3)$ e $u^3=(${a})^3x^3$. Il limite è $-\dfrac{(${a})^3}{6}=\dfrac{${-(a ** 3)}}{6}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.limiti.g2', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{1-\cos(${H.coef(a)}x)}{x^2}$.`,
+          answer: `${a * a}/2`,
+          explain: String.raw`$1-\cos(${H.coef(a)}x)=\dfrac{(${a})^2x^2}{2}+o(x^2)$. Il limite è $\dfrac{${a * a}}{2}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.limiti.g3', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{e^{${H.coef(a)}x}-1-(${H.coef(a)}x)}{x^2}$.`,
+          answer: `${a * a}/2`,
+          explain: String.raw`Con $u=(${a})x$: $e^u-1-u=\dfrac{u^2}{2}+o(u^2)$, e $u^2=(${a * a})x^2$. Il limite è $\dfrac{${a * a}}{2}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.limiti.g4', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{\tan(${H.coef(a)}x)-(${H.coef(a)}x)}{x^3}$.`,
+          answer: `${a ** 3}/3`,
+          explain: String.raw`Con $u=${H.coef(a)}x$: $\tan u-u=\dfrac{u^3}{3}+o(u^3)$ e $u^3=(${a})^3x^3$. Il limite è $\dfrac{(${a})^3}{3}=\dfrac{${a ** 3}}{3}$.`,
+        };
+      },
+    },
+    {
+      id: 's10.limiti.p1', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{x^2}{1-\cos x}$.`,
+      answer: '2',
+      explain: String.raw`$1-\cos x=\dfrac{x^2}{2}+o(x^2)$, quindi il rapporto tende a $2$.`,
+    },
+    {
+      id: 's10.limiti.p2', type: 'mcq', level: 2,
+      prompt: String.raw`Di che ordine è l'infinitesimo $\log(1+x^2)-\sin^2x$ per $x\to0$?`,
+      options: [
+        String.raw`$2$`,
+        String.raw`$3$`,
+        String.raw`$4$`,
+        String.raw`$6$`,
+      ],
+      answer: 2,
+      explain: String.raw`$\log(1+x^2)=x^2-\dfrac{x^4}{2}+o(x^4)$ e $\sin^2x=x^2-\dfrac{x^4}{3}+o(x^4)$. La differenza è $-\dfrac{x^4}{6}+o(x^4)$: ordine $4$. Il grado $2$ dimentica la cancellazione.`,
+    },
+    {
+      id: 's10.limiti.p3', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{e^{x^2}-\cos x}{x^2}$.`,
+      answer: '3/2',
+      explain: String.raw`$e^{x^2}=1+x^2+o(x^2)$ e $\cos x=1-\dfrac{x^2}{2}+o(x^2)$. Il numeratore è $\dfrac32x^2+o(x^2)$, quindi il limite è $\dfrac32$.`,
+    },
+    {
+      id: 's10.limiti.p4', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi la parte principale di $\sqrt{1+2x}-1-x$ per $x\to0$.`,
+      answer: '-x^2/2',
+      vars: ['x'],
+      explain: String.raw`$\sqrt{1+t}=1+\dfrac t2-\dfrac{t^2}{8}+o(t^2)$ con $t=2x$: $\sqrt{1+2x}=1+x-\dfrac{x^2}{2}+o(x^2)$. La parte principale è $-\dfrac{x^2}{2}$.`,
+    },
+    {
+      id: 's10.limiti.p5', type: 'tf', level: 1,
+      prompt: String.raw`Se $f\sim g$ per $x\to0$, allora $f-g=o(f)$.`,
+      answer: true,
+      explain: String.raw`$f\sim g$ significa $f=g(1+o(1))$. Quindi $f-g=g\cdot o(1)$, che è $o(g)$ e dunque $o(f)$.`,
+    },
+    {
+      id: 's10.limiti.p6', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per calcolare $\displaystyle\lim_{x\to0}\dfrac{\cos x-1}{x^2}$.`,
+      steps: [
+        String.raw`Sviluppo il numeratore: $\cos x-1=-\dfrac{x^2}{2}+o(x^2)$.`,
+        String.raw`Divido per $x^2$: $\dfrac{\cos x-1}{x^2}=-\dfrac12+o(1)$.`,
+        String.raw`Passo al limite: il valore è $-\dfrac12$.`,
+      ],
+      distractors: [
+        String.raw`Sostituisco $\cos x\sim1$ al numeratore, ottenendo $0$.`,
+        String.raw`Prendo il coefficiente di $x$ nel numeratore come limite.`,
+      ],
+      explain: String.raw`Il numeratore va sviluppato fino al grado del denominatore. Sostituire $\cos x$ con $1$ annulla il numeratore e fa perdere il limite.`,
+    },
+    {
+      id: 's10.limiti.p7', type: 'num', level: 2,
+      prompt: String.raw`Di che ordine è l'infinitesimo $\tan x-\sin x$ per $x\to0$?`,
+      answer: '3',
+      explain: String.raw`$\tan x=x+\dfrac{x^3}{3}+o(x^3)$ e $\sin x=x-\dfrac{x^3}{6}+o(x^3)$. La differenza è $\dfrac{x^3}{2}+o(x^3)$: ordine $3$.`,
+    },
+    {
+      id: 's10.limiti.p8', type: 'match', level: 1,
+      prompt: String.raw`Abbina ogni infinitesimo al suo ordine per $x\to0$.`,
+      pairs: [
+        [String.raw`$1-\cos x$`, String.raw`ordine $2$`],
+        [String.raw`$x-\sin x$`, String.raw`ordine $3$`],
+        [String.raw`$e^x-1$`, String.raw`ordine $1$`],
+      ],
+      explain: String.raw`L'ordine è il grado del primo termine non nullo dello sviluppo: $\dfrac{x^2}{2}$, $\dfrac{x^3}{6}$, $x$.`,
+    },
+    {
+      id: 's10.limiti.p9', type: 'cloze', level: 2,
+      text: String.raw`Il limite $\displaystyle\lim_{x\to0}\dfrac{\cos x-1}{x^2}$ vale [[0]], perché il numeratore è di ordine [[1]], come il denominatore.`,
+      blanks: [
+        { options: [String.raw`$-\dfrac12$`, String.raw`$\dfrac12$`, String.raw`$0$`], answer: 0 },
+        { options: [String.raw`$2$`, String.raw`$1$`, String.raw`$3$`], answer: 0 },
+      ],
+      explain: String.raw`Il numeratore è $-\dfrac{x^2}{2}+o(x^2)$: ordine $2$ e coefficiente $-\dfrac12$. Il denominatore è $x^2$, quindi il limite è $-\dfrac12$.`,
+    },
+    {
+      id: 's10.limiti.p10', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Perché per $\dfrac{\sin x-x}{x^3}$ non si può scrivere $\sin x\sim x$ nel numeratore?`,
+      answer: String.raw`Perché i due addendi hanno la stessa parte principale $x$, che si cancella. Sostituendo, il numeratore diventa $0$ e si perde il termine $-\dfrac{x^3}{6}$ che determina il limite.`,
+      rubric: [
+        'La parte principale x si cancella',
+        'Sostituendo si perde il termine -x^3/6',
+      ],
+    },
+    {
+      id: 's10.limiti.p11', type: 'num', level: 3,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{x^2-\sin^2x}{x^4}$.`,
+      answer: '1/3',
+      explain: String.raw`$\sin^2x=x^2-\dfrac{x^4}{3}+o(x^4)$, quindi $x^2-\sin^2x=\dfrac{x^4}{3}+o(x^4)$. Il limite è $\dfrac13$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's10.limiti.fc1', kind: 'metodo', front: String.raw`Limite $\dfrac00$ con Taylor: i passi`, back: String.raw`1) Trova l'ordine $k$ del denominatore. 2) Sviluppa il numeratore fino a $o(x^k)$. 3) Il limite è il rapporto dei coefficienti di $x^k$.` },
+    { id: 's10.limiti.fc2', kind: 'errore', front: String.raw`Sostituire un equivalente in una somma`, back: String.raw`Non si può se gli addendi hanno la stessa parte principale: la sostituzione cancella il termine che determina il limite. Esempio: $\sin x-x$ non è $0$ ma $-\dfrac{x^3}{6}+o(x^3)$.` },
+    { id: 's10.limiti.fc3', kind: 'formula', front: String.raw`Infinitesimi notevoli come differenze`, back: String.raw`$1-\cos x\sim\dfrac{x^2}{2}$; $\sin x-x\sim-\dfrac{x^3}{6}$; $\tan x-x\sim\dfrac{x^3}{3}$; $e^x-1-x\sim\dfrac{x^2}{2}$.` },
+    { id: 's10.limiti.fc4', kind: 'def', front: String.raw`Ordine di un infinitesimo e parte principale`, back: String.raw`$f$ ha ordine $k$ se $f(x)=c\,x^k+o(x^k)$ con $c\neq0$. Il termine $c\,x^k$ è la parte principale.` },
+    { id: 's10.limiti.fc5', kind: 'thm', front: String.raw`Limite del rapporto con Taylor`, back: String.raw`Se $f=c\,x^k+o(x^k)$ e $g=d\,x^k+o(x^k)$ con $d\neq0$, allora $\dfrac fg\to\dfrac cd$.` },
+    { id: 's10.limiti.fc6', kind: 'metodo', front: String.raw`Ordine di una somma o di una differenza`, back: String.raw`Nella somma vince l'ordine più basso. Se le parti principali si cancellano, l'ordine sale: bisogna sviluppare di più.` },
+    { id: 's10.limiti.fc7', kind: 'errore', front: String.raw`Numeratore sviluppato troppo poco`, back: String.raw`Se lo sviluppo si ferma prima di $x^k$, il termine decisivo finisce nel resto $o(x^k)$ e il limite non si vede.` },
+    { id: 's10.limiti.fc8', kind: 'metodo', front: String.raw`Ordine di un prodotto`, back: String.raw`Gli ordini si sommano: se $f\sim a\,x^m$ e $g\sim b\,x^n$, allora $fg\sim ab\,x^{m+n}$.` },
+  ],
+});
+
 // @@END
