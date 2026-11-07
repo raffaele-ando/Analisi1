@@ -424,7 +424,7 @@ $$\sum_{n=1}^{+\infty}\frac1{n(n+1)}=\sum_{n=1}^{+\infty}\left(\frac1n-\frac1{n+
           type: 'num',
           prompt: String.raw`Calcola $\displaystyle\sum_{n=${n0}}^{+\infty}\frac{${k}}{${den}}$.`,
           answer: qstr(S),
-          explain: String.raw`Il denominatore è $${fac(a)}${fac(a + d)}$, quindi $\frac{${k}}{${fac(a)}${fac(a + d)}}=${kd === '1' ? '' : kd}\left(\frac1{${nk(a)}}-\frac1{${nk(a + d)}}\right)$ (fratti semplici). È telescopica: i termini si cancellano a distanza ${d}, e da $n=${n0}$ restano i primi ${d} positivi: $${kept.join('+')}$. Somma $=${kd === '1' ? '' : kd + '\\cdot'}${qtex(tail)}=${qtex(S)}$.`,
+          explain: String.raw`Il denominatore è $${fac(a)}${fac(a + d)}$, quindi $\frac{${k}}{${fac(a)}${fac(a + d)}}=${kd === '1' ? '' : kd}\left(\frac1{${nk(a)}}-\frac1{${nk(a + d)}}\right)$ (fratti semplici). È telescopica: i termini si cancellano a distanza ${d}, e da $n=${n0}$ restano i primi ${d} positivi: $${kept.join('+')}$. Somma $=${kd === '1' ? '' : kd + '\\cdot' + qtex(tail) + '='}${qtex(S)}$.`,
         };
       },
     },
