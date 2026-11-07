@@ -254,7 +254,7 @@ Se esiste il massimo, allora $\max=\sup$; se esiste il minimo, allora $\min=\inf
           type: 'num',
           prompt: String.raw`Sia $a_n=\dfrac{${H.coef(p)}n${H.signed(q)}}{${H.coef(r)}n${H.signed(s)}}$. Calcola $a_{${k}}$.`,
           answer: `(${p}*${k}+${q})/(${r}*${k}+${s})`,
-          explain: String.raw`Sostituisco $n=${k}$: numeratore $\dfrac{${numV}}{${denV}}$. Quindi $a_{${k}}=\dfrac{${numV}}{${denV}}$.`,
+          explain: String.raw`Sostituisco $n=${k}$: numeratore $${numV}$, denominatore $${denV}$. Quindi $a_{${k}}=\dfrac{${numV}}{${denV}}$.`,
         };
       } },
     { id: 's04.def.p-maxmin', type: 'gen', level: 2,
@@ -587,9 +587,9 @@ Caso utile: se $|c_n|\le b_n$ e $b_n\to0$, allora $c_n\to0$. Ad esempio $\left|\
         const p = R.nz(-6, 6), s = R.nz(-6, 6), q = R.int(-5, 5), r = R.int(-5, 5), t = R.nz(-5, 5);
         return {
           type: 'num',
-          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${H.poly([p, q, r], 'n')}}{${H.poly([s, t], 'n')}}$.`,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${H.poly([p, q, r], 'n')}}{${H.poly([s, 0, t], 'n')}}$.`,
           answer: `(${p})/(${s})`,
-          explain: String.raw`Il termine di grado massimo domina: numeratore $${p}n^{2}$, denominatore $${s}n^{2}$. Il limite è $\dfrac{${p}}{${s}}$.`,
+          explain: String.raw`Domina il termine di grado $2$: il numeratore ha coefficiente $${p}$ e il denominatore coefficiente $${s}$. Il limite è $\dfrac{${p}}{${s}}$.`,
         };
       } },
     { id: 's04.limiti.p-grado', type: 'gen', level: 2,
@@ -991,7 +991,7 @@ Questo è $<\dfrac12$ definitivamente (basta $n+1>2b$). Quindi da un certo $N$ i
           type: 'num',
           prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(1${sg}\dfrac{${ab}}{n}\right)^{${bn}}$.`,
           answer: `e^(${a * b})`,
-          explain: String.raw`Con $k=${a}$ e esponente $${bn}$: $\left(1+\dfrac{k}{n}\right)^{mn}\to e^{km}=e^{${a * b}}$.`,
+          explain: String.raw`Qui $k=${a}$ e l'esponente è $${bn}$: $\left(1+\dfrac{k}{n}\right)^{mn}\to e^{km}=e^{${a * b}}$.`,
         };
       } },
     { id: 's04.monotone.p-esp', type: 'gen', level: 2,
