@@ -516,3 +516,499 @@ Se $h$ compare anche dentro l'esponenziale o il seno, porta il coefficiente fuor
     },
   ],
 });
+
+// ===========================================================================
+// s08.regole · Algebra delle derivate, funzione composta
+// ===========================================================================
+SKILLS.push({
+  id: 's08.regole',
+  title: 'Regole di derivazione',
+  summary: String.raw`Derivi somme, prodotti, quozienti e funzioni composte senza ricorrere alla definizione, e riconosci gli errori tipici.`,
+  prereq: ['s08.def'],
+  examRefs: ['Itinere 11/11/2025 · Parte B', 'Appello 15/01/2026 · Parte B', 'Appello 10/02/2026 · Parte B', 'Appello 03/09/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's08.regole.L1',
+      title: 'Somme, costanti e potenze',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Le regole di base',
+          body: String.raw`Con la definizione si ottengono subito alcune regole. Se $f$ e $g$ sono derivabili in $x$ e $c\in\R$:
+>* **Linearità.** $D(f+g)=f'+g'$ e $D(cf)=c\,f'$. La derivata si distribuisce su somme e costanti.
+>* **Potenze.** $D(x^n)=n\,x^{n-1}$ per ogni $n$ intero; $D(\sqrt{x})=\frac{1}{2\sqrt{x}}$ per $x>0$.
+>* **Costanti.** $D(c)=0$: una costante non cambia mai.
+
+Esempio: $D(3x^2-5x+7)=3\cdot2x-5\cdot1+0=6x-5$. Il termine $7$ sparisce, il termine $-5x$ diventa $-5$.`,
+        },
+        {
+          id: 's08.regole.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Quanto vale $D(x^2\cdot x^3)$?`,
+          options: [
+            String.raw`$5x^4$`,
+            String.raw`$6x^3$`,
+            String.raw`$x^5$`,
+            String.raw`$4x^4$`,
+          ],
+          answer: 0,
+          explain: String.raw`Prima semplifica: $x^2\cdot x^3=x^5$, quindi $D(x^5)=5x^4$. Il distrattore $6x^3$ moltiplica le derivate, $(2x)(3x^2)$: è l'errore più comune, e non è una regola (la derivata del prodotto ha una forma diversa, vedi la lezione successiva). $x^5$ è la funzione, non la sua derivata. $4x^4$ sbaglia l'esponente.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: polinomio',
+          problem: String.raw`Calcola $f'(x)$ per $f(x)=x^5-3x^2+4x$.`,
+          steps: [
+            String.raw`Applica la linearità: $D(x^5-3x^2+4x)=D(x^5)-3D(x^2)+4D(x)$.`,
+            String.raw`Usa $D(x^n)=nx^{n-1}$ per ogni termine: $D(x^5)=5x^4$, $D(x^2)=2x$, $D(x)=1$.`,
+            String.raw`Metti insieme: $5x^4-3\cdot2x+4\cdot1=5x^4-6x+4$.`,
+          ],
+          result: String.raw`$f'(x)=5x^4-6x+4$.`,
+        },
+        {
+          id: 's08.regole.L1.q2',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=x^4-3x^2+5x-1$.`,
+          answer: '4*x^3-6*x+5',
+          vars: ['x'],
+          explain: String.raw`Ogni termine si deriva separatamente: $x^4\to4x^3$, $-3x^2\to-6x$, $5x\to5$, la costante $-1$ sparisce. Il risultato è $4x^3-6x+5$.`,
+        },
+        {
+          id: 's08.regole.L1.q3',
+          type: 'num',
+          prompt: String.raw`Qual è $f'(2)$ se $f(x)=2x^3-x^2+4$?`,
+          answer: '20',
+          explain: String.raw`$f'(x)=6x^2-2x$, quindi $f'(2)=6\cdot4-2\cdot2=24-4=20$. Calcola prima la derivata e solo dopo sostituisci $x=2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Radici ed esponenti negativi',
+          body: String.raw`La regola delle potenze vale anche per esponenti negativi e frazionari, con il dominio giusto:
+$$D\left(\frac{1}{x}\right)=D(x^{-1})=-x^{-2}=-\frac{1}{x^2}\quad (x\neq0),\qquad D\left(\sqrt{x}\right)=D\left(x^{1/2}\right)=\frac{1}{2\sqrt{x}}\quad (x>0).$$
+Attenzione: $\sqrt{x}$ non è derivabile in $0$ (la derivata diverge, come hai visto in s08.def). Il dominio della derivata può essere più piccolo di quello della funzione.`,
+        },
+        {
+          id: 's08.regole.L1.q4',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\sqrt{x}$, per $x>0$.`,
+          answer: '1/(2*sqrt(x))',
+          vars: ['x'],
+          domain: [0.3, 2.7],
+          explain: String.raw`Regola delle potenze con esponente $\frac12$: $D(x^{1/2})=\frac12x^{-1/2}=\frac{1}{2\sqrt x}$.`,
+        },
+        {
+          id: 's08.regole.L1.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? $D\big(3\sqrt{x}\big)=\dfrac{3}{2\sqrt{x}}$ per $x>0$.`,
+          answer: true,
+          explain: String.raw`Vero. La costante $3$ esce dalla derivata: $3\cdot\frac{1}{2\sqrt x}=\frac{3}{2\sqrt x}$.`,
+        },
+      ],
+    },
+    {
+      id: 's08.regole.L2',
+      title: 'Prodotto e quoziente',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Derivata del prodotto e del quoziente',
+          body: String.raw`>* **Prodotto.** $D(fg)=f'g+fg'$.
+>* **Quoziente.** Se $g(x)\neq0$: $D\left(\frac{f}{g}\right)=\frac{f'g-fg'}{g^2}$.
+
+Nota che **la derivata del prodotto non è il prodotto delle derivate**: $D(fg)\neq f'g'$. Lo stesso vale per il quoziente. Per ricordare l'ordine nel quoziente: "derivata del numeratore per il denominatore, meno il numeratore per la derivata del denominatore, tutto su denominatore al quadrato".`,
+        },
+        {
+          id: 's08.regole.L2.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale è $D(x\,e^x)$?`,
+          options: [
+            String.raw`$(x+1)e^x$`,
+            String.raw`$e^x$`,
+            String.raw`$xe^x$`,
+            String.raw`$x^2e^x$`,
+          ],
+          answer: 0,
+          explain: String.raw`Regola del prodotto: $D(x)\,e^x+x\,D(e^x)=e^x+xe^x=(x+1)e^x$. Il distrattore $e^x$ dimentica il secondo addendo; $xe^x$ è la funzione di partenza; $x^2e^x$ sbaglia la regola del prodotto.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: prodotto',
+          problem: String.raw`Calcola $f'(x)$ per $f(x)=x^2\sin x$.`,
+          steps: [
+            String.raw`Scrivo $f=g\cdot h$ con $g(x)=x^2$ e $h(x)=\sin x$. Quindi $g'=2x$ e $h'=\cos x$.`,
+            String.raw`Regola del prodotto: $f'=g'h+gh'=2x\sin x+x^2\cos x$.`,
+            String.raw`Non c'è semplificazione: il risultato è una somma di due termini.`,
+          ],
+          result: String.raw`$f'(x)=2x\sin x+x^2\cos x$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: quoziente',
+          problem: String.raw`Calcola $f'(x)$ per $f(x)=\frac{2x+1}{x-1}$, con $x\neq1$.`,
+          steps: [
+            String.raw`Numeratore $n=2x+1$ con $n'=2$; denominatore $d=x-1$ con $d'=1$. Applico la regola: $f'=\frac{n'd-nd'}{d^2}$.`,
+            {
+              text: String.raw`Calcola il numeratore $n'd-nd'$ prima di tutto il resto.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $n'd-nd'=2(x-1)-(2x+1)\cdot1$? (Inserisci il valore costante.)`,
+                answer: '-3',
+                explain: String.raw`$2x-2-2x-1=-3$. Le $x$ si cancellano: il numeratore della derivata è una costante.`,
+              },
+            },
+          ],
+          result: String.raw`$f'(x)=\frac{-3}{(x-1)^2}=-\frac{3}{(x-1)^2}$, per $x\neq1$.`,
+        },
+        {
+          id: 's08.regole.L2.q2',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=x\,e^{-x}$.`,
+          answer: '(1-x)*e^(-x)',
+          vars: ['x'],
+          explain: String.raw`$f'=1\cdot e^{-x}+x\cdot(-e^{-x})=(1-x)e^{-x}$. Il segno meno viene dalla derivata di $e^{-x}$, che è $-e^{-x}$. Questa derivata sarà utile per la convessità.`,
+        },
+        {
+          id: 's08.regole.L2.q3',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? $D(x\cdot x)=1\cdot1=1$.`,
+          answer: false,
+          explain: String.raw`Falso. $x\cdot x=x^2$ e $D(x^2)=2x$, non $1$. La derivata del prodotto è $D(x)\cdot x+x\cdot D(x)=2x$.`,
+        },
+        {
+          id: 's08.regole.L2.q4',
+          type: 'num',
+          prompt: String.raw`Calcola $f'(2)$ se $f(x)=\dfrac{x^2+1}{x-1}$.`,
+          answer: '-1',
+          explain: String.raw`$f'=\frac{2x(x-1)-(x^2+1)}{(x-1)^2}=\frac{x^2-2x-1}{(x-1)^2}$. In $x=2$: $\frac{4-4-1}{1}=-1$.`,
+        },
+        {
+          id: 's08.regole.L2.q5',
+          type: 'expr',
+          level: 3,
+          source: 'Appello 15/01/2026 · Parte B',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\dfrac{x-1}{2x-3}$, per $x\neq\frac32$.`,
+          answer: '-1/(2*x-3)^2',
+          vars: ['x'],
+          domain: [-1.2, 0.8],
+          explain: String.raw`Regola del quoziente: $\frac{1\cdot(2x-3)-(x-1)\cdot2}{(2x-3)^2}=\frac{2x-3-2x+2}{(2x-3)^2}=\frac{-1}{(2x-3)^2}$. Il numeratore si riduce a $-1$.`,
+        },
+        {
+          id: 's08.regole.L2.q6',
+          type: 'expr',
+          level: 3,
+          source: 'Appello 15/01/2026 · Parte B',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=x\log x$, per $0<x<1$.`,
+          answer: 'log(x)+1',
+          vars: ['x'],
+          domain: [0.2, 0.8],
+          explain: String.raw`Prodotto: $1\cdot\log x+x\cdot\frac{1}{x}=\log x+1$. Nel tema d'esame questa derivata serve per trovare i punti critici e il punto angoloso in $1$. Qui $\log$ è il logaritmo naturale.`,
+        },
+      ],
+    },
+    {
+      id: 's08.regole.L3',
+      title: 'Funzione composta',
+      cards: [
+        {
+          type: 'learn',
+          title: 'La regola della catena',
+          body: String.raw`Se $f(x)=F(g(x))$ con $F$ e $g$ derivabili, allora
+>* **Derivata della composta.** $D\big(F(g(x))\big)=F'(g(x))\cdot g'(x)$.
+
+In parole: **derivata esterna** (calcolata nel punto interno) per **derivata interna**. Schema utile:
+$$D(e^{g})=e^{g}\,g',\qquad D(\sin g)=\cos g\cdot g',\qquad D(g^n)=n\,g^{n-1}g',\qquad D(\log g)=\frac{g'}{g}.$$
+Ogni volta che c'è una funzione dentro un'altra, non dimenticare il fattore $g'$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: esponenziale composta',
+          problem: String.raw`Calcola $f'(x)$ se $f(x)=e^{x^2+1}$.`,
+          steps: [
+            String.raw`Esterna: $F(u)=e^u$, quindi $F'(u)=e^u$. Interna: $g(x)=x^2+1$, quindi $g'(x)=2x$.`,
+            String.raw`Chain rule: $f'(x)=F'(g(x))\,g'(x)=e^{x^2+1}\cdot2x$.`,
+          ],
+          result: String.raw`$f'(x)=2x\,e^{x^2+1}$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: seno di $3x^2$',
+          problem: String.raw`Calcola $f'(x)$ se $f(x)=\sin(3x^2)$.`,
+          steps: [
+            String.raw`Esterna: $\sin u$, con derivata $\cos u$. Interna: $g(x)=3x^2$.`,
+            {
+              text: String.raw`Calcola la derivata interna $g'(x)$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Quanto vale $g'(x)$ se $g(x)=3x^2$?`,
+                answer: '6*x',
+                vars: ['x'],
+                explain: String.raw`$D(3x^2)=3\cdot2x=6x$.`,
+              },
+            },
+            {
+              text: String.raw`Ricompongo: la derivata esterna $\cos u$ va calcolata nel punto interno $u=3x^2$.`,
+              ask: {
+                type: 'mcq',
+                prompt: String.raw`Quale è la derivata di $\sin(3x^2)$?`,
+                options: [
+                  String.raw`$\cos(3x^2)$`,
+                  String.raw`$6x\cos(3x^2)$`,
+                  String.raw`$-6x\sin(3x^2)$`,
+                  String.raw`$3\cos(3x^2)$`,
+                ],
+                answer: 1,
+                explain: String.raw`Derivata esterna $\cos(3x^2)$ per derivata interna $6x$. Il primo distrattore dimentica la derivata interna; il terzo sbaglia il segno e scambia $\sin$ con $\cos$; il quarto usa il coefficiente $3$ al posto di $6x$.`,
+              },
+            },
+          ],
+          result: String.raw`$f'(x)=6x\cos(3x^2)$.`,
+        },
+        {
+          id: 's08.regole.L3.q1',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=(x^2-1)^3$.`,
+          answer: '6*x*(x^2-1)^2',
+          vars: ['x'],
+          explain: String.raw`$D(u^3)=3u^2\cdot u'$ con $u=x^2-1$ e $u'=2x$: $3(x^2-1)^2\cdot2x=6x(x^2-1)^2$.`,
+        },
+        {
+          id: 's08.regole.L3.q2',
+          type: 'mcq',
+          prompt: String.raw`Quale è la derivata di $\sin(x^2)$?`,
+          options: [
+            String.raw`$2x\cos(x^2)$`,
+            String.raw`$\cos(x^2)$`,
+            String.raw`$2x\sin(x^2)$`,
+            String.raw`$\cos(2x)$`,
+          ],
+          answer: 0,
+          explain: String.raw`Derivata esterna $\cos(x^2)$, per derivata interna $2x$. Il distrattore $\cos(x^2)$ dimentica la derivata interna; il terzo lascia $\sin$ invece di $\cos$; il quarto confonde l'argomento $x^2$ con la sua derivata $2x$ e la mette dentro il coseno.`,
+        },
+        {
+          id: 's08.regole.L3.q3',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\log(x^2+1)$.`,
+          answer: '2*x/(x^2+1)',
+          vars: ['x'],
+          explain: String.raw`$D(\log g)=\frac{g'}{g}$ con $g=x^2+1$ e $g'=2x$: $\frac{2x}{x^2+1}$.`,
+        },
+        {
+          id: 's08.regole.L3.q4',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\sqrt{3x+1}$, per $x>-\frac13$.`,
+          answer: '3/(2*sqrt(3*x+1))',
+          vars: ['x'],
+          domain: [0, 2],
+          explain: String.raw`$D(\sqrt g)=\frac{g'}{2\sqrt g}$ con $g=3x+1$ e $g'=3$: $\frac{3}{2\sqrt{3x+1}}$.`,
+        },
+        {
+          id: 's08.regole.L3.q5',
+          type: 'expr',
+          level: 3,
+          source: 'Appello 03/09/2026 · Parte B',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=e^{\frac{x+1}{x-1}}$, per $x\neq1$.`,
+          answer: '-2/(x-1)^2*e^((x+1)/(x-1))',
+          vars: ['x'],
+          domain: [-2, 0.5],
+          explain: String.raw`Interna $g=\frac{x+1}{x-1}$: $g'=\frac{(x-1)-(x+1)}{(x-1)^2}=\frac{-2}{(x-1)^2}$. Quindi $f'=e^{g}\,g'=-\frac{2}{(x-1)^2}e^{\frac{x+1}{x-1}}$.`,
+        },
+        {
+          id: 's08.regole.L3.q6',
+          type: 'expr',
+          level: 3,
+          source: 'Appello 11/06/2026 · Parte B',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=e^{\frac{1}{4-x^2}}$, per $x\neq\pm2$.`,
+          answer: '2*x/(4-x^2)^2*e^(1/(4-x^2))',
+          vars: ['x'],
+          domain: [-1.5, 0.5],
+          explain: String.raw`Interna $g=\frac{1}{4-x^2}$: $g'=-\frac{-2x}{(4-x^2)^2}=\frac{2x}{(4-x^2)^2}$. Quindi $f'=e^{g}g'$. Il segno segue quello di $x$: $g'$ è negativa per $x<0$ e positiva per $x>0$ (nel dominio $x\neq\pm2$), perché il denominatore $(4-x^2)^2$ è sempre positivo.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.regole.p1',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const a = R.nz(-3, 3), b = R.int(-4, 4), c = R.int(-5, 5), d = R.int(-5, 5);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=${H.poly([a, b, c, d])}$.`,
+          answer: H.polyStr(H.polyDeriv([a, b, c, d])),
+          vars: ['x'],
+          explain: String.raw`Ogni termine $kx^n$ diventa $nk\,x^{n-1}$, la costante scompare: $f'(x)=${H.poly(H.polyDeriv([a, b, c, d]))}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.regole.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3), b = R.int(-4, 4), c = R.int(-5, 5), d = R.int(-5, 5), x0 = R.int(-2, 3);
+        const ans = 3 * a * x0 * x0 + 2 * b * x0 + c;
+        return {
+          type: 'num',
+          prompt: String.raw`Qual è $f'(${x0})$ se $f(x)=${H.poly([a, b, c, d])}$?`,
+          answer: String(ans),
+          explain: String.raw`$f'(x)=${H.poly(H.polyDeriv([a, b, c, d]))}$, quindi $f'(${x0})=${ans}$. Calcola prima la derivata e poi sostituisci.`,
+        };
+      },
+    },
+    {
+      id: 's08.regole.p3',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.nz(-2, 2), b = R.int(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=e^{${H.poly([a, b, 0])}}$.`,
+          answer: `(${2 * a}*x+(${b}))*e^(${a}*x^2+(${b})*x)`,
+          vars: ['x'],
+          explain: String.raw`Chain rule: $e^{g}\cdot g'$ con $g=${H.poly([a, b, 0])}$, $g'=${H.poly([2 * a, b])}$. Quindi $f'=(${H.poly([2 * a, b])})\,e^{${H.poly([a, b, 0])}}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.regole.p4',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3), b = R.int(-4, 4), n = R.pick([2, 3, 4]);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\left(${H.lin(a, b)}\right)^{${n}}$.`,
+          answer: `${n * a}*(${a}*x+(${b}))^${n - 1}`,
+          vars: ['x'],
+          explain: String.raw`$D(u^{${n}})=${n}u^{${n - 1}}u'$ con $u=${H.lin(a, b)}$ e $u'=${a}$. Il risultato è $${n * a}\,(${H.lin(a, b)})^{${n - 1}}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.regole.p5',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const m = R.pick([2, 3]), k = R.pick([-3, -2, 2, 3]);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=x^{${m}}\,e^{${k}x}$.`,
+          answer: `(${m}*x^${m - 1}+(${k})*x^${m})*e^(${k}*x)`,
+          vars: ['x'],
+          explain: String.raw`Prodotto: $D(x^{${m}})\,e^{${k}x}+x^{${m}}\,D(e^{${k}x})=(${m}x^{${m - 1}}+${k}x^{${m}})\,e^{${k}x}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.regole.p6',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? $D\big(\sin(x^2)\big)=\cos(x^2)$.`,
+      answer: false,
+      explain: String.raw`Falso: manca la derivata interna $2x$. La derivata corretta è $2x\cos(x^2)$.`,
+    },
+    {
+      id: 's08.regole.p7',
+      type: 'num',
+      prompt: String.raw`Calcola $f'(0)$ se $f(x)=\dfrac{3x+1}{x+2}$.`,
+      answer: '5/4',
+      explain: String.raw`$f'=\frac{3(x+2)-(3x+1)}{(x+2)^2}=\frac{5}{(x+2)^2}$. In $x=0$: $\frac{5}{4}$.`,
+    },
+    {
+      id: 's08.regole.p8',
+      type: 'expr',
+      prompt: String.raw`Calcola $f'(x)$ se $f(x)=x^2\log x$, per $x>0$.`,
+      answer: '2*x*log(x)+x',
+      vars: ['x'],
+      domain: [0.3, 2.7],
+      explain: String.raw`Prodotto: $2x\log x+x^2\cdot\frac{1}{x}=2x\log x+x$.`,
+    },
+    {
+      id: 's08.regole.p9',
+      type: 'mcq',
+      prompt: String.raw`Quale è la derivata di $f(x)=\dfrac{1}{x}$, per $x\neq0$?`,
+      options: [
+        String.raw`$-\dfrac{1}{x^2}$`,
+        String.raw`$\dfrac{1}{x^2}$`,
+        String.raw`$-\dfrac{1}{x}$`,
+        String.raw`$\log x$`,
+      ],
+      answer: 0,
+      explain: String.raw`$D(x^{-1})=-x^{-2}=-\frac{1}{x^2}$. Il secondo distrattore dimentica il segno meno. Il terzo confonde la derivata con la funzione; il quarto non ha senso.`,
+    },
+    {
+      id: 's08.regole.p10',
+      type: 'num',
+      prompt: String.raw`Calcola $f'(0)$ se $f(x)=x\,e^{x}$.`,
+      answer: '1',
+      explain: String.raw`$f'=(1+x)e^x$, quindi $f'(0)=1\cdot e^0=1$.`,
+    },
+    {
+      id: 's08.regole.p11',
+      type: 'expr',
+      prompt: String.raw`Calcola $f'(x)$ se $f(x)=\sqrt{x^2+1}$.`,
+      answer: 'x/sqrt(x^2+1)',
+      vars: ['x'],
+      explain: String.raw`$D(\sqrt g)=\frac{g'}{2\sqrt g}$ con $g=x^2+1$, $g'=2x$: $\frac{2x}{2\sqrt{x^2+1}}=\frac{x}{\sqrt{x^2+1}}$.`,
+    },
+    {
+      id: 's08.regole.p12',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f$ e $g$ sono derivabili, allora $D(f+g)=f'+g'$.`,
+      answer: true,
+      explain: String.raw`Vero: la derivata è lineare, quindi si distribuisce sulla somma.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.regole.fc1',
+      kind: 'formula',
+      front: String.raw`Regole di base: somma, costante, potenza`,
+      back: String.raw`$D(f+g)=f'+g'$, $D(cf)=cf'$, $D(x^n)=nx^{n-1}$, $D(c)=0$.`,
+    },
+    {
+      id: 's08.regole.fc2',
+      kind: 'thm',
+      front: String.raw`Derivata del prodotto`,
+      back: String.raw`Se $f,g$ sono derivabili in $x$: $D(fg)=f'g+fg'$.`,
+    },
+    {
+      id: 's08.regole.fc3',
+      kind: 'thm',
+      front: String.raw`Derivata del quoziente`,
+      back: String.raw`Se $f,g$ sono derivabili in $x$ e $g(x)\neq0$: $D\left(\frac{f}{g}\right)=\frac{f'g-fg'}{g^2}$.`,
+    },
+    {
+      id: 's08.regole.fc4',
+      kind: 'thm',
+      front: String.raw`Derivata della funzione composta (regola della catena)`,
+      back: String.raw`Se $g$ è derivabile in $x$ e $F$ è derivabile in $g(x)$: $D\big(F(g(x))\big)=F'(g(x))\,g'(x)$.`,
+    },
+    {
+      id: 's08.regole.fc5',
+      kind: 'formula',
+      front: String.raw`Composte più usate`,
+      back: String.raw`$D(e^g)=e^g g'$, $D(\sin g)=\cos g\cdot g'$, $D(\cos g)=-\sin g\cdot g'$, $D(g^n)=ng^{n-1}g'$, $D(\log g)=\frac{g'}{g}$, $D(\sqrt g)=\frac{g'}{2\sqrt g}$.`,
+    },
+    {
+      id: 's08.regole.fc6',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "$D(fg)=f'g'$"`,
+      back: String.raw`Sbagliato. La derivata del prodotto è $f'g+fg'$. Esempio: $D(x\cdot x)=2x$, non $1$.`,
+    },
+    {
+      id: 's08.regole.fc7',
+      kind: 'errore',
+      front: String.raw`Errore tipico nella composta: $D(\sin(x^2))=\cos(x^2)$?`,
+      back: String.raw`Manca la derivata interna: $D(\sin(x^2))=2x\cos(x^2)$. Ogni volta che c'è una funzione dentro un'altra, moltiplica per $g'$.`,
+    },
+    {
+      id: 's08.regole.fc8',
+      kind: 'metodo',
+      front: String.raw`Quale regola scegliere?`,
+      back: String.raw`Somma o costante: deriva termine per termine. Prodotto di due funzioni: regola del prodotto. Rapporto: regola del quoziente. Funzione dentro un'altra: regola della catena.`,
+    },
+  ],
+});
