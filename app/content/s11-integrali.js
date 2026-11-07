@@ -1616,6 +1616,12 @@ Poi calcoli in $t$, con i nuovi estremi, senza tornare a $x$. Se preferisci torn
           rubric: ['Ipotesi: $g$ derivabile con $g\'$ continua, $f$ continua', 'Formula con estremi $g(a)$ e $g(b)$', 'Spiega il cambio degli estremi come corrispondenza $x\\mapsto t=g(x)$', 'Verifica con la primitiva $G(g(x))$ o con la regola della catena'],
         },
         {
+          id: 's11.sostituzione.L3.e6', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\sqrt3}\frac{x}{\sqrt{1+x^2}}\,dx$`,
+          answer: '1', _int: ['x/sqrt(1+x^2)', 0, 'sqrt(3)'],
+          explain: String.raw`Con $t=1+x^2$: $dt=2x\,dx$. Estremi: $x=0\Rightarrow t=1$, $x=\sqrt3\Rightarrow t=4$. L'integrale è $\frac12\int_1^4t^{-1/2}\,dt=\left[\sqrt t\right]_1^4=2-1=1$.`,
+        },
+        {
           id: 's11.sostituzione.L3.e5', type: 'problem', level: 3, points: 4,
           prompt: String.raw`Calcola $\displaystyle\int_0^1\sqrt{1-x^2}\,dx$ con la sostituzione $x=\sin t$, $t\in\left[0,\frac\pi2\right]$.`,
           parts: [
