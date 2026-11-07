@@ -325,7 +325,7 @@ Nel passo induttivo **supponi** vera $P(n)$ (ipotesi induttiva) e la **usi** per
       } },
     { id: 's01.naturali.p.gen-binom', type: 'gen', level: 1,
       gen: (R) => {
-        const n = R.int(4, 10), k = R.int(1, n - 1);
+        const n = R.int(5, 10), k = R.int(2, n - 2);
         const kk = Math.min(k, n - k);
         let num = 1, den = 1;
         const f = [];
@@ -347,9 +347,9 @@ Nel passo induttivo **supponi** vera $P(n)$ (ipotesi induttiva) e la **usi** per
         const pw = (base, e) => (e === 1 ? (base < 0 ? `(${base})` : String(base)) : base < 0 ? `(${base})^{${e}}` : `${base}^{${e}}`);
         const par = (x) => (x < 0 ? `(${x})` : String(x));
         return { type: 'num',
-          prompt: String.raw`Qual è il coefficiente di $x^{${k}}$ nello sviluppo di $(${H.lin(a, b)})^{${n}}$?`,
+          prompt: String.raw`Qual è il coefficiente di $${k === 1 ? 'x' : `x^{${k}}`}$ nello sviluppo di $(${H.lin(a, b)})^{${n}}$?`,
           answer: String(v),
-          explain: String.raw`Termine generale: $\binom{${n}}{j}\,(${H.coef(a)}x)^{j}\,${pw(b, 'n-j').replace('n-j', `${n}-j`)}$. Per avere $x^{${k}}$ serve $j=${k}$: $\binom{${n}}{${k}}\cdot${pw(a, k)}\cdot${pw(b, n - k)}=${bin}\cdot${par(a ** k)}\cdot${par(b ** (n - k))}=${v}$.`,
+          explain: String.raw`Termine generale: $\binom{${n}}{j}\,${a === 1 ? 'x^{j}' : `(${H.coef(a)}x)^{j}`}\,${pw(b, 'n-j').replace('n-j', `${n}-j`)}$. Per avere $${k === 1 ? 'x' : `x^{${k}}`}$ serve $j=${k}$: $\binom{${n}}{${k}}\cdot${pw(a, k)}\cdot${pw(b, n - k)}=${bin}\cdot${par(a ** k)}\cdot${par(b ** (n - k))}=${v}$.`,
           hint: String.raw`Scrivi il termine generale $\binom nj(ax)^jb^{n-j}$ e scegli $j$.` };
       } },
     { id: 's01.naturali.p.gen-gauss', type: 'gen', level: 2,
