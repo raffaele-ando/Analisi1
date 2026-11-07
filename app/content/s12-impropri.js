@@ -557,11 +557,520 @@ const def = {
   practice: defPractice,
   flashcards: defFlashcards,
 };
+// ---------------------------------------------------------------------------
+// s12.criteri · Confronto, confronto asintotico, condizione necessaria, campioni
+// ---------------------------------------------------------------------------
+
+// [p, q, beta]: alpha = p/q nel campione int_2^inf dx / (x^alpha log^beta x)
+const LOG_TAB = [
+  [1, 1, 1],
+  [1, 1, 2],
+  [1, 1, 3],
+  [3, 2, 1],
+  [1, 2, 2],
+  [2, 1, 1],
+  [3, 4, 2],
+  [5, 4, 1],
+];
+
+const critL1 = {
+  id: 's12.criteri.L1',
+  title: 'Il confronto',
+  cards: [
+    {
+      type: 'learn',
+      title: 'Funzioni positive: l\'area non scende',
+      body: String.raw`Se $f\ge0$ su $[a,+\infty)$, la funzione $F(t)=\int_a^t f(x)\,dx$ è **non decrescente**: allungando l'intervallo si aggiunge area positiva. Quindi $F$ ha limite per $t\to+\infty$ se e solo se è limitata.
+
+Per una funzione positiva la domanda è quindi una sola: l'area **resta sotto un limite**, oppure cresce senza fine? Per rispondere non serve la primitiva: basta confrontare con una funzione di cui conosciamo già la risposta.
+
+>! Questo ragionamento vale solo se $f\ge0$. Con $f$ che cambia segno l'area può salire e scendere, e la monotonia non c'è più.`,
+    },
+    {
+      type: 'learn',
+      title: 'Criterio del confronto',
+      body: String.raw`Siano $0\le f(x)\le g(x)$ per $x\ge a$. Allora:
+
+>* se $\int_a^{+\infty}g$ **converge**, anche $\int_a^{+\infty}f$ converge;
+>* se $\int_a^{+\infty}f$ **diverge**, anche $\int_a^{+\infty}g$ diverge.
+
+Il verso conta. Se $\int f$ converge, nulla si può dire su $\int g$, che è più grande. Se $\int g$ diverge, nulla si può dire su $\int f$, che è più piccola.
+
+Il criterio è una **maggiorazione**: serve un maggiorante integrabile, e il minorante eredita la convergenza.`,
+      plot: { fns: [{ f: '1/x^2', label: 'g(x)=1/x^2' }, { f: '1/(x^2+x)', label: 'f(x)=1/(x^2+x)' }], x: [1, 5], y: [0, 1.1] },
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_1^{+\\infty}\\frac{dx}{x^2+x}$',
+      problem: String.raw`Dimostra che $\displaystyle\int_1^{+\infty}\frac{dx}{x^2+x}$ converge, senza calcolare la primitiva.`,
+      steps: [
+        String.raw`Per $x\ge1$ la funzione è positiva: $0<\dfrac{1}{x^2+x}$.`,
+        String.raw`Poiché $x^2+x\ge x^2$ per $x\ge0$, si ha $\dfrac{1}{x^2+x}\le\dfrac{1}{x^2}$. Il maggiorante è $g(x)=\dfrac{1}{x^2}$.`,
+        {
+          text: String.raw`Quindi $0\le\displaystyle\int_1^{+\infty}\frac{dx}{x^2+x}\le\int_1^{+\infty}\frac{dx}{x^2}=1$. L'integrale è limitato e crescente nel suo estremo: converge.`,
+          ask: {
+            type: 'num',
+            prompt: String.raw`Quanto vale $\displaystyle\int_1^{+\infty}\frac{dx}{x^2}$?`,
+            answer: '1',
+            explain: String.raw`È un integrale campione con esponente $2>1$. Primitiva $-\frac1x$: il valore è $0-(-1)=1$.`,
+          },
+        },
+      ],
+      result: String.raw`$\displaystyle\int_1^{+\infty}\frac{dx}{x^2+x}$ converge (e vale al più $1$)`,
+    },
+    {
+      id: 's12.criteri.L1.e1', type: 'mcq', level: 1,
+      prompt: String.raw`Sai che $\displaystyle\int_1^{+\infty}g(x)\,dx$ converge e che $0\le f\le g$ su $[1,+\infty)$. Cosa segue?`,
+      options: [
+        String.raw`$\int_1^{+\infty}f$ converge`,
+        String.raw`$\int_1^{+\infty}f$ diverge a $+\infty$`,
+        String.raw`$\int_1^{+\infty}f$ vale esattamente $0$`,
+        String.raw`Non si può concludere nulla su $\int_1^{+\infty}f$`,
+      ],
+      answer: 0,
+      explain: String.raw`Il confronto dice che se il maggiorante converge, anche la funzione più piccola converge. Il criterio non dà il valore: $f$ potrebbe valere molto meno di $g$, quindi "vale $0$" non segue.`,
+    },
+    {
+      id: 's12.criteri.L1.e2', type: 'mcq', level: 1,
+      prompt: String.raw`Sai che $\displaystyle\int_1^{+\infty}f(x)\,dx$ diverge e che $0\le f\le g$ su $[1,+\infty)$. Cosa segue per $\int_1^{+\infty}g$?`,
+      options: [
+        String.raw`Converge`,
+        String.raw`Diverge a $+\infty$`,
+        String.raw`Non si può concludere`,
+        String.raw`Vale $\int_1^{+\infty}f$`,
+      ],
+      answer: 1,
+      explain: String.raw`Se il minorante $f$ ha area infinita, la funzione $g\ge f$ ha area ancora più grande: diverge. Il criterio funziona nel verso dell'area maggiore.`,
+    },
+    {
+      id: 's12.criteri.L1.e3', type: 'tf', level: 1,
+      prompt: String.raw`Se $0\le f\le g$ e $\displaystyle\int_1^{+\infty}g$ diverge, allora anche $\displaystyle\int_1^{+\infty}f$ diverge.`,
+      answer: false,
+      explain: String.raw`Falso. Un minorante di una funzione divergente può convergere. Per esempio $f=\frac{1}{x^2}\le g=\frac1x$ su $[1,+\infty)$: $\int g$ diverge, mentre $\int f$ converge.`,
+    },
+    {
+      id: 's12.criteri.L1.e4', type: 'mcq', level: 2,
+      prompt: String.raw`Quale maggiorante permette di concludere con il confronto che $\displaystyle\int_1^{+\infty}\frac{dx}{\sqrt{x^3+1}}$ converge?`,
+      options: [
+        String.raw`$\dfrac{1}{x^{3/2}}$`,
+        String.raw`$\dfrac{1}{x}$`,
+        String.raw`$\dfrac{1}{\sqrt{x}}$`,
+        String.raw`$\dfrac{1}{x^2}$`,
+      ],
+      answer: 0,
+      explain: String.raw`Si ha $\sqrt{x^3+1}\ge\sqrt{x^3}=x^{3/2}$, quindi $0<\dfrac{1}{\sqrt{x^3+1}}\le\dfrac{1}{x^{3/2}}$, che è integrabile perché $\frac32>1$. $\frac1x$ e $\frac1{\sqrt x}$ divergono, quindi non servono. $\frac1{x^2}$ è più piccolo della funzione e non la maggiora.`,
+    },
+    {
+      id: 's12.criteri.L1.e5', type: 'interval', level: 1,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_1^{+\infty}\frac{dx}{x^\alpha}$?`,
+      answer: '(1,+inf)',
+      explain: String.raw`È il campione all'infinito: converge se e solo se $\alpha>1$. Per $\alpha=1$ si ottiene $\log t\to+\infty$; per $\alpha<1$, $\frac{t^{1-\alpha}}{1-\alpha}\to+\infty$.`,
+    },
+  ],
+};
+
+const critL2 = {
+  id: 's12.criteri.L2',
+  title: 'Confronto asintotico e integrali campione',
+  cards: [
+    {
+      type: 'learn',
+      title: 'Gli integrali campione',
+      body: String.raw`Alcuni integrali **campione** si decidono subito. Con $a>0$, $b>0$ e $\alpha,\beta$ reali:
+
+>* $\displaystyle\int_a^{+\infty}\frac{dx}{x^\alpha}$ converge $\iff\alpha>1$;
+>* $\displaystyle\int_0^{b}\frac{dx}{x^\alpha}$ converge $\iff\alpha<1$;
+>* $\displaystyle\int_2^{+\infty}\frac{dx}{x^\alpha\log^\beta x}$ converge $\iff\alpha>1$, oppure $\alpha=1$ e $\beta>1$.
+
+Il logaritmo "aiuta" solo quando $\alpha=1$. Con $\alpha\ne1$ decide l'esponente da solo.`,
+    },
+    {
+      type: 'learn',
+      title: 'Confronto asintotico',
+      body: String.raw`Il confronto diretto richiede $f\le g$, che spesso non si vede subito. Serve il **confronto asintotico**.
+
+Siano $f,g\ge0$ vicino a $+\infty$ (o vicino a un punto critico), con
+
+$$\lim\frac{f(x)}{g(x)}=\ell\qquad\text{con }0<\ell<+\infty.$$
+
+>* In tal caso $\int f$ e $\int g$ hanno **la stessa natura**: convergono entrambi o divergono entrambi. Si scrive $f\sim\ell\,g$.
+
+Nella pratica si sostituisce ogni funzione con la sua **parte principale** per $x\to+\infty$ (o per $x\to a$).
+
+>! Se $\ell=0$ o $\ell=+\infty$ si ottiene solo un'implicazione: serve il confronto diretto.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_1^{+\\infty}\\frac{x+1}{x^3+2}\\,dx$',
+      problem: String.raw`Studia la convergenza di $\displaystyle\int_1^{+\infty}\frac{x+1}{x^3+2}\,dx$.`,
+      steps: [
+        String.raw`La funzione è positiva per $x\ge1$. Per $x\to+\infty$ il numeratore è $\sim x$ e il denominatore è $\sim x^3$, quindi $f\sim\dfrac{x}{x^3}=\dfrac{1}{x^2}$.`,
+        String.raw`Scelgo $g(x)=\dfrac{1}{x^2}$ e calcolo il rapporto $\dfrac{f}{g}=\dfrac{x^2(x+1)}{x^3+2}$.`,
+        {
+          text: String.raw`Quindi $f\sim g$ con $\ell=1$, e $\int_1^{+\infty}\frac{dx}{x^2}$ converge (esponente $2>1$). Anche $\int_1^{+\infty}f$ converge.`,
+          ask: {
+            type: 'num',
+            prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\frac{x^2(x+1)}{x^3+2}$?`,
+            answer: '1',
+            explain: String.raw`Divido numeratore e denominatore per $x^3$: $\dfrac{1+\frac1x}{1+\frac{2}{x^3}}\to1$.`,
+          },
+        },
+      ],
+      result: String.raw`$\displaystyle\int_1^{+\infty}\frac{x+1}{x^3+2}\,dx$ converge`,
+    },
+    {
+      id: 's12.criteri.L2.e1', type: 'mcq', level: 2,
+      prompt: String.raw`Quale comportamento ha $\displaystyle\int_1^{+\infty}\frac{\sqrt x+1}{x^2+x}\,dx$?`,
+      options: [
+        String.raw`Converge: $f\sim x^{-3/2}$ e $\frac32>1$`,
+        String.raw`Diverge: $f\sim x^{-1}$`,
+        String.raw`Diverge: il denominatore ha grado $2$`,
+        String.raw`Non si può decidere senza calcolare la primitiva`,
+      ],
+      answer: 0,
+      explain: String.raw`Per $x\to+\infty$: $\sqrt x+1\sim\sqrt x$ e $x^2+x\sim x^2$. Quindi $f\sim\dfrac{\sqrt x}{x^2}=x^{-3/2}$, integrabile a $+\infty$. L'errore $x^{-1}$ nasce da un esponente sbagliato di $\sqrt x$. Il solo grado del denominatore non decide.`,
+    },
+    {
+      id: 's12.criteri.L2.e2', type: 'mcq', level: 2,
+      prompt: String.raw`Quale affermazione su $\displaystyle\int_1^{+\infty}\frac{\sin^2x}{x^2}\,dx$ è corretta?`,
+      options: [
+        String.raw`Converge: $0\le\dfrac{\sin^2x}{x^2}\le\dfrac{1}{x^2}$`,
+        String.raw`Diverge, perché $\sin^2x$ oscilla`,
+        String.raw`Non converge, perché $\sin^2x$ non ha limite`,
+        String.raw`Converge a $0$, perché $\sin^2x\to0$`,
+      ],
+      answer: 0,
+      explain: String.raw`Il seno oscilla, ma il numeratore è limitato da $1$: $0\le\frac{\sin^2x}{x^2}\le\frac1{x^2}$, e $\int_1^{+\infty}\frac{dx}{x^2}$ converge. Il seno non tende a $0$, quindi "$\sin^2x\to0$" è falso. Inoltre la funzione è positiva: il valore dell'integrale non può essere $0$.`,
+    },
+    {
+      id: 's12.criteri.L2.e3', type: 'tf', level: 2,
+      prompt: String.raw`Se $f(x)\sim\dfrac{1}{x^2}$ per $x\to+\infty$ e $f$ è continua su $[1,+\infty)$, allora $\displaystyle\int_1^{+\infty}f(x)\,dx$ converge.`,
+      answer: true,
+      explain: String.raw`Vero. Da $f\sim\frac1{x^2}$ segue che $f$ è positiva e vicina a $\frac{1}{x^2}$ da un certo punto in poi. Il confronto asintotico, sulla semiretta, dà convergenza. Il tratto iniziale è un integrale di una funzione continua su un intervallo chiuso e limitato, quindi finito.`,
+    },
+    {
+      id: 's12.criteri.L2.e4', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_0^{1}\frac{dx}{x^\alpha}$?`,
+      answer: '(-inf,1)',
+      explain: String.raw`È il campione in $0$: converge se e solo se $\alpha<1$. Per $\alpha=1$ si ottiene $-\log t\to+\infty$; per $\alpha>1$, $\frac{t^{1-\alpha}-1}{\alpha-1}\to+\infty$.`,
+    },
+    {
+      id: 's12.criteri.L2.e5', type: 'mcq', level: 2,
+      prompt: String.raw`Quale comportamento ha $\displaystyle\int_0^1\frac{dx}{\sin x}$?`,
+      options: [
+        String.raw`Converge, perché $\frac{1}{\sin x}\le1$`,
+        String.raw`Diverge: $\frac{1}{\sin x}\sim\frac1x$ per $x\to0^+$ e $\int_0^1\frac{dx}{x}=+\infty$`,
+        String.raw`Converge: $\frac{1}{\sin x}\sim\frac1x$ e $\int_0^1\frac{dx}{x}$ è finito`,
+        String.raw`Non si può decidere senza calcolare la primitiva`,
+      ],
+      answer: 1,
+      explain: String.raw`Per $x\to0^+$ si ha $\sin x\sim x$, quindi $\frac{1}{\sin x}\sim\frac1x$. Il campione in $0$ con $\alpha=1$ diverge. La disuguaglianza $\frac1{\sin x}\le1$ è falsa vicino a $0$, dove la funzione cresce senza limiti.`,
+    },
+  ],
+};
+
+const critL3 = {
+  id: 's12.criteri.L3',
+  title: 'Perché funziona, e condizione necessaria',
+  cards: [
+    {
+      type: 'learn',
+      title: 'Dimostrazione del criterio del confronto',
+      body: String.raw`Per $0\le f\le g$ poniamo
+
+$$F(t)=\int_a^t f(x)\,dx,\qquad G(t)=\int_a^t g(x)\,dx\qquad(t\ge a).$$
+
+Entrambe sono non decrescenti, perché le funzioni sono positive, e $F(t)\le G(t)$ per ogni $t$. Se $\int g$ converge, $G$ ha limite finito, quindi è limitata. Allora anche $F$ è limitata. Una funzione crescente e limitata ha limite finito: l'integrale di $f$ converge.
+
+>* Monotonia più limitatezza dà l'esistenza del limite finito.`,
+    },
+    {
+      id: 's12.criteri.L3.e1', type: 'order', level: 3,
+      prompt: String.raw`Metti in ordine i passi della dimostrazione del criterio del confronto, con $0\le f\le g$ e $\int g$ convergente.`,
+      steps: [
+        String.raw`Pongo $F(t)=\int_a^t f$ e $G(t)=\int_a^t g$: sono non decrescenti perché $f,g\ge0$.`,
+        String.raw`Dal confronto $f\le g$ segue $F(t)\le G(t)$ per ogni $t\ge a$.`,
+        String.raw`Se $\int_a^{+\infty}g$ converge, $G$ ha limite finito, quindi è limitata superiormente.`,
+        String.raw`Quindi $F$, non decrescente e limitata, ha limite finito: $\int_a^{+\infty}f$ converge.`,
+      ],
+      distractors: [
+        String.raw`Se $\int_a^{+\infty}f$ converge, allora $\int_a^{+\infty}g$ converge.`,
+        String.raw`Quindi $F=G$ per ogni $t$, perché $f\le g$.`,
+      ],
+      explain: String.raw`La catena è: monotonia, confronto dei due integrali, limitatezza del maggiorante, conclusione. Il maggiorante limita l'integrale del minorante, non il contrario.`,
+    },
+    {
+      id: 's12.criteri.L3.e2', type: 'open', level: 3,
+      prompt: String.raw`Dimostra che se $0\le f\le g$ e $\int_a^{+\infty}g$ converge, allora $\int_a^{+\infty}f$ converge. Puoi usare il fatto che una funzione crescente e limitata ha limite finito.`,
+      answer: String.raw`Siano $F(t)=\int_a^tf$ e $G(t)=\int_a^tg$. Poiché $f\ge0$, $F$ è non decrescente; poiché $f\le g$, $F(t)\le G(t)$. Essendo $\int g$ convergente, $G$ ha limite finito, quindi è limitata. Allora $F$ è crescente e limitata e ha limite finito: l'integrale di $f$ converge.`,
+      rubric: [
+        String.raw`Monotonia di $F$ dal fatto che $f\ge0$`,
+        String.raw`Disuguaglianza $F(t)\le G(t)$ dal confronto $f\le g$`,
+        String.raw`Limitatezza di $G$ dalla convergenza di $\int g$`,
+        String.raw`Conclusione: $F$ crescente e limitata converge`,
+      ],
+      explain: String.raw`Serve la catena completa: monotonia, confronto, limitatezza, conclusione. Basta "per confronto converge" senza dimostrarlo non vale il punteggio pieno.`,
+      points: 3,
+    },
+    {
+      type: 'learn',
+      title: 'Condizione necessaria',
+      body: String.raw`Se un integrale converge, la funzione non può restare lontana da zero. Più precisamente:
+
+>* Se $\int_a^{+\infty}f$ converge e $\lim_{x\to+\infty}f(x)$ esiste, allora $\displaystyle\lim_{x\to+\infty}f(x)=0$.
+
+Idea della dimostrazione: se il limite fosse $L\ne0$, da un certo punto in poi $f$ avrebbe lo stesso segno di $L$ e $|f|\ge\frac{|L|}{2}$. Allora l'integrale su $[M,+\infty)$ divergerebbe per confronto con $\int\frac{|L|}{2}\,dx$.
+
+>! È una condizione **necessaria**, non sufficiente. Con $f\to0$ l'integrale può comunque divergere: per $f=\frac1x$ il limite è $0$ e $\int_1^{+\infty}\frac{dx}{x}=+\infty$.`,
+    },
+    {
+      type: 'tf', id: 's12.criteri.L3.e3', level: 3,
+      prompt: String.raw`Se $\displaystyle\int_1^{+\infty}f$ converge e $\displaystyle\lim_{x\to+\infty}f(x)$ esiste, allora tale limite è $0$.`,
+      answer: true,
+      explain: String.raw`Vero. È la condizione necessaria della sezione precedente: se il limite fosse diverso da $0$, $f$ resterebbe da un certo punto in poi lontana da $0$ con segno costante, e l'integrale divergerebbe.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_1^{+\\infty}\\frac{\\cos^2x+x}{x+1}\\,dx$',
+      problem: String.raw`Studia la convergenza di $\displaystyle\int_1^{+\infty}\frac{\cos^2x+x}{x+1}\,dx$.`,
+      steps: [
+        String.raw`Il numeratore è positivo e $0\le\cos^2x\le1$. Calcolo il limite della funzione per $x\to+\infty$, senza integrare.`,
+        {
+          text: String.raw`Il termine $\dfrac{\cos^2x}{x+1}$ tende a $0$, perché il numeratore è limitato. Quindi l'integranda non tende a $0$: la condizione necessaria fallisce.`,
+          ask: {
+            type: 'num',
+            prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\frac{\cos^2x+x}{x+1}$?`,
+            answer: '1',
+            explain: String.raw`$\dfrac{\cos^2x}{x+1}\to0$ e $\dfrac{x}{x+1}\to1$. Il limite totale è $1$.`,
+          },
+        },
+        String.raw`Poiché la funzione tende a $1\ne0$, l'integrale diverge a $+\infty$.`,
+      ],
+      result: String.raw`$\displaystyle\int_1^{+\infty}\frac{\cos^2x+x}{x+1}\,dx=+\infty$ (diverge)`,
+    },
+    {
+      id: 's12.criteri.L3.e4', type: 'mcq', level: 3,
+      prompt: String.raw`Quale affermazione su $\displaystyle\int_1^{+\infty}\frac{x^2}{x^3+1}\,dx$ è corretta?`,
+      options: [
+        String.raw`Converge, perché $f\to0$`,
+        String.raw`Converge per confronto con $\dfrac{1}{x^2}$`,
+        String.raw`Diverge: $f\sim\dfrac1x$ e $\int_1^{+\infty}\dfrac{dx}{x}=+\infty$`,
+        String.raw`Non si può decidere, perché il numeratore ha grado $2$`,
+      ],
+      answer: 2,
+      explain: String.raw`Per $x\to+\infty$: $\dfrac{x^2}{x^3+1}\sim\dfrac{x^2}{x^3}=\dfrac1x$, che diverge. "$f\to0$" è vero ma non basta, perché la condizione necessaria è solo necessaria. Il confronto con $\frac1{x^2}$ non vale, perché $\frac{x^2}{x^3+1}$ è più grande di $\frac1{x^2}$ per $x$ grande.`,
+    },
+    {
+      type: 'problem',
+      id: 's12.criteri.L3.p1', level: 3,
+      prompt: String.raw`Studia la convergenza di tre integrali: (a) $\displaystyle\int_0^{1}\frac{x^2}{\sqrt x\,(e^x-1)}\,dx$; (b) $\displaystyle\int_2^{+\infty}\frac{dx}{x\log x}$; (c) $\displaystyle\int_2^{+\infty}\frac{dx}{x\log^2x}$.`,
+      parts: [
+        {
+          type: 'mcq',
+          prompt: String.raw`(a) Comportamento di $\dfrac{x^2}{\sqrt x\,(e^x-1)}$ per $x\to0^+$.`,
+          options: [
+            String.raw`Converge: $f\sim x^{1/2}$ per $x\to0^+$`,
+            String.raw`Diverge: $f\sim\dfrac1x$ per $x\to0^+$`,
+            String.raw`Diverge: $\sqrt x$ al denominatore non è integrabile`,
+            String.raw`Converge: $f\sim x^{3/2}$ per $x\to0^+$`,
+          ],
+          answer: 0,
+          explain: String.raw`Con $e^x-1\sim x$: $f\sim\dfrac{x^2}{x^{1/2}\cdot x}=x^{1/2}$, limitata e quindi integrabile. L'opzione $x^{3/2}$ dimentica il denominatore $e^x-1\sim x$.`,
+        },
+        {
+          type: 'mcq',
+          prompt: String.raw`(b) Comportamento di $\displaystyle\int_2^{+\infty}\frac{dx}{x\log x}$.`,
+          options: [
+            String.raw`Converge: $\dfrac{1}{x\log x}\le\dfrac{1}{x^2}$`,
+            String.raw`Diverge: $\alpha=1$ e $\beta=1$`,
+            String.raw`Converge: il logaritmo cresce`,
+            String.raw`Diverge: $\alpha<1$`,
+          ],
+          answer: 1,
+          explain: String.raw`Campione con $\alpha=1$ e $\beta=1$: nel caso $\alpha=1$ serve $\beta>1$. Primitiva $\log\log x\to+\infty$: diverge.`,
+        },
+        {
+          type: 'mcq',
+          prompt: String.raw`(c) Comportamento di $\displaystyle\int_2^{+\infty}\frac{dx}{x\log^2x}$.`,
+          options: [
+            String.raw`Diverge: $\alpha=1$`,
+            String.raw`Converge: $\alpha=1$ e $\beta=2>1$`,
+            String.raw`Diverge: $\log^2x\to+\infty$`,
+            String.raw`Converge: $\dfrac{1}{x\log^2x}\to0$`,
+          ],
+          answer: 1,
+          explain: String.raw`Primitiva $-\dfrac{1}{\log x}$ (la derivata di $-\frac1{\log x}$ è $\frac{1}{x\log^2x}$). Per $x\to+\infty$ tende a $0$: converge. Il fatto che $\log^2x\to+\infty$ non basta da solo.`,
+        },
+      ],
+      solution: String.raw`(a) Vicino a $0$ si ha $e^x-1\sim x$, quindi l'integranda è $\sim x^{1/2}$: converge. (b) Campione con $\alpha=\beta=1$: diverge, perché $\log\log x\to+\infty$. (c) Campione con $\alpha=1$ e $\beta=2>1$: converge, con primitiva $-\frac{1}{\log x}$.`,
+      points: 4,
+    },
+  ],
+};
+
+const critPractice = [
+  {
+    id: 's12.criteri.gen-razionale', type: 'gen', level: 2,
+    gen: (R) => {
+      const p = R.pick([2, 3, 4]);
+      const a = R.int(1, 3);
+      const b = R.int(1, 5);
+      const conv = p > 2;
+      return {
+        type: 'mcq',
+        prompt: String.raw`Studia la convergenza di $\displaystyle\int_1^{+\infty}\frac{x+${a}}{x^{${p}}+${b}}\,dx$.`,
+        options: ['Converge', 'Diverge a $+\\infty$'],
+        answer: conv ? 0 : 1,
+        explain: String.raw`Per $x\to+\infty$ la funzione è $\sim\dfrac{x}{x^{${p}}}=x^{${1 - p}}$. Il campione $\int_1^{+\infty}\frac{dx}{x^\alpha}$ con $\alpha=${p - 1}$ converge sse $\alpha>1$: qui ${conv ? 'converge' : 'diverge'}.`,
+      };
+    },
+  },
+  {
+    id: 's12.criteri.gen-log', type: 'gen', level: 3,
+    gen: (R) => {
+      const [p, q, b] = R.pick(LOG_TAB);
+      const conv = p > q || (p === q && b > 1);
+      const alphaTex = p === q ? '' : `^{${H.frac(p, q)}}`;
+      const logTex = b === 1 ? '\\log x' : `\\log^{${b}}x`;
+      return {
+        type: 'mcq',
+        prompt: String.raw`Studia la convergenza di $\displaystyle\int_2^{+\infty}\frac{dx}{x${alphaTex}\,${logTex}}$.`,
+        options: ['Converge', 'Diverge'],
+        answer: conv ? 0 : 1,
+        explain: String.raw`Campione: $\int_2^{+\infty}\frac{dx}{x^\alpha\log^\beta x}$ converge sse $\alpha>1$, oppure $\alpha=1$ e $\beta>1$. Qui $\alpha=${H.frac(p, q)}$ e $\beta=${b}$: ${conv ? 'converge' : 'diverge'}.`,
+      };
+    },
+  },
+  {
+    id: 's12.criteri.gen-radice', type: 'gen', level: 3,
+    gen: (R) => {
+      const n = R.pick([3, 4, 5, 6]);
+      const c = R.int(1, 3);
+      const d = R.int(1, 3);
+      const conv = n > 4;
+      return {
+        type: 'mcq',
+        prompt: String.raw`Studia la convergenza di $\displaystyle\int_1^{+\infty}\frac{x+${c}}{\sqrt{x^{${n}}+${d}}}\,dx$.`,
+        options: ['Converge', 'Diverge'],
+        answer: conv ? 0 : 1,
+        explain: String.raw`Per $x\to+\infty$: $\dfrac{x+${c}}{\sqrt{x^{${n}}+${d}}}\sim\dfrac{x}{x^{${n}/2}}=x^{${H.frac(2 - n, 2)}}$. Converge sse $\frac n2-1>1$, cioè $n>4$. Qui $n=${n}$: ${conv ? 'converge' : 'diverge'}.`,
+      };
+    },
+  },
+  {
+    id: 's12.criteri.gen-coseno', type: 'gen', level: 2,
+    gen: (R) => {
+      const p = R.pick([1, 2, 3]);
+      const conv = p > 1;
+      const pot = p === 1 ? 'x' : `x^{${p}}`;
+      return {
+        type: 'mcq',
+        prompt: String.raw`Studia la convergenza di $\displaystyle\int_1^{+\infty}\frac{\cos^2x}{${pot}}\,dx$.`,
+        options: ['Converge', 'Diverge'],
+        answer: conv ? 0 : 1,
+        explain: conv
+          ? String.raw`$0\le\dfrac{\cos^2x}{x^{${p}}}\le\dfrac{1}{x^{${p}}}$ e l'esponente è $${p}>1$: converge per confronto.`
+          : String.raw`Qui $\dfrac{\cos^2x}{x}$ non è integrabile: $\cos^2x=\dfrac{1+\cos2x}{2}$, il termine $\dfrac12$ dà $\int\dfrac{dx}{2x}=+\infty$, mentre $\int\dfrac{\cos2x}{2x}\,dx$ converge. Diverge.`,
+      };
+    },
+  },
+  {
+    id: 's12.criteri.p5', type: 'mcq', level: 1,
+    prompt: String.raw`Quale affermazione su $\displaystyle\int_1^{+\infty}\frac{2+\sin x}{x^2}\,dx$ è corretta?`,
+    options: [
+      String.raw`Converge: $0<\dfrac{2+\sin x}{x^2}\le\dfrac{3}{x^2}$`,
+      String.raw`Diverge, perché $\sin x$ oscilla`,
+      String.raw`Converge a $0$, perché $\sin x\to0$`,
+      String.raw`Diverge, perché il numeratore tende a $2$`,
+    ],
+    answer: 0,
+    explain: String.raw`Il numeratore è compreso fra $1$ e $3$, quindi $\frac{2+\sin x}{x^2}\le\frac{3}{x^2}$. Il maggiorante converge. Il seno non tende a $0$, e l'oscillazione non impedisce la convergenza; l'integrale è positivo, quindi non può valere $0$.`,
+  },
+  {
+    id: 's12.criteri.p6', type: 'tf', level: 1,
+    prompt: String.raw`Se $0\le f\le g$ e $\displaystyle\int_a^{+\infty}g$ converge, allora $\displaystyle\int_a^{+\infty}f$ converge.`,
+    answer: true,
+    explain: String.raw`Vero: è il criterio del confronto, nel verso in cui il maggiorante converge.`,
+  },
+  {
+    id: 's12.criteri.p7', type: 'tf', level: 1,
+    prompt: String.raw`Se $0\le f\le g$ e $\displaystyle\int_a^{+\infty}f$ converge, allora $\displaystyle\int_a^{+\infty}g$ converge.`,
+    answer: false,
+    explain: String.raw`Falso. Il minorante converge, ma il maggiorante può essere più grande e divergere: per esempio $f=\frac1{x^2}\le g=\frac1x$ su $[1,+\infty)$.`,
+  },
+  {
+    id: 's12.criteri.p8', type: 'interval', level: 2,
+    prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_2^{+\infty}\frac{dx}{x^{\alpha}\log x}$?`,
+    answer: '(1,+inf)',
+    explain: String.raw`Con $\alpha>1$ l'esponente decide: converge. Con $\alpha=1$ si ha $\int\frac{dx}{x\log x}=\log\log x\to+\infty$: diverge. Con $\alpha<1$ diverge per il campione.`,
+  },
+  {
+    id: 's12.criteri.p9', type: 'num', level: 2,
+    prompt: String.raw`Calcola $\displaystyle\int_1^{+\infty}\frac{dx}{x^2+x}$ (il valore esatto, in forma chiusa).`,
+    answer: 'log(2)',
+    explain: String.raw`Decomposizione $\frac{1}{x(x+1)}=\frac1x-\frac1{x+1}$. Primitiva $\log\frac{x}{x+1}$. Per $x\to+\infty$ tende a $0$; in $x=1$ vale $\log\frac12$. Risultato $0-\log\frac12=\log2$.`,
+  },
+  {
+    id: 's12.criteri.p10', type: 'mcq', level: 2,
+    prompt: String.raw`Quale comportamento ha $\displaystyle\int_1^{+\infty}\frac{x^2+1}{x^4-x}\,dx$?`,
+    options: [
+      String.raw`Diverge: $f\sim\dfrac1x$`,
+      String.raw`Converge: $f\sim\dfrac{1}{x^2}$`,
+      String.raw`Converge: $f\to0$`,
+      String.raw`Diverge: il numeratore ha grado $2$`,
+    ],
+    answer: 1,
+    explain: String.raw`Per $x\to+\infty$: $\dfrac{x^2+1}{x^4-x}\sim\dfrac{x^2}{x^4}=\dfrac1{x^2}$, che è integrabile. "$f\to0$" è vero ma non basta da solo.`,
+  },
+  {
+    id: 's12.criteri.p11', type: 'open', level: 3,
+    prompt: String.raw`Perché il confronto con $\dfrac{1}{x}$ non decide la convergenza di $\displaystyle\int_1^{+\infty}\frac{\sin x}{x}\,dx$? Spiega perché l'integrale converge comunque.`,
+    answer: String.raw`$\left|\dfrac{\sin x}{x}\right|\le\dfrac1x$, ma $\int_1^{+\infty}\frac{dx}{x}=+\infty$: il maggiorante non è integrabile e il confronto non decide. Per parti: $\displaystyle\int_1^t\frac{\sin x}{x}\,dx=\cos1-\frac{\cos t}{t}-\int_1^t\frac{\cos x}{x^2}\,dx$. Il termine $\frac{\cos t}{t}$ tende a $0$ e l'ultimo integrale converge per confronto con $\frac1{x^2}$. Quindi l'integrale converge, ma non assolutamente.`,
+    rubric: [
+      String.raw`Il maggiorante $\frac1x$ diverge, quindi il confronto non decide`,
+      String.raw`Integrazione per parti sul tratto $[1,t]$`,
+      String.raw`Il termine $\frac{\cos t}{t}$ tende a $0$, e l'ultimo integrale converge per confronto con $\frac1{x^2}$`,
+      String.raw`Conclusione: converge, ma non assolutamente`,
+    ],
+    explain: String.raw`Il punto chiave è che la convergenza assoluta è più forte: qui manca. L'integrale converge grazie alle oscillazioni del seno, che la stima con $\frac1x$ non vede.`,
+    points: 3,
+  },
+  {
+    id: 's12.criteri.p12', type: 'tf', level: 3,
+    prompt: String.raw`Se $f\ge0$ e $\displaystyle\int_1^{+\infty}f$ converge, allora $\displaystyle\lim_{x\to+\infty}f(x)=0$.`,
+    answer: false,
+    explain: String.raw`Falso: serve che il limite esista. Esempio: sopra ogni punto $x=n$ ($n\ge2$) si metta un picco triangolare, continuo, di altezza $n$ e base $\frac{2}{n^3}$. Ogni picco ha area $\frac{1}{n^2}$, e la somma converge. Però $f$ non tende a $0$, perché ha picchi di altezza $n$.`,
+  },
+];
+
+const critFlashcards = [
+  { id: 's12.criteri.fc1', kind: 'thm', front: String.raw`Criterio del confronto per integrali impropri`, back: String.raw`Se $0\le f\le g$ su $[a,+\infty)$: se $\int g$ converge allora $\int f$ converge; se $\int f$ diverge allora $\int g$ diverge.` },
+  { id: 's12.criteri.fc2', kind: 'dim', front: String.raw`Idea della dimostrazione del confronto`, back: String.raw`$F(t)=\int_a^tf$ e $G(t)=\int_a^tg$ sono non decrescenti e $F\le G$. Se $G$ è limitata (converge), anche $F$ è limitata e crescente, quindi ha limite finito.` },
+  { id: 's12.criteri.fc3', kind: 'thm', front: String.raw`Confronto asintotico`, back: String.raw`Se $f,g\ge0$ e $\lim\frac{f}{g}=\ell$ con $0<\ell<+\infty$, allora $\int f$ e $\int g$ hanno la stessa natura. Per $\ell=0$ o $+\infty$ si ottiene solo un'implicazione.` },
+  { id: 's12.criteri.fc4', kind: 'formula', front: String.raw`Campione in $+\infty$`, back: String.raw`$\displaystyle\int_a^{+\infty}\frac{dx}{x^\alpha}$ converge $\iff\alpha>1$ ($a>0$).` },
+  { id: 's12.criteri.fc5', kind: 'formula', front: String.raw`Campione in $0^+$`, back: String.raw`$\displaystyle\int_0^{b}\frac{dx}{x^\alpha}$ converge $\iff\alpha<1$ ($b>0$).` },
+  { id: 's12.criteri.fc6', kind: 'formula', front: String.raw`Campione con logaritmo`, back: String.raw`$\displaystyle\int_2^{+\infty}\frac{dx}{x^\alpha\log^\beta x}$ converge $\iff\alpha>1$, oppure $\alpha=1$ e $\beta>1$.` },
+  { id: 's12.criteri.fc7', kind: 'thm', front: String.raw`Condizione necessaria di convergenza`, back: String.raw`Se $\int_a^{+\infty}f$ converge e $\lim_{x\to+\infty}f(x)$ esiste, allora il limite è $0$. È necessaria, non sufficiente.` },
+  { id: 's12.criteri.fc8', kind: 'errore', front: String.raw`Errore tipico: il verso del confronto`, back: String.raw`Se $f\le g$ e $\int f$ converge, non si conclude nulla su $\int g$. Se $\int g$ diverge, non si conclude nulla su $\int f$.` },
+  { id: 's12.criteri.fc9', kind: 'errore', front: String.raw`Errore tipico: "$f\to0$ quindi converge"`, back: String.raw`$f\to0$ è necessario ma non basta: $f=\frac1x$ tende a $0$ e $\int_1^{+\infty}\frac{dx}{x}=+\infty$.` },
+  { id: 's12.criteri.fc10', kind: 'metodo', front: String.raw`Come decidere la natura di un integrale positivo`, back: String.raw`1) Trova i punti critici. 2) Sostituisci $f$ con un'equivalente $\sim c\,x^{-\alpha}$ (o $\sim c\,x^{-\alpha}\log^{-\beta}x$). 3) Applica il campione. Se serve, usa il confronto diretto.` },
+];
+
+const criteri = {
+  id: 's12.criteri',
+  title: 'Confronto, confronto asintotico e integrali campione',
+  summary: String.raw`Decidere se un integrale improprio converge senza calcolarlo: confronto con una funzione nota, equivalenti asintotici, integrali campione e condizione necessaria.`,
+  prereq: ['s12.def', 's06.gerarchia', 's06.o'],
+  examRefs: ['Itinere 15/01/2026 · B1 (a)', 'Appello 10/02/2026 · B5', 'Appello 15/01/2026 · B3 (a)'],
+  lessons: [critL1, critL2, critL3],
+  practice: critPractice,
+  flashcards: critFlashcards,
+};
 
 export default {
   id: 's12',
   title: 'Integrali impropri',
   subtitle: 'Prima e seconda specie, criteri di convergenza, parametri',
   intro: String.raw`All'esame compare quasi ogni anno un integrale improprio: un'area che va all'infinito, una funzione illimitata vicino a un estremo, oppure un parametro da discutere. Qui impari a calcolarli come limiti e a decidere se convergono.`,
-  skills: [def],
+  skills: [def, criteri],
 };
