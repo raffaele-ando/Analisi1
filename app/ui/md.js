@@ -8,7 +8,16 @@ export function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-export function tex(src, display = false) {
+/** Rifinitura estetica delle formule generate: 1x -> x, -1x -> -x, x^{1} -> x, 0x+o(x) -> o(x). */
+export function tidy(src) {
+  return src
+    .replace(/(^|[^\w^{}\\])([+-]?)1x(?!\w)/g, '$1$2x')
+    .replace(/(^|[^\w^{}\\])0x\+o/g, '$1o')
+    .replace(/x\^\{1\}/g, 'x');
+}
+
+export function tex(src0, display = false) {
+  const src = tidy(src0);
   const key = (display ? 'D' : 'I') + src;
   if (cache.has(key)) return cache.get(key);
   let out;
