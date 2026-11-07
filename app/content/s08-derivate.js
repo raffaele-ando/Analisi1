@@ -2059,3 +2059,572 @@ Se la continuità fallisce, non ha senso controllare la derivabilità. Per trova
     },
   ],
 });
+
+// ===========================================================================
+// s08.teoremi · Punti critici, Fermat, Rolle, Lagrange, monotonia, invertibilità
+// ===========================================================================
+SKILLS.push({
+  id: 's08.teoremi',
+  title: 'Teoremi di Fermat, Rolle e Lagrange',
+  summary: String.raw`Trovi i punti critici, enunci e applichi Fermat, Rolle e Lagrange, e studi monotonia e invertibilità con la derivata.`,
+  prereq: ['s08.punti', 's08.regole', 's07.teoremi'],
+  examRefs: ['Appello 10/02/2026 · Parte A', 'Appello 11/06/2026 · Parte A', 'Appello 03/09/2026 · Parte A', 'Appello 03/09/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's08.teoremi.L1',
+      title: 'Punti critici e teorema di Fermat',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Punti stazionari e punti critici',
+          body: String.raw`Un punto $x_0$ è **stazionario** se $f$ è derivabile in $x_0$ e $f'(x_0)=0$: la tangente è orizzontale.
+
+Un punto $x_0$ è **critico** se è stazionario, **oppure** se $f$ non è derivabile in $x_0$. I punti critici sono i candidati naturali per massimi e minimi: li cerchi per primi, prima di confrontare i valori.
+
+>* **Teorema di Fermat.** Sia $x_0$ un punto interno all'intervallo di definizione di $f$, con $f$ derivabile in $x_0$. Se $x_0$ è di massimo o di minimo relativo, allora $f'(x_0)=0$.
+
+Attenzione: il teorema dà una condizione **necessaria**, non sufficiente. Una derivata nulla non garantisce un estremo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: candidati estremi di $x^2-4x+1$',
+          problem: String.raw`Usa Fermat per trovare i candidati a massimo e minimo di $f(x)=x^2-4x+1$ su tutto $\R$.`,
+          steps: [
+            String.raw`La funzione è derivabile ovunque, quindi i candidati sono solo i punti con $f'(x)=0$.`,
+            String.raw`$f'(x)=2x-4$, che si annulla solo per $x=2$.`,
+            String.raw`L'unico candidato è $x=2$, con $f(2)=4-8+1=-3$. La parabola ha concavità verso l'alto, quindi $-3$ è il minimo assoluto.`,
+          ],
+          result: String.raw`Minimo assoluto $-3$ in $x=2$. Non ci sono massimi: $f\to+\infty$ per $x\to\pm\infty$.`,
+        },
+        {
+          id: 's08.teoremi.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Sia $x_0$ un punto di massimo relativo interno, con $f$ derivabile in $x_0$. Quale affermazione è vera?`,
+          options: [
+            String.raw`$f'(x_0)=0$`,
+            String.raw`$f'(x_0)>0$`,
+            String.raw`$f''(x_0)<0$`,
+            String.raw`$f(x_0)=0$`,
+          ],
+          answer: 0,
+          explain: String.raw`È Fermat: la derivata in un estremo interno è nulla. $f'(x_0)>0$ è impossibile: significherebbe che $f$ cresce in $x_0$ e quindi valori più grandi a destra. $f''(x_0)<0$ è una condizione diversa, sufficiente per un massimo ma non richiesta dal teorema. $f(x_0)=0$ è un valore qualunque.`,
+        },
+        {
+          id: 's08.teoremi.L1.q2',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $f'(x_0)=0$, allora $x_0$ è un punto di massimo o di minimo di $f$.`,
+          answer: false,
+          explain: String.raw`Falso. Il teorema di Fermat va in una sola direzione. Controesempio: $f(x)=x^3$ in $x_0=0$: $f'(0)=0$, ma $0$ non è né massimo né minimo, perché $f$ è strettamente crescente.`,
+        },
+        {
+          id: 's08.teoremi.L1.q3',
+          type: 'num',
+          prompt: String.raw`Quanti punti stazionari ha $f(x)=x^3-12x$ in $\R$?`,
+          answer: '2',
+          explain: String.raw`$f'(x)=3x^2-12=0$ se $x^2=4$, cioè $x=\pm2$. Sono due punti stazionari.`,
+        },
+        {
+          id: 's08.teoremi.L1.q4',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=|x|$ quale punto è critico ma non stazionario?`,
+          options: [
+            String.raw`$x=0$`,
+            String.raw`$x=1$`,
+            String.raw`nessuno: $|x|$ non ha punti critici`,
+            String.raw`$x=-1$`,
+          ],
+          answer: 0,
+          explain: String.raw`In $x=0$ la funzione non è derivabile: il punto è critico per definizione, ma non stazionario, perché la derivata non esiste (e non è zero). In $x=\pm1$ la derivata vale $\pm1$, non è critico.`,
+        },
+        {
+          type: 'learn',
+          title: 'Dimostrazione di Fermat',
+          body: String.raw`Idea: se $x_0$ è un massimo relativo, il valore $f(x_0+h)$ è al più $f(x_0)$ per $h$ piccolo. Il rapporto incrementale è quindi $\le0$ per $h>0$ e $\ge0$ per $h<0$. Per derivabilità i due limiti coincidono: l'unico numero compatibile è $0$.`,
+        },
+        {
+          id: 's08.teoremi.L1.q5',
+          type: 'order',
+          prompt: String.raw`Riordina i passi della dimostrazione di Fermat per un massimo relativo $x_0$, derivabile in $x_0$.`,
+          steps: [
+            String.raw`Suppongo che $x_0$ sia un punto di massimo relativo interno, e $f$ derivabile in $x_0$.`,
+            String.raw`Per $h$ piccolo vale $f(x_0+h)\le f(x_0)$, cioè $f(x_0+h)-f(x_0)\le0$.`,
+            String.raw`Per $h>0$ il rapporto incrementale è $\le0$, quindi $f'_+(x_0)\le0$; per $h<0$ è $\ge0$, quindi $f'_-(x_0)\ge0$.`,
+            String.raw`Poiché $f$ è derivabile, $f'_+(x_0)=f'_-(x_0)=f'(x_0)$: l'unico valore compatibile è $f'(x_0)=0$.`,
+          ],
+          distractors: [
+            String.raw`Per $h>0$ il rapporto è $\ge0$, quindi $f'(x_0)\ge0$, e il massimo ha derivata positiva.`,
+            String.raw`Dalla continuità di $f$ segue $f'(x_0)=0$ senza bisogno di considerare $h>0$ e $h<0$.`,
+          ],
+          explain: String.raw`Il cuore della dimostrazione è confrontare i due limiti laterali del rapporto incrementale. Il primo distrattore ha il segno sbagliato per $h>0$; il secondo salta la parte essenziale: la continuità non basta per la derivata.`,
+        },
+        {
+          id: 's08.teoremi.L1.q6',
+          type: 'open',
+          points: 3,
+          prompt: String.raw`Enuncia il teorema di Fermat e dimostra che, se $x_0$ è un punto di minimo relativo interno con $f$ derivabile in $x_0$, allora $f'(x_0)=0$.`,
+          answer: String.raw`Enunciato: sia $x_0$ interno a un intervallo, $f$ derivabile in $x_0$ e $x_0$ di massimo o minimo relativo. Allora $f'(x_0)=0$. Dimostrazione (minimo): per $h$ piccolo $f(x_0+h)\ge f(x_0)$. Per $h>0$ il rapporto è $\ge0$, quindi $f'(x_0)\ge0$. Per $h<0$ il rapporto è $\le0$, quindi $f'(x_0)\le0$. Dunque $f'(x_0)=0$.`,
+          rubric: [
+            String.raw`Enunciato: punto interno, derivabilità, estremo relativo, tesi $f'(x_0)=0$`,
+            String.raw`Confronto del segno del rapporto incrementale per $h>0$ e per $h<0$`,
+            String.raw`Uso della derivabilità: i due limiti laterali coincidono`,
+            String.raw`Conclusione corretta $f'(x_0)=0$`,
+          ],
+        },
+      ],
+    },
+    {
+      id: 's08.teoremi.L2',
+      title: 'Rolle e Lagrange',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Rolle e Lagrange',
+          body: String.raw`>* **Teorema di Rolle.** Sia $f$ continua su $[a,b]$, derivabile in $(a,b)$, con $f(a)=f(b)$. Allora esiste $c\in(a,b)$ con $f'(c)=0$.
+
+>* **Teorema di Lagrange.** Sia $f$ continua su $[a,b]$ e derivabile in $(a,b)$. Allora esiste $c\in(a,b)$ con
+$$f'(c)=\frac{f(b)-f(a)}{b-a}.$$
+
+Geometria: Lagrange dice che esiste un punto in cui la tangente è **parallela alla secante** tra $(a,f(a))$ e $(b,f(b))$. Rolle è il caso particolare in cui la secante è orizzontale.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: Rolle per $x^2-4$',
+          problem: String.raw`Verifica le ipotesi di Rolle per $f(x)=x^2-4$ su $[-2,2]$ e trova $c$.`,
+          steps: [
+            String.raw`$f$ è un polinomio: continua su $[-2,2]$ e derivabile ovunque. Inoltre $f(-2)=0=f(2)$.`,
+            String.raw`$f'(x)=2x$, che si annulla in $x=0$, interno a $(-2,2)$.`,
+          ],
+          result: String.raw`Le ipotesi valgono e $c=0$: la tangente nel vertice è orizzontale.`,
+        },
+        {
+          id: 's08.teoremi.L2.q1',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=|x|$ su $[-1,1]$, con $f(-1)=f(1)=1$, quale ipotesi di Rolle non vale?`,
+          options: [
+            String.raw`$f$ non è derivabile in $0$, che è interno a $(-1,1)$`,
+            String.raw`$f(-1)\neq f(1)$`,
+            String.raw`$f$ non è continua su $[-1,1]$`,
+            String.raw`Non manca nessuna ipotesi: $c$ esiste sempre`,
+          ],
+          answer: 0,
+          explain: String.raw`$|x|$ è continua su $[-1,1]$ e $f(-1)=f(1)$, ma non è derivabile in $0$, dove non si può trovare $f'(c)=0$. Le altre opzioni sono false: i valori agli estremi sono uguali, e la funzione è continua. La quarta è una conclusione sbagliata: la conclusione di Rolle vale solo con tutte le ipotesi.`,
+        },
+        {
+          id: 's08.teoremi.L2.q2',
+          type: 'num',
+          prompt: String.raw`Per $f(x)=x^2$ su $[1,5]$, qual è il valore $c$ del teorema di Lagrange?`,
+          answer: '3',
+          explain: String.raw`La pendenza della secante è $\frac{f(5)-f(1)}{5-1}=\frac{25-1}{4}=6$. Poiché $f'(c)=2c$, si ha $2c=6$, cioè $c=3$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: Lagrange per $x^3$ su $[0,1]$',
+          problem: String.raw`Trova $c$ del teorema di Lagrange per $f(x)=x^3$ su $[0,1]$.`,
+          steps: [
+            String.raw`La pendenza della secante è $\frac{f(1)-f(0)}{1-0}$.`,
+            {
+              text: String.raw`Calcola la pendenza della secante.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\frac{f(1)-f(0)}{1-0}$ per $f(x)=x^3$?`,
+                answer: '1',
+                explain: String.raw`$f(1)=1$ e $f(0)=0$: la pendenza è $1$.`,
+              },
+            },
+            {
+              text: String.raw`Imponi $f'(c)=1$ con $f'(x)=3x^2$ e risolvi per $c\in(0,1)$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $c>0$ con $3c^2=1$?`,
+                answer: '1/sqrt(3)',
+                explain: String.raw`$3c^2=1$ dà $c=\frac{1}{\sqrt3}$, che è in $(0,1)$.`,
+              },
+            },
+          ],
+          result: String.raw`$c=\frac{1}{\sqrt3}$: la tangente in $c$ è parallela alla secante tra $0$ e $1$.`,
+        },
+        {
+          id: 's08.teoremi.L2.q3',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Il teorema di Lagrange vale anche se $f$ non è continua in $a$.`,
+          answer: false,
+          explain: String.raw`Falso. Serve la continuità su tutto $[a,b]$, incluso $a$ e $b$. Senza continuità agli estremi, il teorema non garantisce il punto $c$.`,
+        },
+        {
+          id: 's08.teoremi.L2.q4',
+          type: 'num',
+          prompt: String.raw`Per $f(x)=x^3$ su $[0,2]$, quanto vale $c$ del teorema di Lagrange, se $c>0$? Scrivi il valore esatto.`,
+          answer: '2/sqrt(3)',
+          explain: String.raw`La pendenza è $\frac{8-0}{2}=4$. Da $3c^2=4$ si ottiene $c=\frac{2}{\sqrt3}\approx1{,}15$, in $(0,2)$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Dimostrazione di Lagrange',
+          body: String.raw`Idea: togli alla funzione la retta secante. Con $m=\frac{f(b)-f(a)}{b-a}$ la funzione $g(x)=f(x)-mx$ ha gli stessi valori agli estremi. Applicando Rolle a $g$ si trova $c$ con $g'(c)=0$, cioè $f'(c)=m$.`,
+        },
+        {
+          id: 's08.teoremi.L2.q5',
+          type: 'order',
+          prompt: String.raw`Riordina i passi della dimostrazione del teorema di Lagrange.`,
+          steps: [
+            String.raw`Sia $m=\frac{f(b)-f(a)}{b-a}$ e $g(x)=f(x)-mx$.`,
+            String.raw`Calcolo $g(b)-g(a)=f(b)-f(a)-m(b-a)=0$: quindi $g(a)=g(b)$.`,
+            String.raw`Applico Rolle a $g$, continua su $[a,b]$ e derivabile in $(a,b)$: esiste $c\in(a,b)$ con $g'(c)=0$.`,
+            String.raw`Poiché $g'(x)=f'(x)-m$, si ha $f'(c)=m=\frac{f(b)-f(a)}{b-a}$.`,
+          ],
+          distractors: [
+            String.raw`Applico Fermat direttamente a $f$, senza ausiliaria: quindi $f'(c)=0$ per ogni $c$.`,
+            String.raw`Scelgo $g(x)=f(x)+mx$ e ottengo $g'(c)=0$, quindi $f'(c)=-m$.`,
+          ],
+          explain: String.raw`La chiave è la funzione ausiliaria $g$: toglie la secante e rende gli estremi uguali, così Rolle si applica. Il primo distrattore dimentica che Fermat e Rolle richiedono $f(a)=f(b)$; il secondo cambia segno alla secante e sbaglia la derivata.`,
+        },
+        {
+          id: 's08.teoremi.L2.q6',
+          type: 'open',
+          points: 3,
+          prompt: String.raw`Enuncia il teorema di Lagrange e spiegane il significato geometrico. Dimostralo usando il teorema di Rolle.`,
+          answer: String.raw`Enunciato: se $f$ è continua su $[a,b]$ e derivabile in $(a,b)$, esiste $c\in(a,b)$ con $f'(c)=\frac{f(b)-f(a)}{b-a}$. Geometria: esiste un punto in cui la tangente è parallela alla secante per $(a,f(a))$ e $(b,f(b))$. Dimostrazione: $g(x)=f(x)-mx$ con $m$ la pendenza della secante verifica $g(a)=g(b)$; per Rolle esiste $c$ con $g'(c)=0$, cioè $f'(c)=m$.`,
+          rubric: [
+            String.raw`Enunciato con ipotesi (continuità su $[a,b]$, derivabilità in $(a,b)$) e tesi`,
+            String.raw`Significato geometrico: tangente parallela alla secante`,
+            String.raw`Funzione ausiliaria $g(x)=f(x)-mx$ con $g(a)=g(b)$`,
+            String.raw`Applicazione di Rolle e conclusione $f'(c)=m$`,
+          ],
+        },
+      ],
+    },
+    {
+      id: 's08.teoremi.L3',
+      title: 'Monotonia e invertibilità',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il test di monotonia',
+          body: String.raw`Sia $f$ derivabile su un intervallo $I$.
+- Se $f'(x)\ge0$ per ogni $x\in I$, allora $f$ è **non decrescente** su $I$.
+- Se $f'(x)>0$ per ogni $x$ interno a $I$ (salvo al più punti isolati), allora $f$ è **strettamente crescente**.
+- Se $f'=0$ su un intervallo, allora $f$ è costante lì. In particolare se $f'=g'$, allora $f-g$ è costante.
+
+Il segno della derivata dice dove la funzione sale o scende. Lo studio si fa come tabella: punti critici, segno di $f'$, conclusione.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: monotonia di $x^3-3x$',
+          problem: String.raw`Studia la monotonia di $f(x)=x^3-3x$ su $\R$.`,
+          steps: [
+            String.raw`$f'(x)=3x^2-3=3(x-1)(x+1)$. Si annulla in $x=-1$ e $x=1$.`,
+            String.raw`Segno: per $x<-1$ è $+$ (prodotto di due negativi per $3$); tra $-1$ e $1$ è $-$; per $x>1$ è $+$.`,
+            String.raw`Quindi $f$ cresce su $(-\infty,-1]$ e su $[1,+\infty)$, decresce su $[-1,1]$.`,
+          ],
+          result: String.raw`Massimo relativo in $x=-1$ con $f(-1)=2$; minimo relativo in $x=1$ con $f(1)=-2$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: invertibilità di $x+\\tfrac12\\sin x$',
+          problem: String.raw`Dimostra che $f(x)=x+\frac12\sin x$ è invertibile su $\R$.`,
+          steps: [
+            String.raw`Calcolo la derivata: $f'(x)=1+\frac12\cos x$.`,
+            {
+              text: String.raw`Per trovare il minimo di $f'$ serve il minimo di $\cos x$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Qual è il minimo di $\cos x$?`,
+                answer: '-1',
+                explain: String.raw`Il coseno varia tra $-1$ e $1$.`,
+              },
+            },
+            {
+              text: String.raw`Quindi $f'(x)\ge1+\frac12(-1)=\frac12>0$ per ogni $x$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $1+\frac12\cdot(-1)$?`,
+                answer: '1/2',
+                explain: String.raw`$1-\frac12=\frac12$.`,
+              },
+            },
+          ],
+          result: String.raw`$f'>0$ ovunque: $f$ è strettamente crescente su $\R$, quindi iniettiva, quindi invertibile su $\R$ (sull'immagine).`,
+        },
+        {
+          id: 's08.teoremi.L3.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale è la definizione di funzione strettamente crescente su $I$?`,
+          options: [
+            String.raw`per ogni $x_1<x_2$ in $I$ si ha $f(x_1)<f(x_2)$`,
+            String.raw`per ogni $x_1<x_2$ in $I$ si ha $f(x_1)\le f(x_2)$`,
+            String.raw`$f'(x)>0$ per ogni $x\in I$`,
+            String.raw`$f(x)>0$ per ogni $x\in I$`,
+          ],
+          answer: 0,
+          explain: String.raw`La definizione è sui valori: per ogni coppia $x_1<x_2$, $f(x_1)<f(x_2)$. Il secondo descrive una funzione non decrescente. Il terzo è una condizione sufficiente, non la definizione. Il quarto riguarda il segno dei valori.`,
+        },
+        {
+          id: 's08.teoremi.L3.q2',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $f'(x)>0$ su un intervallo, allora $f$ è strettamente crescente su quell'intervallo.`,
+          answer: true,
+          explain: String.raw`Vero: è il test di monotonia (salvo al più punti isolati di derivata nulla, che non cambiano la conclusione).`,
+        },
+        {
+          id: 's08.teoremi.L3.q3',
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=x^3-3x$.`,
+          answer: '3*x^2-3',
+          vars: ['x'],
+          explain: String.raw`$D(x^3)=3x^2$, $D(-3x)=-3$: $f'(x)=3x^2-3$.`,
+        },
+        {
+          id: 's08.teoremi.L3.q4',
+          type: 'interval',
+          prompt: String.raw`Dove è decrescente $f(x)=x^3-12x$? Scrivi l'intervallo.`,
+          answer: '(-2,2)',
+          explain: String.raw`$f'(x)=3x^2-12=3(x-2)(x+2)$ è negativa tra $-2$ e $2$, quindi $f$ decresce su $(-2,2)$.`,
+        },
+        {
+          id: 's08.teoremi.L3.q5',
+          type: 'problem',
+          level: 3,
+          source: 'Appello 03/09/2026 · Parte B',
+          points: 4,
+          prompt: String.raw`Sia $f(x)=x+\frac12\sin x$. (a) Calcola $f'(x)$. (b) Trova il minimo di $f'$ su $\R$. (c) La funzione è invertibile su $\R$?`,
+          parts: [
+            {
+              type: 'expr',
+              prompt: String.raw`(a) $f'(x)$`,
+              answer: '1+cos(x)/2',
+              vars: ['x'],
+              explain: String.raw`$D(x)=1$, $D(\frac12\sin x)=\frac12\cos x$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`(b) Minimo di $f'$ su $\R$`,
+              answer: '1/2',
+              explain: String.raw`$\cos x\ge-1$, quindi $f'\ge1-\frac12=\frac12$ con uguaglianza in $x=\pi+2k\pi$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`(c) La funzione è invertibile su $\R$?`,
+              options: [
+                String.raw`Sì: $f'\ge\frac12>0$, quindi $f$ è strettamente crescente e iniettiva`,
+                String.raw`No: $f$ ha un punto critico`,
+                String.raw`Sì, perché $f$ è dispari`,
+                String.raw`No: $f$ non è continua`,
+              ],
+              answer: 0,
+              explain: String.raw`Con $f'\ge\frac12>0$, $f$ è strettamente crescente, quindi iniettiva su $\R$ e invertibile sull'immagine. Un punto critico non impedisce l'invertibilità, se $f'$ non cambia segno. La parità non c'entra; la continuità è vera perché $f$ è derivabile.`,
+            },
+          ],
+          solution: String.raw`(a) $f'(x)=1+\frac12\cos x$. (b) Minimo $\frac12$, perché $\cos x\ge-1$. (c) Poiché $f'\ge\frac12>0$, $f$ è strettamente crescente su $\R$ e quindi invertibile sulla sua immagine.`,
+        },
+        {
+          id: 's08.teoremi.L3.q6',
+          type: 'num',
+          prompt: String.raw`Quanti punti stazionari ha $f(x)=x^4-8x^2$ in $\R$?`,
+          answer: '3',
+          explain: String.raw`$f'(x)=4x^3-16x=4x(x^2-4)$, che si annulla in $x=0$ e $x=\pm2$. Sono tre punti.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.teoremi.p1',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.int(-3, 2), b = a + R.pick([2, 4, 6]), p = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Per $f(x)=x^2${p === 0 ? '' : (p > 0 ? '+' : '-') + ' ' + (Math.abs(p) === 1 ? '' : Math.abs(p)) + 'x'}$ su $[${a},${b}]$, qual è il valore $c$ del teorema di Lagrange?`,
+          answer: H.fracStr(a + b, 2),
+          explain: String.raw`La pendenza della secante è $a+b+(${p})=${a + b + p}$ (la somma $a+b$ più $p$), e $f'(c)=2c+(${p})$. Quindi $c=\frac{a+b}{2}=${H.fracStr(a + b, 2)}$, in $(${a},${b})$.`,
+        };
+      },
+    },
+    {
+      id: 's08.teoremi.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const p = R.int(-3, 0), q = R.int(p + 2, p + 6);
+        return {
+          type: 'num',
+          prompt: String.raw`Per $f(x)=(x-(${p}))(x-(${q}))$ su $[${p},${q}]$, il teorema di Rolle dà $c$ con $f'(c)=0$. Quanto vale $c$?`,
+          answer: H.fracStr(p + q, 2),
+          explain: String.raw`$f(x)=x^2-(${p + q})x+(${p * q})$, quindi $f'(x)=2x-(${p + q})$. Si annulla in $x=\frac{${p + q}}{2}=${H.fracStr(p + q, 2)}$, interno a $(${p},${q})$.`,
+        };
+      },
+    },
+    {
+      id: 's08.teoremi.p3',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const k = R.pick([1, 2, 3]);
+        return {
+          type: 'set',
+          prompt: String.raw`Trova tutti i punti stazionari di $f(x)=x^3-${3 * k * k}x$, separati da punto e virgola.`,
+          answer: [String(k), String(-k)],
+          explain: String.raw`$f'(x)=3x^2-${3 * k * k}=0$ dà $x^2=${k * k}$, quindi $x=\pm${k}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.teoremi.p4',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const r = R.pick([1, 2, 3]);
+        return {
+          type: 'interval',
+          prompt: String.raw`Dove è decrescente $f(x)=x^3-${3 * r * r}x$? Scrivi l'intervallo.`,
+          answer: `(${-r},${r})`,
+          explain: String.raw`$f'(x)=3x^2-${3 * r * r}=3(x-${r})(x+${r})$ è negativa per $|x|<${r}$: decresce su $(${-r},${r})$.`,
+        };
+      },
+    },
+    {
+      id: 's08.teoremi.p5',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const b = R.pick([1, 2, 3, 4]);
+        return {
+          type: 'num',
+          prompt: String.raw`Per $f(x)=x^3$ su $[0,${b}]$, quanto vale $c>0$ del teorema di Lagrange? Scrivi il valore esatto.`,
+          answer: `${b}/sqrt(3)`,
+          explain: String.raw`La pendenza della secante è $\frac{${b}^3}{${b}}=${b * b}$. Da $3c^2=${b * b}$ si ottiene $c=\frac{${b}}{\sqrt3}$, in $(0,${b})$.`,
+        };
+      },
+    },
+    {
+      id: 's08.teoremi.p6',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f$ è derivabile in $x_0$ e $f'(x_0)=0$, allora $x_0$ è un estremo relativo.`,
+      answer: false,
+      explain: String.raw`Falso: $f(x)=x^3$ in $0$ ha derivata nulla ma non è un estremo. Fermat dà solo una condizione necessaria.`,
+    },
+    {
+      id: 's08.teoremi.p7',
+      type: 'mcq',
+      prompt: String.raw`Quale ipotesi di Rolle manca per $f(x)=|x-1|$ su $[0,2]$?`,
+      options: [
+        String.raw`$f$ non è derivabile in $1$, che è interno a $(0,2)$`,
+        String.raw`$f(0)\neq f(2)$`,
+        String.raw`$f$ non è continua su $[0,2]$`,
+        String.raw`nessuna: $f(0)=f(2)$ e $f$ è derivabile in ogni punto di $(0,2)$`,
+      ],
+      answer: 0,
+      explain: String.raw`$f(0)=f(2)=1$ e $f$ è continua. Ma in $x=1$ c'è un punto angoloso: $f$ non è derivabile lì, quindi Rolle non si applica (e infatti $f'=\pm1$ non si annulla mai).`,
+    },
+    {
+      id: 's08.teoremi.p8',
+      type: 'num',
+      prompt: String.raw`Quanti punti stazionari ha $f(x)=x^3-3x^2$ in $\R$? Attenzione: calcola $f'(x)=3x^2-6x$.`,
+      answer: '2',
+      explain: String.raw`$f'(x)=3x(x-2)$: si annulla in $x=0$ e $x=2$. Sono due punti.`,
+    },
+    {
+      id: 's08.teoremi.p9',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f'(x)\ge0$ su $\R$, allora $f$ è non decrescente su $\R$.`,
+      answer: true,
+      explain: String.raw`Vero: è il test di monotonia (versione non stretta).`,
+    },
+    {
+      id: 's08.teoremi.p10',
+      type: 'mcq',
+      prompt: String.raw`Per $f(x)=x^3$, $f$ è strettamente crescente su $\R$?`,
+      options: [
+        String.raw`Sì: $f'(x)=3x^2\ge0$, con $f'(0)=0$ solo in un punto isolato`,
+        String.raw`No: $f'(0)=0$ quindi $f$ non è crescente`,
+        String.raw`No: $f$ è decrescente per $x<0$`,
+        String.raw`Sì, perché $f$ è pari`,
+      ],
+      answer: 0,
+      explain: String.raw`$f'(x)=3x^2$ è positiva ovunque tranne in $0$. Un punto isolato in cui $f'=0$ non blocca la crescita stretta. Il secondo distrattore confonde il punto stazionario con il non essere crescente. Il terzo è falso perché $f'\ge0$. Il quarto: $x^3$ è dispari, non pari.`,
+    },
+    {
+      id: 's08.teoremi.p11',
+      type: 'num',
+      prompt: String.raw`Quanto vale $f'(0)$ per $f(x)=\sin x+x$?`,
+      answer: '2',
+      explain: String.raw`$f'(x)=\cos x+1$, quindi $f'(0)=1+1=2$.`,
+    },
+    {
+      id: 's08.teoremi.p12',
+      type: 'mcq',
+      prompt: String.raw`Quale teorema garantisce un punto $c$ con $f'(c)$ uguale alla pendenza della secante per $a$ e $b$?`,
+      options: [
+        String.raw`Lagrange`,
+        String.raw`Fermat`,
+        String.raw`Weierstrass`,
+        String.raw`dei valori intermedi`,
+      ],
+      answer: 0,
+      explain: String.raw`È Lagrange: tangente parallela alla secante. Fermat riguarda un punto di estremo con tangente orizzontale. Weierstrass garantisce massimo e minimo. Il teorema dei valori intermedi riguarda i valori della funzione, non la derivata.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.teoremi.fc1',
+      kind: 'thm',
+      front: String.raw`Teorema di Fermat`,
+      back: String.raw`Se $x_0$ è interno all'intervallo, $f$ è derivabile in $x_0$ e $x_0$ è di massimo o minimo relativo, allora $f'(x_0)=0$. La condizione è solo necessaria.`,
+    },
+    {
+      id: 's08.teoremi.fc2',
+      kind: 'dim',
+      front: String.raw`Idea della dimostrazione di Fermat`,
+      back: String.raw`Per un massimo $f(x_0+h)-f(x_0)\le0$: il rapporto incrementale è $\le0$ per $h>0$ e $\ge0$ per $h<0$. Per derivabilità i due limiti coincidono, quindi $f'(x_0)=0$.`,
+    },
+    {
+      id: 's08.teoremi.fc3',
+      kind: 'thm',
+      front: String.raw`Teorema di Rolle`,
+      back: String.raw`$f$ continua su $[a,b]$, derivabile in $(a,b)$, con $f(a)=f(b)$. Allora esiste $c\in(a,b)$ con $f'(c)=0$.`,
+    },
+    {
+      id: 's08.teoremi.fc4',
+      kind: 'thm',
+      front: String.raw`Teorema di Lagrange`,
+      back: String.raw`$f$ continua su $[a,b]$, derivabile in $(a,b)$. Allora esiste $c\in(a,b)$ con $f'(c)=\dfrac{f(b)-f(a)}{b-a}$: la tangente in $c$ è parallela alla secante.`,
+    },
+    {
+      id: 's08.teoremi.fc5',
+      kind: 'dim',
+      front: String.raw`Idea della dimostrazione di Lagrange`,
+      back: String.raw`Con $m=\frac{f(b)-f(a)}{b-a}$, la funzione $g(x)=f(x)-mx$ ha $g(a)=g(b)$. Rolle su $g$ dà $c$ con $g'(c)=0$, cioè $f'(c)=m$.`,
+    },
+    {
+      id: 's08.teoremi.fc6',
+      kind: 'def',
+      front: String.raw`Punto stazionario e punto critico`,
+      back: String.raw`Stazionario: $f$ derivabile con $f'(x_0)=0$. Critico: stazionario, oppure $f$ non derivabile in $x_0$.`,
+    },
+    {
+      id: 's08.teoremi.fc7',
+      kind: 'thm',
+      front: String.raw`Test di monotonia`,
+      back: String.raw`$f'\ge0$ su $I$ $\Rightarrow$ $f$ non decrescente; $f'>0$ su $I$ (salvo punti isolati) $\Rightarrow$ $f$ strettamente crescente; $f'=0$ su $I$ $\Rightarrow$ $f$ costante.`,
+    },
+    {
+      id: 's08.teoremi.fc8',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "$f'(x_0)=0$ quindi $x_0$ è un estremo"`,
+      back: String.raw`Falso: Fermat è una condizione necessaria. $x^3$ in $0$ ha derivata nulla ma non è un estremo.`,
+    },
+    {
+      id: 's08.teoremi.fc9',
+      kind: 'def',
+      front: String.raw`Funzione strettamente crescente`,
+      back: String.raw`Per ogni $x_1<x_2$ in $I$ si ha $f(x_1)<f(x_2)$. Una funzione strettamente crescente è iniettiva.`,
+    },
+    {
+      id: 's08.teoremi.fc10',
+      kind: 'metodo',
+      front: String.raw`Studio di monotonia: come si fa`,
+      back: String.raw`1) Calcola $f'$. 2) Trova i punti in cui $f'=0$ o non esiste. 3) Studia il segno di $f'$ sugli intervalli tra questi punti. 4) Concludi: $+$ crescente, $-$ decrescente.`,
+    },
+  ],
+});
