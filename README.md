@@ -37,7 +37,6 @@ tools/
   build.mjs           genera dist/ (pagina per l'Artifact e copia locale)
   check-imports.mjs   verifica gli import dei moduli
   check-contrast.mjs  verifica il contrasto WCAG dei token colore
-  check-contrast.mjs  verifica il contrasto WCAG dei colori
   test-sync.mjs       test della sincronizzazione con database in memoria
 ```
 
