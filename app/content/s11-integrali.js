@@ -3,6 +3,18 @@ import { H } from '../engine/tex.js';
 // Nota: i campi `_f` (integranda di cui `answer` è una primitiva) e `_int` ([f, a, b] con
 // ∫_a^b f = answer) servono solo alla verifica numerica automatica dei contenuti.
 
+/** Somma di termini con coefficienti razionali: [[p, q, 'x^{2}'], ...] -> LaTeX pulito */
+function sumTex(terms) {
+  let s = '';
+  for (const [p, q, v] of terms) {
+    if (p === 0) continue;
+    const [a, b] = H.reduce(p, q);
+    const abs = b === 1 ? (Math.abs(a) === 1 && v ? '' : String(Math.abs(a))) : `\\frac{${Math.abs(a)}}{${b}}`;
+    s += (a < 0 ? (s ? ' - ' : '-') : s ? ' + ' : '') + abs + v;
+  }
+  return s || '0';
+}
+
 // ---------------------------------------------------------------------------
 // s11.riemann · Integrale di Riemann, media, funzione integrale, teorema fondamentale
 // ---------------------------------------------------------------------------
@@ -329,7 +341,7 @@ Calcolare integrali diventa: **trovare una primitiva**.`,
           type: 'num',
           prompt: String.raw`Somma **${sup ? 'superiore' : 'inferiore'}** di $f(x)=${H.coef(k)}x$ su $[0,${b}]$ dividendo in $${n}$ parti uguali.`,
           answer: H.fracStr(...val),
-          explain: String.raw`Ampiezza $\frac{${b}}{${n}}$. $f$ è crescente: ${sup ? 'massimi negli estremi destri' : 'minimi negli estremi sinistri'}. Somma $=\frac{${b}}{${n}}\sum ${H.coef(k)}x_i = ${H.frac(...val)}$. In generale per $kx$ su $[0,b]$: $s_n=kb^2\frac{n-1}{2n}$, $S_n=kb^2\frac{n+1}{2n}$, entrambe $\to\frac{kb^2}2$.`,
+          explain: String.raw`Ampiezza $${H.frac(b, n)}$. $f$ è crescente: ${sup ? 'massimi negli estremi destri' : 'minimi negli estremi sinistri'}. Somma $=${H.frac(b, n)}\sum ${H.coef(k)}x_i = ${H.frac(...val)}$. In generale per $kx$ su $[0,b]$: $s_n=kb^2\frac{n-1}{2n}$, $S_n=kb^2\frac{n+1}{2n}$, entrambe $\to\frac{kb^2}2$.`,
         };
       },
     },
@@ -365,7 +377,7 @@ Calcolare integrali diventa: **trovare una primitiva**.`,
           type: 'num',
           prompt: String.raw`Media integrale di $f(x)=${H.poly([a, 0, b])}$ su $[0,${c}]$.`,
           answer: H.fracStr(a * c * c + 3 * b, 3), _int: [`((${a})*x^2+(${b}))/${c}`, 0, c],
-          explain: String.raw`$\int_0^{${c}}(${H.poly([a, 0, b])})dx=\left[${H.poly([a, 0, 0, 0]).replace(/x\^\{3\}/, 'x^{3}')}/3${H.signed(b, 'x')}\right]_0^{${c}}=${H.frac(a * c * c * c + 3 * b * c, 3)}$. Divido per la lunghezza $${c}$: media $=${H.frac(a * c * c + 3 * b, 3)}$.`,
+          explain: String.raw`$\int_0^{${c}}(${H.poly([a, 0, b])})dx=\left[${sumTex([[a, 3, 'x^{3}'], [b, 1, 'x']])}\right]_0^{${c}}=${H.frac(a * c * c * c + 3 * b * c, 3)}$. Divido per la lunghezza $${c}$: media $=${H.frac(a * c * c + 3 * b, 3)}$.`,
         };
       },
     },
@@ -373,16 +385,17 @@ Calcolare integrali diventa: **trovare una primitiva**.`,
       id: 's11.riemann.gen-limite', type: 'gen', level: 3,
       gen: (R) => {
         const a = R.int(1, 5), m = R.int(1, 3);
+        const arg = (v) => `${a === 1 ? '' : a}${v}${m === 1 ? '' : `^{${m}}`}`;
         const g = R.pick([
-          { tex: String.raw`\sin(${a === 1 ? '' : a}t${m === 1 ? '' : `^{${m}}`})`, name: 'sin' },
-          { tex: String.raw`\log(1+${a === 1 ? '' : a}t${m === 1 ? '' : `^{${m}}`})`, name: 'log' },
-          { tex: String.raw`\left(e^{${a === 1 ? '' : a}t${m === 1 ? '' : `^{${m}}`}}-1\right)`, name: 'exp' },
+          (v) => String.raw`\sin(${arg(v)})`,
+          (v) => String.raw`\log(1+${arg(v)})`,
+          (v) => String.raw`\left(e^{${arg(v)}}-1\right)`,
         ]);
         return {
           type: 'num',
-          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}\frac{1}{x^{${m + 1}}}\int_0^x ${g.tex}\,dt$.`,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}\frac{1}{x^{${m + 1}}}\int_0^x ${g('t')}\,dt$.`,
           answer: H.fracStr(a, m + 1),
-          explain: String.raw`Forma $\frac00$. De l'Hôpital + teorema fondamentale: il limite diventa $\lim\frac{${g.tex.replace(/t/g, 'x')}}{${m + 1}x^{${m}}}$. Poiché l'integranda $\sim ${a === 1 ? '' : a}x${m === 1 ? '' : `^{${m}}`}$, il risultato è $${H.frac(a, m + 1)}$.`,
+          explain: String.raw`Forma $\frac00$. De l'Hôpital + teorema fondamentale: il limite diventa $\displaystyle\lim_{x\to0^+}\frac{${g('x')}}{${m + 1}x${m === 1 ? '' : `^{${m}}`}}$. L'integranda è $\sim ${arg('x')}$ (limiti notevoli), quindi il risultato è $${H.frac(a, m + 1)}$.`,
         };
       },
     },
@@ -397,7 +410,7 @@ Calcolare integrali diventa: **trovare una primitiva**.`,
           type: 'num',
           prompt: String.raw`Calcola $\displaystyle\int_{${lo}}^{${hi}}\left(${H.poly([p, q, r])}\right)dx$.`,
           answer: H.fracStr(num6, 6), _int: [`(${p})*x^2+(${q})*x+(${r})`, lo, hi],
-          explain: String.raw`Primitiva termine a termine: $G(x)=${p ? `${H.frac(p, 3)}x^3` : ''}${q ? `${p ? (q > 0 ? '+' : '') : ''}${H.frac(q, 2)}x^2` : ''}${r ? H.signed(r, 'x') : ''}$. $G(${hi})-G(${lo})=${H.frac(num6, 6)}$.`,
+          explain: String.raw`Primitiva termine a termine: $G(x)=${sumTex([[p, 3, 'x^{3}'], [q, 2, 'x^{2}'], [r, 1, 'x']])}$. $G(${hi})-G(${lo})=${H.frac(num6, 6)}$.`,
         };
       },
     },
