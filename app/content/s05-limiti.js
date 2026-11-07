@@ -1138,3 +1138,519 @@ e si calcola il limite dell'esponente $g\log f$. Le forme $1^\infty$, $0^0$, $\i
     { id: 's05.calcolo.fc10', kind: 'metodo', front: String.raw`Forme $1^\infty$, $0^0$, $\infty^0$`, back: String.raw`Scrivi $f^g=e^{g\log f}$ e calcola il limite dell'esponente (diventa $0\cdot\infty$). Prima controlla la base: se tende a $a\ne1$ con esponente $\to\infty$ non è indeterminata.` },
   ],
 });
+
+// ===========================================================================
+// s05.notevoli · Limiti notevoli
+// ===========================================================================
+
+/** "sin(3x)" in LaTeX: \sin 3x, \sin x, \sin(-2x) */
+function fn(name, a, v = 'x') {
+  if (a === 1) return `\\${name} ${v}`;
+  if (a < 0) return `\\${name}(${H.coef(a)}${v})`;
+  return `\\${name} ${a}${v}`;
+}
+
+SKILLS.push({
+  id: 's05.notevoli',
+  title: 'Limiti notevoli',
+  summary: String.raw`Conoscere, giustificare e usare i limiti notevoli: $\frac{\sin x}{x}$, $\frac{1-\cos x}{x^2}$, $(1+\frac1x)^x$, $\frac{\log(1+x)}{x}$, $\frac{e^x-1}{x}$, $\frac{(1+x)^\alpha-1}{x}$, anche combinati e nelle forme $1^\infty$.`,
+  prereq: ['s05.calcolo', 's00.trig', 's00.esplog', 's04.monotone'],
+  examRefs: ['Itinere 11/11/2025 · Es. 3', 'Itinere 11/11/2025 · Es. 4', 'Appello 15/01/2026 · Parte A', 'Appello 06/07/2026 · Parte A'],
+  lessons: [
+    {
+      id: 's05.notevoli.L1',
+      title: 'Seno e coseno vicino a 0',
+      cards: [
+        {
+          type: 'learn',
+          title: String.raw`Il limite $\frac{\sin x}{x}$`,
+          body: String.raw`>* $$\lim_{x\to0}\frac{\sin x}{x}=1$$
+
+Cioè: vicino a 0, $\sin x$ e $x$ sono «quasi uguali» (in radianti!).
+
+**Perché.** Per $0<x<\frac\pi2$, confrontando le aree nella circonferenza goniometrica (triangolo inscritto $\le$ settore $\le$ triangolo con la tangente):
+$$\sin x<x<\tan x.$$
+Dividendo per $\sin x>0$ e passando ai reciproci: $\cos x<\dfrac{\sin x}{x}<1$. Per $x\to0^+$, $\cos x\to1$: per il **confronto** il limite destro è 1. La funzione $\frac{\sin x}x$ è pari, quindi anche il limite sinistro è 1.`,
+          plot: { fns: [{ f: 'sin(x)/x', label: 'sin x / x' }], x: [-10, 10], y: [-0.5, 1.3], open: [[0, 1]] },
+        },
+        {
+          id: 's05.notevoli.L1.e1', type: 'order', level: 3,
+          prompt: String.raw`Riordina la dimostrazione di $\displaystyle\lim_{x\to0}\frac{\sin x}x=1$.`,
+          steps: [
+            String.raw`Per $0<x<\frac\pi2$, confrontando aree nella circonferenza goniometrica: $\sin x<x<\tan x$.`,
+            String.raw`Divido per $\sin x>0$: $1<\dfrac{x}{\sin x}<\dfrac{1}{\cos x}$.`,
+            String.raw`Passo ai reciproci (tutto positivo): $\cos x<\dfrac{\sin x}{x}<1$.`,
+            String.raw`Poiché $\cos x\to1$, per il teorema del confronto $\displaystyle\lim_{x\to0^+}\frac{\sin x}{x}=1$.`,
+            String.raw`$\frac{\sin x}{x}$ è pari, quindi anche il limite sinistro vale 1: il limite è 1.`,
+          ],
+          distractors: [
+            String.raw`Sostituendo $x=0$ si ottiene $\frac{\sin 0}{0}=1$.`,
+            String.raw`Per de l'Hôpital $\frac{\cos x}{1}\to1$.`,
+          ],
+          explain: String.raw`Sostituire dà $\frac00$, non 1. De l'Hôpital qui è un circolo vizioso: per sapere che $(\sin x)'=\cos x$ serve proprio questo limite.`,
+        },
+        {
+          id: 's05.notevoli.L1.e2', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sin 3x}{x}$.`,
+          answer: '3',
+          explain: String.raw`Moltiplico e divido per 3: $\frac{\sin3x}{x}=3\cdot\frac{\sin 3x}{3x}$. Con $t=3x\to0$, $\frac{\sin t}t\to1$: il limite è $3$. (Errore tipico: rispondere 1 «semplificando» il 3.)`,
+        },
+        {
+          type: 'example', title: 'Esempio svolto: argomenti diversi',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\tan 3x}{\sin 6x}$.`,
+          steps: [
+            String.raw`Forma $\frac00$. Scrivo il rapporto con lo **stesso argomento** sotto ciascuna funzione: $\dfrac{\tan 3x}{\sin 6x}=\dfrac{\tan 3x}{3x}\cdot\dfrac{6x}{\sin 6x}\cdot\dfrac{3x}{6x}$.`,
+            String.raw`Il primo fattore tende a 1 (limite $\frac{\tan t}{t}\to1$ con $t=3x$), il secondo a 1 (limite $\frac{\sin t}{t}\to1$ con $t=6x$).`,
+            String.raw`Resta il fattore costante $\dfrac{3x}{6x}=\dfrac12$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\frac{\tan 3x}{\sin 6x}=\frac12$.`,
+        },
+        {
+          type: 'example',
+          title: 'Aggiustare l\'argomento',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sin 5x}{2x}$.`,
+          steps: [
+            String.raw`Per usare il limite notevole serve **lo stesso argomento** sopra e sotto: $\frac{\sin 5x}{5x}$.`,
+            { text: String.raw`Scrivo $\dfrac{\sin5x}{2x}=\dfrac{\sin 5x}{5x}\cdot\dfrac{5x}{2x}=\dfrac{\sin5x}{5x}\cdot\dfrac52$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale allora il limite?`, answer: '5/2', explain: String.raw`$1\cdot\frac52=\frac52$.` } },
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\frac{\sin 5x}{2x}=\frac52$. In generale $\frac{\sin ax}{bx}\to\frac ab$.`,
+        },
+        {
+          id: 's05.notevoli.L1.e3', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\tan x}{x}$.`,
+          answer: '1',
+          explain: String.raw`$\frac{\tan x}x=\frac{\sin x}{x}\cdot\frac{1}{\cos x}\to1\cdot1=1$.`,
+        },
+        {
+          type: 'learn',
+          title: String.raw`Il limite $\frac{1-\cos x}{x^2}$`,
+          body: String.raw`>* $$\lim_{x\to0}\frac{1-\cos x}{x^2}=\frac12$$
+
+**Perché.** Moltiplico e divido per $1+\cos x$:
+$$\frac{1-\cos x}{x^2}=\frac{1-\cos^2x}{x^2(1+\cos x)}=\left(\frac{\sin x}{x}\right)^2\cdot\frac{1}{1+\cos x}\to1\cdot\frac12.$$
+
+Conseguenza: $\dfrac{1-\cos x}{x}=\dfrac{1-\cos x}{x^2}\cdot x\to\frac12\cdot0=0$.`,
+        },
+        {
+          id: 's05.notevoli.L1.e4', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{1-\cos 4x}{x^2}$.`,
+          answer: '8',
+          explain: String.raw`$\frac{1-\cos4x}{x^2}=\frac{1-\cos 4x}{(4x)^2}\cdot16\to\frac12\cdot16=8$. Errore tipico: $\frac12\cdot4=2$ (si deve moltiplicare per $4^2$, perché sotto c'è $x^2$).`,
+        },
+        {
+          id: 's05.notevoli.L1.e5', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{1-\cos x}{x}$.`,
+          answer: '0',
+          explain: String.raw`$\frac{1-\cos x}{x}=\frac{1-\cos x}{x^2}\cdot x\to\frac12\cdot0=0$. Non $\frac12$: quello è il limite con $x^2$.`,
+        },
+        {
+          id: 's05.notevoli.L1.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to0}\frac{\sin(x^2)}{x}$?`,
+          options: ['$0$', '$1$', String.raw`$+\infty$`, 'non esiste'],
+          answer: 0,
+          explain: String.raw`L'argomento del seno è $x^2$: $\frac{\sin x^2}{x}=\frac{\sin x^2}{x^2}\cdot x\to1\cdot0=0$. Rispondere 1 significa usare il limite notevole con argomenti diversi sopra ($x^2$) e sotto ($x$).`,
+        },
+        {
+          id: 's05.notevoli.L1.e7', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\arctan x}{x}$ (suggerimento: poni $t=\arctan x$).`,
+          answer: '1',
+          explain: String.raw`Con $t=\arctan x\to0$ si ha $x=\tan t$: $\frac{t}{\tan t}\to1$. Lo stesso vale per $\frac{\arcsin x}{x}$ (con $x=\sin t$).`,
+        },
+        {
+          id: 's05.notevoli.L1.e8', type: 'tf', level: 1,
+          prompt: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{\sin x}{x}=1$.`,
+          answer: false,
+          explain: String.raw`Il limite notevole vale per $x\to0$. Per $x\to+\infty$: $|\sin x|\le1$ e $\frac1x\to0$, quindi il limite è $0$.`,
+        },
+        {
+          id: 's05.notevoli.L1.e9', type: 'open', level: 3,
+          prompt: String.raw`Enuncia e dimostra il limite notevole $\displaystyle\lim_{x\to0}\frac{\sin x}{x}=1$. Deduci poi $\displaystyle\lim_{x\to0}\frac{1-\cos x}{x^2}$.`,
+          answer: String.raw`Per $0<x<\frac\pi2$, dal confronto delle aree di triangolo $OAP$, settore circolare e triangolo $OAT$ nella circonferenza goniometrica: $\frac12\sin x<\frac12x<\frac12\tan x$, cioè $\sin x<x<\tan x$. Dividendo per $\sin x>0$: $1<\frac{x}{\sin x}<\frac1{\cos x}$, e passando ai reciproci $\cos x<\frac{\sin x}x<1$. Per $x\to0^+$, $\cos x\to1$ e per il teorema del confronto $\frac{\sin x}{x}\to1$. Essendo $\frac{\sin x}x$ pari, anche il limite per $x\to0^-$ vale 1.
+
+Poi: $\frac{1-\cos x}{x^2}=\frac{1-\cos^2x}{x^2(1+\cos x)}=\left(\frac{\sin x}{x}\right)^2\frac{1}{1+\cos x}\to\frac12$.`,
+          rubric: [
+            String.raw`Disuguaglianza $\sin x<x<\tan x$ per $0<x<\pi/2$ con la sua giustificazione geometrica`,
+            String.raw`Passaggio a $\cos x<\frac{\sin x}{x}<1$`,
+            'Uso corretto del teorema del confronto',
+            'Estensione a $x\\to0^-$ per parità',
+            String.raw`Deduzione di $\frac12$ moltiplicando per $1+\cos x$`,
+          ],
+        },
+      ],
+    },
+    {
+      id: 's05.notevoli.L2',
+      title: 'Il numero e: esponenziali e logaritmi',
+      cards: [
+        {
+          type: 'learn',
+          title: String.raw`Da $(1+\frac1n)^n$ a $(1+\frac1x)^x$`,
+          body: String.raw`>* $$\lim_{x\to\pm\infty}\left(1+\frac1x\right)^x=e,\qquad\lim_{x\to\pm\infty}\left(1+\frac ax\right)^x=e^a.$$
+
+**Perché.** Sappiamo (s04) che $\left(1+\frac1n\right)^n\to e$. Se $n\le x<n+1$ ($n$ = parte intera di $x$):
+$$\left(1+\frac1{n+1}\right)^{n}\le\left(1+\frac1x\right)^x\le\left(1+\frac1n\right)^{n+1},$$
+e i due estremi tendono a $e$; per il confronto anche $(1+\frac1x)^x\to e$ per $x\to+\infty$ (il caso $-\infty$ si riconduce a questo con $x=-y$).
+
+Per la seconda: con $t=\frac xa$, $\left(1+\frac ax\right)^x=\left[\left(1+\frac1t\right)^t\right]^a\to e^a$.`,
+        },
+        {
+          id: 's05.notevoli.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(1+\frac3x\right)^x$.`,
+          answer: 'e^3',
+          explain: String.raw`È $\left(1+\frac ax\right)^x\to e^a$ con $a=3$: il limite è $e^3$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Logaritmo, esponenziale, potenza',
+          body: String.raw`>* $$\lim_{x\to0}\frac{\log(1+x)}{x}=1,\qquad\lim_{x\to0}\frac{e^x-1}{x}=1,\qquad\lim_{x\to0}\frac{(1+x)^\alpha-1}{x}=\alpha.$$
+
+**Perché.**
+1. $\frac{\log(1+x)}x=\log\left[(1+x)^{1/x}\right]$; con $t=\frac1x\to\pm\infty$, $(1+x)^{1/x}=(1+\frac1t)^t\to e$ e, per la continuità di $\log$, il limite è $\log e=1$.
+2. Pongo $y=e^x-1\to0$, cioè $x=\log(1+y)$: $\frac{e^x-1}{x}=\frac{y}{\log(1+y)}\to1$.
+3. $(1+x)^\alpha-1=e^{\alpha\log(1+x)}-1$. Con $t=\alpha\log(1+x)\to0$:
+$$\frac{(1+x)^\alpha-1}{x}=\frac{e^{t}-1}{t}\cdot\frac{\alpha\log(1+x)}{x}\to1\cdot\alpha.$$
+
+Conseguenza: $\dfrac{a^x-1}{x}=\dfrac{e^{x\log a}-1}{x}\to\log a$ ($a>0$).`,
+        },
+        {
+          id: 's05.notevoli.L2.e2', type: 'order', level: 3,
+          prompt: String.raw`Riordina la dimostrazione di $\displaystyle\lim_{x\to0}\frac{e^x-1}{x}=1$ (sapendo che $\frac{\log(1+y)}{y}\to1$).`,
+          steps: [
+            String.raw`Pongo $y=e^x-1$; per la continuità di $e^x$, se $x\to0$ allora $y\to0$.`,
+            String.raw`Ricavo $x$: $e^x=1+y$, cioè $x=\log(1+y)$.`,
+            String.raw`Sostituisco: $\dfrac{e^x-1}{x}=\dfrac{y}{\log(1+y)}=\left(\dfrac{\log(1+y)}{y}\right)^{-1}$.`,
+            String.raw`Per il limite notevole del logaritmo e il limite di funzione composta, l'espressione tende a $1^{-1}=1$.`,
+          ],
+          distractors: [String.raw`Pongo $y=e^x$, quindi $y\to0$.`],
+          explain: String.raw`Il cambio di variabile giusto è $y=e^x-1$, che tende a 0 (mentre $e^x\to1$, non a 0).`,
+        },
+        {
+          id: 's05.notevoli.L2.e3', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\log(1+3x)}{x}$.`,
+          answer: '3',
+          explain: String.raw`$\frac{\log(1+3x)}{x}=3\cdot\frac{\log(1+3x)}{3x}\to3$.`,
+        },
+        {
+          type: 'example',
+          title: 'Due limiti notevoli insieme',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{e^{2x}-1}{\sin 5x}$.`,
+          steps: [
+            String.raw`Forma $\frac00$. Faccio comparire i due limiti notevoli moltiplicando e dividendo per $2x$ e per $5x$:`,
+            String.raw`$\dfrac{e^{2x}-1}{\sin5x}=\dfrac{e^{2x}-1}{2x}\cdot\dfrac{5x}{\sin 5x}\cdot\dfrac{2x}{5x}$.`,
+            { text: String.raw`I primi due fattori tendono a 1, il terzo vale $\frac25$.`,
+              ask: { type: 'num', prompt: 'Quanto vale il limite?', answer: '2/5', explain: String.raw`$1\cdot1\cdot\frac25$.` } },
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to0}\frac{e^{2x}-1}{\sin 5x}=\frac25$`,
+        },
+        {
+          id: 's05.notevoli.L2.e4', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{2^x-1}{x}$.`,
+          answer: 'log(2)',
+          explain: String.raw`$2^x=e^{x\log 2}$: $\frac{e^{x\log2}-1}{x\log 2}\cdot\log2\to\log 2$. (Si può scrivere ln(2).)`,
+        },
+        {
+          id: 's05.notevoli.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sqrt[3]{1+2x}-1}{x}$.`,
+          answer: '2/3',
+          explain: String.raw`È $\frac{(1+t)^\alpha-1}{t}$ con $\alpha=\frac13$, $t=2x$: $\frac{(1+2x)^{1/3}-1}{2x}\cdot2\to\frac13\cdot2=\frac23$.`,
+        },
+        {
+          id: 's05.notevoli.L2.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to1}\frac{\log x}{x-1}$?`,
+          options: ['$1$', '$0$', String.raw`$+\infty$`, '$e$'],
+          answer: 0,
+          explain: String.raw`Con $t=x-1\to0$: $\frac{\log(1+t)}{t}\to1$. Il limite notevole vale con «argomento che tende a 0» dentro $\log(1+\cdot)$: qui è $t=x-1$.`,
+        },
+        {
+          id: 's05.notevoli.L2.e7', type: 'match', level: 1,
+          prompt: 'Abbina ogni limite (per $x\\to0$ salvo indicazione) al suo valore.',
+          pairs: [
+            [String.raw`$\dfrac{\sin x}{x}$`, '$1$'],
+            [String.raw`$\dfrac{1-\cos x}{x^2}$`, String.raw`$\frac12$`],
+            [String.raw`$\dfrac{(1+x)^\alpha-1}{x}$`, String.raw`$\alpha$`],
+            [String.raw`$\dfrac{a^x-1}{x}$`, String.raw`$\log a$`],
+            [String.raw`$\left(1+\frac1x\right)^x$, $x\to+\infty$`, '$e$'],
+          ],
+          explain: String.raw`Ogni coppia è un limite notevole. Il limite $\frac{\log(1+x)}{x}\to1$ non compare qui: è il logaritmo di $(1+x)^{1/x}\to e$.`,
+        },
+        {
+          id: 's05.notevoli.L2.e8', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}x\log\left(1+\frac2x\right)$.`,
+          answer: '2',
+          explain: String.raw`Con $t=\frac2x\to0^+$: $x\log(1+t)=2\cdot\frac{\log(1+t)}{t}\to2$.`,
+        },
+      ],
+    },
+    {
+      id: 's05.notevoli.L3',
+      title: 'Combinare i limiti notevoli (livello esame)',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Strategia',
+          body: String.raw`1. Sostituisci: se non è indeterminata, hai finito.
+2. Cerca i «mattoni» del tipo $\sin(\square)$, $1-\cos(\square)$, $\log(1+\square)$, $e^\square-1$, $(1+\square)^\alpha-1$ con $\square\to0$.
+3. Moltiplica e dividi per $\square$ (o $\square^2$ per il coseno) in modo che ogni mattone diventi un limite notevole.
+4. Per $1^\infty$: se $f\to1$ e $g\to\infty$,
+$$f^g=e^{g\log f}=e^{g\,(f-1)\frac{\log(1+(f-1))}{f-1}},\quad\text{quindi}\quad f^g\to e^{\lim g\,(f-1)}.$$
+
+>! Un equivalente si può sostituire solo in un **fattore** di un prodotto o di un quoziente, mai dentro una **somma** o differenza in cui il termine principale può cancellarsi (es. $\sin x-x$).`,
+        },
+        {
+          type: 'example',
+          title: 'Prima prova in itinere',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\tan x+\log(1+x^2)}{2x}$.`,
+          steps: [
+            String.raw`Forma $\frac00$. Spezzo la somma: $\dfrac{\tan x}{2x}+\dfrac{\log(1+x^2)}{2x}$.`,
+            { text: String.raw`Primo addendo: $\frac{\tan x}{2x}=\frac12\cdot\frac{\tan x}{x}\to\frac12$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to0}\frac{\tan x}{2x}$?`, answer: '1/2', explain: String.raw`$\frac{\tan x}{x}\to1$.` } },
+            { text: String.raw`Secondo addendo: $\frac{\log(1+x^2)}{2x}=\frac{\log(1+x^2)}{x^2}\cdot\frac x2\to1\cdot0=0$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to0}\frac{\log(1+x^2)}{2x}$?`, answer: '0', explain: String.raw`L'argomento è $x^2$: serve $x^2$ al denominatore; resta un fattore $\frac x2\to0$.` } },
+          ],
+          result: String.raw`Il limite vale $\frac12+0=\frac12$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e1', type: 'num', level: 3, source: 'Itinere 11/11/2025 · Es. 4',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to\infty}\left(1+\frac2n\right)^{n/2}$.`,
+          answer: 'e',
+          explain: String.raw`Con $m=\frac n2\to+\infty$: $\left(1+\frac1m\right)^m\to e$. Oppure: $\left[\left(1+\frac2n\right)^n\right]^{1/2}\to(e^2)^{1/2}=e$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\left(1+\sin x\right)^{1/x}$.`,
+          answer: 'e',
+          explain: String.raw`Forma $1^\infty$. $e^{\frac{\log(1+\sin x)}{x}}$ e $\frac{\log(1+\sin x)}{x}=\frac{\log(1+\sin x)}{\sin x}\cdot\frac{\sin x}{x}\to1$. Limite: $e^1=e$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e3', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}(\cos x)^{1/x^2}$.`,
+          answer: 'e^(-1/2)',
+          explain: String.raw`Forma $1^\infty$. Esponente: $\frac{\log\cos x}{x^2}=\frac{\log(1+(\cos x-1))}{\cos x-1}\cdot\frac{\cos x-1}{x^2}\to1\cdot\left(-\frac12\right)$. Limite: $e^{-1/2}=\frac1{\sqrt e}$. (Errore tipico: dimenticare il segno, $\cos x-1=-(1-\cos x)$.)`,
+        },
+        {
+          id: 's05.notevoli.L3.e4', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\frac{x+2}{x-1}\right)^{x}$.`,
+          answer: 'e^3',
+          explain: String.raw`Base $\to1$: forma $1^\infty$. $\frac{x+2}{x-1}=1+\frac{3}{x-1}$, e $x\cdot\frac{3}{x-1}\to3$. Il limite è $e^3$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e5', type: 'num', level: 3, source: 'Appello 15/01/2026 · Parte A',
+          prompt: String.raw`Usando la definizione di derivata, calcola $\displaystyle\lim_{h\to0}\frac{e^{2+h}-e^2}{h}$ (è la derivata di $e^x$ in $x=2$).`,
+          answer: 'e^2',
+          explain: String.raw`$\frac{e^{2+h}-e^2}{h}=e^2\cdot\frac{e^h-1}{h}\to e^2\cdot1=e^2$. In generale $(e^x)'=e^x$ grazie al limite notevole $\frac{e^h-1}h\to1$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{e^{3x}-e^{x}}{x}$.`,
+          answer: '2',
+          explain: String.raw`$\frac{e^{3x}-1}{x}-\frac{e^x-1}{x}\to3-1=2$. (Oppure $e^x\cdot\frac{e^{2x}-1}{x}\to1\cdot2$.)`,
+        },
+        {
+          id: 's05.notevoli.L3.e7', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\log(1+\sin 2x)}{e^{x}-1}$.`,
+          answer: '2',
+          explain: String.raw`$\frac{\log(1+\sin2x)}{\sin2x}\cdot\frac{\sin 2x}{2x}\cdot\frac{x}{e^x-1}\cdot2\to1\cdot1\cdot1\cdot2=2$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e8', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{1-\cos 2x}{x\sin 3x}$.`,
+          answer: '2/3',
+          explain: String.raw`$1-\cos2x=\frac{1-\cos 2x}{(2x)^2}\cdot4x^2$ e $x\sin3x=x\cdot\frac{\sin3x}{3x}\cdot3x$. Il rapporto tende a $\frac{\frac12\cdot4x^2}{3x^2}=\frac23$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e9', type: 'problem', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sqrt{1+4x}-1}{\log(1+x)}$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to0}\frac{\sqrt{1+4x}-1}{x}$`, answer: '2', explain: String.raw`$\alpha=\frac12$, argomento $4x$: $\frac12\cdot4=2$.` },
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to0}\frac{x}{\log(1+x)}$`, answer: '1', explain: 'Reciproco del limite notevole del logaritmo.' },
+            { type: 'num', prompt: 'Valore del limite richiesto', answer: '2', explain: 'Prodotto dei due limiti: $2\\cdot1$.' },
+          ],
+          solution: String.raw`$\dfrac{\sqrt{1+4x}-1}{\log(1+x)}=\dfrac{(1+4x)^{1/2}-1}{4x}\cdot4\cdot\dfrac{x}{\log(1+x)}\to\frac12\cdot4\cdot1=2$.`,
+        },
+        {
+          id: 's05.notevoli.L3.e10', type: 'open', level: 3, source: 'Appello 06/07/2026 · Parte A',
+          prompt: String.raw`Calcola la derivata di $f(x)=e^x+\sin x$ usando la definizione (limite del rapporto incrementale), indicando i limiti notevoli usati.`,
+          answer: String.raw`$\dfrac{f(x+h)-f(x)}{h}=\dfrac{e^{x+h}-e^x}{h}+\dfrac{\sin(x+h)-\sin x}{h}$.
+
+Primo pezzo: $e^x\cdot\frac{e^h-1}{h}\to e^x$.
+
+Secondo pezzo, con la formula di addizione $\sin(x+h)=\sin x\cos h+\cos x\sin h$:
+$$\frac{\sin x(\cos h-1)+\cos x\sin h}{h}=-\sin x\cdot\frac{1-\cos h}{h}+\cos x\cdot\frac{\sin h}{h}\to-\sin x\cdot0+\cos x\cdot1.$$
+
+Quindi $f'(x)=e^x+\cos x$.
+
+>! La soluzione ufficiale contiene un errore di segno: il risultato corretto è $e^x+\cos x$.`,
+          rubric: [
+            'Scrive correttamente il rapporto incrementale',
+            String.raw`Usa $\frac{e^h-1}h\to1$ per la parte esponenziale`,
+            String.raw`Usa la formula di addizione del seno`,
+            String.raw`Usa $\frac{\sin h}h\to1$ e $\frac{1-\cos h}h\to0$`,
+            String.raw`Conclude $f'(x)=e^x+\cos x$`,
+          ],
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's05.notevoli.gen-seno', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.nz(-6, 6), b = R.pick([1, 2, 3, 4, 5, 6].filter((v) => v !== Math.abs(a)));
+        const kind = R.pick(['sin', 'tan', 'sinsin']);
+        if (kind === 'sinsin') {
+          return {
+            type: 'num',
+            prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${fn('sin', a)}}{${fn('sin', b)}}$.`,
+            answer: H.fracStr(a, b),
+            explain: String.raw`$\dfrac{${fn('sin', a)}}{${fn('sin', b)}}=\dfrac{${fn('sin', a)}}{${ax(a)}}\cdot\dfrac{${ax(b)}}{${fn('sin', b)}}\cdot\dfrac{${ax(a)}}{${ax(b)}}\to1\cdot1\cdot${H.frac(a, b)}$.`,
+          };
+        }
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${fn(kind, a)}}{${ax(b)}}$.`,
+          answer: H.fracStr(a, b),
+          explain: String.raw`Faccio comparire lo stesso argomento: $\dfrac{${fn(kind, a)}}{${ax(a)}}\cdot\dfrac{${ax(a)}}{${ax(b)}}\to1\cdot${H.frac(a, b)}=${H.frac(a, b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-coseno', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(2, 6), b = R.pick([1, 2, 3, 4]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{1-\cos ${a}x}{${ax(b)}^2}$.`,
+          answer: H.fracStr(a * a, 2 * b),
+          explain: String.raw`$\dfrac{1-\cos ${a}x}{(${a}x)^2}\cdot\dfrac{${a * a}x^2}{${ax(b)}^2}\to\dfrac12\cdot\dfrac{${a * a}}{${b}}=${H.frac(a * a, 2 * b)}$. Attenzione: $(${a}x)^2=${a * a}x^2$, non $${a}x^2$.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-e', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-4, 4), b = R.nz(-3, 3);
+        const atZero = R.chance(0.5);
+        const ab = a * b;
+        if (atZero) {
+          return {
+            type: 'num',
+            prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\left(1${sg(a, 'x')}\right)^{${b < 0 ? '-' : ''}\frac{${Math.abs(b)}}{x}}$.`,
+            answer: `e^(${ab})`,
+            explain: String.raw`Forma $1^\infty$. Scrivo $e^{\frac{${b}}{x}\log(1${sg(a, 'x')})}$ e $\frac{${b}\log(1${sg(a, 'x')})}{x}=${b}\cdot(${a})\cdot\frac{\log(1${sg(a, 'x')})}{${ax(a)}}\to${ab}$. Il limite è $e^{${ab}}$.`,
+          };
+        }
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(1${a < 0 ? '-' : '+'}\frac{${Math.abs(a)}}{x}\right)^{${ax(b)}}$.`,
+          answer: `e^(${ab})`,
+          explain: String.raw`$\left(1${a < 0 ? '-' : '+'}\frac{${Math.abs(a)}}{x}\right)^{x}\to e^{${a}}$, quindi elevando alla ${b}: $\left[\left(1${a < 0 ? '-' : '+'}\frac{${Math.abs(a)}}{x}\right)^{x}\right]^{${b}}\to e^{${ab}}$. (Errore tipico: rispondere $e^{${a}}$ dimenticando l'esponente ${b}.)`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-explog', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.pick([1, 2, 3, 4, 5].filter((v) => v !== Math.abs(a)));
+        const swap = R.chance(0.5);
+        const E = String.raw`e^{${ax(a)}}-1`, L = String.raw`\log(1${sg(b, 'x')})`;
+        return {
+          type: 'num',
+          prompt: swap ? String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${L}}{${E}}$.` : String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${E}}{${L}}$.`,
+          answer: swap ? H.fracStr(b, a) : H.fracStr(a, b),
+          explain: String.raw`$e^{${ax(a)}}-1\sim ${ax(a)}$ (perché $\frac{e^t-1}t\to1$) e $\log(1${sg(b, 'x')})\sim ${ax(b)}$. Moltiplicando e dividendo, il limite è ${swap ? `$\\frac{${b}x}{${ax(a)}}=${H.frac(b, a)}$` : `$\\frac{${ax(a)}}{${b}x}=${H.frac(a, b)}$`}.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-potenza', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.pick([2, 3]), a = R.nz(-6, 6), b = R.pick([1, 2, 3, 4]);
+        const root = k === 2 ? String.raw`\sqrt{1${sg(a, 'x')}}` : String.raw`\sqrt[3]{1${sg(a, 'x')}}`;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${root}-1}{${ax(b)}}$.`,
+          answer: H.fracStr(a, k * b),
+          explain: String.raw`$${root}=(1${sg(a, 'x')})^{1/${k}}$ e $\frac{(1+t)^\alpha-1}{t}\to\alpha$: con $t=${ax(a)}$, $\alpha=\frac1${k}$ il numeratore è $\sim\frac{${ax(a)}}{${k}}$. Diviso $${ax(b)}$ dà $${H.frac(a, k * b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-somma', type: 'gen', level: 3,
+      gen: (R) => {
+        let a = R.nz(-4, 4), b = R.nz(-4, 4);
+        if (a + b === 0) b = b + (b > 0 ? 1 : -1);
+        const c = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${fn('sin', a)}+\log(1${sg(b, 'x')})}{e^{${ax(c)}}-1}$.`,
+          answer: H.fracStr(a + b, c),
+          explain: String.raw`Divido numeratore e denominatore per $x$: $\dfrac{\frac{${fn('sin', a)}}{x}+\frac{\log(1${sg(b, 'x')})}{x}}{\frac{e^{${ax(c)}}-1}{x}}\to\dfrac{${a}${sg(b)}}{${c}}=${H.frac(a + b, c)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.gen-infinito', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.pick([1, 2, 3]);
+        const kind = R.pick(['sin', 'log', 'exp']);
+        const fr = `${a < 0 ? '-' : ''}\\frac{${Math.abs(a)}}{x}`;
+        const inner = kind === 'sin' ? `\\sin\\left(${fr}\\right)` : kind === 'log' ? `\\log\\left(1${a < 0 ? '-' : '+'}\\frac{${Math.abs(a)}}{x}\\right)` : `\\left(e^{${fr}}-1\\right)`;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}${b === 1 ? '' : b}x\,${inner}$.`,
+          answer: String(a * b),
+          explain: String.raw`Pongo $t=\frac{${a}}{x}\to0$, cioè $x=\frac{${a}}{t}$: l'espressione diventa $${b * a}\cdot\frac{${kind === 'sin' ? '\\sin t' : kind === 'log' ? '\\log(1+t)' : 'e^t-1'}}{t}\to${a * b}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.notevoli.p1', type: 'tf', level: 1,
+      prompt: String.raw`$\displaystyle\lim_{x\to0}\frac{\sin 2x}{\sin 3x}=1$ perché seno su seno tende a 1.`,
+      answer: false,
+      explain: String.raw`$\sin2x\sim2x$, $\sin3x\sim3x$: il limite è $\frac23$.`,
+    },
+    {
+      id: 's05.notevoli.p2', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{x\,(e^{x}-1)}{1-\cos x}$.`,
+      answer: '2',
+      explain: String.raw`$x(e^x-1)\sim x\cdot x=x^2$ e $1-\cos x\sim\frac{x^2}2$: il rapporto tende a $\frac{x^2}{x^2/2}=2$.`,
+    },
+    {
+      id: 's05.notevoli.p3', type: 'num', level: 3,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\log(\cos x)}{x^2}$.`,
+      answer: '-1/2',
+      explain: String.raw`$\log(\cos x)=\log(1+(\cos x-1))$ con $\cos x-1\to0$: $\frac{\log(1+(\cos x-1))}{\cos x-1}\cdot\frac{\cos x-1}{x^2}\to1\cdot\left(-\frac12\right)$.`,
+    },
+    {
+      id: 's05.notevoli.p4', type: 'cloze', level: 2,
+      prompt: 'Completa la giustificazione.',
+      text: String.raw`Scrivo $(1+x)^\alpha=e^{\alpha\log(1+x)}$, quindi $\dfrac{(1+x)^\alpha-1}{x}=\dfrac{e^{t}-1}{t}\cdot\dfrac{\alpha\log(1+x)}{x}$ con $t=$ [[0]]. Il primo fattore tende a [[1]], il secondo a [[2]]: il limite vale [[3]].`,
+      blanks: [
+        { options: [String.raw`$\alpha\log(1+x)$`, String.raw`$\alpha x$`, String.raw`$\log(1+\alpha x)$`], answer: 0 },
+        { options: ['$0$', '$1$', '$e$'], answer: 1 },
+        { options: [String.raw`$1$`, String.raw`$\alpha$`, String.raw`$e^\alpha$`], answer: 1 },
+        { options: [String.raw`$\alpha$`, '$1$', String.raw`$\log\alpha$`], answer: 0 },
+      ],
+      explain: String.raw`$(1+x)^\alpha=e^{\alpha\log(1+x)}$. Con $t=\alpha\log(1+x)\to0$ il primo fattore tende a 1 (limite di $\frac{e^t-1}{t}$); il secondo, $\alpha\frac{\log(1+x)}{x}$, tende a $\alpha\cdot1$.`,
+    },
+    {
+      id: 's05.notevoli.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\left(1+\frac1x\right)^{x^2}$?`,
+      options: [String.raw`$+\infty$`, '$e$', String.raw`$e^2$`, '$1$'],
+      answer: 0,
+      explain: String.raw`$e^{x^2\log(1+\frac1x)}$ e $x^2\log\left(1+\frac1x\right)=x\cdot\left[x\log\left(1+\frac1x\right)\right]\sim x\to+\infty$. Non basta «vedere» $(1+\frac1x)^{\dots}$: conta il prodotto esponente·$(f-1)$, che qui è $x^2\cdot\frac1x=x$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's05.notevoli.fc1', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{\sin x}{x}$`, back: String.raw`$=1$. Anche $\frac{\tan x}{x}\to1$, $\frac{\arcsin x}x\to1$, $\frac{\arctan x}x\to1$.` },
+    { id: 's05.notevoli.fc2', kind: 'dim', front: String.raw`Dimostrazione di $\frac{\sin x}{x}\to1$`, back: String.raw`Per $0<x<\frac\pi2$ (aree): $\sin x<x<\tan x$. Dividendo per $\sin x$ e passando ai reciproci: $\cos x<\frac{\sin x}x<1$. Confronto per $x\to0^+$; parità per $x\to0^-$.` },
+    { id: 's05.notevoli.fc3', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{1-\cos x}{x^2}$`, back: String.raw`$=\frac12$. Si ottiene moltiplicando per $1+\cos x$: $\left(\frac{\sin x}{x}\right)^2\frac1{1+\cos x}$.` },
+    { id: 's05.notevoli.fc4', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to\pm\infty}\left(1+\frac ax\right)^{x}$`, back: String.raw`$=e^a$ (per $a=1$: $e$). Si deduce da $(1+\frac1n)^n\to e$ con la parte intera e il confronto.` },
+    { id: 's05.notevoli.fc5', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{\log(1+x)}{x}$`, back: String.raw`$=1$. Perché $\frac{\log(1+x)}x=\log(1+x)^{1/x}\to\log e$.` },
+    { id: 's05.notevoli.fc6', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{e^x-1}{x}$ e $\displaystyle\lim_{x\to0}\frac{a^x-1}{x}$`, back: String.raw`$1$ e $\log a$. Dimostrazione: $y=e^x-1$, $x=\log(1+y)$.` },
+    { id: 's05.notevoli.fc7', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{(1+x)^\alpha-1}{x}$`, back: String.raw`$=\alpha$. Perché $(1+x)^\alpha-1=e^{\alpha\log(1+x)}-1$. Caso utile: $\sqrt{1+x}-1\sim\frac x2$.` },
+    { id: 's05.notevoli.fc8', kind: 'metodo', front: String.raw`Forma $1^\infty$: $f\to1$, $g\to\infty$`, back: String.raw`$f^g=e^{g\log f}$ e $\log f=\log(1+(f-1))\sim f-1$, quindi $f^g\to e^{\lim g(f-1)}$.` },
+    { id: 's05.notevoli.fc9', kind: 'errore', front: 'Errore tipico con i limiti notevoli', back: String.raw`L'argomento deve essere **lo stesso** e deve **tendere a 0**: $\frac{\sin x^2}{x}\to0$ (non 1), $\frac{\sin x}{x}\to0$ per $x\to+\infty$, $\frac{1-\cos 4x}{x^2}\to8$ (non 2).` },
+  ],
+});
