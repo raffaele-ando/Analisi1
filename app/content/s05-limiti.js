@@ -27,7 +27,7 @@ function sg(c, body = '', first = false) {
   return (c < 0 ? ' - ' : ' + ') + k + body;
 }
 /** Decimale in notazione italiana (virgola). */
-const dec = (v) => String(v).replace('.', ',');
+const dec = (v) => String(v).replace('.', '{,}');
 /** "+\infty" / "-\infty" / "0" … in LaTeX per un risultato numerico. */
 const infTex = (s) => (s > 0 ? String.raw`+\infty` : String.raw`-\infty`);
 /** x - c in LaTeX (c intero) */
@@ -438,7 +438,7 @@ Quindi $x=2$ è asintoto verticale (da sinistra) e il limite bilaterale non esis
     {
       id: 's05.def.gen-delta', type: 'gen', level: 2,
       gen: (R) => {
-        const a = R.nz(-7, 7), x0 = R.int(-3, 4), b = R.int(-5, 5);
+        const a = R.pick([2, 3, 4, 5, 6, 7]) * R.sign(), x0 = R.int(-3, 4), b = R.int(-5, 5);
         const k = R.pick([1, 2, 5]);
         const A = Math.abs(a);
         const eps = (A * k) / 100;
@@ -476,9 +476,9 @@ Quindi $x=2$ è asintoto verticale (da sinistra) e il limite bilaterale non esis
         const expSign = Math.sign(k) * (side === '+' ? 1 : -1);
         return {
           type: 'num',
-          prompt: String.raw`Calcola $\displaystyle\lim_{x\to ${c}^{${side}}} e^{\frac{${k}}{${xm(c)}}}$. (Scrivi inf per $+\infty$.)`,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to ${c}^{${side}}} e^{${k < 0 ? '-' : ''}\frac{${Math.abs(k)}}{${xm(c)}}}$. (Scrivi inf per $+\infty$.)`,
           answer: expSign > 0 ? 'inf' : '0',
-          explain: String.raw`L'esponente $\frac{${k}}{${xm(c)}}$ tende a $${infTex(expSign)}$ (segno di ${k} diviso $0^{${side}}$). Poiché $e^t\to+\infty$ per $t\to+\infty$ ed $e^t\to0$ per $t\to-\infty$, il limite è $${expSign > 0 ? String.raw`+\infty` : '0'}$.`,
+          explain: String.raw`L'esponente $${k < 0 ? '-' : ''}\frac{${Math.abs(k)}}{${xm(c)}}$ tende a $${infTex(expSign)}$ (segno di ${k} diviso $0^{${side}}$). Poiché $e^t\to+\infty$ per $t\to+\infty$ ed $e^t\to0$ per $t\to-\infty$, il limite è $${expSign > 0 ? String.raw`+\infty` : '0'}$.`,
         };
       },
     },
