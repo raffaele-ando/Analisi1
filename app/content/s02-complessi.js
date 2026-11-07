@@ -670,3 +670,275 @@ Il passaggio tipico è: forma algebrica → modulo e argomento → operazione co
       back: String.raw`$\overline{e^{i\theta}}=e^{-i\theta}$, e $\left|e^{i\theta}\right|=1$ per ogni $\theta\in\R$.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s02.radici
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's02.radici',
+  title: 'Radici n-esime, formula e poligoni regolari',
+  summary: String.raw`Saprai trovare tutte le radici n-esime di un complesso con la formula, riconoscerle come vertici di un poligono regolare e risolvere equazioni del tipo $(z-z_0)^n=c$.`,
+  prereq: ['s02.trigonometrica'],
+  examRefs: ['Appello 10/02/2026 · B2', 'Appello 11/06/2026 · A3', 'Appello 11/06/2026 · B2'],
+  lessons: [
+    {
+      id: 's02.radici.L1',
+      title: 'Radici quadrate e cubiche: il concetto',
+      cards: [
+        { type: 'learn', title: 'Che cos\'è una radice n-esima',
+          body: String.raw`Dato $c\in\C$ e $n\in\N$ con $n\ge2$, una **radice n-esima** di $c$ è un numero $w\in\C$ tale che $w^n=c$. Si scrive $w\in\sqrt[n]{c}$.
+
+In $\R$ una radice quadrata di $-4$ non esiste. In $\C$ ne esistono sempre, e un complesso $c\neq0$ ha **esattamente $n$ radici n-esime distinte**. Questo è il primo fatto da ricordare, e vale anche per $c$ reale negativo.` },
+        { type: 'learn', title: 'Un esempio guida',
+          body: String.raw`Per trovare le radici quadrate di $-4$ basta cercare $w=x+iy$ con $w^2=-4$. Si trova $w=2i$ e $w=-2i$: sono due radici, come previsto.
+
+Con la forma esponenziale il problema è immediato: $-4=4e^{i\pi}$. Il paragrafo successivo mostra come generalizzare.` },
+        { type: 'example', title: 'Esempio svolto: radici quadrate di $-4$',
+          problem: String.raw`Trova le radici quadrate di $-4$ in forma algebrica.`,
+          steps: [
+            String.raw`Scrivo $-4=4e^{i\pi}$: modulo $4$, argomento $\pi$.`,
+            { text: String.raw`Il modulo delle radici è $\sqrt4=2$. Gli argomenti sono $\dfrac{\pi+2k\pi}{2}$ per $k=0,1$. Per $k=0$ l'argomento è $\dfrac\pi2$.`,
+              ask: { type: 'num', prompt: String.raw`Per $k=1$, quanto vale $\dfrac{\pi+2\pi}{2}$? Scrivilo con pi.`, answer: '3*pi/2',
+                explain: String.raw`$\dfrac{\pi+2\pi}{2}=\dfrac{3\pi}{2}$.` } },
+          ],
+          result: String.raw`Le radici sono $2e^{i\frac\pi2}=2i$ e $2e^{i\frac{3\pi}2}=-2i$.` },
+        { id: 's02.radici.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quante radici cubiche ha un complesso $c\neq0$ in $\C$?`,
+          options: ['$1$', '$2$', '$3$', String.raw`$\infty$`],
+          answer: 2,
+          explain: String.raw`In $\C$ ogni $c\neq0$ ha esattamente $n=3$ radici cubiche distinte. Errore tipico: contare solo le radici reali, che sono al più una.` },
+        { id: 's02.radici.L1.e2', type: 'set', level: 1,
+          prompt: String.raw`Scrivi le radici quadrate di $-1$ separate da punto e virgola. Usa i per l'unità immaginaria.`,
+          answer: ['i', '-i'],
+          explain: String.raw`$i^2=-1$ e $(-i)^2=-1$: le radici quadrate di $-1$ sono $\pm i$.` },
+        { id: 's02.radici.L1.e3', type: 'set', level: 1,
+          prompt: String.raw`Scrivi le radici quadrate di $-9$ separate da punto e virgola.`,
+          answer: ['3i', '-3i'],
+          explain: String.raw`$(3i)^2=9i^2=-9$ e $(-3i)^2=-9$.` },
+        { id: 's02.radici.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Ogni complesso $c\neq0$ ha esattamente due radici quadrate.`,
+          answer: true,
+          explain: String.raw`In $\C$ ogni complesso non nullo ha esattamente $n=2$ radici quadrate distinte.` },
+        { id: 's02.radici.L1.e5', type: 'tf', level: 2,
+          prompt: String.raw`In $\C$ l'unica radice cubica di $8$ è $2$.`,
+          answer: false,
+          explain: String.raw`Falso: $-1+i\sqrt3$ e $-1-i\sqrt3$ sono altre due radici cubiche di $8$, perché $(-1\pm i\sqrt3)^3=8$.` },
+        { id: 's02.radici.L1.g1', type: 'gen', level: 2,
+          gen: (R) => {
+            const s = R.int(1, 9);
+            return {
+              type: 'set',
+              answer: [`${s}i`, `-${s}i`],
+              prompt: String.raw`Scrivi le radici quadrate di $-${s * s}$ separate da punto e virgola.`,
+              explain: String.raw`$\sqrt{-${s * s}}=\sqrt{${s * s}}\,\sqrt{-1}=\pm${s}i$.`,
+            };
+          } },
+      ],
+    },
+    {
+      id: 's02.radici.L2',
+      title: 'La formula e i poligoni regolari',
+      cards: [
+        { type: 'learn', title: 'La formula delle radici n-esime',
+          body: String.raw`Sia $c=\rho e^{i\theta}\neq0$. Le sue $n$ radici n-esime sono
+$$w_k=\sqrt[n]{\rho}\;e^{i\frac{\theta+2k\pi}{n}},\qquad k=0,1,\dots,n-1.$$
+
+Tutte hanno lo **stesso modulo** $\sqrt[n]\rho$. Gli argomenti $\dfrac{\theta+2k\pi}{n}$ sono equispaziati di $\dfrac{2\pi}{n}$. Scegliere un altro $\theta$ (per esempio $\theta+2\pi$) non cambia l'insieme delle radici.` },
+        { type: 'learn', title: 'Teorema di struttura',
+          body: String.raw`>* **Teorema di struttura.** Le $n$ radici n-esime di $c\neq0$ sono i vertici di un poligono regolare di $n$ lati, inscritto nella circonferenza di centro $0$ e raggio $\sqrt[n]{|c|}$. Due radici consecutive formano un angolo al centro di $\dfrac{2\pi}{n}$.
+
+Conseguenza utile: per $n\ge2$ la somma delle $n$ radici è $0$, perché i vertici di un poligono regolare centrato nell'origine si compensano.` },
+        { type: 'example', title: 'Esempio svolto: radici cubiche di $-8$',
+          problem: String.raw`Trova le radici cubiche di $-8$ in forma algebrica.`,
+          steps: [
+            String.raw`Scrivo $-8=8e^{i\pi}$. Il modulo delle radici è $\sqrt[3]{8}=2$.`,
+            { text: String.raw`Gli argomenti sono $\dfrac{\pi+2k\pi}{3}$, per $k=0,1,2$. Per $k=0$ si ottiene $\dfrac\pi3$.`,
+              ask: { type: 'num', prompt: String.raw`Per $k=1$, quale argomento si ottiene? Scrivi $\dfrac{\pi+2\pi}{3}$ con pi.`, answer: 'pi',
+                explain: String.raw`$\dfrac{\pi+2\pi}{3}=\dfrac{3\pi}{3}=\pi$.` } },
+            String.raw`Per $k=2$ l'argomento è $\dfrac{5\pi}3$. Le tre radici sono $2e^{i\frac\pi3}$, $2e^{i\pi}$, $2e^{i\frac{5\pi}3}$.`,
+          ],
+          result: String.raw`$1+i\sqrt3$, $\;-2$, $\;1-i\sqrt3$. Sono i vertici di un triangolo equilatero inscritto nel cerchio di raggio $2$.` },
+        { id: 's02.radici.L2.e1', type: 'mcq', level: 2,
+          prompt: String.raw`Il modulo di ciascuna radice quinta di $32$ è:`,
+          options: [String.raw`$2$`, String.raw`$\dfrac{32}5$`, String.raw`$\sqrt{32}$`, String.raw`$16$`],
+          answer: 0,
+          explain: String.raw`Il modulo è $\sqrt[5]{32}=2$, perché $2^5=32$. Errore tipico: dividere per $n$ invece di estrarre la radice $n$-esima.` },
+        { id: 's02.radici.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`Calcola il modulo delle radici quarte di $-16$.`,
+          answer: '2',
+          explain: String.raw`$|c|=16$ e $\sqrt[4]{16}=2$: tutte le radici quarte hanno modulo $2$.` },
+        { id: 's02.radici.L2.e3', type: 'set', level: 2,
+          prompt: String.raw`Scrivi le quattro radici quarte di $1$ separate da punto e virgola.`,
+          answer: ['1', 'i', '-1', '-i'],
+          explain: String.raw`Le radici quarte dell'unità sono $e^{i\frac{k\pi}{2}}$ per $k=0,1,2,3$: $1$, $i$, $-1$, $-i$. Sono i vertici di un quadrato.` },
+        { id: 's02.radici.L2.e4', type: 'tuple', level: 2, labels: ['Modulo', 'Argomento'],
+          prompt: String.raw`Per la radice cubica di $8i$ con $k=0$ della formula, scrivi modulo e argomento in $[0,2\pi)$.`,
+          answer: ['2', 'pi/6'],
+          explain: String.raw`$8i=8e^{i\frac\pi2}$: modulo $\sqrt[3]{8}=2$, argomento $\dfrac{\frac\pi2+0}{3}=\dfrac\pi6$.` },
+        { id: 's02.radici.L2.g1', type: 'gen', level: 2,
+          gen: (R) => {
+            const n = R.pick([3, 4, 5]), a = R.int(2, 3), p = a ** n;
+            return {
+              type: 'num',
+              answer: String(a),
+              prompt: String.raw`Calcola il modulo di ciascuna radice ${n}-esima di $-${p}$.`,
+              explain: String.raw`Il modulo delle radici è $\sqrt[${n}]{|{-${p}}|}=\sqrt[${n}]{${p}}=${a}$.`,
+            };
+          } },
+        { id: 's02.radici.L2.g2', type: 'gen', level: 2,
+          gen: (R) => {
+            const n = R.pick([3, 4, 6]), k = R.int(0, n - 1);
+            return {
+              type: 'num',
+              answer: `${2 * k + 1}*pi/${n}`,
+              prompt: String.raw`Radici ${n}-esime di $-1$: con $k=${k}$ la formula dà l'argomento $\dfrac{\pi+2k\pi}{${n}}$. Scrivilo in $[0,2\pi)$ con pi.`,
+              explain: String.raw`$\dfrac{\pi+2\cdot${k}\pi}{${n}}=\dfrac{${2 * k + 1}\pi}{${n}}$, già in $[0,2\pi)$.`,
+            };
+          } },
+      ],
+    },
+    {
+      id: 's02.radici.L3',
+      title: 'Equazioni con radici: esempi d\'esame',
+      cards: [
+        { type: 'learn', title: 'Procedura per $z^n=c$ e per $(z-z_0)^n=c$',
+          body: String.raw`Per risolvere $z^n=c$ con $c\neq0$:
+
+1. scrivi $c=\rho e^{i\theta}$;
+2. calcola il modulo $\sqrt[n]{\rho}$;
+3. calcola gli $n$ argomenti $\dfrac{\theta+2k\pi}{n}$ per $k=0,\dots,n-1$;
+4. scrivi ogni radice in forma algebrica, se serve.
+
+Per $(z-z_0)^n=c$ si pone $w=z-z_0$, si risolve $w^n=c$ e infine si torna a $z=w+z_0$.` },
+        { type: 'example', title: 'Esempio svolto d\'esame',
+          problem: String.raw`Risolvi in $\C$ l'equazione $(z+2i)^4=9(1+i)^8$.`,
+          steps: [
+            String.raw`Calcolo $(1+i)^8=16$, quindi $(z+2i)^4=144$.`,
+            { text: String.raw`Pongo $w=z+2i$: allora $w^4=144$, con modulo $|w|=\sqrt[4]{144}$ e argomenti $\dfrac{2k\pi}{4}$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\sqrt[4]{144}$? Scrivi il numero come $2\sqrt3$ oppure come 2*sqrt(3).`, answer: '2*sqrt(3)',
+                explain: String.raw`$\sqrt[4]{144}=\sqrt{\sqrt{144}}=\sqrt{12}=2\sqrt3$.` } },
+            { text: String.raw`Gli argomenti sono $0,\ \dfrac\pi2,\ \pi,\ \dfrac{3\pi}2$. Le radici sono $w=2\sqrt3\,e^{ik\frac\pi2}$ per $k=0,1,2,3$.`,
+              ask: { type: 'set', prompt: String.raw`Scrivi in forma algebrica la radice con $k=1$, cioè $w=2\sqrt3\,e^{i\frac\pi2}$, usando i.`, answer: ['2*sqrt(3)*i'],
+                explain: String.raw`$e^{i\frac\pi2}=i$, quindi $w=2\sqrt3\,i$.` } },
+          ],
+          result: String.raw`Infine $z=w-2i$: $\;\{\,2\sqrt3-2i,\ 2(\sqrt3-1)i,\ -2\sqrt3-2i,\ -2(\sqrt3+1)i\,\}$.` },
+        { id: 's02.radici.L3.e1', type: 'mcq', level: 2,
+          prompt: String.raw`Quante soluzioni distinte ha $z^5=1$ in $\C$?`,
+          options: ['$1$', '$4$', '$5$', '$10$'],
+          answer: 2,
+          explain: String.raw`Sono le $5$ radici quinte di $1$: i vertici di un pentagono regolare inscritto nel cerchio unitario.` },
+        { id: 's02.radici.L3.P1', type: 'problem', level: 3, source: 'Appello 11/06/2026 · B2', points: 2,
+          prompt: String.raw`Risolvi in $\C$ l'equazione $(z+2-i)^3=i$.`,
+          parts: [
+            { type: 'set', prompt: 'Soluzioni, separate da punto e virgola.',
+              answer: ['(sqrt(3)-4)/2+3/2*i', '-(sqrt(3)+4)/2+3/2*i', '-2'],
+              explain: String.raw`Con $w=z+2-i$: $w^3=i=e^{i\frac\pi2}$, quindi $w\in\left\{\frac{\sqrt3}2+\frac i2,\ -\frac{\sqrt3}2+\frac i2,\ -i\right\}$. Si sottrae $2-i$.` },
+          ],
+          solution: String.raw`$w=z+2-i$ con $w^3=i$: le radici cubiche di $i$ sono $\frac{\sqrt3}2+\frac i2$, $-\frac{\sqrt3}2+\frac i2$ e $-i$. Quindi $z=w-2+i$ dà $\frac{\sqrt3-4}2+\frac32i$, $-\frac{\sqrt3+4}2+\frac32i$ e $-2$.` },
+        { id: 's02.radici.L3.o1', type: 'open', level: 3, source: 'Appello 11/06/2026 · A3', points: 2,
+          prompt: String.raw`Scrivi la formula delle radici $n$-esime di un numero complesso $z$.`,
+          answer: String.raw`Se $z=\rho e^{i\vartheta}$: $\sqrt[n]{z}=\sqrt[n]\rho\,e^{i\frac{\vartheta+2k\pi}{n}}$, $k=0,\dots,n-1$.`,
+          rubric: ['Forma esponenziale di $z$', 'Radice del modulo e argomento $(\\vartheta+2k\\pi)/n$', 'Valori di $k$ da $0$ a $n-1$'] },
+        { id: 's02.radici.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`Nell'equazione $(z-1)^4=16$ pongo $w=z-1$. Quanto vale $|w|$ per ciascuna soluzione?`,
+          answer: '2',
+          explain: String.raw`$w^4=16$ dà $|w|=\sqrt[4]{16}=2$. Il modulo di $z$ invece cambia, perché $z=w+1$.` },
+        { id: 's02.radici.L3.e3', type: 'tf', level: 2,
+          prompt: String.raw`Le radici quarte di $-1$ hanno tutte modulo $1$.`,
+          answer: true,
+          explain: String.raw`$|-1|=1$, quindi $|w|^4=1$ e $|w|=1$ per ogni radice quarta.` },
+        { id: 's02.radici.L3.e4', type: 'tf', level: 2,
+          prompt: String.raw`Per ogni $c\neq0$ e $n\ge2$, la somma delle $n$ radici n-esime di $c$ è $0$.`,
+          answer: true,
+          explain: String.raw`Le radici sono i vertici di un poligono regolare centrato nell'origine: la somma è $0$. Equivale a dire che nel polinomio $z^n-c$ manca il termine in $z^{n-1}$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's02.radici.p1', type: 'num', level: 1, prompt: String.raw`Calcola il modulo di una radice quadrata di $-4$.`, answer: '2',
+      explain: String.raw`$|-4|=4$, quindi $\sqrt{4}=2$.` },
+    { id: 's02.radici.p2', type: 'set', level: 2, prompt: String.raw`Scrivi le radici quadrate di $2i$ separate da punto e virgola.`,
+      answer: ['1+i', '-1-i'],
+      explain: String.raw`Verifica: $(1+i)^2=2i$ e $(-1-i)^2=2i$.` },
+    { id: 's02.radici.p3', type: 'set', level: 2, prompt: String.raw`Scrivi le radici cubiche di $8i$ separate da punto e virgola.`,
+      answer: ['sqrt(3)+i', '-sqrt(3)+i', '-2i'],
+      explain: String.raw`$8i=8e^{i\frac\pi2}$: modulo $2$ e argomenti $\frac\pi6$, $\frac{5\pi}6$, $\frac{3\pi}2$. Verifica: $(\sqrt3+i)^3=8i$.` },
+    { id: 's02.radici.p4', type: 'num', level: 1, prompt: String.raw`Quante radici complesse distinte ha l'equazione $z^6=5$?`, answer: '6',
+      explain: String.raw`Un complesso non nullo ha $n$ radici n-esime distinte: qui $n=6$.` },
+    { id: 's02.radici.p5', type: 'tf', level: 1, prompt: String.raw`Le radici quadrate di $-1$ sono $i$ e $-i$.`, answer: true,
+      explain: String.raw`$i^2=-1$ e $(-i)^2=-1$.` },
+    { id: 's02.radici.p6', type: 'gen', level: 2,
+      gen: (R) => {
+        const n = R.pick([3, 4, 5, 6]), k = R.int(1, n - 1);
+        return {
+          type: 'num',
+          answer: `${2 * k}*pi/${n}`,
+          prompt: String.raw`Nelle radici ${n}-esime di $1$, scrivi l'argomento $\dfrac{2k\pi}{${n}}$ della radice con $k=${k}$, in $[0,2\pi)$, con pi.`,
+          explain: String.raw`$\dfrac{2\cdot${k}\pi}{${n}}=\dfrac{${2 * k}\pi}{${n}}$.`,
+        };
+      } },
+    { id: 's02.radici.p7', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.nz(-3, 3), q = R.nz(-3, 3);
+        const c1 = p * p - q * q, c2 = 2 * p * q;
+        return {
+          type: 'set',
+          answer: [`(${p})+(${q})*i`, `(${-p})+(${-q})*i`],
+          prompt: String.raw`Risolvi in $\C$: $z^2=${H.cplx(c1, c2)}$. Separa le soluzioni con punto e virgola.`,
+          explain: String.raw`$(${H.cplx(p, q)})^2=${H.cplx(c1, c2)}$, quindi le radici sono $\pm(${H.cplx(p, q)})$.`,
+        };
+      } },
+    { id: 's02.radici.p8', type: 'gen', level: 2,
+      gen: (R) => {
+        const n = R.pick([2, 3, 4]), a = R.int(2, 3), c = a ** n;
+        return {
+          type: 'num',
+          answer: String(a),
+          prompt: String.raw`Calcola il modulo delle radici ${n}-esime di $${H.cplx(0, c)}$.`,
+          explain: String.raw`$|c|=${c}$, quindi il modulo delle radici è $\sqrt[${n}]{${c}}=${a}$.`,
+        };
+      } },
+    { id: 's02.radici.p9', type: 'problem', level: 3, source: 'Appello 10/02/2026 · B2', points: 3,
+      prompt: String.raw`Risolvi in $\C$: $(z+2i)^4=9(1+i)^8$.`,
+      parts: [
+        { type: 'set', prompt: 'Soluzioni, separate da punto e virgola.',
+          answer: ['2*sqrt(3)-2*i', '2*(sqrt(3)-1)*i', '-2*sqrt(3)-2*i', '-2*(sqrt(3)+1)*i'],
+          explain: String.raw`$(1+i)^8=16$, quindi $(z+2i)^4=144$ e $|z+2i|=2\sqrt3$. Gli argomenti sono $\frac{k\pi}{2}$, $k=0,1,2,3$.` },
+      ],
+      solution: String.raw`$z+2i=2\sqrt3\,e^{ik\frac\pi2}$ per $k=0,1,2,3$, cioè $z+2i\in\{2\sqrt3,\ 2\sqrt3\,i,\ -2\sqrt3,\ -2\sqrt3\,i\}$. Si sottrae $2i$.` },
+    { id: 's02.radici.p10', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per risolvere $z^n=c$, con $c\neq0$.`,
+      steps: [
+        String.raw`Scrivo $c$ in forma esponenziale $\rho e^{i\theta}$.`,
+        String.raw`Calcolo il modulo delle soluzioni: $\sqrt[n]{\rho}$.`,
+        String.raw`Calcolo gli argomenti $\dfrac{\theta+2k\pi}{n}$ per $k=0,\dots,n-1$.`,
+        String.raw`Scrivo ogni radice in forma algebrica, se serve.`,
+      ],
+      distractors: [String.raw`Divido $c$ per $n$ e ottengo direttamente le radici.`],
+      explain: String.raw`Prima il modulo e l'argomento, poi gli $n$ valori di $k$, infine la forma algebrica. Dividere $c$ per $n$ non dà le radici.` },
+    { id: 's02.radici.p11', type: 'open', level: 2,
+      prompt: String.raw`Spiega perché tutte le radici n-esime di $c=\rho e^{i\theta}$ hanno lo stesso modulo.`,
+      answer: String.raw`Se $w^n=c$, allora $|w|^n=|w^n|=|c|=\rho$, quindi $|w|=\sqrt[n]\rho$, lo stesso per tutte le radici.`,
+      rubric: ['Uso di $|w^n|=|w|^n$', 'Conclusione $|w|=\\sqrt[n]{\\rho}$ per ogni radice'],
+      explain: String.raw`Il modulo non dipende da $k$: solo gli argomenti cambiano.` },
+    { id: 's02.radici.p12', type: 'num', level: 2,
+      prompt: String.raw`Calcola la somma delle quattro radici quarte complesse di $5$.`, answer: '0',
+      explain: String.raw`Per $n\ge2$ la somma delle radici n-esime è $0$: i vertici del quadrato si compensano.` },
+  ],
+  flashcards: [
+    { id: 's02.radici.fc1', kind: 'def', front: String.raw`Radice n-esima di $c$`,
+      back: String.raw`Un $w\in\C$ con $w^n=c$. Se $c\neq0$ ci sono sempre esattamente $n$ radici n-esime distinte in $\C$.` },
+    { id: 's02.radici.fc2', kind: 'thm', front: String.raw`Formula delle radici n-esime`,
+      back: String.raw`Se $c=\rho e^{i\theta}\neq0$: $\sqrt[n]{c}=\left\{\sqrt[n]{\rho}\,e^{i\frac{\theta+2k\pi}{n}}:\ k=0,\dots,n-1\right\}$.` },
+    { id: 's02.radici.fc3', kind: 'thm', front: String.raw`Teorema di struttura delle radici n-esime`,
+      back: String.raw`Le $n$ radici n-esime di $c\neq0$ sono i vertici di un poligono regolare di $n$ lati inscritto nella circonferenza di centro $0$ e raggio $\sqrt[n]{|c|}$.` },
+    { id: 's02.radici.fc4', kind: 'formula', front: String.raw`Radici n-esime dell'unità`,
+      back: String.raw`$\omega_k=e^{i\frac{2k\pi}{n}}$ per $k=0,\dots,n-1$. Per $n=3$: $1$, $-\frac12+i\frac{\sqrt3}2$, $-\frac12-i\frac{\sqrt3}2$.` },
+    { id: 's02.radici.fc5', kind: 'thm', front: String.raw`Somma delle radici n-esime`,
+      back: String.raw`Per $n\ge2$ e $c\neq0$ la somma delle n radici n-esime di $c$ è $0$ (il polinomio $z^n-c$ non ha termine in $z^{n-1}$).` },
+    { id: 's02.radici.fc6', kind: 'errore', front: String.raw`Errore tipico: contare solo le radici reali`,
+      back: String.raw`Sbagliato: un complesso $c\neq0$ ha sempre $n$ radici n-esime in $\C$, anche se sono non reali.` },
+    { id: 's02.radici.fc7', kind: 'metodo', front: String.raw`Come risolvere $(z-z_0)^n=c$`,
+      back: String.raw`Pongo $w=z-z_0$, risolvo $w^n=c$ con la formula, poi $z=w+z_0$.` },
+  ],
+});
