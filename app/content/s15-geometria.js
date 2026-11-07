@@ -820,6 +820,467 @@ Lo useremo per riconoscere le rette sghembe e per la distanza tra rette.` },
           back: String.raw`Dimenticare il segno meno della componente centrale; scambiare l'ordine ($w\wedge v=-v\wedge w$); usare il coseno nel modulo; dimenticare il $\frac12$ nell'area del triangolo.` },
       ],
     },
+    // -----------------------------------------------------------------------
+    // s15.rette
+    // -----------------------------------------------------------------------
+    {
+      id: 's15.rette',
+      title: 'Rette nello spazio',
+      summary: String.raw`Saprai scrivere una retta in forma parametrica e cartesiana, passare dall'una all'altra e riconoscere rette parallele, ortogonali, incidenti e sghembe.`,
+      prereq: ['s15.vettoriale', 's00.equazioni'],
+      examRefs: ['Itinere 15/01/2026 · Parte B', 'Appello 11/06/2026 · Parte B', 'Appello 06/07/2026 · Parte A e B'],
+      lessons: [
+        {
+          id: 's15.rette.L1',
+          title: 'Punto + direzione',
+          cards: [
+            { type: 'learn', title: 'Equazioni parametriche',
+              body: String.raw`Una retta nello spazio è individuata da **un punto** $P_0=(x_0,y_0,z_0)$ e da **un vettore direzione** $v=(l,m,n)\neq\mathbf 0$. I suoi punti sono $P_0+t\,v$ al variare di $t\in\R$:
+$$r:\ \begin{cases}x=x_0+l\,t\\ y=y_0+m\,t\\ z=z_0+n\,t\end{cases}\qquad t\in\R.$$
+Lo scriveremo anche in breve $r:\ (x,y,z)=(x_0+lt,\ y_0+mt,\ z_0+nt)$.
+
+- i **termini noti** danno un punto (quello con $t=0$);
+- i **coefficienti di $t$** danno la direzione.
+
+La stessa retta ha infinite parametrizzazioni: si può cambiare punto e usare qualunque multiplo non nullo di $v$.` },
+            { id: 's15.rette.L1.q1', type: 'mcq', level: 1,
+              prompt: String.raw`Quale vettore è una direzione della retta $r:\ (x,y,z)=(1+2t,\ -t,\ 3)$?`,
+              options: [String.raw`$(2,-1,0)$`, String.raw`$(1,0,3)$`, String.raw`$(2,-1,3)$`, String.raw`$(3,-1,3)$`],
+              answer: 0,
+              explain: String.raw`La direzione è data dai coefficienti di $t$: $2$, $-1$ e $0$ (la $z$ non dipende da $t$). $(1,0,3)$ è il punto per $t=0$; $(2,-1,3)$ mescola coefficienti e termini noti.` },
+            { id: 's15.rette.L1.q2', type: 'tuple', level: 1,
+              prompt: String.raw`Trova il punto della retta $r:\ (x,y,z)=(1+2t,\ 3-t,\ -1+4t)$ corrispondente a $t=2$.`,
+              answer: ['5', '1', '7'], labels: ['x', 'y', 'z'],
+              explain: String.raw`Sostituisco $t=2$: $(1+4,\ 3-2,\ -1+8)=(5,1,7)$.` },
+            { type: 'learn', title: 'Retta per due punti',
+              body: String.raw`Per due punti distinti $A$, $B$ passa una sola retta: come direzione si prende $v=B-A$ e come punto $A$:
+$$r:\ A+t\,(B-A).$$
+Per $t=0$ si ottiene $A$, per $t=1$ si ottiene $B$.
+
+Per sapere se un punto $Q$ sta su $r$: si cerca un **unico** $t$ che soddisfi **tutte e tre** le equazioni.` },
+            { type: 'example', title: 'Esempio svolto',
+              problem: String.raw`Scrivi la retta per $A=(1,0,2)$ e $B=(3,1,-1)$ e stabilisci se $Q=(7,3,-7)$ le appartiene.`,
+              steps: [
+                String.raw`Direzione: $v=B-A=(2,1,-3)$.`,
+                String.raw`$r:\ (x,y,z)=(1+2t,\ t,\ 2-3t)$.`,
+                String.raw`Prima equazione: $1+2t=7\Rightarrow t=3$.`,
+                String.raw`Controllo le altre con $t=3$: $y=3$ ✓, $z=2-9=-7$ ✓.`,
+              ],
+              result: String.raw`$Q\in r$ (per $t=3$).` },
+            { id: 's15.rette.L1.q3', type: 'tuple', level: 1, proportional: true,
+              prompt: String.raw`Trova un vettore direzione della retta per $A=(2,-1,0)$ e $B=(0,1,3)$.`,
+              answer: ['-2', '2', '3'], labels: ['l', 'm', 'n'],
+              explain: String.raw`$v=B-A=(0-2,\ 1+1,\ 3-0)=(-2,2,3)$. Va bene anche ogni multiplo, ad esempio $(2,-2,-3)=A-B$.` },
+            { id: 's15.rette.L1.q4', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: $Q=(3,2,-1)$ appartiene a $r:\ (x,y,z)=(1+2t,\ t,\ 2-3t)$.`,
+              answer: false,
+              explain: String.raw`Dalla $x$: $1+2t=3\Rightarrow t=1$. Ma allora $y=1\neq2$. Non esiste un unico $t$ che soddisfi tutte le equazioni: $Q\notin r$. Errore tipico: controllare una sola coordinata.` },
+            { id: 's15.rette.L1.q5', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: $r:\ (1+2t,\ t,\ 2-3t)$ e $s:\ (3-4u,\ 1-2u,\ -1+6u)$ sono la stessa retta.`,
+              answer: true,
+              explain: String.raw`Le direzioni $(2,1,-3)$ e $(-4,-2,6)=-2(2,1,-3)$ sono parallele, e il punto $(3,1,-1)$ di $s$ ($u=0$) sta su $r$ per $t=1$. Rette parallele con un punto in comune coincidono.` },
+            { type: 'learn', title: 'Equazioni cartesiane',
+              body: String.raw`Eliminando il parametro $t$ si ottengono **due equazioni lineari** in $x,y,z$: una retta è l'**intersezione di due piani** non paralleli,
+$$r:\ \begin{cases}a_1x+b_1y+c_1z+d_1=0\\ a_2x+b_2y+c_2z+d_2=0.\end{cases}$$
+Se $l,m,n\neq0$ si può scrivere anche $\dfrac{x-x_0}{l}=\dfrac{y-y_0}{m}=\dfrac{z-z_0}{n}$ (sono due equazioni).
+
+**Da parametriche a cartesiane:** ricavo $t$ da un'equazione e lo sostituisco nelle altre due.
+**Da cartesiane a parametriche:** pongo una variabile uguale a $t$ e risolvo il sistema nelle altre due.` },
+            { type: 'example', title: 'Completa tu',
+              problem: String.raw`Scrivi in forma cartesiana $r:\ (x,y,z)=(1+2t,\ -1+t,\ 3-t)$.`,
+              steps: [
+                String.raw`Dalla seconda: $t=y+1$.`,
+                { text: String.raw`Sostituisco nella prima: $x=1+2(y+1)$, cioè $x-2y-3=0$.`,
+                  ask: { type: 'mcq', prompt: String.raw`Che equazione si ottiene sostituendo $t=y+1$ in $x=1+2t$?`, options: [String.raw`$x-2y-3=0$`, String.raw`$x-2y+1=0$`, String.raw`$x+2y-3=0$`], answer: 0, explain: String.raw`$x=1+2y+2=2y+3$, quindi $x-2y-3=0$.` } },
+                String.raw`Sostituisco nella terza: $z=3-(y+1)=2-y$, cioè $y+z-2=0$.`,
+              ],
+              result: String.raw`$r:\ \begin{cases}x-2y-3=0\\ y+z-2=0\end{cases}$` },
+            { id: 's15.rette.L1.q6', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova un vettore direzione della retta $r:\ \begin{cases}x-y=1\\ z=2\end{cases}$.`,
+              answer: ['1', '1', '0'], labels: ['l', 'm', 'n'],
+              explain: String.raw`Pongo $y=t$: $x=1+t$, $z=2$. Quindi $r:\ (1+t,\ t,\ 2)$ e la direzione è $(1,1,0)$. Errore tipico: prendere la normale $(1,-1,0)$ del primo piano, che è **ortogonale** alla retta.` },
+            { id: 's15.rette.L1.q7', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova un vettore direzione della retta $\dfrac{x-1}{2}=\dfrac{y+3}{-1}=\dfrac{z}{4}$.`,
+              answer: ['2', '-1', '4'], labels: ['l', 'm', 'n'],
+              explain: String.raw`Ponendo i tre rapporti uguali a $t$: $x=1+2t$, $y=-3-t$, $z=4t$. La direzione è data dai denominatori: $(2,-1,4)$; un punto è $(1,-3,0)$ (attenzione ai segni: $y+3$ dà $y_0=-3$).` },
+          ],
+        },
+        {
+          id: 's15.rette.L2',
+          title: 'Intersezione di piani, parallelismo, angoli',
+          cards: [
+            { type: 'learn', title: 'Direzione di una retta data da due piani',
+              body: String.raw`Se $r=\pi_1\cap\pi_2$ con normali $n_1=(a_1,b_1,c_1)$ e $n_2=(a_2,b_2,c_2)$, la retta giace in entrambi i piani, quindi la sua direzione è **ortogonale a entrambe le normali**:
+$$v=n_1\wedge n_2.$$
+Per un **punto** fisso un valore comodo di una coordinata (ad esempio $z=0$) e risolvo il sistema $2\times2$ che resta.
+
+In alternativa si parametrizza direttamente: pongo $z=t$ e risolvo in $x,y$.` },
+            { type: 'example', title: 'Esempio (Itinere 15/01/2026)',
+              problem: String.raw`Scrivi in forma parametrica $r=\pi_1\cap\pi_2$ con $\pi_1:\ 4x+y-z-6=0$ e $\pi_2:\ 2x-y-z=0$.`,
+              steps: [
+                String.raw`Pongo $z=t$: $\ 4x+y=6+t$ e $2x-y=t$.`,
+                { text: String.raw`Sommo: $6x=6+2t$, quindi $x=1+\frac t3$.`,
+                  ask: { type: 'expr', vars: ['t'], prompt: String.raw`Sommando le due equazioni, quanto vale $x$ in funzione di $t$?`, answer: '1+t/3', explain: String.raw`$6x=6+2t\Rightarrow x=1+\frac t3$.` } },
+                { text: String.raw`Dalla seconda: $y=2x-t=2+\frac{2t}3-t=2-\frac t3$.`,
+                  ask: { type: 'expr', vars: ['t'], prompt: String.raw`Quanto vale $y$ in funzione di $t$?`, answer: '2-t/3', explain: String.raw`$y=2x-t=2+\frac{2}{3}t-t=2-\frac t3$.` } },
+                String.raw`$r:\ (x,y,z)=\left(1+\frac t3,\ 2-\frac t3,\ t\right)$, direzione $\left(\frac13,-\frac13,1\right)\parallel(1,-1,3)$.`,
+                String.raw`Controllo: $n_1\wedge n_2=(4,1,-1)\wedge(2,-1,-1)=(-2,2,-6)=-2(1,-1,3)$ ✓.`,
+              ],
+              result: String.raw`$r:\ \left(1+\frac t3,\ 2-\frac t3,\ t\right)$, direzione $(1,-1,3)$, passa per $(1,2,0)$.` },
+            { id: 's15.rette.L2.q1', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova la direzione di $r:\ \begin{cases}x+y-z=1\\ 2x-y+z=2\end{cases}$.`,
+              answer: ['0', '1', '1'], labels: ['l', 'm', 'n'],
+              explain: String.raw`$n_1\wedge n_2=(1,1,-1)\wedge(2,-1,1)=(1\cdot1-(-1)(-1),\ (-1)\cdot2-1\cdot1,\ 1\cdot(-1)-1\cdot2)=(0,-3,-3)\parallel(0,1,1)$.` },
+            { id: 's15.rette.L2.q2', type: 'tuple', level: 2,
+              prompt: String.raw`Trova il punto della stessa retta $r:\ \begin{cases}x+y-z=1\\ 2x-y+z=2\end{cases}$ con $z=0$.`,
+              answer: ['1', '0', '0'], labels: ['x', 'y', 'z'],
+              explain: String.raw`Con $z=0$: $x+y=1$, $2x-y=2$. Sommando $3x=3$: $x=1$, $y=0$. Punto $(1,0,0)$.` },
+            { type: 'learn', title: 'Parallelismo, ortogonalità, angolo',
+              body: String.raw`Siano $r$, $s$ rette di direzioni $v_r$, $v_s$.
+
+- $r\parallel s\iff v_r\parallel v_s$ (cioè $v_r\wedge v_s=\mathbf 0$, o componenti proporzionali);
+- $r\perp s$ (ortogonali) $\iff\langle v_r,v_s\rangle=0$;
+- **angolo tra due rette**: è l'angolo **acuto** (o retto) tra le direzioni,
+$$\cos\theta=\frac{|\langle v_r,v_s\rangle|}{|v_r|\,|v_s|},\qquad\theta\in\left[0,\tfrac\pi2\right].$$
+
+>! Nello spazio due rette ortogonali **non** si intersecano necessariamente: "perpendicolari" di solito vuol dire ortogonali e incidenti.` },
+            { id: 's15.rette.L2.q3', type: 'mcq', level: 2,
+              prompt: String.raw`Le rette $r:\ (1+2t,\ -t,\ 3+t)$ e $s:\ (4u,\ 1-2u,\ 2u)$ sono:`,
+              options: ['parallele distinte', 'coincidenti', 'ortogonali', 'incidenti'],
+              answer: 0,
+              explain: String.raw`Direzioni $(2,-1,1)$ e $(4,-2,2)=2(2,-1,1)$: parallele. Il punto $(0,1,0)$ di $s$ sta su $r$? $1+2t=0\Rightarrow t=-\frac12$, ma allora $y=\frac12\neq1$. Quindi sono parallele **distinte**.` },
+            { id: 's15.rette.L2.q4', type: 'num', level: 2,
+              prompt: String.raw`Per quale $k$ le rette di direzioni $v_r=(1,k,2)$ e $v_s=(k,-3,1)$ sono ortogonali?`,
+              answer: '1',
+              explain: String.raw`$\langle v_r,v_s\rangle=k-3k+2=2-2k=0\Rightarrow k=1$.` },
+            { id: 's15.rette.L2.q5', type: 'num', level: 2,
+              prompt: String.raw`Calcola l'angolo (in radianti) tra le rette di direzioni $v_r=(1,1,0)$ e $v_s=(-1,0,1)$.`,
+              answer: 'pi/3',
+              explain: String.raw`$\langle v_r,v_s\rangle=-1$, $|v_r|=|v_s|=\sqrt2$. Tra i **vettori** l'angolo è $\frac{2\pi}3$, ma tra le **rette** si prende l'acuto: $\cos\theta=\frac{|-1|}{2}=\frac12$, $\theta=\frac\pi3$.` },
+            { id: 's15.rette.L2.q6', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: due rette ortogonali nello spazio hanno sempre un punto in comune.`,
+              answer: false,
+              explain: String.raw`Falso. Esempio: l'asse $x$, cioè $(t,0,0)$, e la retta $(0,u,1)$: direzioni $(1,0,0)\perp(0,1,0)$, ma la prima ha sempre $z=0$ e la seconda $z=1$. Sono ortogonali e sghembe.` },
+            { id: 's15.rette.L2.q7', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova la direzione di $r:\ \begin{cases}x=2y\\ z=3\end{cases}$.`,
+              answer: ['2', '1', '0'], labels: ['l', 'm', 'n'],
+              explain: String.raw`Pongo $y=t$: $r:\ (2t,\ t,\ 3)$, direzione $(2,1,0)$. Oppure $(1,-2,0)\wedge(0,0,1)=(-2,-1,0)\parallel(2,1,0)$.` },
+            { id: 's15.rette.L2.q8', type: 'tuple', level: 3, proportional: true,
+              prompt: String.raw`Trova la direzione della retta per $P=(1,0,-2)$ parallela a $r:\ \begin{cases}x+y=1\\ y-z=0\end{cases}$.`,
+              answer: ['-1', '1', '1'], labels: ['l', 'm', 'n'],
+              explain: String.raw`Rette parallele hanno la stessa direzione: $(1,1,0)\wedge(0,1,-1)=(1\cdot(-1)-0,\ 0-1\cdot(-1),\ 1\cdot1-0)=(-1,1,1)$. La retta cercata è $(1-t,\ t,\ -2+t)$.` },
+          ],
+        },
+        {
+          id: 's15.rette.L3',
+          title: 'Incidenti, parallele o sghembe',
+          cards: [
+            { type: 'learn', title: 'Le quattro posizioni',
+              body: String.raw`Due rette nello spazio possono essere:
+
+1. **coincidenti**;
+2. **parallele distinte** (stessa direzione, nessun punto comune);
+3. **incidenti** (esattamente un punto comune);
+4. **sghembe**: né parallele né incidenti.
+
+>* **Definizione.** Due rette sono **sghembe** se **non sono complanari**, cioè non esiste un piano che le contenga entrambe.
+
+Rette parallele o incidenti stanno sempre in un piano; le sghembe no. Nel piano le rette sghembe non esistono.` },
+            { type: 'learn', title: 'Come si riconoscono',
+              body: String.raw`Siano $r:\ P_1+t\,v_1$ e $s:\ P_2+u\,v_2$.
+
+- Se $v_1\parallel v_2$: **coincidenti** se $P_2\in r$, altrimenti **parallele distinte**.
+- Se $v_1\not\parallel v_2$: risolvo il sistema $P_1+t\,v_1=P_2+u\,v_2$ (3 equazioni, 2 incognite). Se ha soluzione sono **incidenti**, altrimenti **sghembe**.
+
+Scorciatoia con il prodotto misto: $r,s$ sono complanari $\iff\langle P_2-P_1,\ v_1\wedge v_2\rangle=0$. Quindi, se $v_1\not\parallel v_2$:
+$$\langle P_2-P_1,\ v_1\wedge v_2\rangle\neq0\iff\text{sghembe}.$$
+
+>! Per il sistema usa **parametri diversi** ($t$ e $u$): con lo stesso parametro imponi che i punti si trovino nello stesso "istante", che è una condizione in più (e sbagliata).` },
+            { type: 'example', title: 'Esempio svolto (Appello 11/06/2026)',
+              problem: String.raw`Per quale $\gamma$ le rette $r:\ (1+3t,\ 3-t,\ 1-2t)$ e $s:\ (3-u,\ \gamma+u,\ 1+u)$ sono incidenti? In quale punto?`,
+              steps: [
+                String.raw`Uguaglio le coordinate: $1+3t=3-u$, $\ 3-t=\gamma+u$, $\ 1-2t=1+u$.`,
+                { text: String.raw`Dalla terza $u=-2t$; nella prima $1+3t=3+2t$, quindi $t=2$, $u=-4$.`,
+                  ask: { type: 'tuple', labels: ['t', 'u'], prompt: String.raw`Risolvi la prima e la terza equazione: quanto valgono $t$ e $u$?`, answer: ['2', '-4'], explain: String.raw`$u=-2t$ e $1+3t=3+2t\Rightarrow t=2$, $u=-4$.` } },
+                { text: String.raw`Seconda equazione: $3-2=\gamma-4\Rightarrow\gamma=5$.`,
+                  ask: { type: 'num', prompt: String.raw`Quanto vale $\gamma$?`, answer: '5', explain: String.raw`$1=\gamma-4\Rightarrow\gamma=5$.` } },
+                String.raw`Punto: $t=2$ in $r$ dà $P=(7,1,-3)$; controllo con $u=-4$ in $s$: $(7,\ 5-4,\ -3)$ ✓.`,
+              ],
+              result: String.raw`$\gamma=5$, $P=(7,1,-3)$. Per $\gamma\neq5$ le rette sono sghembe (le direzioni $(3,-1,-2)$ e $(-1,1,1)$ non sono parallele).` },
+            { id: 's15.rette.L3.q1', type: 'tuple', level: 2,
+              prompt: String.raw`Trova il punto d'intersezione di $r:\ (1+t,\ 2-t,\ 3+2t)$ e $s:\ (2+u,\ 1,\ 5+u)$.`,
+              answer: ['2', '1', '5'], labels: ['x', 'y', 'z'],
+              explain: String.raw`Dalla $y$: $2-t=1\Rightarrow t=1$. Dalla $x$: $2=2+u\Rightarrow u=0$. Controllo la $z$: $3+2=5=5+0$ ✓. Punto $(2,1,5)$.` },
+            { id: 's15.rette.L3.q2', type: 'mcq', level: 2,
+              prompt: String.raw`Le rette $r:\ (1+t,\ 2t,\ -1)$ e $s:\ (2,\ 1+u,\ u)$ sono:`,
+              options: ['sghembe', 'incidenti', 'parallele distinte', 'coincidenti'],
+              answer: 0,
+              explain: String.raw`Direzioni $(1,2,0)$ e $(0,1,1)$: non parallele. Sistema: $1+t=2\Rightarrow t=1$; $2t=1+u\Rightarrow u=1$; $-1=u=1$: assurdo. Nessun punto comune e non parallele: sghembe. (Prodotto misto: $\langle(1,1,1),(2,-1,1)\rangle=2\neq0$.)` },
+            { id: 's15.rette.L3.q3', type: 'num', level: 2,
+              prompt: String.raw`Per quale $\gamma$ le rette $r:\ (t,\ 1+t,\ 2t)$ e $s:\ (1+u,\ \gamma-u,\ 3+u)$ sono incidenti?`,
+              answer: '4',
+              explain: String.raw`Dalla $x$ e dalla $z$: $t=1+u$, $2t=3+u$, quindi $2+2u=3+u$: $u=1$, $t=2$. Dalla $y$: $1+2=\gamma-1\Rightarrow\gamma=4$. Il punto comune è $(2,3,4)$.` },
+            { id: 's15.rette.L3.q4', type: 'open', level: 3, points: 1,
+              source: 'Appello 06/07/2026 · Parte A',
+              prompt: 'Si dia la definizione di rette sghembe.',
+              answer: String.raw`Due rette dello spazio si dicono **sghembe** se non sono complanari, cioè se non esiste alcun piano che le contenga entrambe. Equivalentemente: non sono parallele e non hanno punti in comune. In coordinate, con $r:P_1+tv_1$, $s:P_2+uv_2$: sono sghembe se e solo se $\langle P_2-P_1,v_1\wedge v_2\rangle\neq0$.`,
+              rubric: ['Non complanari (nessun piano le contiene entrambe)', 'Equivalentemente: né parallele né incidenti', 'Eventuale criterio con il prodotto misto'] },
+            { id: 's15.rette.L3.q5', type: 'tf', level: 1,
+              prompt: String.raw`Vero o falso: due rette dello spazio che non hanno punti in comune sono parallele.`,
+              answer: false,
+              explain: String.raw`Falso: possono essere **sghembe**. "Nessun punto comune $\Rightarrow$ parallele" vale solo nel piano.` },
+            { id: 's15.rette.L3.q6', type: 'cloze', level: 2,
+              prompt: 'Completa.',
+              text: String.raw`Se $v_1\wedge v_2\neq\mathbf 0$ e $\langle P_2-P_1,v_1\wedge v_2\rangle=0$ le rette sono [[0]]; se invece $\langle P_2-P_1,v_1\wedge v_2\rangle\neq0$ sono [[1]]. Se $v_1\wedge v_2=\mathbf 0$ sono [[2]].`,
+              blanks: [
+                { options: ['incidenti', 'sghembe', 'parallele'], answer: 0 },
+                { options: ['sghembe', 'incidenti', 'coincidenti'], answer: 0 },
+                { options: ['parallele o coincidenti', 'sghembe', 'incidenti'], answer: 0 },
+              ],
+              explain: String.raw`Prodotto misto nullo = complanari. Complanari e non parallele = incidenti; non complanari = sghembe; $v_1\wedge v_2=\mathbf 0$ = stessa direzione.` },
+            { id: 's15.rette.L3.q7', type: 'mcq', level: 2,
+              prompt: String.raw`Risolvendo il sistema per l'intersezione di $r:\ (1+t,\ t,\ 0)$ e $s:\ (u,\ 1-u,\ 0)$ uno studente pone $u=t$ e conclude "nessuna soluzione, sghembe". Cosa c'è di sbagliato?`,
+              options: [
+                'Doveva usare due parametri distinti: le rette sono incidenti',
+                'Niente: le rette sono sghembe',
+                'Le rette sono parallele',
+                'Doveva usare il prodotto scalare delle direzioni',
+              ],
+              answer: 0,
+              explain: String.raw`Con parametri distinti: $1+t=u$, $t=1-u$, $0=0$. Sommando le prime due: $1+2t=1\Rightarrow t=0$, $u=1$: punto $(1,0,0)$. Sono incidenti (e stanno entrambe nel piano $z=0$, quindi non potevano essere sghembe).` },
+          ],
+        },
+        {
+          id: 's15.rette.L4',
+          title: "Livello d'esame",
+          cards: [
+            { id: 's15.rette.L4.q1', type: 'problem', level: 3, points: 4,
+              source: 'Appello 11/06/2026 · Parte B',
+              prompt: String.raw`Date le rette $r:\ (x,y,z)=(1+3t,\ 3-t,\ 1-2t)$ e $s:\ (x,y,z)=(3-u,\ \gamma+u,\ 1+u)$, determinare $\gamma$ in modo che siano incidenti, il loro punto d'intersezione e il piano che le contiene.`,
+              parts: [
+                { type: 'num', prompt: String.raw`Valore di $\gamma$`, answer: '5', explain: String.raw`Prima e terza equazione danno $t=2$, $u=-4$; la seconda $1=\gamma-4$.` },
+                { type: 'tuple', labels: ['x', 'y', 'z'], prompt: "Punto d'intersezione", answer: ['7', '1', '-3'], explain: String.raw`$t=2$ in $r$.` },
+                { type: 'tuple', labels: ['a', 'b', 'c', 'd'], proportional: true, prompt: String.raw`Piano $ax+by+cz+d=0$ che contiene $r$ e $s$`, answer: ['1', '-1', '2', '0'], explain: String.raw`Normale $(3,-1,-2)\wedge(-1,1,1)=(1,-1,2)$, per $P=(7,1,-3)$: $x-y+2z=0$.` },
+              ],
+              solution: String.raw`Uguaglio le coordinate: $1+3t=3-u$, $3-t=\gamma+u$, $1-2t=1+u$. Dalla terza $u=-2t$; nella prima $1+3t=3+2t\Rightarrow t=2$, $u=-4$. La seconda dà $1=\gamma-4$, quindi $\gamma=5$.
+
+Punto comune: $P=r(2)=(7,1,-3)$ (e $s(-4)=(7,1,-3)$ ✓).
+
+Il piano contiene entrambe le direzioni $v_r=(3,-1,-2)$ e $v_s=(-1,1,1)$, quindi ha normale
+$$n=v_r\wedge v_s=((-1)(1)-(-2)(1),\ (-2)(-1)-3\cdot1,\ 3\cdot1-(-1)(-1))=(1,-1,2).$$
+Passa per $P$: $(x-7)-(y-1)+2(z+3)=0$, cioè $x-y+2z=0$ (passa per l'origine).` },
+            { id: 's15.rette.L4.q2', type: 'problem', level: 3, points: 3,
+              source: 'Appello 06/07/2026 · Parte B',
+              prompt: String.raw`Date le rette $r_1:\ (x,y,z)=(2+t,\ 1-t,\ 3+2t)$ e $r_2:\ (x,y,z)=(1+2s,\ -1+s,\ 4-s)$, determinare la retta $s$ passante per $P=(1,2,-1)$ e perpendicolare a entrambe. Stabilire la posizione reciproca di $r_1$ e $s$.`,
+              parts: [
+                { type: 'tuple', labels: ['l', 'm', 'n'], proportional: true, prompt: String.raw`Direzione di $s$`, answer: ['-1', '5', '3'], explain: String.raw`$v_1\wedge v_2=(1,-1,2)\wedge(2,1,-1)=(-1,5,3)$.` },
+                { type: 'mcq', prompt: String.raw`Posizione reciproca di $r_1$ e $s$`, options: ['sghembe', 'incidenti', 'parallele distinte', 'coincidenti'], answer: 0,
+                  explain: String.raw`Direzioni non parallele e prodotto misto $\langle P-P_1,\ v_1\wedge v_s\rangle=\langle(-1,1,-4),(-13,-5,4)\rangle=-8\neq0$.` },
+              ],
+              solution: String.raw`Le direzioni sono $v_1=(1,-1,2)$ e $v_2=(2,1,-1)$. Una retta perpendicolare a entrambe ha direzione ortogonale a $v_1$ e $v_2$:
+$$v_s=v_1\wedge v_2=((-1)(-1)-2\cdot1,\ 2\cdot2-1\cdot(-1),\ 1\cdot1-(-1)\cdot2)=(-1,5,3).$$
+Quindi $s:\ (x,y,z)=(1-t,\ 2+5t,\ -1+3t)$.
+
+Posizione di $r_1$ e $s$: le direzioni $(1,-1,2)$ e $(-1,5,3)$ non sono proporzionali. Cerco punti comuni: $2+t=1-k$, $1-t=2+5k$, $3+2t=-1+3k$. Sommando le prime due: $3=3+4k\Rightarrow k=0$, $t=-1$; la terza dà $1=-1$: assurdo. Le rette sono **sghembe**. (Controllo: $v_1\wedge v_s=(-13,-5,4)$, $P-P_1=(-1,1,-4)$, prodotto misto $13-5-16=-8\neq0$.) La loro distanza, $\frac{8}{\sqrt{210}}$, si calcola nella skill sulle distanze.` },
+            { id: 's15.rette.L4.q3', type: 'problem', level: 3, points: 2,
+              source: 'Itinere 15/01/2026 · Parte B',
+              prompt: String.raw`Scrivere in forma parametrica la retta $r=\pi_1\cap\pi_2$, con $\pi_1:\ 4x+y-z-6=0$ e $\pi_2:\ 2x-y-z=0$.`,
+              parts: [
+                { type: 'tuple', labels: ['l', 'm', 'n'], proportional: true, prompt: String.raw`Direzione di $r$`, answer: ['1', '-1', '3'], explain: String.raw`$n_1\wedge n_2=(-2,2,-6)\parallel(1,-1,3)$.` },
+                { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Punto di $r$ con $z=0$`, answer: ['1', '2', '0'], explain: String.raw`$4x+y=6$, $2x-y=0$: $x=1$, $y=2$.` },
+              ],
+              solution: String.raw`Pongo $z=t$: $4x+y=6+t$, $2x-y=t$. Sommando $6x=6+2t$, quindi $x=1+\frac t3$ e $y=2x-t=2-\frac t3$:
+$$r:\ (x,y,z)=\left(1+\tfrac t3,\ 2-\tfrac t3,\ t\right),$$
+con direzione $\left(\frac13,-\frac13,1\right)\parallel(1,-1,3)$ e punto $(1,2,0)$ per $t=0$. Controllo: $n_1\wedge n_2=(4,1,-1)\wedge(2,-1,-1)=(-2,2,-6)$ ✓.` },
+            { id: 's15.rette.L4.q4', type: 'order', level: 3,
+              prompt: String.raw`Riordina il procedimento per stabilire la posizione reciproca di $r:\ P_1+tv_1$ e $s:\ P_2+uv_2$.`,
+              steps: [
+                String.raw`Leggo i punti $P_1,P_2$ e le direzioni $v_1,v_2$.`,
+                String.raw`Controllo se $v_1$ e $v_2$ sono proporzionali.`,
+                String.raw`Se lo sono, verifico se $P_2\in r$: coincidenti se sì, parallele distinte se no.`,
+                String.raw`Se non lo sono, risolvo $P_1+tv_1=P_2+uv_2$ con due parametri distinti.`,
+                String.raw`Sistema compatibile: incidenti (trovo il punto); incompatibile: sghembe.`,
+              ],
+              distractors: [String.raw`Se $\langle v_1,v_2\rangle=0$ le rette sono incidenti.`],
+              explain: String.raw`L'ortogonalità delle direzioni non dice nulla sull'esistenza di un punto comune: due rette ortogonali possono essere sghembe.` },
+            { id: 's15.rette.L4.q5', type: 'tuple', level: 3, proportional: true,
+              prompt: String.raw`Trova la direzione della retta per $P=(0,1,1)$ ortogonale sia a $r:\ (x,y,z)=(1+t,\ 2,\ -t)$ sia a $s:\ \begin{cases}x+y=0\\ z=1\end{cases}$.`,
+              answer: ['1', '1', '1'], labels: ['l', 'm', 'n'],
+              explain: String.raw`$v_r=(1,0,-1)$. Per $s$ pongo $x=u$: allora $y=-u$, $z=1$, quindi $v_s=(1,-1,0)$. La direzione cercata è $v_r\wedge v_s=(0\cdot0-(-1)(-1),\ (-1)\cdot1-1\cdot0,\ 1\cdot(-1)-0\cdot1)=(-1,-1,-1)\parallel(1,1,1)$.` },
+            { type: 'learn', title: "Come riconoscere la domanda d'esame",
+              body: String.raw`Nelle domande di rette i passi sono quasi sempre tre:
+
+1. trovo un **punto** e una **direzione** di ogni retta (dalle equazioni parametriche, o con $v=n_1\wedge n_2$ se la retta è data da due piani);
+2. verifico la **posizione reciproca** con le direzioni e, se serve, con il **prodotto misto** $\langle P_2-P_1,\ v_1\wedge v_2\rangle$;
+3. rispondo nella forma richiesta: parametrica o cartesiana, punto d'intersezione, piano che le contiene.
+
+Il prodotto misto è il controllo più veloce: se è zero le rette sono complanari, altrimenti sono sghembe.` },
+            { type: 'example', title: 'Esempio svolto: sghembe?',
+              problem: String.raw`Stabilisci la posizione reciproca di $r:\ (1+t,\ t,\ 2)$ e $s:\ (0,\ 1+u,\ 1+2u)$.`,
+              steps: [
+                String.raw`Direzioni $v_1=(1,1,0)$ e $v_2=(0,1,2)$: non proporzionali, quindi le rette non sono parallele.`,
+                String.raw`Prodotto vettoriale: $v_1\wedge v_2=(1\cdot2-0\cdot1,\ 0\cdot0-1\cdot2,\ 1\cdot1-1\cdot0)=(2,-2,1)$.`,
+                { text: String.raw`Punti $P_1=(1,0,2)$ e $P_2=(0,1,1)$: $P_2-P_1=(-1,1,-1)$. Prodotto misto: $\langle(-1,1,-1),(2,-2,1)\rangle=-2-2-1=-5$.`,
+                  ask: { type: 'num', prompt: String.raw`Quanto vale il prodotto misto $\langle(-1,1,-1),\ (2,-2,1)\rangle$?`, answer: '-5', explain: String.raw`$(-1)\cdot2+1\cdot(-2)+(-1)\cdot1=-5$.` } },
+                String.raw`Il prodotto misto è diverso da zero: le rette non sono complanari.`,
+              ],
+              result: String.raw`$r$ e $s$ sono **sghembe**.` },
+            { id: 's15.rette.L4.q6', type: 'tf', level: 3,
+              prompt: String.raw`Vero o falso: se $v_1\not\parallel v_2$ e $\langle P_2-P_1,\ v_1\wedge v_2\rangle=0$, allora le rette $r$ e $s$ sono incidenti.`,
+              answer: true,
+              explain: String.raw`Vero. Il prodotto misto nullo significa che le rette sono complanari; non essendo parallele, si intersecano in un punto unico. Attenzione: senza la condizione $v_1\not\parallel v_2$ l'affermazione non vale, perché due rette parallele distinte sono complanari ma non si intersecano.` },
+            { id: 's15.rette.L4.q7', type: 'num', level: 3,
+              prompt: String.raw`Per quale valore di $a$ le rette $r:\ (1+t,\ t,\ 2)$ e $s:\ (0,\ 1+u,\ a+2u)$ sono complanari?`,
+              answer: '6',
+              explain: String.raw`Con $v_1=(1,1,0)$, $v_2=(0,1,2)$ si ha $v_1\wedge v_2=(2,-2,1)$ e $P_2-P_1=(-1,1,a-2)$. Il prodotto misto è $-2-2+(a-2)=a-6$: è nullo per $a=6$.` },
+          ],
+        },
+      ],
+      practice: [
+        { id: 's15.rette.p1', type: 'tuple', level: 1, proportional: true,
+          prompt: String.raw`Trova una direzione della retta per $A=(1,2,0)$ e $B=(3,-1,4)$.`,
+          answer: ['2', '-3', '4'], labels: ['l', 'm', 'n'],
+          explain: String.raw`$v=B-A=(3-1,\ -1-2,\ 4-0)=(2,-3,4)$.` },
+        { id: 's15.rette.p2', type: 'mcq', level: 1,
+          prompt: String.raw`Il punto $(3,-1,4)$ appartiene a $r:\ (x,y,z)=(1+2t,\ -t,\ 3+t)$?`,
+          options: [String.raw`Sì, per $t=1$`, String.raw`No: la $y$ non torna`, String.raw`No: la $z$ non torna`],
+          answer: 0,
+          explain: String.raw`Dalla $x$: $1+2t=3$, quindi $t=1$. Con $t=1$ si ha $y=-1$ e $z=4$: tutte e tre le coordinate tornano, quindi il punto è su $r$. Le altre due risposte nascondono un errore di calcolo.` },
+        { id: 's15.rette.p3', type: 'num', level: 1,
+          prompt: String.raw`Il punto $Q=(5,0,8)$ sta sulla retta $r:\ (x,y,z)=(1+2t,\ 2-t,\ 4t)$. Quale valore di $t$ gli corrisponde?`,
+          answer: '2',
+          explain: String.raw`Dalla $x$: $1+2t=5\Rightarrow t=2$. Verifico: $y=2-2=0$ ✓, $z=4\cdot2=8$ ✓.` },
+        { id: 's15.rette.p4', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $r:\ (t,\ 2t,\ 1)$ e $s:\ (3+2u,\ 4+4u,\ 1)$ sono rette parallele distinte.`,
+          answer: true,
+          explain: String.raw`Le direzioni $(1,2,0)$ e $(2,4,0)=2(1,2,0)$ sono proporzionali. Il punto $(3,4,1)$ di $s$ non sta su $r$: per $x=3$ si ha $t=3$ e $y=6\neq4$. Quindi sono parallele e distinte.` },
+        { id: 's15.rette.p5', type: 'mcq', level: 2,
+          prompt: String.raw`Quale sistema cartesiano descrive la retta $(x,y,z)=(2t,\ 1+t,\ -t)$?`,
+          options: [
+            String.raw`$\begin{cases}x-2y+2=0\\ y+z-1=0\end{cases}$`,
+            String.raw`$\begin{cases}x+2y-2=0\\ y+z-1=0\end{cases}$`,
+            String.raw`$\begin{cases}x-2y+2=0\\ y-z-1=0\end{cases}$`,
+          ],
+          answer: 0,
+          explain: String.raw`Dalla $y=1+t$ ricavo $t=y-1$. Sostituendo: $x=2(y-1)$, cioè $x-2y+2=0$; e $z=-(y-1)$, cioè $y+z-1=0$. Errore tipico: sbagliare il segno quando si isola $t$.` },
+        { id: 's15.rette.p6', type: 'num', level: 2,
+          prompt: String.raw`Calcola il coseno dell'angolo acuto tra le rette di direzioni $(1,2,2)$ e $(2,-1,2)$.`,
+          answer: '4/9',
+          explain: String.raw`$\langle(1,2,2),(2,-1,2)\rangle=2-2+4=4$, $|(1,2,2)|=|(2,-1,2)|=3$. Quindi $\cos\theta=\dfrac{|4|}{3\cdot3}=\dfrac49$.` },
+        { id: 's15.rette.p7', type: 'open', level: 2, points: 1,
+          prompt: String.raw`Spiega come si scrive la retta per due punti distinti $A$ e $B$ in forma parametrica, e come si verifica che un punto $Q$ vi appartenga.`,
+          answer: String.raw`Direzione $v=B-A$ e punto $A$: $r:\ A+t(B-A)$. Per $t=0$ si ottiene $A$, per $t=1$ si ottiene $B$. Per verificare che $Q\in r$ si cerca un unico $t$ che soddisfi tutte e tre le equazioni, e si controlla che valga anche per le altre coordinate.`,
+          rubric: ['Direzione $B-A$ e punto $A$ (o $B$)', 'Forma parametrica corretta', 'Verifica con un unico $t$ su tutte e tre le coordinate'] },
+        { id: 's15.rette.p8', type: 'cloze', level: 2,
+          prompt: 'Completa.',
+          text: String.raw`Le equazioni cartesiane di una retta sono due equazioni lineari indipendenti: una retta è l'[[0]] di [[1]] piani non paralleli. Una direzione della retta è il [[2]] delle due normali.`,
+          blanks: [
+            { options: ['intersezione', 'unione', 'somma'], answer: 0 },
+            { options: ['due', 'tre', 'uno'], answer: 0 },
+            { options: ['prodotto scalare', 'prodotto vettoriale', 'somma'], answer: 1 },
+          ],
+          explain: String.raw`La retta è l'intersezione di due piani non paralleli. Una direzione è ortogonale a entrambe le normali, quindi è il loro prodotto vettoriale $n_1\wedge n_2$.` },
+        { id: 's15.rette.p9', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: se due rette hanno le stesse direzioni proporzionali, sono sempre coincidenti.`,
+          answer: false,
+          explain: String.raw`Falso: possono essere parallele **distinte**. Coincidono solo se il punto di una sta sull'altra.` },
+        { id: 's15.rette.p10', type: 'expr', level: 2, vars: ['t'],
+          prompt: String.raw`Qual è la seconda coordinata $y(t)$ del punto di parametro $t$ sulla retta $r:\ (x,y,z)=(1-2t,\ 3+t,\ 2t)$?`,
+          answer: '3+t',
+          explain: String.raw`La seconda coordinata è $y=3+t$: il termine noto $3$ dà il punto per $t=0$, il coefficiente $1$ di $t$ dà la direzione.` },
+        { id: 's15.rette.g1', type: 'gen', level: 1,
+          gen: (R) => {
+            const A = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            let v;
+            do { v = [R.int(-4, 4), R.int(-4, 4), R.nz(-4, 4)]; } while (v.every((x) => x === 0));
+            const B = A.map((x, i) => x + v[i]);
+            return {
+              type: 'tuple', labels: ['l', 'm', 'n'], proportional: true,
+              prompt: String.raw`Trova una direzione della retta per $A=(${A.join(', ')})$ e $B=(${B.join(', ')})$.`,
+              answer: v.map(String),
+              explain: String.raw`La direzione è $B-A=(${v.join(', ')})$. Ogni multiplo non nullo, ad esempio $-(B-A)$, va altrettanto bene.`,
+            };
+          } },
+        { id: 's15.rette.g2', type: 'gen', level: 2,
+          gen: (R) => {
+            const P = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            const v = [R.nz(-3, 3), R.int(-2, 2), R.nz(-3, 3)];
+            const t0 = R.nz(-3, 3);
+            const Q = P.map((x, i) => x + t0 * v[i]);
+            return {
+              type: 'num',
+              prompt: String.raw`Il punto $Q=(${Q.join(', ')})$ sta sulla retta $r:\ (x,y,z)=(${comp(P[0], v[0])},\ ${comp(P[1], v[1])},\ ${comp(P[2], v[2])})$. Quale valore di $t$ corrisponde a $Q$?`,
+              answer: String(t0),
+              explain: String.raw`Ogni coordinata di $Q$ deve tornare con lo stesso $t$. Dalla prima coordinata, con $v_1=${v[0]}$, si ricava $t=${t0}$; le altre due coordinate danno lo stesso valore.`,
+            };
+          } },
+        { id: 's15.rette.g3', type: 'gen', level: 2,
+          gen: (R) => {
+            let c, m, n, k;
+            do { c = R.nz(-3, 3); m = R.int(-3, 3); n = R.int(-3, 3); k = m + c * n; } while (k === 0);
+            return {
+              type: 'num',
+              prompt: String.raw`Per quale $k$ le rette di direzioni $(1,\ k,\ ${c})$ e $(${m},\ -1,\ ${n})$ sono ortogonali?`,
+              answer: String(k),
+              explain: String.raw`Ortogonali significa prodotto scalare nullo: $${m}-k+(${c * n})=0$, quindi $k=${k}$.`,
+            };
+          } },
+        { id: 's15.rette.g4', type: 'gen', level: 2,
+          gen: (R) => {
+            let v1, v2, c;
+            do {
+              v1 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              v2 = [R.int(-2, 2), R.nz(-2, 2), R.int(-2, 2)];
+              c = H.cross(v1, v2);
+            } while (c.every((x) => x === 0));
+            const P1 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            const P2 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            const d = P2.map((x, i) => x - P1[i]);
+            const mixed = H.dot(d, c) + 0;
+            return {
+              type: 'num',
+              prompt: String.raw`Siano $r:\ P_1+t\,v_1$ e $s:\ P_2+u\,v_2$ con $P_1=(${P1.join(', ')})$, $v_1=(${v1.join(', ')})$, $P_2=(${P2.join(', ')})$, $v_2=(${v2.join(', ')})$. Calcola il prodotto misto $\langle P_2-P_1,\ v_1\wedge v_2\rangle$.`,
+              answer: String(mixed),
+              explain: String.raw`$P_2-P_1=(${d.join(', ')})$ e $v_1\wedge v_2=(${c.join(', ')})$. Il prodotto misto vale $${mixed}$. ${mixed === 0 ? 'È zero: le rette sono complanari.' : 'È diverso da zero: le rette sono sghembe.'}`,
+            };
+          } },
+        { id: 's15.rette.g5', type: 'gen', level: 3,
+          gen: (R) => {
+            let n1, n2, c;
+            do {
+              n1 = [R.int(-2, 2), R.int(-2, 2), R.nz(-2, 2)];
+              n2 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              c = H.cross(n1, n2);
+            } while (c.every((x) => x === 0));
+            return {
+              type: 'tuple', labels: ['l', 'm', 'n'], proportional: true,
+              prompt: String.raw`Trova una direzione della retta $r$ intersezione dei piani $\pi_1:\ ${H.planeTex(n1[0], n1[1], n1[2], 0)}$ e $\pi_2:\ ${H.planeTex(n2[0], n2[1], n2[2], 0)}$.`,
+              answer: c.map(String),
+              explain: String.raw`La direzione è ortogonale a entrambe le normali $(${n1.join(', ')})$ e $(${n2.join(', ')})$: quindi è il loro prodotto vettoriale $(${c.join(', ')})$.`,
+            };
+          } },
+      ],
+      flashcards: [
+        { id: 's15.rette.fc1', kind: 'def', front: String.raw`Forma parametrica di una retta`,
+          back: String.raw`$r:\ P_0+t\,v$, con $P_0$ punto della retta, $v\neq\mathbf 0$ direzione e $t\in\R$.` },
+        { id: 's15.rette.fc2', kind: 'def', front: String.raw`Vettore direzione di una retta`,
+          back: String.raw`Un vettore non nullo parallelo alla retta. Si legge dai coefficienti di $t$ nelle equazioni parametriche. Ogni suo multiplo non nullo è ancora una direzione.` },
+        { id: 's15.rette.fc3', kind: 'formula', front: String.raw`Direzione di una retta data da due piani $\pi_1,\pi_2$`,
+          back: String.raw`$v=n_1\wedge n_2$, dove $n_1,n_2$ sono le normali dei due piani (devono essere non proporzionali).` },
+        { id: 's15.rette.fc4', kind: 'def', front: String.raw`Rette parallele`,
+          back: String.raw`Due rette sono parallele se hanno direzioni proporzionali, cioè $v_1\wedge v_2=\mathbf 0$. Sono coincidenti se hanno anche un punto in comune, altrimenti parallele distinte.` },
+        { id: 's15.rette.fc5', kind: 'def', front: String.raw`Rette sghembe`,
+          back: String.raw`Due rette sono **sghembe** se non sono complanari, cioè non esiste un piano che le contenga entrambe. Nello spazio sono né parallele né incidenti.` },
+        { id: 's15.rette.fc6', kind: 'formula', front: String.raw`Criterio del prodotto misto per due rette`,
+          back: String.raw`Per $r:P_1+tv_1$ e $s:P_2+uv_2$ con $v_1\not\parallel v_2$: $\langle P_2-P_1,\ v_1\wedge v_2\rangle=0\iff$ complanari (incidenti); $\neq0\iff$ sghembe.` },
+        { id: 's15.rette.fc7', kind: 'formula', front: String.raw`Angolo tra due rette`,
+          back: String.raw`$\cos\theta=\dfrac{|\langle v_r,v_s\rangle|}{|v_r|\,|v_s|}$ con $\theta\in[0,\tfrac\pi2]$: si prende l'angolo acuto tra le direzioni.` },
+        { id: 's15.rette.fc8', kind: 'metodo', front: String.raw`Metodo per le posizioni reciproche di due rette`,
+          back: String.raw`1) Se le direzioni sono proporzionali: coincidenti o parallele distinte (un punto di una sta sull'altra?). 2) Altrimenti risolvo $P_1+tv_1=P_2+uv_2$ con parametri **diversi**: soluzione unica $\Rightarrow$ incidenti; nessuna $\Rightarrow$ sghembe.` },
+        { id: 's15.rette.fc9', kind: 'errore', front: String.raw`Errori tipici sulle rette`,
+          back: String.raw`Usare la normale $(a,b,c)$ di un piano come direzione (è ortogonale alla retta). Confondere "ortogonali" con "incidenti": due rette ortogonali possono essere sghembe. Controllare una sola coordinata quando si verifica un punto. Usare lo stesso parametro $t$ per due rette.` },
+      ],
+    },
     // __NEXT_SKILL__
   ],
 };
