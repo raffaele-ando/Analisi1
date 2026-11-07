@@ -511,10 +511,373 @@ Dunque converge sse $|x|<1$, con somma $\frac1{1-x}$.`,
   ],
 };
 
+// =====================================================================
+// s13.necessaria — condizione necessaria, armonica, armonica generalizzata
+// =====================================================================
+const NEC = {
+  id: 's13.necessaria',
+  title: 'Condizione necessaria e serie armonica',
+  summary: String.raw`Dimostri che se una serie converge allora $a_n\to0$, sai che il viceversa è falso (serie armonica) e usi la serie armonica generalizzata $\sum\frac1{n^\alpha}$.`,
+  prereq: ['s13.def', 's04.limiti'],
+  examRefs: ['Itinere 15/01/2026 · A', 'Appello 15/01/2026 · A', 'Appello 03/09/2026 · B'],
+  lessons: [
+    {
+      id: 's13.necessaria.L1',
+      title: 'Il termine generale deve tendere a zero',
+      cards: [
+        {
+          type: 'learn',
+          title: "Un'idea semplice",
+          body: String.raw`Se sommi infiniti numeri e la somma resta finita, prima o poi i numeri che aggiungi devono diventare piccolissimi. Se continuassi ad aggiungere quantità "grandi" (per esempio vicine a $\frac23$), la somma scapperebbe all'infinito.
+
+>* **Condizione necessaria di convergenza.** Se $\sum a_n$ converge, allora $\displaystyle\lim_{n\to\infty}a_n=0$.
+
+La forma più utile negli esercizi è la **contronominale**: se $a_n\not\to0$ (tende a un altro valore, o non ha limite), allora la serie **non** converge.
+
+>! Il viceversa è **falso**: $a_n\to0$ non basta. La serie armonica $\sum\frac1n$ ha $a_n\to0$ ma diverge.`,
+        },
+        {
+          type: 'example',
+          title: 'Dimostrazione',
+          problem: String.raw`Dimostra: se $\sum a_n$ converge, allora $a_n\to0$.`,
+          steps: [
+            String.raw`Sia $s_n=a_1+\cdots+a_n$. Per ipotesi $s_n\to S\in\R$.`,
+            {
+              text: String.raw`Il termine generale è la differenza di due somme parziali consecutive: $a_n=s_n-s_{n-1}$.`,
+              ask: { type: 'mcq', prompt: String.raw`Come si scrive $a_n$ con le somme parziali?`, options: [String.raw`$a_n=s_n-s_{n-1}$`, String.raw`$a_n=s_{n+1}+s_n$`, String.raw`$a_n=\frac{s_n}{n}$`], answer: 0, explain: String.raw`$s_n=s_{n-1}+a_n$: l'ultima somma parziale si ottiene dalla precedente aggiungendo $a_n$.` },
+            },
+            String.raw`Anche $s_{n-1}\to S$ (è la stessa successione, spostata di un indice).`,
+            String.raw`Per l'algebra dei limiti: $a_n=s_n-s_{n-1}\to S-S=0$.`,
+          ],
+          result: String.raw`Il punto chiave è che $S$ è **finito**: $S-S=0$ non avrebbe senso con $S=+\infty$.`,
+        },
+        {
+          id: 's13.necessaria.L1.c1', type: 'tf', level: 3, source: 'Itinere 15/01/2026 · A',
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n=0}^{+\infty}\frac{2n+3}{3n+1}=\frac23$.`,
+          answer: false,
+          explain: String.raw`Falso. Il termine generale tende a $\frac23\neq0$: la condizione necessaria non è soddisfatta e la serie **non** converge (a termini positivi, diverge a $+\infty$). L'errore è confondere il limite di $a_n$ con la somma della serie.`,
+        },
+        {
+          id: 's13.necessaria.L1.c2', type: 'mcq', level: 1,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{n}{n+1}$.`,
+          options: [String.raw`Diverge a $+\infty$`, String.raw`Converge a $1$`, 'È indeterminata', String.raw`Non si può dire: $a_n\to1$ non dà informazioni`],
+          answer: 0,
+          explain: String.raw`$a_n\to1\neq0$: la serie non converge. Avendo termini positivi non è indeterminata, quindi diverge a $+\infty$. "Converge a 1" confonde $\lim a_n$ con la somma; l'ultima opzione è sbagliata perché $a_n\not\to0$ è proprio un'informazione decisiva.`,
+        },
+        {
+          id: 's13.necessaria.L1.c3', type: 'tf', level: 1,
+          prompt: String.raw`Se $\lim a_n=0$ allora $\sum a_n$ converge.`,
+          answer: false,
+          explain: String.raw`Falso: è il viceversa della condizione necessaria. Controesempio: $\sum\frac1n$ diverge pur avendo $\frac1n\to0$.`,
+        },
+        {
+          id: 's13.necessaria.L1.c4', type: 'num', level: 2,
+          prompt: String.raw`Per $\displaystyle\sum_{n=1}^{+\infty}\left(1+\frac1n\right)^n$ calcola $\lim a_n$.`,
+          answer: 'e',
+          explain: String.raw`$\left(1+\frac1n\right)^n\to e\neq0$ (limite notevole). Quindi la serie non soddisfa la condizione necessaria: diverge a $+\infty$ (termini positivi).`,
+        },
+        {
+          id: 's13.necessaria.L1.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}(-1)^n\frac{n}{n+1}$.`,
+          options: ['Non converge: è indeterminata', String.raw`Converge, perché i segni si alternano`, String.raw`Diverge a $+\infty$`, String.raw`Converge a $0$`],
+          answer: 0,
+          explain: String.raw`$|a_n|=\frac n{n+1}\to1$, quindi $a_n\not\to0$: la serie non converge. I segni alternati non aiutano se i termini non diventano piccoli. Si può vedere che $s_n$ oscilla (somma di $\sum(-1)^n$, limitata e oscillante, e di una serie convergente): è indeterminata.`,
+        },
+        {
+          id: 's13.necessaria.L1.c6', type: 'mcq', level: 2,
+          prompt: String.raw`Quale affermazione è equivalente alla condizione necessaria?`,
+          options: [
+            String.raw`Se $a_n\not\to0$, allora $\sum a_n$ non converge`,
+            String.raw`Se $\sum a_n$ non converge, allora $a_n\not\to0$`,
+            String.raw`Se $a_n\to0$, allora $\sum a_n$ converge`,
+            String.raw`$\sum a_n$ converge se e solo se $a_n\to0$`,
+          ],
+          answer: 0,
+          explain: String.raw`"$P\Rightarrow Q$" equivale a "non $Q\Rightarrow$ non $P$" (contronominale). Le altre sono l'inversa, il viceversa e il "se e solo se": tutte false (controesempio: $\sum\frac1n$).`,
+        },
+        {
+          id: 's13.necessaria.L1.c7', type: 'order', level: 3, source: 'Appello 15/01/2026 · A',
+          prompt: String.raw`Riordina la dimostrazione: "se $\sum a_n$ converge allora $a_n\to0$".`,
+          steps: [
+            String.raw`Sia $s_n=\sum_{k=1}^n a_k$; per ipotesi $s_n\to S$ con $S\in\R$.`,
+            String.raw`Per ogni $n\ge2$ vale $a_n=s_n-s_{n-1}$.`,
+            String.raw`Anche $s_{n-1}\to S$, perché è la stessa successione con l'indice spostato.`,
+            String.raw`Per l'algebra dei limiti, $a_n\to S-S=0$, ed è lecito perché $S$ è finito.`,
+          ],
+          distractors: [String.raw`Poiché $a_n\to0$, le somme parziali sono limitate e quindi convergono.`, String.raw`Per ogni $n$ vale $a_n=s_{n+1}-s_{n-1}$.`],
+          explain: String.raw`Il primo distrattore usa la tesi come ipotesi (ed è pure falso: armonica). Il secondo sbaglia la relazione: $s_{n+1}-s_{n-1}=a_n+a_{n+1}$.`,
+        },
+        {
+          id: 's13.necessaria.L1.c8', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\cos\frac1n$.`,
+          options: [String.raw`Diverge a $+\infty$`, 'Converge', 'È indeterminata'],
+          answer: 0,
+          explain: String.raw`$\cos\frac1n\to\cos0=1\neq0$: non converge. I termini sono positivi (definitivamente), quindi diverge a $+\infty$. Errore tipico: pensare che $\frac1n\to0$ renda piccolo il termine — conta il limite di $a_n$, non quello dell'argomento.`,
+        },
+        {
+          id: 's13.necessaria.L1.c9', type: 'open', level: 3, source: 'Itinere 15/01/2026 · A',
+          prompt: String.raw`Enunciare e dimostrare la condizione necessaria di convergenza per una serie numerica. Il viceversa vale?`,
+          answer: String.raw`**Enunciato.** Se la serie $\sum_{n\ge1}a_n$ converge, allora $\lim_{n\to\infty}a_n=0$.
+
+**Dimostrazione.** Sia $s_n=\sum_{k=1}^na_k$. Per ipotesi $s_n\to S\in\R$. Per $n\ge2$, $a_n=s_n-s_{n-1}$. Poiché anche $s_{n-1}\to S$, per l'algebra dei limiti $a_n\to S-S=0$ (operazione lecita perché $S$ è finito).
+
+**Viceversa.** Falso: $\frac1n\to0$ ma $\sum\frac1n$ diverge (per esempio perché $\frac1k\ge\log\left(1+\frac1k\right)$ e $\sum_{k=1}^n\log\frac{k+1}k=\log(n+1)\to+\infty$).`,
+          rubric: [
+            'Enunciato corretto (ipotesi: la serie converge; tesi: il termine generale tende a 0)',
+            String.raw`Scrive $a_n=s_n-s_{n-1}$`,
+            String.raw`Usa $s_n\to S$ e $s_{n-1}\to S$ con $S$ finito`,
+            String.raw`Conclude $a_n\to0$`,
+            String.raw`Osserva che il viceversa è falso con un controesempio (armonica)`,
+          ],
+        },
+      ],
+    },
+    {
+      id: 's13.necessaria.L2',
+      title: 'Serie armonica e armonica generalizzata',
+      cards: [
+        {
+          type: 'learn',
+          title: 'La serie armonica diverge',
+          body: String.raw`La **serie armonica** è $\displaystyle\sum_{n=1}^{+\infty}\frac1n=1+\frac12+\frac13+\cdots$
+
+Il termine generale tende a $0$, eppure la serie **diverge**: le somme parziali crescono come $\log n$, lentamente ma senza limite (servono più di $10^{43}$ termini per superare $100$).
+
+Idea della prova: da $\log(1+x)\le x$ segue $\frac1k\ge\log\left(1+\frac1k\right)=\log(k+1)-\log k$, e sommando (telescopica):
+$$s_n\ge\log(n+1)\to+\infty .$$`,
+          plot: { fns: [{ f: 'log(x+1)', label: 'log(n+1)' }], x: [0, 10], y: [0, 3.2], points: [[1, 1], [2, 1.5], [3, 1.8333], [4, 2.0833], [5, 2.2833], [6, 2.45], [7, 2.5929], [8, 2.7179], [9, 2.829]] },
+        },
+        {
+          type: 'example',
+          title: "Divergenza dell'armonica",
+          problem: String.raw`Dimostra che $\sum_{n\ge1}\frac1n=+\infty$.`,
+          steps: [
+            String.raw`Per $x>-1$ vale $\log(1+x)\le x$; con $x=\frac1k$: $\frac1k\ge\log\left(1+\frac1k\right)=\log\frac{k+1}k$.`,
+            {
+              text: String.raw`Sommo da $k=1$ a $n$: $s_n\ge\sum_{k=1}^n\left(\log(k+1)-\log k\right)=\log(n+1)$.`,
+              ask: { type: 'expr', prompt: String.raw`Quanto vale la somma telescopica $\sum_{k=1}^n\left(\log(k+1)-\log k\right)$?`, answer: 'log(n+1)', vars: ['n'], domain: [1, 9], explain: String.raw`Si cancellano tutti i termini intermedi: resta $\log(n+1)-\log1=\log(n+1)$.` },
+            },
+            String.raw`$\log(n+1)\to+\infty$ e, per confronto, $s_n\to+\infty$.`,
+          ],
+          result: String.raw`La serie armonica diverge, pur avendo $a_n=\frac1n\to0$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Armonica generalizzata',
+          body: String.raw`>* $$\sum_{n=1}^{+\infty}\frac1{n^\alpha}\ \text{converge}\iff\alpha>1 .$$
+
+- $\alpha\le0$: $\frac1{n^\alpha}=n^{-\alpha}\not\to0$, manca la condizione necessaria: diverge.
+- $0<\alpha\le1$: $a_n\to0$ ma la serie diverge (per $\alpha=1$ è l'armonica; per $\alpha<1$ i termini sono ancora più grandi).
+- $\alpha>1$: converge (si dimostra con il criterio integrale, nella prossima skill).
+
+È la **serie campione**: quasi tutti gli esercizi si risolvono riconducendo $a_n$ a $\frac{c}{n^\alpha}$.`,
+        },
+        {
+          id: 's13.necessaria.L2.c1', type: 'mcq', level: 1,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac1{\sqrt n}$.`,
+          options: [String.raw`Diverge a $+\infty$`, 'Converge', 'È indeterminata'],
+          answer: 0,
+          explain: String.raw`$\frac1{\sqrt n}=\frac1{n^{1/2}}$: armonica generalizzata con $\alpha=\frac12\le1$, diverge. Che $\frac1{\sqrt n}\to0$ non basta.`,
+        },
+        {
+          id: 's13.necessaria.L2.c2', type: 'match', level: 1,
+          prompt: 'Abbina ogni serie al suo carattere.',
+          pairs: [
+            [String.raw`$\sum\frac1{n^2}$`, 'converge'],
+            [String.raw`$\sum\frac1{n}$`, String.raw`diverge, ma $a_n\to0$`],
+            [String.raw`$\sum\frac1{n^{-1}}=\sum n$`, String.raw`diverge, e $a_n\not\to0$`],
+            [String.raw`$\sum\frac{(-1)^n n}{n+1}$`, 'indeterminata'],
+          ],
+          explain: String.raw`$\alpha=2>1$ converge; $\alpha=1$ armonica; $\alpha=-1$: $a_n=n\to+\infty$; l'ultima ha $|a_n|\to1$ e segni alterni: le somme parziali oscillano.`,
+        },
+        {
+          id: 's13.necessaria.L2.c3', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{1}{n\sqrt[3]{n}}$.`,
+          options: ['Converge', String.raw`Diverge a $+\infty$`, 'Non soddisfa la condizione necessaria'],
+          answer: 0,
+          explain: String.raw`$n\sqrt[3]n=n^{1+\frac13}=n^{4/3}$: armonica generalizzata con $\alpha=\frac43>1$, converge.`,
+        },
+        {
+          id: 's13.necessaria.L2.c4', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n=1}^{+\infty}\frac1{n^{2\alpha-1}}$?`,
+          answer: '(1,inf)',
+          explain: String.raw`Serve esponente $>1$: $2\alpha-1>1\iff\alpha>1$.`,
+        },
+        {
+          id: 's13.necessaria.L2.c5', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n=1}^{+\infty}\frac{n^\alpha}{n^3}$?`,
+          answer: '(-inf,2)',
+          explain: String.raw`$\frac{n^\alpha}{n^3}=\frac1{n^{3-\alpha}}$: converge sse $3-\alpha>1\iff\alpha<2$.`,
+        },
+        {
+          id: 's13.necessaria.L2.c6', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\alpha$ la serie $\displaystyle\sum_{n=1}^{+\infty}\frac{n^\alpha}{n^3}$ soddisfa la condizione necessaria ($a_n\to0$)?`,
+          answer: '(-inf,3)',
+          explain: String.raw`$a_n=n^{\alpha-3}\to0\iff\alpha-3<0\iff\alpha<3$. Per $2\le\alpha<3$ la condizione necessaria vale ma la serie diverge: è la differenza tra "necessaria" e "sufficiente".`,
+        },
+        {
+          id: 's13.necessaria.L2.c7', type: 'interval', level: 3,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n=1}^{+\infty}\frac1{n^{\alpha^2}}$?`,
+          answer: '(-inf,-1)U(1,inf)',
+          explain: String.raw`Serve $\alpha^2>1\iff|\alpha|>1$, cioè $\alpha<-1$ oppure $\alpha>1$. Errore tipico: dimenticare le soluzioni negative.`,
+        },
+        {
+          id: 's13.necessaria.L2.c8', type: 'tf', level: 2,
+          prompt: String.raw`$\displaystyle\sum_{n=1}^{+\infty}\frac1{n^{1{,}001}}$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: $\alpha=1{,}001>1$. Non importa quanto $\alpha$ sia vicino a $1$: conta solo che sia strettamente maggiore. (La somma è enorme, circa $1000$, ma finita.)`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's13.necessaria.gen-vf', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 5), b = R.int(1, 6), c = R.int(2, 5), d = R.int(1, 6);
+        const L = qtex(H.reduce(a, c));
+        const n0 = R.pick([0, 1]);
+        const kind = R.int(0, 2);
+        const stmt = [
+          String.raw`$\displaystyle\sum_{n=${n0}}^{+\infty}\frac{${H.lin(a, b, 'n')}}{${H.lin(c, d, 'n')}}=${L}$.`,
+          String.raw`la serie $\displaystyle\sum_{n=${n0}}^{+\infty}\frac{${H.lin(a, b, 'n')}}{${H.lin(c, d, 'n')}}$ diverge a $+\infty$.`,
+          String.raw`la serie $\displaystyle\sum_{n=${n0}}^{+\infty}\frac{${H.lin(a, b, 'n')}}{${H.lin(c, d, 'n')}}$ converge, perché il termine generale ha limite finito.`,
+        ][kind];
+        return {
+          type: 'tf',
+          prompt: String.raw`Vero o falso: ${stmt}`,
+          answer: kind === 1,
+          explain: String.raw`Il termine generale tende a $${L}\neq0$: la condizione necessaria non vale, quindi la serie **non** converge; ha termini positivi, perciò diverge a $+\infty$. ${kind === 0 ? String.raw`Scrivere che la somma è $${L}$ confonde il limite di $a_n$ con la somma.` : kind === 2 ? 'Per convergere non basta che $a_n$ abbia limite finito: deve tendere a $0$.' : ''}`,
+        };
+      },
+    },
+    {
+      id: 's13.necessaria.gen-pot', type: 'gen', level: 2,
+      gen: (R) => {
+        // a_n = n^(m/2) / (n^b + c)  ~ n^(m/2 - b)
+        const m = R.int(0, 6);
+        const b = R.int(1, 4);
+        const c = R.int(1, 5);
+        const num = m === 0 ? '1' : m === 1 ? String.raw`\sqrt n` : m % 2 === 0 ? (m === 2 ? 'n' : `n^{${m / 2}}`) : String.raw`\sqrt{n^{${m}}}`;
+        const den = `${b === 1 ? 'n' : `n^{${b}}`} + ${c}`;
+        const p2 = 2 * b - m; // 2*(b - m/2)
+        const pT = H.frac(p2, 2);
+        const ans = p2 <= 0 ? 0 : p2 <= 2 ? 1 : 2;
+        const why = [
+          String.raw`Quindi $a_n\not\to0$ (tende a ${p2 === 0 ? '$1$' : '$+\\infty$'}): manca la condizione necessaria e la serie diverge a $+\infty$.`,
+          String.raw`Qui $0<${pT}\le1$: $a_n\to0$ (condizione necessaria vera), ma la serie si comporta come l'armonica generalizzata con esponente $\le1$: diverge.`,
+          String.raw`L'esponente è $${pT}>1$: converge, come $\sum\frac1{n^{${pT}}}$.`,
+        ][ans];
+        return {
+          type: 'mcq',
+          prompt: String.raw`Studia $\displaystyle\sum_{n=1}^{+\infty}\frac{${num}}{${den}}$.`,
+          options: ['Non soddisfa la condizione necessaria: diverge', 'Soddisfa la condizione necessaria ma diverge', 'Converge'],
+          noShuffle: true,
+          answer: ans,
+          explain: String.raw`Al denominatore domina la potenza più alta: $a_n\sim\frac{${num}}{${b === 1 ? 'n' : `n^{${b}}`}}=${p2 > 0 ? String.raw`\frac1{n^{${pT}}}` : p2 === 0 ? '1' : `n^{${H.frac(-p2, 2)}}`}$. ${why}`,
+        };
+      },
+    },
+    {
+      id: 's13.necessaria.gen-alpha', type: 'gen', level: 2,
+      gen: (R) => {
+        // sum n^(p*alpha) / n^q  -> exponent e = q - p*alpha ; condizione necessaria: e>0 ; convergenza: e>1
+        const p = R.pick([1, 2, 3, -1, -2]);
+        const q = R.int(0, 4);
+        const thr = (k) => H.reduce(q - k, p); // p*alpha < q - k
+        const iv = (k) => (p > 0 ? `(-inf,${qstr(thr(k))})` : `(${qstr(thr(k))},inf)`);
+        const ineq = (k) => (p > 0 ? String.raw`\alpha<${qtex(thr(k))}` : String.raw`\alpha>${qtex(thr(k))}`);
+        const pa = p === 1 ? String.raw`\alpha` : p === -1 ? String.raw`-\alpha` : `${p}\\alpha`;
+        const term = q === 0 ? `n^{${pa}}` : String.raw`\frac{n^{${pa}}}{${q === 1 ? 'n' : `n^{${q}}`}}`;
+        const e = (q === 0 ? '' : String(q)) + (p > 0 ? `-${H.coef(p)}\\alpha` : `${q === 0 ? '' : '+'}${H.coef(-p)}\\alpha`);
+        return {
+          type: 'problem',
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n=1}^{+\infty}${term}$, con $\alpha\in\R$.`,
+          parts: [
+            { type: 'interval', prompt: String.raw`Per quali $\alpha$ vale la condizione necessaria $a_n\to0$?`, answer: iv(0), explain: String.raw`$a_n=\frac1{n^{${e}}}\to0$ sse l'esponente è positivo: $${e}>0\iff${ineq(0)}$.` },
+            { type: 'interval', prompt: String.raw`Per quali $\alpha$ la serie converge?`, answer: iv(1), explain: String.raw`Armonica generalizzata: converge sse $${e}>1\iff${ineq(1)}$.` },
+          ],
+          solution: String.raw`$a_n=\frac1{n^{${e}}}$. Condizione necessaria: $${ineq(0)}$. Convergenza (armonica generalizzata, esponente $>1$): $${ineq(1)}$. Nella fascia intermedia $a_n\to0$ ma la serie diverge.`,
+        };
+      },
+    },
+    {
+      id: 's13.necessaria.p1', type: 'mcq', level: 3,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac1{n^{1+\frac1n}}$.`,
+      options: [String.raw`Diverge a $+\infty$`, String.raw`Converge, perché l'esponente $1+\frac1n$ è maggiore di $1$`, 'Non soddisfa la condizione necessaria'],
+      answer: 0,
+      explain: String.raw`L'esponente non è una costante $\alpha>1$: tende a $1$. Infatti $n^{1+\frac1n}=n\cdot n^{1/n}$ e $n^{1/n}=e^{\frac{\log n}n}\to1$, quindi $a_n\sim\frac1n$ e la serie diverge come l'armonica. La condizione necessaria invece vale ($a_n\to0$).`,
+    },
+    {
+      id: 's13.necessaria.p2', type: 'tf', level: 2,
+      prompt: String.raw`La serie $\displaystyle\sum_{n=1}^{+\infty}\sin n$ converge.`,
+      answer: false,
+      explain: String.raw`Falso: $\sin n\not\to0$. Se fosse $\sin n\to0$, da $\sin(n+1)=\sin n\cos1+\cos n\sin1$ seguirebbe $\cos n\to0$, assurdo perché $\sin^2n+\cos^2n=1$. Manca la condizione necessaria.`,
+    },
+    {
+      id: 's13.necessaria.p3', type: 'mcq', level: 2,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}n\sin\frac1n$.`,
+      options: [String.raw`Diverge a $+\infty$`, 'Converge', 'È indeterminata'],
+      answer: 0,
+      explain: String.raw`Limite notevole: $n\sin\frac1n=\frac{\sin(1/n)}{1/n}\to1\neq0$. Termini positivi e condizione necessaria violata: diverge a $+\infty$.`,
+    },
+    {
+      id: 's13.necessaria.p4', type: 'num', level: 2,
+      prompt: String.raw`Per $\displaystyle\sum_{n=1}^{+\infty}\left(1-\frac2n\right)^n$ calcola $\lim a_n$ (e deduci il carattere).`,
+      answer: 'e^(-2)',
+      explain: String.raw`$\left(1+\frac{x}n\right)^n\to e^x$, qui $x=-2$: $a_n\to e^{-2}\neq0$. La serie diverge a $+\infty$ (termini positivi per $n\ge3$).`,
+    },
+    {
+      id: 's13.necessaria.p5', type: 'cloze', level: 1,
+      text: String.raw`Se la serie $\sum a_n$ [[0]], allora $a_n\to0$. La condizione $a_n\to0$ è [[1]] ma non [[2]]: per esempio la serie $\sum\frac1n$ [[3]].`,
+      blanks: [
+        { options: ['converge', 'diverge', 'è a termini positivi'], answer: 0 },
+        { options: ['necessaria', 'sufficiente'], answer: 0 },
+        { options: ['sufficiente', 'necessaria'], answer: 0 },
+        { options: ['diverge', 'converge a 0', 'è indeterminata'], answer: 0 },
+      ],
+      explain: String.raw`Necessaria: deve valere se la serie converge. Non sufficiente: può valere anche per serie divergenti, come l'armonica.`,
+    },
+    {
+      id: 's13.necessaria.p6', type: 'order', level: 2,
+      prompt: String.raw`Riordina la dimostrazione che $\sum_{n\ge1}\frac1n$ diverge.`,
+      steps: [
+        String.raw`Per $x>-1$ vale $\log(1+x)\le x$.`,
+        String.raw`Con $x=\frac1k$: $\frac1k\ge\log(k+1)-\log k$.`,
+        String.raw`Sommando da $1$ a $n$ (telescopica): $s_n\ge\log(n+1)$.`,
+        String.raw`Poiché $\log(n+1)\to+\infty$, per confronto $s_n\to+\infty$.`,
+      ],
+      distractors: [String.raw`Poiché $\frac1n\to0$, la serie converge.`],
+      explain: String.raw`Il distrattore usa il viceversa (falso) della condizione necessaria.`,
+    },
+    {
+      id: 's13.necessaria.p7', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\sum_{n=1}^{+\infty}\frac{\sqrt n}{n^{\alpha}}$?`,
+      answer: '(3/2,inf)',
+      explain: String.raw`$\frac{\sqrt n}{n^\alpha}=\frac1{n^{\alpha-\frac12}}$: converge sse $\alpha-\frac12>1\iff\alpha>\frac32$.`,
+    },
+    {
+      id: 's13.necessaria.p8', type: 'tf', level: 2,
+      prompt: String.raw`Se $\sum a_n$ converge, allora anche $\sum_{n\ge100}a_n$ converge.`,
+      answer: true,
+      explain: String.raw`Vero: togliere un numero finito di termini sposta tutte le somme parziali della stessa costante ($a_1+\cdots+a_{99}$). Il carattere non cambia; la somma sì.`,
+    },
+  ],
+  flashcards: [
+    { id: 's13.necessaria.fc1', kind: 'thm', front: 'Condizione necessaria di convergenza', back: String.raw`Se $\sum a_n$ converge, allora $a_n\to0$. Equivalente: se $a_n\not\to0$ la serie non converge.` },
+    { id: 's13.necessaria.fc2', kind: 'dim', front: 'Dimostrazione della condizione necessaria', back: String.raw`$s_n\to S\in\R$. Per $n\ge2$: $a_n=s_n-s_{n-1}$. Anche $s_{n-1}\to S$, quindi $a_n\to S-S=0$ (lecito perché $S$ è finito).` },
+    { id: 's13.necessaria.fc3', kind: 'errore', front: String.raw`"$a_n\to0$, quindi la serie converge"`, back: String.raw`Falso: la condizione è solo necessaria. Controesempio: $\sum\frac1n$ diverge.` },
+    { id: 's13.necessaria.fc4', kind: 'thm', front: 'Serie armonica', back: String.raw`$\sum_{n\ge1}\frac1n=+\infty$. Prova: $\frac1k\ge\log\frac{k+1}k$, quindi $s_n\ge\log(n+1)\to+\infty$.` },
+    { id: 's13.necessaria.fc5', kind: 'thm', front: 'Serie armonica generalizzata', back: String.raw`$\sum_{n\ge1}\frac1{n^\alpha}$ converge $\iff\alpha>1$. Per $\alpha\le0$ manca anche la condizione necessaria.` },
+    { id: 's13.necessaria.fc6', kind: 'errore', front: String.raw`"$\sum a_n=\lim a_n$"`, back: String.raw`Errore tipico (V/F d'esame $\sum\frac{2n+3}{3n+1}=\frac23$): $\frac23$ è il limite di $a_n$; essendo $\neq0$ la serie diverge.` },
+    { id: 's13.necessaria.fc7', kind: 'metodo', front: 'Primo controllo su ogni serie', back: String.raw`Calcola $\lim a_n$. Se non è $0$ (o non esiste) hai finito: la serie non converge. Se è $0$ servono i criteri.` },
+  ],
+};
+
 export default {
   id: 's13',
   title: 'Serie numeriche',
   subtitle: 'Somme parziali, criteri di convergenza, serie con parametri',
   intro: String.raw`Le serie compaiono in ogni tema: in Parte A (condizione necessaria, criterio del confronto, vero/falso sulle somme) e in Parte B (carattere di una serie con parametro, 2–4 punti). Qui impari a sommare infiniti termini e a decidere se la somma esiste.`,
-  skills: [DEF],
+  skills: [DEF, NEC],
 };
