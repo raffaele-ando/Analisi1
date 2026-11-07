@@ -414,21 +414,21 @@ Ogni raccordo dà **un'equazione** nei parametri. Se il pezzo è una formula "in
         if (kind === 0) {
           tex = String.raw`\frac{\sin(${b}x)}{${H.coef(c)}x}`;
           L = H.fracStr(b, c); Ltex = H.frac(b, c);
-          why = String.raw`$\frac{\sin(${b}x)}{${H.coef(c)}x}=\frac{${b}}{${c}}\cdot\frac{\sin(${b}x)}{${b}x}\to${Ltex}$`;
+          why = String.raw`$\frac{\sin(${b}x)}{${H.coef(c)}x}=${H.frac(b, c)}\cdot\frac{\sin(${b}x)}{${b}x}\to${Ltex}$`;
         } else if (kind === 1) {
           tex = String.raw`\frac{e^{${b}x}-1}{${H.coef(c)}x}`;
           L = H.fracStr(b, c); Ltex = H.frac(b, c);
-          why = String.raw`$\frac{e^{${b}x}-1}{${H.coef(c)}x}=\frac{${b}}{${c}}\cdot\frac{e^{${b}x}-1}{${b}x}\to${Ltex}$`;
+          why = String.raw`$\frac{e^{${b}x}-1}{${H.coef(c)}x}=${H.frac(b, c)}\cdot\frac{e^{${b}x}-1}{${b}x}\to${Ltex}$`;
         } else if (kind === 2) {
           const bb = Math.abs(b);
           tex = String.raw`\frac{\log(1+${bb}x)}{${H.coef(c)}x}`;
           L = H.fracStr(bb, c); Ltex = H.frac(bb, c);
-          why = String.raw`$\frac{\log(1+${bb}x)}{${H.coef(c)}x}=\frac{${bb}}{${c}}\cdot\frac{\log(1+${bb}x)}{${bb}x}\to${Ltex}$`;
+          why = String.raw`$\frac{\log(1+${bb}x)}{${H.coef(c)}x}=${H.frac(bb, c)}\cdot\frac{\log(1+${bb}x)}{${bb}x}\to${Ltex}$`;
         } else {
           const bb = Math.abs(b);
           tex = String.raw`\frac{1-\cos(${bb}x)}{${H.coef(c)}x^2}`;
           L = H.fracStr(bb * bb, 2 * c); Ltex = H.frac(bb * bb, 2 * c);
-          why = String.raw`$\frac{1-\cos(${bb}x)}{${H.coef(c)}x^2}=\frac{${bb * bb}}{${c}}\cdot\frac{1-\cos(${bb}x)}{(${bb}x)^2}\to\frac{${bb * bb}}{${c}}\cdot\frac12=${Ltex}$`;
+          why = String.raw`$\frac{1-\cos(${bb}x)}{${H.coef(c)}x^2}=${H.frac(bb * bb, c)}\cdot\frac{1-\cos(${bb}x)}{(${bb}x)^2}\to${H.frac(bb * bb, c)}\cdot\frac12=${Ltex}$`;
         }
         return {
           type: 'num',
