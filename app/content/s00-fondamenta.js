@@ -2338,7 +2338,9 @@ Il metodo è sempre lo stesso: trovo i due punti di intersezione con la retta, p
           prompt: String.raw`Per $f(x) = 2\sin x + \cos 2x$ su $[0,2\pi]$, il punto $x = \dfrac{\pi}{2}$ è:`,
           options: [String.raw`un minimo relativo, con $f(\frac{\pi}{2}) = 1$`, String.raw`un massimo relativo`, String.raw`un punto dove $f$ non è derivabile`, String.raw`uno zero di $f$`],
           answer: 0,
-          explain: String.raw`$f(\frac{\pi}{2}) = 2 + \cos\pi = 1 \ne 0$. Prima di $\frac{\pi}{2}$ si ha $f' < 0$ (decrescente) e dopo $f' > 0$ (crescente): è un minimo relativo. Il valore $f = 1$ non è zero, quindi il quarto distrattore è falso.` },
+          explain: String.raw`$f(\frac{\pi}{2}) = 2 + \cos\pi = 1 \ne 0$. Prima di $\frac{\pi}{2}$ si ha $f' < 0$ (decrescente) e dopo $f' > 0$ (crescente): è un minimo relativo. Il valore $f = 1$ non è zero, quindi il quarto distrattore è falso.
+
+>! Nota: la soluzione ufficiale del tema dice che in $\frac{\pi}{2}$ non c\'è né massimo né minimo. È un errore: la derivata cambia segno da $-$ a $+$, quindi il punto è un minimo relativo.` },
       ],
     },
   ],
@@ -2410,7 +2412,9 @@ Il metodo è sempre lo stesso: trovo i due punti di intersezione con la retta, p
         { type: 'num', prompt: String.raw`Valore di $f\left(\frac{3\pi}{2}\right)$.`, answer: '-3', explain: String.raw`$2\sin\frac{3\pi}{2} + \cos 3\pi = -2 - 1 = -3$.` },
         { type: 'num', prompt: String.raw`Valore di $f\left(\frac{\pi}{2}\right)$.`, answer: '1', explain: String.raw`$2\cdot 1 + \cos\pi = 2 - 1 = 1$.` },
       ],
-      solution: String.raw`Derivata: $f'(x) = 2\cos x - 2\sin 2x = 2\cos x\,(1 - 2\sin x)$. Punti stazionari: $\frac{\pi}{6}$, $\frac{\pi}{2}$, $\frac{5\pi}{6}$, $\frac{3\pi}{2}$. Il segno di $f'$ cambia così: $+$ prima di $\frac{\pi}{6}$, $-$ dopo; in $\frac{\pi}{2}$ passa da $-$ a $+$, quindi è un minimo relativo con $f = 1$; in $\frac{5\pi}{6}$ e $\frac{3\pi}{2}$ si hanno rispettivamente un massimo relativo e un minimo relativo. Il massimo assoluto è $\frac{3}{2}$ e il minimo assoluto è $-3$ in $\frac{3\pi}{2}$.` },
+      solution: String.raw`Derivata: $f'(x) = 2\cos x - 2\sin 2x = 2\cos x\,(1 - 2\sin x)$. Punti stazionari: $\frac{\pi}{6}$, $\frac{\pi}{2}$, $\frac{5\pi}{6}$, $\frac{3\pi}{2}$. Il segno di $f'$ cambia così: $+$ prima di $\frac{\pi}{6}$, $-$ dopo; in $\frac{\pi}{2}$ passa da $-$ a $+$, quindi è un minimo relativo con $f = 1$; in $\frac{5\pi}{6}$ e $\frac{3\pi}{2}$ si hanno rispettivamente un massimo relativo e un minimo relativo. Il massimo assoluto è $\frac{3}{2}$ e il minimo assoluto è $-3$ in $\frac{3\pi}{2}$.
+
+>! Nota: nella soluzione ufficiale $x = \frac{\pi}{2}$ è indicato come punto né di massimo né di minimo. È un errore: è un minimo relativo, con $f = 1$.` },
     { id: 's00.trig.p2', type: 'tf', level: 1,
       prompt: String.raw`Per ogni $x \in \R$ vale $\sin^2 x + \cos^2 x = 1$.`, answer: true,
       explain: String.raw`Vero: è l'identità fondamentale, conseguenza del teorema di Pitagora sulla circonferenza di raggio $1$.` },
@@ -2961,12 +2965,12 @@ Anche il **dominio** di una funzione è un sottoinsieme di $\R$: il dominio di $
           prompt: String.raw`Scrivi come unione di intervalli $\{x \in \R : x^2 > 4\}$.`,
           answer: '(-inf,-2)U(2,inf)',
           explain: String.raw`$x^2 > 4$ significa $|x| > 2$: $x < -2$ oppure $x > 2$. L'insieme è l'unione di due intervalli, non un intervallo solo.` },
-        { id: 's00.insiemi.L3.e6', type: 'mcq', level: 2, source: 'Appello 06/07/2026 · Parte B (insieme di definizione)',
+        { id: 's00.insiemi.L3.e6', type: 'mcq', level: 3, source: 'Appello 06/07/2026 · Parte B (insieme di definizione)',
           prompt: String.raw`Qual è il dominio di $f(x) = \sqrt{x-1} + \log(x-3)$?`,
           options: [String.raw`$[1,+\infty)$`, String.raw`$(3,+\infty)$`, String.raw`$[1,3)$`, String.raw`$(1,+\infty)$`],
           answer: 1,
           explain: String.raw`Serve $x \ge 1$ per la radice e $x > 3$ per il logaritmo. Il dominio è l'intersezione $[1,+\infty)\cap(3,+\infty) = (3,+\infty)$.` },
-        { id: 's00.insiemi.L3.e7', type: 'interval', level: 2,
+        { id: 's00.insiemi.L3.e7', type: 'interval', level: 3,
           prompt: String.raw`Determina il dominio di $f(x) = \dfrac{\sqrt{x}}{x-2}$.`,
           answer: '[0,2)U(2,inf)',
           explain: String.raw`Serve $x \ge 0$ per la radice e $x \ne 2$ per il denominatore. L'intersezione è $[0,2)\cup(2,+\infty)$.` },
