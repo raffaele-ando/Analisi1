@@ -737,5 +737,654 @@ Candidati per gli assoluti: $f(-1)=-3$, $f(1)=1$, $f(2)=0$, $f(3)=3$. **Massimo 
         { id: 's09.estremi.fc14', kind: 'def', front: String.raw`Funzione limitata`, back: String.raw`$f$ è limitata se esiste $M$ con $|f(x)|\le M$ per ogni $x$ del dominio, cioè $\inf f$ e $\sup f$ sono finiti.` },
       ],
     },
+    // =====================================================================
+    {
+      id: 's09.studio',
+      title: 'Studio completo del grafico',
+      summary: String.raw`Saprai studiare una funzione in ordine fisso: dominio, asintoti, derivata prima (monotonia ed estremi), derivata seconda (concavità e flessi) e grafico finale. Anche con modulo, funzioni a tratti ed esponenziali.`,
+      prereq: ['s09.estremi', 's05.asintoti', 's08.punti', 's08.convessita', 's03.simmetrie'],
+      examRefs: ['Itinere 11/11/2025 · Parte B', 'Appello 15/01/2026 · Parte B', 'Appello 10/02/2026 · Parte B'],
+      lessons: [
+        // ---------------------------------------------------------------
+        {
+          id: 's09.studio.L1',
+          title: 'Dominio, segno e asintoti',
+          cards: [
+            {
+              type: 'learn',
+              title: "L'idea di asintoto",
+              body: String.raw`Un **asintoto** è una retta a cui il grafico si avvicina sempre di più, senza mai (o quasi mai) toccarla.
+
+Il grafico di $f(x)=\dfrac1x$ si stringe verso l'asse $y$ quando $x$ si avvicina a $0$, e verso l'asse $x$ quando $x$ va a $\pm\infty$. Quelle due rette sono i suoi asintoti.
+
+Per trovarli non si disegna: si **calcolano limiti**. Per questo lo studio di una funzione inizia sempre dal dominio.`,
+              plot: { fns: ['1/x'], x: [-4, 4], y: [-4, 4], vlines: [0], hlines: [0] },
+            },
+            {
+              type: 'learn',
+              title: 'La lista di controllo',
+              body: String.raw`Studiare una funzione significa raccogliere, **uno alla volta**, le informazioni che servono per disegnarne il grafico. All'esame il grafico non si indovina: si costruisce con una lista fissa.
+
+1. **Dominio** e simmetrie (pari, dispari, periodica)
+2. **Segno** di $f$ e intersezioni con gli assi
+3. **Limiti** agli estremi del dominio e **asintoti**
+4. **Derivata prima**: monotonia, punti stazionari, punti angolosi, estremi
+5. **Derivata seconda**: concavità, convessità, flessi
+6. **Grafico**: si riportano insieme tutte le informazioni
+
+Ogni passo prepara il successivo. Se salti il dominio, cerchi asintoti in punti che non appartengono alla funzione.`,
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto: dominio e asintoti',
+              problem: String.raw`Studia dominio e asintoti di $f(x)=\dfrac{x^2}{x-1}$.`,
+              steps: [
+                String.raw`**Dominio.** Il denominatore non deve annullarsi: $x\neq1$. Quindi $D=\R\setminus\{1\}$.`,
+                String.raw`**Asintoto verticale.** Il punto escluso $x=1$ va controllato con i limiti. Il numeratore tende a $1>0$ e il denominatore tende a $0$ da destra o da sinistra: $\lim_{x\to1^+}f(x)=+\infty$ e $\lim_{x\to1^-}f(x)=-\infty$. Quindi $x=1$ è asintoto verticale.`,
+                String.raw`**Asintoto obliquo.** Il grado del numeratore è $2$, quello del denominatore $1$: ci aspettiamo un asintoto obliquo $y=mx+q$. Per prima cosa calcolo $m=\lim_{x\to\pm\infty}\dfrac{f(x)}{x}=\lim_{x\to\pm\infty}\dfrac{x}{x-1}$.`,
+                String.raw`Ora $q=\lim_{x\to\pm\infty}\big(f(x)-x\big)=\lim_{x\to\pm\infty}\dfrac{x}{x-1}=1$. Quindi l'asintoto obliquo è $y=x+1$.`,
+              ],
+              result: String.raw`Asintoto verticale $x=1$; asintoto obliquo $y=x+1$ per $x\to\pm\infty$.`,
+            },
+            {
+              type: 'example',
+              title: 'Esempio a completamento',
+              problem: String.raw`Studia gli asintoti di $f(x)=\dfrac{x^2+1}{x}$.`,
+              steps: [
+                String.raw`**Dominio:** $x\neq0$. Riscrivo la funzione come $f(x)=x+\dfrac1x$: così i limiti si leggono subito.`,
+                {
+                  text: String.raw`**Asintoto verticale.** Il punto escluso è $x=0$. Il termine $\frac1x$ domina vicino a $0$. Prova a decidere il segno del limite da sinistra.`,
+                  ask: {
+                    type: 'mcq',
+                    prompt: String.raw`Quanto vale $\lim_{x\to0^-}f(x)$?`,
+                    options: [String.raw`$+\infty$`, String.raw`$-\infty$`, String.raw`$0$`, String.raw`$1$`],
+                    answer: 1,
+                    explain: String.raw`Da sinistra $\frac1x\to-\infty$ e $x\to0$, quindi $f\to-\infty$. Il limite da destra è $+\infty$: basta un solo lato per avere un asintoto verticale.`,
+                  },
+                },
+                String.raw`**Asintoto obliquo.** $m=\lim_{x\to\pm\infty}\dfrac{f(x)}{x}=\lim_{x\to\pm\infty}\Big(1+\dfrac1{x^2}\Big)=1$.`,
+                {
+                  text: String.raw`Ora $q=\lim_{x\to\pm\infty}\big(f(x)-x\big)=\lim_{x\to\pm\infty}\dfrac1x$. Quanto vale?`,
+                  ask: {
+                    type: 'num',
+                    prompt: String.raw`Quanto vale $\lim_{x\to\pm\infty}\dfrac1x$?`,
+                    answer: '0',
+                    explain: String.raw`Il reciproco di un numero che diverge tende a $0$: $q=0$. L'asintoto obliquo è $y=x$.`,
+                  },
+                },
+              ],
+              result: String.raw`Asintoto verticale $x=0$; asintoto obliquo $y=x$ per $x\to\pm\infty$.`,
+            },
+            {
+              type: 'learn',
+              title: 'Tre tipi di asintoto',
+              body: String.raw`>* **Verticale** $x=c$: $\lim_{x\to c^{\pm}}f(x)=\pm\infty$ (basta un lato). I candidati sono i punti esclusi dal dominio e gli estremi finiti del dominio.
+
+>* **Orizzontale** $y=\ell$: $\lim_{x\to\pm\infty}f(x)=\ell$ con $\ell\in\R$.
+
+>* **Obliquo** $y=mx+q$: prima $m=\lim_{x\to\pm\infty}\frac{f(x)}{x}$ finito e non nullo, poi $q=\lim_{x\to\pm\infty}\big(f(x)-mx\big)$ finito.
+
+Se $m=0$ e $q$ è finito, l'asintoto è **orizzontale**, non obliquo.`,
+              plot: { fns: ['x^2/(x-1)', 'x+1'], x: [-3, 4], y: [-6, 6], vlines: [1] },
+            },
+            {
+              id: 's09.studio.L1.e1', type: 'interval', level: 1,
+              prompt: String.raw`Dominio di $f(x)=\dfrac{\sqrt{x^2-3x}}{x-4}$.`,
+              answer: '(-inf,0]U[3,4)U(4,inf)',
+              explain: String.raw`Serve $x^2-3x\ge0$, cioè $x(x-3)\ge0$: quindi $x\le0$ oppure $x\ge3$. Serve anche $x\neq4$. Dunque $D=(-\infty,0]\cup[3,4)\cup(4,+\infty)$.`,
+            },
+            {
+              id: 's09.studio.L1.e2', type: 'mcq', level: 1,
+              prompt: String.raw`Per $f(x)=\dfrac{1}{(x-2)^2}$, quanto vale $\lim_{x\to2}f(x)$?`,
+              options: [String.raw`$+\infty$`, String.raw`$-\infty$`, String.raw`$0$`, String.raw`$2$`],
+              answer: 0,
+              explain: String.raw`Il denominatore $(x-2)^2$ è sempre positivo, quindi il limite è $+\infty$ da entrambi i lati. Il segno $-\infty$ è l'errore tipico di chi pensa che il segno dipenda sempre da $x-2$: qui il quadrato lo rende positivo.`,
+            },
+            {
+              id: 's09.studio.L1.e3', type: 'set', level: 1,
+              prompt: String.raw`Asintoti verticali di $f(x)=\dfrac{x+2}{(x-2)(x+1)}$: quali ascisse?`,
+              answer: ['-1', '2'],
+              explain: String.raw`Il denominatore si annulla in $x=2$ e $x=-1$. Il numeratore vale $4$ in $2$ e $1$ in $-1$, quindi non si semplifica: entrambi sono asintoti verticali. In $x=-2$ il numeratore si annulla, ma lì il denominatore no: è uno zero di $f$, non un asintoto.`,
+            },
+            {
+              id: 's09.studio.L1.e4', type: 'tf', level: 1,
+              prompt: String.raw`Se in una funzione razionale il grado del numeratore supera di $1$ quello del denominatore, la funzione ha un asintoto obliquo.`,
+              answer: true,
+              explain: String.raw`Vero. La divisione polinomiale dà $f(x)=mx+q+\dfrac{R(x)}{D(x)}$, e il resto $\dfrac{R}{D}$ tende a $0$ all'infinito. Esempio: $\dfrac{x^2}{x-1}=x+1+\dfrac{1}{x-1}$.`,
+            },
+            {
+              id: 's09.studio.L1.e5', type: 'num', level: 2,
+              prompt: String.raw`Per $f(x)=\dfrac{x^2+3x+5}{x+1}$ l'asintoto obliquo è $y=x+q$. Quanto vale $q$?`,
+              answer: '2',
+              explain: String.raw`Divido: $x^2+3x+5=(x+1)(x+2)+3$, quindi $f(x)=x+2+\dfrac{3}{x+1}$. Il termine $\frac3{x+1}$ tende a $0$: $q=2$.`,
+            },
+            {
+              id: 's09.studio.L1.e6', type: 'tuple', level: 2,
+              prompt: String.raw`Asintoto obliquo $y=mx+q$ di $f(x)=\dfrac{2x^2-x+1}{x-1}$: quali $m$ e $q$?`,
+              labels: ['m', 'q'],
+              answer: ['2', '1'],
+              explain: String.raw`Divisione: $2x^2-x+1=(x-1)(2x+1)+2$. Quindi $f(x)=2x+1+\dfrac{2}{x-1}$: $m=2$ e $q=1$.`,
+            },
+            {
+              id: 's09.studio.L1.e7', type: 'order', level: 2,
+              prompt: String.raw`Metti in ordine i passi per trovare l'asintoto obliquo $y=mx+q$ per $x\to+\infty$.`,
+              steps: [
+                String.raw`Calcolo $m=\lim_{x\to+\infty}\dfrac{f(x)}{x}$. Se è finito e non nullo, continuo.`,
+                String.raw`Calcolo $q=\lim_{x\to+\infty}\big(f(x)-mx\big)$. Se è finito, l'asintoto esiste.`,
+                String.raw`Scrivo la retta $y=mx+q$ e verifico che sia l'asintoto per $x\to+\infty$.`,
+              ],
+              distractors: [
+                String.raw`Calcolo $q=\lim_{x\to+\infty}\dfrac{f(x)}{x}$: questo è il valore di $m$, non di $q$.`,
+                String.raw`Calcolo $m=\lim_{x\to+\infty}f(x)$: se è finito, l'asintoto obliquo è $y=m$.`,
+              ],
+              explain: String.raw`Prima la pendenza $m$ (dal rapporto $f(x)/x$), poi il termine noto $q$ (dalla differenza $f(x)-mx$). Il limite $\lim f(x)$, se finito, dà un asintoto **orizzontale**, non obliquo.`,
+            },
+            {
+              id: 's09.studio.L1.e8', type: 'mcq', level: 2,
+              prompt: String.raw`Per $f(x)=\dfrac{x^2}{x-1}$, quale asintoto obliquo ha il grafico per $x\to\pm\infty$?`,
+              options: [String.raw`$y=x+1$`, String.raw`$y=x$`, String.raw`$y=x-1$`, String.raw`$y=1$`],
+              answer: 0,
+              explain: String.raw`$f(x)=x+1+\dfrac{1}{x-1}$, quindi $q=1$. $y=x$ dimentica il termine $\dfrac{x}{x-1}\to1$ nel calcolo di $q$. $y=x-1$ cambia il segno di $q$. $y=1$ è una retta orizzontale: confonde $q$ con la pendenza $m$, che qui vale $1$ e non $0$.`,
+            },
+          ],
+        },
+        // ---------------------------------------------------------------
+        {
+          id: 's09.studio.L2',
+          title: 'Derivata prima: monotonia, estremi, punti angolosi',
+          cards: [
+            {
+              type: 'learn',
+              title: 'Come legge il grafico la derivata prima',
+              body: String.raw`La derivata è la **pendenza** della tangente. Dove $f'>0$ il grafico sale, dove $f'<0$ scende.
+
+>* **Monotonia.** Su un intervallo $I$: $f'>0$ ⇒ $f$ strettamente crescente; $f'<0$ ⇒ strettamente decrescente.
+
+>* **Candidati ad estremo:** i punti in cui $f'=0$ (stazionari), i punti in cui $f$ non è derivabile (angolosi, cuspidi) e gli estremi del dominio.
+
+Un estremo sta dove la pendenza **cambia segno**. Un punto stazionario senza cambio di segno non è un estremo.`,
+              plot: { fns: ['x^2*e^(-x)'], x: [-1.5, 4.5], y: [-0.2, 1.2], points: [[0, 0, 'min'], [2, 0.54, 'max']] },
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto: monotonia ed estremi',
+              problem: String.raw`Studia la monotonia e gli estremi relativi di $f(x)=x^2e^{-x}$.`,
+              steps: [
+                String.raw`**Derivata.** Prodotto di $x^2$ ed $e^{-x}$: $f'(x)=2xe^{-x}-x^2e^{-x}=(2x-x^2)e^{-x}$.`,
+                String.raw`**Fattorizzo.** $f'(x)=x(2-x)\,e^{-x}$. Il fattore $e^{-x}$ è sempre positivo: il segno di $f'$ è quello di $x(2-x)$.`,
+                {
+                  text: String.raw`**Segno.** Ora decido dove $f'>0$, cioè dove $x(2-x)>0$.`,
+                  ask: {
+                    type: 'interval',
+                    prompt: String.raw`Per quali $x$ è $f'(x)>0$?`,
+                    answer: '(0,2)',
+                    explain: String.raw`$x(2-x)>0$ quando $x$ sta tra le radici $0$ e $2$. Fuori dalle radici il prodotto è negativo.`,
+                  },
+                },
+                String.raw`**Tabella.** $f'$ passa da $-$ a $+$ in $x=0$: minimo relativo, $f(0)=0$. Passa da $+$ a $-$ in $x=2$: massimo relativo, $f(2)=4e^{-2}$.`,
+              ],
+              result: String.raw`$f$ decresce su $(-\infty,0)$, cresce su $(0,2)$, decresce su $(2,+\infty)$.`,
+            },
+            {
+              id: 's09.studio.L2.e1', type: 'mcq', level: 1,
+              prompt: String.raw`Per $f(x)=x^2e^{-x}$, il punto $x=2$ è…`,
+              options: [
+                String.raw`un massimo relativo, ma non assoluto`,
+                String.raw`un massimo assoluto`,
+                String.raw`un minimo relativo`,
+                String.raw`un punto in cui $f'$ non esiste`,
+              ],
+              answer: 0,
+              explain: String.raw`$f'$ passa da $+$ a $-$ in $2$: è un massimo relativo. Non è assoluto: per $x\to-\infty$ la funzione tende a $+\infty$ (per esempio $f(-1)=e\approx2.7>4e^{-2}\approx0.54$). Qui $f'$ esiste ovunque.`,
+            },
+            {
+              id: 's09.studio.L2.e2', type: 'set', level: 2,
+              prompt: String.raw`Punti stazionari di $f(x)=x^2e^{-x}$ (dove $f'=0$): quali ascisse?`,
+              answer: ['0', '2'],
+              explain: String.raw`$f'(x)=x(2-x)e^{-x}$ si annulla per $x=0$ e $x=2$, perché $e^{-x}$ non è mai zero.`,
+            },
+            {
+              id: 's09.studio.L2.e3', type: 'num', level: 2,
+              prompt: String.raw`Valore del massimo relativo di $f(x)=x^2e^{-x}$, cioè $f(2)$.`,
+              answer: '4*e^(-2)',
+              explain: String.raw`$f(2)=2^2e^{-2}=4e^{-2}\approx0.54$.`,
+            },
+            {
+              type: 'learn',
+              title: 'Punti angolosi: il caso che sfugge',
+              body: String.raw`Un punto **angoloso** è un punto in cui il grafico fa uno spigolo: le derivate laterali esistono ma sono diverse. In quel punto $f'$ non esiste, quindi **non compare** tra i punti stazionari. Va però controllato tra i candidati.
+
+Esempio: $f(x)=|x^2-1|$. Per $|x|<1$ si ha $f=1-x^2$; per $|x|>1$ si ha $f=x^2-1$.
+
+- In $x=\pm1$ c'è una **valle a punta**: minimo relativo, con $f=0$.
+- In $x=0$ c'è una **cima liscia**: $f'=-2x$ passa da $+$ a $-$, massimo relativo con $f(0)=1$.`,
+              plot: { fns: ['abs(x^2-1)'], x: [-2, 2], y: [-0.5, 3], points: [[-1, 0, 'min'], [0, 1, 'max'], [1, 0, 'min']] },
+            },
+            {
+              id: 's09.studio.L2.e4', type: 'num', level: 2,
+              prompt: String.raw`Derivata sinistra di $f(x)=|x^2-1|$ in $x=1$.`,
+              answer: '-2',
+              explain: String.raw`Per $x$ vicino a $1$ da sinistra, $x^2<1$, quindi $|x^2-1|=1-x^2$. La derivata è $-2x$, che in $x=1$ vale $-2$.`,
+            },
+            {
+              id: 's09.studio.L2.e5', type: 'mcq', level: 2,
+              prompt: String.raw`Per $f(x)=|x^2-1|$, il punto $x=0$ è…`,
+              options: [
+                String.raw`un massimo relativo`,
+                String.raw`un minimo relativo`,
+                String.raw`un punto angoloso di minimo`,
+                String.raw`né massimo né minimo`,
+              ],
+              answer: 0,
+              explain: String.raw`Vicino a $0$ si ha $f=1-x^2\le1$: è un massimo relativo. È liscio, perché $f$ è derivabile in $0$: non è un punto angoloso. Il punto $x=0$ non è un minimo: $f(0)=1$ è più alto dei valori vicini.`,
+            },
+            {
+              id: 's09.studio.L2.e6', type: 'tf', level: 2,
+              prompt: String.raw`Se $f'(x_0)=0$, allora $x_0$ è un punto di massimo o di minimo relativo.`,
+              answer: false,
+              explain: String.raw`Falso. Per $f(x)=x^3$ si ha $f'(0)=0$, ma $f'=3x^2\ge0$ non cambia segno: $0$ non è un estremo. Serve il cambio di segno di $f'$.`,
+            },
+            {
+              id: 's09.studio.L2.e7', type: 'order', level: 2,
+              prompt: String.raw`Metti in ordine il procedimento per trovare gli estremi relativi di $f$.`,
+              steps: [
+                String.raw`Calcolo $f'$ e trovo i punti in cui $f'=0$ oppure $f'$ non esiste.`,
+                String.raw`Studio il segno di $f'$ su ciascun intervallo tra i candidati.`,
+                String.raw`Classifico ogni candidato: da $+$ a $-$ massimo; da $-$ a $+$ minimo; senza cambio di segno nessun estremo.`,
+                String.raw`Se mi servono gli estremi assoluti, confronto i valori di $f$ nei candidati e i limiti agli estremi del dominio.`,
+              ],
+              distractors: [
+                String.raw`Concludo che ogni punto con $f'=0$ è un massimo o un minimo, senza guardare il segno.`,
+                String.raw`Calcolo $f''$ e concludo che è un flesso dove $f''=0$.`,
+              ],
+              explain: String.raw`L'ordine è: candidati, segno, classificazione, confronto globale. L'errore più frequente è saltare il segno di $f'$.`,
+            },
+            {
+              id: 's09.studio.L2.e8', type: 'cloze', level: 2,
+              prompt: String.raw`Completa il ragionamento sul segno di $f'$.`,
+              text: String.raw`Se $f'>0$ a sinistra di $x_0$ e $f'<0$ a destra, allora $x_0$ è un punto di [[0]] relativo. Su un intervallo a sinistra di $x_0$ la funzione è [[1]].`,
+              blanks: [
+                { options: [String.raw`massimo`, String.raw`minimo`, String.raw`flesso`], answer: 0 },
+                { options: [String.raw`crescente`, String.raw`decrescente`, String.raw`costante`], answer: 0 },
+              ],
+              explain: String.raw`Il segno di $f'$ passa da $+$ a $-$: la funzione sale e poi scende, quindi c'è una cima. A sinistra di $x_0$ la funzione sale, cioè è crescente.`,
+            },
+            {
+              id: 's09.studio.L2.e9', type: 'num', level: 2,
+              prompt: String.raw`Per $f(x)=|x^2-1|$, calcola la derivata destra in $x=1$, cioè $f'_+(1)$.`,
+              answer: '2',
+              explain: String.raw`Per $x>1$ si ha $f=x^2-1$, quindi $f'=2x$. In $x=1$ vale $2$. Con $f'_-(1)=-2\neq2$ il punto è angoloso.`,
+            },
+            {
+              id: 's09.studio.L2.e10', type: 'open', level: 2,
+              prompt: String.raw`Spiega in 3–4 frasi perché un punto in cui $f$ non è derivabile può essere un estremo relativo. Usa l'esempio di $f(x)=|x|$.`,
+              answer: String.raw`Se $f$ non è derivabile in $x_0$, in $x_0$ non c'è una tangente e quindi $x_0$ non è un punto stazionario. Però può essere comunque un estremo: per $f(x)=|x|$, a sinistra di $0$ la funzione scende e a destra sale. Quindi $0$ è un minimo relativo (e assoluto), anche se $f'(0)$ non esiste. Si decide controllando il **segno** di $f$ a sinistra e a destra del punto.`,
+              rubric: [
+                'Dice che se $f$ non è derivabile non c\'è una tangente, e il punto non è stazionario',
+                'Spiega che l\'estremo si decide con il cambio di monotonia (segno a sinistra e a destra), non con $f\'=0$',
+                'Esempio corretto: $|x|$ ha minimo in $0$, con derivate laterali $-1$ e $+1$',
+              ],
+              points: 2,
+              explain: String.raw`Un punto angoloso non è stazionario, ma può essere un estremo. Va controllato con la monotonia, come un qualunque candidato.`,
+            },
+          ],
+        },
+        // ---------------------------------------------------------------
+        {
+          id: 's09.studio.L3',
+          title: 'Concavità, flessi ed esame',
+          cards: [
+            {
+              type: 'learn',
+              title: 'Concavità e flessi',
+              body: String.raw`La **concavità** dice come il grafico "curva".
+
+>* $f$ è **convessa** su $I$ se il grafico sta **sopra** ogni sua tangente (forma di coppa ∪).
+>* $f$ è **concava** su $I$ se il grafico sta **sotto** ogni sua tangente (forma di cupola ∩).
+
+>* **Criterio.** Se $f''>0$ su $I$, $f$ è convessa; se $f''<0$ su $I$, $f$ è concava.
+
+Un **flesso** è un punto in cui il grafico **cambia concavità**. Per $f(x)=x^3-3x$ si ha $f''=6x$, che cambia segno in $0$: flesso in $x=0$.`,
+              plot: { fns: ['x^3-3x'], x: [-2.6, 2.6], y: [-4, 4], points: [[0, 0, 'flesso']] },
+            },
+            {
+              type: 'learn',
+              title: 'Flessi con tangente obliqua o orizzontale',
+              body: String.raw`Un flesso può avere tangente **obliqua** (per $x^3-3x$ in $0$ la pendenza è $f'(0)=-3$) oppure **orizzontale** (per $f(x)=x^3$ in $0$ si ha $f'(0)=0$).
+
+Nel secondo caso il punto è un flesso ma **non** è un estremo: $f'=3x^2$ resta positiva da entrambi i lati e non cambia segno. Non confondere $f'$ con $f''$: la $f'$ dice dove si sale o si scende, la $f''$ dove si curva in su o in giù.`,
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto: concavità e flessi',
+              problem: String.raw`Studia concavità e flessi di $f(x)=x^2e^{-x}$.`,
+              steps: [
+                String.raw`**Derivata seconda.** Parto da $f'(x)=(2x-x^2)e^{-x}$ e derivo ancora: $f''(x)=(2-2x)e^{-x}-(2x-x^2)e^{-x}=(x^2-4x+2)\,e^{-x}$.`,
+                {
+                  text: String.raw`**Zeri di $f''$.** Il fattore $e^{-x}$ non si annulla mai: restano le radici di $x^2-4x+2$.`,
+                  ask: {
+                    type: 'set',
+                    prompt: String.raw`Risolvi $x^2-4x+2=0$ (valori esatti, separati da ;).`,
+                    answer: ['2-sqrt(2)', '2+sqrt(2)'],
+                    explain: String.raw`$\dfrac{\Delta}{4}=4-2=2$, quindi $x=2\pm\sqrt2$.`,
+                  },
+                },
+                String.raw`**Segno.** La parabola $x^2-4x+2$ ha concavità verso l'alto: è positiva fuori dalle radici e negativa tra $2-\sqrt2\approx0.59$ e $2+\sqrt2\approx3.41$.`,
+                String.raw`**Concavità.** $f$ è convessa su $(-\infty,2-\sqrt2)$ e su $(2+\sqrt2,+\infty)$, concava su $(2-\sqrt2,2+\sqrt2)$.`,
+                String.raw`**Flessi.** $f''$ cambia segno in $x=2\pm\sqrt2$: sono due flessi, con ordinate $f(2-\sqrt2)=(6-4\sqrt2)\,e^{\sqrt2-2}$ e $f(2+\sqrt2)=(6+4\sqrt2)\,e^{-2-\sqrt2}$.`,
+              ],
+              result: String.raw`Convessa su $(-\infty,2-\sqrt2)\cup(2+\sqrt2,+\infty)$, concava su $(2-\sqrt2,2+\sqrt2)$; flessi in $x=2\pm\sqrt2$.`,
+            },
+            {
+              type: 'example',
+              title: 'Esempio a completamento: $f$ con asintoto',
+              problem: String.raw`Studia la concavità di $f(x)=\dfrac{x^2}{x-1}$ (la stessa funzione della prima lezione).`,
+              steps: [
+                String.raw`Riscrivo la derivata prima: $f'(x)=\dfrac{x^2-2x}{(x-1)^2}=1-\dfrac{1}{(x-1)^2}$.`,
+                {
+                  text: String.raw`Derivo di nuovo: $f''(x)=\dfrac{d}{dx}\big(-(x-1)^{-2}\big)=2(x-1)^{-3}$. Scrivila come frazione.`,
+                  ask: {
+                    type: 'expr',
+                    prompt: String.raw`Quanto vale $f''(x)$ per $x\neq1$?`,
+                    answer: '2/(x-1)^3',
+                    vars: ['x'],
+                    domain: [1.5, 3],
+                    explain: String.raw`$2(x-1)^{-3}=\dfrac{2}{(x-1)^3}$.`,
+                  },
+                },
+                String.raw`**Segno.** Il numeratore $2$ è positivo; il denominatore ha il segno di $x-1$. Quindi $f''<0$ per $x<1$ e $f''>0$ per $x>1$.`,
+                String.raw`**Conclusione.** $f$ è concava su $(-\infty,1)$ e convessa su $(1,+\infty)$. Il cambio di concavità avviene in $x=1$, che non appartiene al dominio: **nessun flesso**.`,
+              ],
+              result: String.raw`Concava su $(-\infty,1)$, convessa su $(1,+\infty)$, nessun flesso.`,
+            },
+            {
+              id: 's09.studio.L3.e1', type: 'mcq', level: 1,
+              prompt: String.raw`Per $f(x)=x^3-3x$, su quale intervallo la funzione è concava?`,
+              options: [String.raw`$(-\infty,0)$`, String.raw`$(0,+\infty)$`, String.raw`$\R$`, String.raw`in nessun intervallo`],
+              answer: 0,
+              explain: String.raw`$f''=6x$ è negativa per $x<0$: concava su $(-\infty,0)$. Per $x>0$ la funzione è convessa.`,
+            },
+            {
+              id: 's09.studio.L3.e2', type: 'set', level: 2,
+              prompt: String.raw`Ascisse dei flessi di $f(x)=x^4-6x^2$.`,
+              answer: ['-1', '1'],
+              explain: String.raw`$f''=12x^2-12=12(x-1)(x+1)$ cambia segno in $\pm1$: entrambi sono flessi. In $0$ la $f''$ è negativa e non cambia segno: lì nessun flesso.`,
+            },
+            {
+              id: 's09.studio.L3.e3', type: 'tf', level: 2,
+              prompt: String.raw`Se $f''(x_0)=0$, allora $x_0$ è un punto di flesso.`,
+              answer: false,
+              explain: String.raw`Falso. Per $f(x)=x^4$ si ha $f''(0)=0$, ma $f''=12x^2\ge0$ non cambia segno: $f$ è convessa ovunque e $0$ è un minimo, non un flesso.`,
+            },
+            {
+              id: 's09.studio.L3.e4', type: 'num', level: 2,
+              prompt: String.raw`Pendenza della tangente nel flesso $x=0$ di $f(x)=x^3-3x$, cioè $f'(0)$.`,
+              answer: '-3',
+              explain: String.raw`$f'(x)=3x^2-3$, quindi $f'(0)=-3$: la tangente è obliqua, non orizzontale.`,
+            },
+            {
+              id: 's09.studio.L3.e5', type: 'mcq', level: 2,
+              prompt: String.raw`Per $f(x)=x^3$, il punto $x=0$ è…`,
+              options: [
+                String.raw`un flesso a tangente orizzontale`,
+                String.raw`un massimo relativo`,
+                String.raw`un flesso a tangente obliqua`,
+                String.raw`né flesso né estremo`,
+              ],
+              answer: 0,
+              explain: String.raw`$f'(0)=0$ (tangente orizzontale) e $f''=6x$ cambia segno in $0$: è un flesso. Non è un massimo né un minimo, perché $f'=3x^2$ non cambia segno.`,
+            },
+            {
+              id: 's09.studio.L3.e6', type: 'problem', level: 3, points: 8,
+              source: 'Appello 15/01/2026 · Parte B',
+              prompt: String.raw`Sia
+$$f(x)=\begin{cases} x\log x & \text{se } 0<x<1\\ \dfrac{x-1}{2x-3} & \text{se } x\ge1\end{cases}$$
+Studiare $f$: dominio, limiti e asintoti, derivabilità in $x=1$, estremi relativi, e l'area della regione tra il grafico di $f$ e l'asse $x$ per $0\le x\le1$.`,
+              plot: { fns: [{ f: 'x<1 ? x*log(x) : (x-1)/(2*x-3)', label: 'f' }], x: [0.02, 3.2], y: [-2, 2.5], vlines: [1.5], points: [[1, 0, 'max'], [0.3679, -0.3679, 'min']] },
+              parts: [
+                { type: 'interval', prompt: 'Dominio di $f$', answer: '(0,3/2)U(3/2,inf)', explain: String.raw`Il primo ramo è definito per $0<x<1$, il secondo per $x\ge1$ con $x\neq\frac32$ (il denominatore). Unendo: $(0,\frac32)\cup(\frac32,+\infty)$.` },
+                { type: 'num', prompt: String.raw`$\lim_{x\to0^+}f(x)$`, answer: '0', explain: String.raw`$\lim_{x\to0^+}x\log x=0$: il logaritmo è infinitesimo di ordine inferiore a $\frac1x$.` },
+                { type: 'set', prompt: 'Asintoti verticali (ascisse)', answer: ['3/2'], explain: String.raw`Il denominatore $2x-3$ si annulla in $\frac32$, mentre il numeratore vale $\frac12$. Da sinistra $f\to-\infty$, da destra $f\to+\infty$: $x=\frac32$ è asintoto verticale.` },
+                { type: 'num', prompt: String.raw`Asintoto orizzontale per $x\to+\infty$: $y=$?`, answer: '1/2', explain: String.raw`$\lim_{x\to+\infty}\dfrac{x-1}{2x-3}=\dfrac12$: il grafico tende alla retta $y=\frac12$.` },
+                { type: 'num', prompt: String.raw`Derivata sinistra in $x=1$: $f'_-(1)$`, answer: '1', explain: String.raw`Per $0<x<1$: $f'(x)=\log x+1$, quindi $f'_-(1)=0+1=1$.` },
+                { type: 'num', prompt: String.raw`Derivata destra in $x=1$: $f'_+(1)$`, answer: '-1', explain: String.raw`Per $x>1$: $f'(x)=\dfrac{2x-3-2(x-1)}{(2x-3)^2}=-\dfrac{1}{(2x-3)^2}$, quindi $f'_+(1)=-1$. Poiché $f'_-(1)\neq f'_+(1)$, $x=1$ è punto angoloso.` },
+                { type: 'num', prompt: 'Ascissa del minimo relativo', answer: '1/e', explain: String.raw`Su $(0,1)$ la derivata $\log x+1$ è negativa per $x<\frac1e$ e positiva per $x>\frac1e$: minimo relativo in $x=\frac1e$, con $f(\frac1e)=-\frac1e$.` },
+                { type: 'num', prompt: String.raw`Area della regione tra il grafico di $f$ e l'asse $x$ per $0\le x\le1$`, answer: '1/4', explain: String.raw`Su $(0,1)$ si ha $f\le0$, quindi l'area è $-\int_0^1 x\log x\,dx$. Per parti: $\int_0^1 x\log x\,dx=\big[\tfrac{x^2}{2}\log x-\tfrac{x^2}{4}\big]_0^1=-\tfrac14$. Area $=\tfrac14$.` },
+              ],
+              solution: String.raw`**Dominio.** $D=(0,\frac32)\cup(\frac32,+\infty)$.
+
+**Limiti e asintoti.** $\lim_{x\to0^+}f=0$. In $\frac32$ il limite è $-\infty$ da sinistra e $+\infty$ da destra: asintoto verticale $x=\frac32$. Per $x\to+\infty$, $f\to\frac12$: asintoto orizzontale $y=\frac12$.
+
+**Derivate.** Per $0<x<1$: $f'=\log x+1$. Per $x>1$: $f'=-\dfrac{1}{(2x-3)^2}$. Quindi $f'_-(1)=1\neq-1=f'_+(1)$: punto angoloso in $x=1$.
+
+**Monotonia.** Su $(0,1)$: $f'<0$ per $x<\frac1e$ e $f'>0$ per $x>\frac1e$, quindi decresce su $(0,\frac1e)$ e cresce su $(\frac1e,1)$. Su $(1,\frac32)$ e su $(\frac32,+\infty)$ la derivata è negativa: decresce.
+
+**Estremi.** In $x=\frac1e$ minimo relativo, $f=-\frac1e$. In $x=1$ si ha $f(1)=0$ e $f<0$ a sinistra e a destra: massimo relativo $0$. Non ci sono estremi assoluti: $f\to+\infty$ per $x\to\frac32^+$ e $f\to-\infty$ per $x\to\frac32^-$.
+
+**Area.** Su $[0,1]$ si ha $f\le0$: area $=-\int_0^1x\log x\,dx=\dfrac14$.
+
+`,
+            },
+            {
+              id: 's09.studio.L3.e7', type: 'problem', level: 3, points: 6,
+              source: 'Appello 10/02/2026 · Parte B',
+              prompt: String.raw`Sia $f(x)=(x^2-3)\,e^{-|2-x|}$. Studiare $f$: limiti agli estremi del dominio, punti non derivabili, punti stazionari, massimo e minimo assoluti.`,
+              plot: { fns: ['(x^2-3)*e^(-abs(2-x))'], x: [-3, 4.5], y: [-1, 2.5], points: [[1, -0.74, 'min'], [3, 2.21, 'max'], [2, 1]] },
+              parts: [
+                { type: 'num', prompt: String.raw`$\lim_{x\to-\infty}f(x)$`, answer: '0', explain: String.raw`Per $x<2$ si ha $f=(x^2-3)e^{x-2}$: l'esponenziale che tende a $0$ domina il polinomio, quindi il limite è $0$.` },
+                { type: 'num', prompt: String.raw`Derivata sinistra in $x=2$: $f'_-(2)$`, answer: '5', explain: String.raw`Per $x<2$: $f'=(x^2+2x-3)e^{x-2}=(x+3)(x-1)e^{x-2}$. In $x=2$: $5\cdot1\cdot e^0=5$.` },
+                { type: 'num', prompt: String.raw`Derivata destra in $x=2$: $f'_+(2)$`, answer: '3', explain: String.raw`Per $x>2$: $f=(x^2-3)e^{2-x}$, quindi $f'=-(x-3)(x+1)e^{2-x}$. In $x=2$: $-(-1)\cdot3\cdot1=3$. Poiché $5\neq3$, $x=2$ è punto angoloso.` },
+                { type: 'set', prompt: String.raw`Punti stazionari ($f'=0$, con $x\neq2$)`, answer: ['-3', '1', '3'], explain: String.raw`Per $x<2$: $(x+3)(x-1)=0$ per $x=-3$ e $x=1$. Per $x>2$: $(x-3)(x+1)=0$ per $x=3$ (la radice $-1$ non è in questo ramo).` },
+                { type: 'num', prompt: 'Massimo assoluto di $f$', answer: '6/e', explain: String.raw`Il massimo è $f(3)=(9-3)e^{-1}=\frac6e\approx2.21$. Gli altri massimi relativi valgono $f(-3)=6e^{-5}$ e sono molto più piccoli; agli estremi del dominio $f\to0$.` },
+                { type: 'num', prompt: 'Minimo assoluto di $f$', answer: '-2/e', explain: String.raw`Il minimo relativo in $x=1$ vale $f(1)=(1-3)e^{-1}=-\frac2e\approx-0.74$. È il valore più basso: agli infiniti $f\to0$ e $f$ è negativa solo tra $-\sqrt3$ e $\sqrt3$.` },
+              ],
+              solution: String.raw`**Limiti.** Per $x\to\pm\infty$ l'esponenziale tende a $0$ più in fretta del polinomio: $f\to0$ da entrambi i lati.
+
+**Derivate.** Per $x<2$: $f'=(x+3)(x-1)e^{x-2}$. Per $x>2$: $f'=-(x-3)(x+1)e^{2-x}$. In $x=2$ le derivate laterali sono $5$ e $3$: punto angoloso.
+
+**Segno.** Su $(-\infty,2)$: $f'>0$ per $x<-3$ e per $1<x<2$; $f'<0$ per $-3<x<1$. Su $(2,+\infty)$: $f'>0$ per $2<x<3$, $f'<0$ per $x>3$.
+
+**Estremi.** $x=-3$: massimo relativo $6e^{-5}$. $x=1$: minimo relativo $-\frac2e$. $x=3$: massimo relativo $\frac6e$. $x=2$ non è estremo: $f$ cresce attraverso lo spigolo.
+
+**Assoluti.** Massimo assoluto $\frac6e$ in $x=3$; minimo assoluto $-\frac2e$ in $x=1$.`,
+            },
+            {
+              id: 's09.studio.L3.e8', type: 'open', level: 2,
+              prompt: String.raw`Scrivi in ordine i passi per lo studio completo di una funzione, dal dominio al grafico.`,
+              answer: String.raw`1) Dominio e simmetrie. 2) Segno e intersezioni con gli assi. 3) Limiti agli estremi del dominio e asintoti (verticali, orizzontali, obliqui). 4) Derivata prima: punti stazionari e punti angolosi, monotonia, estremi. 5) Derivata seconda: concavità, flessi. 6) Grafico con tutte le informazioni insieme, controllando che rispetti ogni risultato.`,
+              rubric: [
+                'Parte dal dominio e dalle simmetrie',
+                'Calcola limiti agli estremi del dominio e individua gli asintoti',
+                'Usa la derivata prima per monotonia ed estremi, con i punti angolosi',
+                'Usa la derivata seconda per concavità e flessi, poi disegna il grafico',
+              ],
+              points: 2,
+              explain: String.raw`L'ordine non è arbitrario: ogni passo usa i risultati dei precedenti.`,
+            },
+          ],
+        },
+      ],
+      practice: [
+        {
+          id: 's09.studio.p1', type: 'interval', level: 1,
+          prompt: String.raw`Dominio di $f(x)=\dfrac{\log(x-1)}{x-3}$.`,
+          answer: '(1,3)U(3,inf)',
+          explain: String.raw`Serve $x-1>0$, cioè $x>1$ (argomento del logaritmo), e $x\neq3$. Dunque $D=(1,3)\cup(3,+\infty)$.`,
+        },
+        {
+          id: 's09.studio.p2', type: 'mcq', level: 2,
+          prompt: String.raw`Per $f(x)=\dfrac{e^x}{x+1}$, quale affermazione sugli asintoti orizzontali è vera?`,
+          options: [
+            String.raw`$y=0$ è asintoto solo per $x\to-\infty$`,
+            String.raw`$y=0$ è asintoto solo per $x\to+\infty$`,
+            String.raw`$y=0$ è asintoto per entrambi i lati`,
+            String.raw`non ci sono asintoti orizzontali`,
+          ],
+          answer: 0,
+          explain: String.raw`Per $x\to-\infty$ l'esponenziale $e^x\to0$ domina e $f\to0$. Per $x\to+\infty$ il numeratore cresce molto più in fretta del denominatore: $f\to+\infty$.`,
+        },
+        {
+          id: 's09.studio.p3', type: 'match', level: 1,
+          prompt: 'Abbina ogni funzione al suo asintoto.',
+          pairs: [
+            [String.raw`$\dfrac{1}{x-2}$`, String.raw`asintoto verticale $x=2$`],
+            [String.raw`$\dfrac{2x+1}{x}$`, String.raw`asintoto orizzontale $y=2$`],
+            [String.raw`$\dfrac{x^2-1}{x}$`, String.raw`asintoto obliquo $y=x$`],
+          ],
+          explain: String.raw`$\frac{2x+1}{x}=2+\frac1x$ tende a $2$; $\frac{x^2-1}{x}=x-\frac1x$ tende alla retta $y=x$; $\frac{1}{x-2}$ diverge in $x=2$.`,
+        },
+        {
+          id: 's09.studio.p4', type: 'cloze', level: 1,
+          prompt: String.raw`Completa la regola sugli asintoti.`,
+          text: String.raw`Se $\lim_{x\to a}f(x)=\pm\infty$, allora la retta [[0]] è un asintoto [[1]] del grafico.`,
+          blanks: [
+            { options: [String.raw`$x=a$`, String.raw`$y=a$`, String.raw`$x=0$`], answer: 0 },
+            { options: [String.raw`verticale`, String.raw`orizzontale`, String.raw`obliquo`], answer: 0 },
+          ],
+          explain: String.raw`Un limite infinito in un punto $a$ dà un asintoto verticale. Un limite finito a $\pm\infty$ dà un asintoto orizzontale.`,
+        },
+        {
+          id: 's09.studio.p5', type: 'num', level: 1,
+          prompt: String.raw`Asintoto orizzontale di $f(x)=\dfrac{3x^2+1}{x^2-4}$ per $x\to+\infty$: $y=$?`,
+          answer: '3',
+          explain: String.raw`Numeratore e denominatore hanno lo stesso grado: il rapporto tende al rapporto dei coefficienti direttori, $\dfrac{3}{1}=3$.`,
+        },
+        {
+          id: 's09.studio.p6', type: 'set', level: 2,
+          prompt: String.raw`Punti stazionari di $f(x)=x^3-12x$: quali ascisse?`,
+          answer: ['-2', '2'],
+          explain: String.raw`$f'(x)=3x^2-12=0$ per $x^2=4$, cioè $x=\pm2$.`,
+        },
+        {
+          id: 's09.studio.p7', type: 'tf', level: 2,
+          prompt: String.raw`Un flesso a tangente orizzontale è un estremo relativo.`,
+          answer: false,
+          explain: String.raw`Falso. In un flesso $f'$ ha lo stesso segno a sinistra e a destra (per esempio $x^3$ in $0$): non è né massimo né minimo.`,
+        },
+        {
+          id: 's09.studio.p8', type: 'open', level: 2,
+          prompt: String.raw`Spiega con un esempio perché $f''(x_0)=0$ non basta per avere un flesso.`,
+          answer: String.raw`Per $f(x)=x^4$ si ha $f''(x)=12x^2$, quindi $f''(0)=0$. Però $f''\ge0$ ovunque e non cambia segno in $0$: $f$ è convessa su tutto $\R$ e $0$ non è un flesso ma un minimo. Serve il cambio di segno di $f''$.`,
+          rubric: [
+            'Esempio corretto: $f(x)=x^4$ in $x=0$',
+            'Osserva che $f\'\'=12x^2$ non cambia segno',
+            'Conclude che serve il cambio di segno di $f\'\'$, non solo lo zero',
+          ],
+          points: 2,
+          explain: String.raw`$f''(x_0)=0$ è un candidato. Il flesso richiede che la concavità cambi davvero.`,
+        },
+        {
+          id: 's09.studio.gen-asintoto', type: 'gen', level: 2,
+          gen: (R) => {
+            const a = R.pick([1, 2, 3, -1, -2]);
+            const d = R.nz(-3, 3);
+            const b = R.int(-4, 4);
+            const q = b - a * d;
+            let c = R.int(-5, 5);
+            if (c === d * q) c += 1; // resto non nullo
+            const rem = c - d * q;
+            const num = H.poly([a, b, c]);
+            const den = H.lin(1, d);
+            const lin = H.lin(a, q);
+            return {
+              type: 'tuple',
+              labels: ['m', 'q'],
+              prompt: String.raw`Trova $m$ e $q$ dell'asintoto obliquo $y=mx+q$ di $f(x)=\dfrac{${num}}{${den}}$.`,
+              answer: [String(a), String(q)],
+              explain: String.raw`Divisione polinomiale: $${num}=(${den})(${lin})${rem === 0 ? '' : ` ${rem > 0 ? '+' : '-'} ${Math.abs(rem)}`}$. Quindi $f(x)=${lin}+\dfrac{${rem}}{${den}}$ e il resto tende a $0$: $m=${a}$, $q=${q}$.`,
+            };
+          },
+        },
+        {
+          id: 's09.studio.gen-razionale', type: 'gen', level: 3,
+          gen: (R) => {
+            const p = R.int(-3, 3);
+            let q = R.int(-3, 3);
+            while (q === p) q = R.int(-3, 3);
+            const kq = q - 2 * p; // asintoto obliquo y = x + kq
+            const x2 = 2 * q - p; // secondo stazionario
+            const f2 = 4 * (q - p); // f(x2)
+            const minP = p > q; // in p: minimo se p > q
+            const numTex = `(${H.lin(1, -p)})^{2}`;
+            const denTex = H.lin(1, -q);
+            return {
+              type: 'problem',
+              prompt: String.raw`Sia $f(x)=\dfrac{${numTex}}{${denTex}}$. Trova l'asintoto verticale, l'asintoto obliquo, i punti stazionari, la natura di $x=${p}$ e il valore di $f$ nel secondo stazionario.`,
+              parts: [
+                { type: 'set', prompt: 'Asintoto verticale (ascissa)', answer: [String(q)], explain: String.raw`Il denominatore si annulla in $x=${q}$, mentre il numeratore vale $${(q - p) ** 2}\neq0$: asintoto verticale $x=${q}$.` },
+                { type: 'expr', prompt: String.raw`Asintoto obliquo: $y=$`, answer: `x+(${kq})`, vars: ['x'], domain: [-4, 4], explain: String.raw`Divido: $(x-${p})^2=(x-${q})(${H.lin(1, kq)})+${(p - q) ** 2}$, quindi $f(x)=${H.lin(1, kq)}+\dfrac{${(p - q) ** 2}}{${denTex}}$: asintoto obliquo $y=${H.lin(1, kq)}$.` },
+                { type: 'set', prompt: String.raw`Punti stazionari (ascisse, dove $f'=0$)`, answer: [String(p), String(x2)], explain: String.raw`$f'(x)=\dfrac{(${H.lin(1, -p)})(${H.lin(1, -x2)})}{(${denTex})^2}$: si annulla per $x=${p}$ e $x=${x2}$.` },
+                {
+                  type: 'mcq', prompt: String.raw`Natura di $x=${p}$`, options: NAT_TEX, answer: minP ? 1 : 0, noShuffle: true,
+                  explain: String.raw`Il numeratore è sempre $\ge0$, quindi il segno di $f$ vicino a $${p}$ è quello di $x-${q}$. ${minP ? String.raw`Poiché $${p}>${q}$, $f\ge0$ vicino a $${p}$ e $f(${p})=0$: minimo relativo.` : String.raw`Poiché $${p}<${q}$, $f\le0$ vicino a $${p}$ e $f(${p})=0$: massimo relativo.`}`,
+                },
+                { type: 'num', prompt: String.raw`Valore di $f$ nel secondo stazionario $x=${x2}$`, answer: String(f2), explain: String.raw`$f(${x2})=\dfrac{(${x2 - p})^2}{${x2 - q}}=\dfrac{${(x2 - p) ** 2}}{${x2 - q}}=${f2}$.` },
+              ],
+              solution: String.raw`Asintoto verticale $x=${q}$. Divisione: $(x-${p})^2=(x-${q})(${H.lin(1, kq)})+${(p - q) ** 2}$, quindi l'asintoto obliquo è $y=${H.lin(1, kq)}$. Derivata: $f'(x)=\dfrac{(${H.lin(1, -p)})(${H.lin(1, -x2)})}{(${denTex})^2}$, con stazionari $x=${p}$ e $x=${x2}$. In $x=${p}$ il segno di $f$ è quello di $x-${q}$: ${minP ? 'minimo' : 'massimo'} relativo con valore $0$. In $x=${x2}$ la natura è opposta, e $f(${x2})=${f2}$.`,
+            };
+          },
+        },
+        {
+          id: 's09.studio.gen-flesso', type: 'gen', level: 2,
+          gen: (R) => {
+            const a = R.pick([1, -1, 2, -2]);
+            const r = R.int(-2, 2);
+            const m = R.nz(-3, 3);
+            const d = R.int(-3, 3);
+            // f(x) = a(x-r)^3 + m(x-r) + d, espansa
+            const co = [a, -3 * a * r, 3 * a * r * r + m, -a * r ** 3 - m * r + d];
+            const f2 = H.polyDeriv(H.polyDeriv(co));
+            return {
+              type: 'problem',
+              prompt: String.raw`Sia $f(x)=${H.poly(co)}$. Trova il flesso, la sua ordinata, la pendenza della tangente nel flesso e la concavità a sinistra del flesso.`,
+              parts: [
+                { type: 'num', prompt: 'Ascissa del flesso', answer: String(r), explain: String.raw`$f''(x)=${H.poly(f2)}$ si annulla in $x=${r}$ e cambia segno: flesso in $x=${r}$.` },
+                { type: 'num', prompt: 'Ordinata del flesso $f(x_0)$', answer: String(d), explain: String.raw`Scrivo $f(x)=a(x-x_0)^3+m(x-x_0)+d$ con $x_0=${r}$: in $x_0$ restano solo $d$. Quindi $f(${r})=${d}$.` },
+                { type: 'num', prompt: String.raw`Pendenza della tangente nel flesso, cioè $f'(x_0)$`, answer: String(m), explain: String.raw`$f'(x)=3a(x-x_0)^2+m$, quindi $f'(x_0)=m=${m}$.` },
+                {
+                  type: 'mcq', prompt: String.raw`Per $x<${r}$ il grafico è…`, options: [String.raw`concavo ($f''<0$)`, String.raw`convesso ($f''>0$)`], answer: a > 0 ? 0 : 1, noShuffle: true,
+                  explain: String.raw`$f''(x)=6a(x-${r})$: per $x<${r}$ ha il segno opposto a $a$. Con $a=${a}$ è ${a > 0 ? 'negativa: concavo' : 'positiva: convesso'}.`,
+                },
+              ],
+              solution: String.raw`$f''(x)=6a(x-${r})$ si annulla in $x_0=${r}$ e cambia segno: è il flesso. Riscrivendo $f(x)=${a}(x-${r})^3+${m}(x-${r})+${d}$ si leggono $f(${r})=${d}$ e $f'(${r})=${m}$. Con $a=${a}$ il grafico è ${a > 0 ? 'concavo' : 'convesso'} a sinistra di $x_0$.`,
+            };
+          },
+        },
+        {
+          id: 's09.studio.gen-angoloso', type: 'gen', level: 2,
+          gen: (R) => {
+            const k = R.pick([1, 2, 3]);
+            const K = k * k;
+            return {
+              type: 'problem',
+              prompt: String.raw`Sia $f(x)=\left|x^2-${K}\right|$. Trova i punti in cui $f$ non è derivabile, la natura di $x=${k}$, i punti stazionari e il valore del massimo relativo in $x=0$.`,
+              parts: [
+                { type: 'set', prompt: 'Punti in cui $f$ non è derivabile', answer: [String(-k), String(k)], explain: String.raw`Il modulo cambia segno in $x=\pm${k}$, dove $x^2-${K}=0$: lì il grafico fa uno spigolo. Le derivate laterali in $x=${k}$ sono $-${2 * k}$ e $+${2 * k}$.` },
+                { type: 'mcq', prompt: String.raw`Natura di $x=${k}$`, options: NAT_TEX, answer: 1, noShuffle: true, explain: String.raw`$f(${k})=0$ e $f\ge0$ ovunque: $x=${k}$ è una valle a punta, quindi minimo relativo.` },
+                { type: 'set', prompt: String.raw`Punti stazionari ($f'=0$) in $(-${k},${k})$`, answer: ['0'], explain: String.raw`Per $|x|<${k}$ si ha $f=${K}-x^2$, con $f'=-2x$: si annulla solo in $x=0$.` },
+                { type: 'num', prompt: String.raw`Valore del massimo relativo in $x=0$`, answer: String(K), explain: String.raw`$f(0)=|-${K}|=${K}$. In $0$ la derivata passa da $+$ a $-$: massimo relativo.` },
+              ],
+              solution: String.raw`Per $|x|<${k}$ si ha $f=${K}-x^2$; per $|x|>${k}$ si ha $f=x^2-${K}$. Il grafico ha spigoli in $\pm${k}$, dove $f$ vale $0$ (minimi relativi). In $x=0$ c'è una cima liscia con valore $${K}$.`,
+            };
+          },
+        },
+      ],
+      flashcards: [
+        { id: 's09.studio.fc1', kind: 'def', front: String.raw`Asintoto verticale`, back: String.raw`$x=c$ è asintoto verticale se $\lim_{x\to c^+}f(x)=\pm\infty$ oppure $\lim_{x\to c^-}f(x)=\pm\infty$. Basta un solo lato.` },
+        { id: 's09.studio.fc2', kind: 'def', front: String.raw`Asintoto orizzontale`, back: String.raw`$y=\ell$ con $\ell\in\R$ se $\lim_{x\to+\infty}f(x)=\ell$ oppure $\lim_{x\to-\infty}f(x)=\ell$.` },
+        { id: 's09.studio.fc3', kind: 'def', front: String.raw`Asintoto obliquo $y=mx+q$`, back: String.raw`$m=\lim_{x\to\pm\infty}\dfrac{f(x)}{x}\in\R\setminus\{0\}$ e $q=\lim_{x\to\pm\infty}\big(f(x)-mx\big)\in\R$.` },
+        { id: 's09.studio.fc4', kind: 'metodo', front: String.raw`Lista di studio completo`, back: String.raw`1) Dominio e simmetrie. 2) Segno e intersezioni. 3) Limiti agli estremi del dominio e asintoti. 4) $f'$: monotonia, stazionari, angolosi, estremi. 5) $f''$: concavità, flessi. 6) Grafico con tutte le informazioni.` },
+        { id: 's09.studio.fc5', kind: 'def', front: String.raw`Funzione convessa e concava`, back: String.raw`$f$ è **convessa** su $I$ se il grafico sta sopra ogni sua tangente; **concava** se sta sotto.` },
+        { id: 's09.studio.fc6', kind: 'thm', front: String.raw`Criterio di concavità con $f''$`, back: String.raw`Se $f''>0$ su un intervallo $I$, $f$ è convessa su $I$. Se $f''<0$ su $I$, $f$ è concava su $I$.` },
+        { id: 's09.studio.fc7', kind: 'def', front: String.raw`Punto di flesso`, back: String.raw`$x_0$ è un flesso se in $x_0$ la funzione è derivabile e il grafico **cambia concavità**: $f''$ cambia segno in $x_0$.` },
+        { id: 's09.studio.fc8', kind: 'metodo', front: String.raw`Procedimento per i flessi`, back: String.raw`1) Calcola $f''$. 2) Trova i punti con $f''=0$ o dove $f''$ non esiste. 3) Studia il segno di $f''$ a sinistra e a destra. 4) Cambio di segno: flesso; altrimenti no. L'ordinata è $f(x_0)$.` },
+        { id: 's09.studio.fc9', kind: 'errore', front: String.raw`"$f''(x_0)=0$ quindi flesso"`, back: String.raw`Falso: $f''(x_0)=0$ è solo un candidato. Con $f=x^4$ si ha $f''(0)=0$ ma non c'è flesso, perché $f''\ge0$ non cambia segno.` },
+        { id: 's09.studio.fc10', kind: 'errore', front: String.raw`Flesso e estremo`, back: String.raw`Un flesso a tangente orizzontale ($x^3$ in $0$) non è un estremo: $f'$ non cambia segno. Non confondere $f'$ (monotonia) con $f''$ (concavità).` },
+        { id: 's09.studio.fc11', kind: 'errore', front: String.raw`Asintoto obliquo con $m=0$`, back: String.raw`Se $m=0$ e $q$ è finito, l'asintoto è **orizzontale**, non obliquo.` },
+        { id: 's09.studio.fc12', kind: 'errore', front: String.raw`Punto escluso dal dominio = asintoto?`, back: String.raw`No, non sempre. Un punto escluso è solo candidato: se il limite è finito non c'è asintoto. Esempio: $\dfrac{x^2-1}{x-1}=x+1$ per $x\neq1$, limite finito in $1$.` },
+        { id: 's09.studio.fc13', kind: 'def', front: String.raw`Punto angoloso`, back: String.raw`$x_0$ è angoloso se le derivate laterali $f'_-(x_0)$ e $f'_+(x_0)$ esistono finite ma sono diverse. Non è un punto stazionario, ma va controllato tra i candidati.` },
+        { id: 's09.studio.fc14', kind: 'metodo', front: String.raw`Come disegnare il grafico finale`, back: String.raw`Prima gli asintoti, poi i punti notevoli (zeri, estremi, flessi), poi concavità e direzione. Il grafico deve rispettare **tutte** le informazioni raccolte.` },
+      ],
+    },
   ],
 };
