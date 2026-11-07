@@ -33,6 +33,13 @@ export function App() {
   const [, force] = useState(0);
   const [route, setRoute] = useState({ name: 'tab', tab: store.st.profile.onboarded ? 'home' : 'onboarding' });
   const [toast, setToast] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  // Titolo grande a riposo, titolo compatto nella barra solo quando si scorre (convenzione iOS per i titoli grandi)
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   useEffect(() => store.subscribe(() => force((n) => n + 1)), []);
   useEffect(() => {
     store.toast = (msg) => {
@@ -40,7 +47,6 @@ export function App() {
       setTimeout(() => setToast((t) => (t === msg ? null : t)), 2600);
     };
   }, []);
-  useEffect(() => applyTheme(store.st.settings.theme), [store.st.settings.theme]);
 
   const go = (r) => {
     const from = route.name === 'tab' ? route.tab : route.from;
@@ -96,7 +102,7 @@ export function App() {
 
   return html`<div class="shell">
     ${showChrome && html`<header class="topbar"><div class="wrap">
-      <div class="brand"><span class="mark" aria-hidden="true">∫</span><span>Analisi 1</span></div>
+      <h1 class=${"topbar-title" + (scrolled ? " on" : "")}>${TABS.find((t) => t.id === route.tab)?.label || ''}</h1>
       <span class="spacer"></span>
       <span class=${'stat flame' + (sk ? '' : ' off')} title="Giorni consecutivi di studio" aria-label=${`${sk} giorni di fila`}><${I.flame} />${sk}</span>
       <span class="stat bolt" title="Esperienza totale" aria-label=${`${totalXp(st)} XP`}><${I.bolt} />${totalXp(st)}</span>
@@ -126,12 +132,6 @@ function TabScreen({ tab, go }) {
   if (tab === 'exams') return html`<${ExamsHub} go=${go} />`;
   if (tab === 'theory') return html`<${TheoryHub} go=${go} />`;
   return html`<${Profile} />`;
-}
-
-function applyTheme(t) {
-  const root = document.documentElement;
-  if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t);
-  else root.removeAttribute('data-theme');
 }
 
 /** Schermata vuota: icona, perché è vuota, cosa fare. Mai una pagina bianca. */
@@ -291,10 +291,6 @@ function Profile() {
           </select></div>
         <div class="list-item"><label for="p-date" class="grow" style="flex:1">Data dell'esame</label>
           <input id="p-date" type="date" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.profile.examDate} onChange=${(e) => setP({ examDate: e.currentTarget.value })} /></div>
-        <div class="list-item"><label for="p-theme" class="grow" style="flex:1">Tema</label>
-          <select id="p-theme" class="input" style="width:50%;min-height:44px;padding:8px 10px" value=${st.settings.theme} onChange=${(e) => setS({ theme: e.currentTarget.value })}>
-            <option value="system">Come il sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option>
-          </select></div>
         <div class="list-item"><label for="p-sound" class="grow" style="flex:1">Suoni di feedback</label>
           <input id="p-sound" type="checkbox" style="width:24px;height:24px;accent-color:var(--accent)" checked=${st.settings.sound} onChange=${(e) => { setS({ sound: e.currentTarget.checked }); sound.enabled = e.currentTarget.checked; }} /></div>
       </div>

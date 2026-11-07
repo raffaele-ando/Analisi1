@@ -38,6 +38,7 @@ tools/
   check-imports.mjs   verifica gli import dei moduli
   check-contrast.mjs  verifica il contrasto WCAG dei token colore
   test-sync.mjs       test della sincronizzazione con database in memoria
+  audit-targets.mjs   controllo nel browser dei bersagli sotto 48 px
 ```
 
 ## Comandi

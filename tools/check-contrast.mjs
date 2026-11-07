@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Verifica il contrasto WCAG 2.2 delle coppie colore/sfondo, leggendo i token reali da app/app.css.
-// Tema chiaro: blocco :root. Tema scuro: blocco :root:not([data-theme='light']) e :root[data-theme='dark'].
+// Tema chiaro: blocco :root. Tema scuro: blocco @media (prefers-color-scheme: dark), come da HIG (aspetto di sistema).
 // Soglie: testo normale 4.5:1 (WCAG 1.4.3), componenti grafici e bordi 3:1 (WCAG 1.4.11).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,7 +27,7 @@ function blockAfter(marker) {
 }
 
 const light = tokens(blockAfter(':root {'));
-const dark = { ...light, ...tokens(blockAfter(":root:not([data-theme='light'])")) };
+const dark = { ...light, ...tokens(blockAfter('@media (prefers-color-scheme: dark)')) };
 
 const lin = (c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 const lum = (h) => {

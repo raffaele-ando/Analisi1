@@ -113,6 +113,7 @@ export function ExamRunner({ exam: examProp, resume, onExit, go }) {
   const [tab, setTab] = useState('A');
   const [now, setNow] = useState(Date.now());
   const [confirm, setConfirm] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const saveT = useRef(null);
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
@@ -175,11 +176,15 @@ export function ExamRunner({ exam: examProp, resume, onExit, go }) {
   const openPending = review && [...qs.A, ...qs.B].some((q) => q.type === 'open' && !att.answers[q.id]?.revealed);
   return html`<div class="player">
     <div class="player-top"><div class="wrap">
-      <button class="x-btn" aria-label="Esci" onClick=${onExit}><${I.x} /></button>
+      <button class="x-btn" aria-label="Esci" onClick=${() => (!review && Object.keys(att.answers || {}).length ? setLeaving(true) : onExit())}><${I.x} /></button>
       <b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${exam.title}</b>
       ${!review && html`<span class=${'chip ' + (remaining < 10 * 60000 ? 'red' : 'blue')}><${I.clock} /> ${remaining > 0 ? fmtTime(remaining) : 'Tempo scaduto'}</span>`}
       ${review && html`<span class="chip hl">Correzione</span>`}
     </div></div>
+    ${leaving && html`<div class="wrap"><div class="confirm-box" role="alertdialog" aria-label="Uscire dalla prova">
+      <b>Uscire dalla prova?</b><span class="small">Le risposte sono salvate: potrai riprendere la prova dalla sezione Esami.</span>
+      <div class="row-wrap"><button class="btn ghost sm" onClick=${onExit}>Esci</button><button class="btn sm" onClick=${() => setLeaving(false)}>Continua la prova</button></div>
+    </div></div>`}
     <div class="wrap stack" style="padding-bottom:160px">
       ${review && html`<div class="callout">Consegnato. Gli esercizi sono corretti in automatico. Per ogni domanda di teoria apri la risposta modello e spunta i criteri che hai soddisfatto${ai.available ? ', oppure chiedi la correzione a Claude' : ''}.</div>`}
       ${!review && remaining <= 0 && html`<div class="callout warn">Tempo scaduto: all'esame dovresti consegnare ora.</div>`}

@@ -1,128 +1,93 @@
-# Design: principi e regole
+# Design: regole, fonti e decisioni
 
-Questo documento fissa le regole di design dell'app e le ragioni di ogni scelta.
-Le fonti sono le linee guida delle piattaforme (Apple Human Interface Guidelines, Material Design 3),
-gli standard di accessibilità (WCAG 2.2) e il comportamento delle app di apprendimento più usate
-(Duolingo, Anki, Khan Academy, Brilliant). Dove riporto un numero di una linea guida lo indico;
-i valori di Apple e Material sono quelli noti delle linee guida, non ricontrollati sulla pagina ufficiale.
+Ogni regola dice da dove viene e con quale grado di verifica:
 
-## 1. Principi (condivisi da HIG, Material e dalle app di studio)
+- **[verificata]**: letta nel testo della fonte primaria o nella copia verbatim indicata.
+- **[conoscenza]**: dalla mia conoscenza dei principi di design, non verificata sul testo ufficiale.
 
-1. **Chiarezza.** Un'azione principale per schermata. Testo leggibile, icone precise, contrasto adeguato.
-   Le app di studio migliori (Anki, Khan Academy) mostrano una domanda alla volta e una sola azione in evidenza.
-2. **Deferenza.** L'interfaccia sta indietro, il contenuto (la formula, la domanda) è il protagonista.
-   Niente sfondi decorativi dietro al testo: lo sfondo a quadretti è stato tolto per questo.
-3. **Profondità con misura.** I livelli (sfondo, superfici, foglio di feedback) si distinguono con il colore
-   e con poche ombre. Il movimento spiega un cambiamento, non lo decora.
-4. **Coerenza.** Stessi raggi, spaziature e stati ovunque. Pochi elementi ripetuti in modo identico
-   valgono più di molti stili diversi.
-5. **Semplicità prima della funzione.** Quello che non serve in una schermata va in un'altra.
-   Il voto stimato, la sincronizzazione e le statistiche stanno nel Profilo, non nel percorso.
+Le linee guida di Apple e di Material sono in larga parte dinamiche (pagine generate via JavaScript), quindi
+non tutte sono leggibili con gli strumenti disponibili. Per questo distinguo le fonti.
 
-## 2. Navigazione
+## 1. Fonti
 
-- **Barra inferiore con 5 destinazioni al massimo** con etichetta sempre visibile (HIG: tab bar;
-  Material 3: navigation bar con 3–5 destinazioni). Le etichette sono in 12 px, semibold.
-- **Titolo di schermata** in alto, a sinistra; sulle pagine secondarie un pulsante "indietro" (chevron),
-  e sulle sessioni a tutto schermo una "X" per uscire, come in Duolingo.
-- **Sessioni a tutto schermo** (lezione, ripasso, esame) senza barra inferiore: sono compiti, non navigazione.
-- **Profilo in liste raggruppate** (stile impostazioni di iOS): righe con etichetta, valore e azione.
+| Fonte | Stato | Dove |
+|---|---|---|
+| Apple, *Human Interface Guidelines* (edizione attuale) | verificata via copia verbatim di 172 pagine, generata dai dati DocC di Apple | <https://developer.apple.com/design/human-interface-guidelines/> · copia: <https://github.com/valentinllpz/apple-human-interface-guidelines> (agent skill, verbatim, dal sito Apple) |
+| Google Support, *Touch target size* (Android) | verificata sul testo | <https://support.google.com/accessibility/android/answer/7101858> |
+| W3C, *WCAG 2.2*, 2.5.8 Target Size (Minimum) | verificata sul testo | <https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html> |
+| Material Design 3 (m3.material.io) | **non verificata**: le pagine sono generate via JavaScript e non si leggono con gli strumenti disponibili | <https://m3.material.io/> |
+| Material Web (libreria, documentazione d'implementazione) | letta: `docs/components/fab.md` ha un'opzione di area di tocco predefinita a 48 dp | <https://github.com/material-components/material-web> |
 
-## 3. Bersagli tattili e interazione
+Non copio il testo di Apple nel repository: lo cito e ne applico i principi.
 
-- Minimo **44 × 44 pt** per Apple HIG; **48 × 48 dp** per Material 3. Usiamo **44 px come minimo assoluto**
-  e 56 px per le risposte degli esercizi.
-- WCAG 2.2 criterio 2.5.8 (livello AA): minimo **24 × 24 CSS px** (verificato); il livello AAA (2.5.5) chiede 44 px.
-  Seguiamo il valore più alto.
-- Gli stati (selezionato, corretto, sbagliato, bloccato) si distinguono con **colore + forma/icona + testo**.
-  Mai solo colore (WCAG 1.4.1).
+## 2. Accessibilità e bersagli
 
-## 4. Tipografia
+- **Bersaglio tattile minimo 44 × 44 pt** [verificata, HIG `buttons`: «a button needs a hit region of at least 44x44 pt»].
+- **Dimensione minima dei controlli 28 × 28 pt** per i controlli meno importanti [verificata, HIG `accessibility`, tabella].
+- **Spaziatura: circa 12 pt attorno agli elementi con cornice, 24 pt per quelli senza** [verificata, HIG `accessibility`].
+- **48 × 48 dp, spaziatura di 8 dp tra i target** [verificata, Google Support].
+- **24 × 24 px minimo (AA), 44 × 44 px (AAA)** [verificata, WCAG 2.2 2.5.8 e 2.5.5].
+- **Applicato**: `--touch: 48px` (soddisfa Apple e Material); pulsanti principali alti 52 px; spaziatura dei controlli 12 px.
+- **Contrasto del testo**: 4,5:1 fino a 17 pt, 3:1 da 18 pt in su e per il grassetto [verificata, HIG `accessibility`]. L'app applica 4,5:1 a tutto il testo, più restrittivo. Verificato con `tools/check-contrast.mjs` (WCAG 1.4.3 e 1.4.11).
+- **Il colore non è mai l'unico segnale** [verificata, HIG `color`: «Avoid relying solely on color...»]. Ogni stato ha colore, forma/icona e testo.
+- **Testo che scala**: unità `rem` su tutto il testo, così lo zoom del browser e le preferenze dell'utente funzionano [verificata, HIG `accessibility`: «Support larger text sizes», ingrandimento fino al 200%].
 
-- **Caratteri di sistema** per l'interfaccia (SF su Apple, Roboto su Android, Segoe su Windows): è ciò
-  che Apple e Material raccomandano per sentirsi nativi, e riduce il peso della pagina.
-  La matematica resta in KaTeX.
-- **Scala a 6 livelli**, non di più: titolo grande 28/34 (semibold), titolo 22/28, sottotitolo 17/24 (semibold),
-  corpo 17/24 (HIG usa 17 pt come corpo), didascalia 14/20, etichetta 12/16.
-- Lunghezza di riga non oltre ~65 caratteri nel testo di teoria.
-- Numeri che si allineano: `font-variant-numeric: tabular-nums`.
+## 3. Navigazione
 
-## 5. Colore
+- **Barra inferiore con 5 destinazioni al massimo**, con etichette di una sola parola [verificata, HIG `tab-bars`: «fewer tabs» e «Use single words»].
+- **Non nascondere né disattivare le voci della barra**: una sezione vuota spiega perché è vuota [verificata, HIG `tab-bars`: «Don't disable or hide tab bar buttons»]. Applicato: la scheda Ripasso vuota mostra uno stato vuoto.
+- **La barra resta visibile durante la navigazione** tranne che nei modali a schermo intero, che sono compiti temporanei [verificata, HIG `tab-bars`].
+- **Titolo della schermata, mai il nome dell'app** [verificata, HIG `toolbars`: «Don't title windows with your app name»]. Applicato: la barra mostra il nome della sezione.
+- **Titolo grande a riposo, titolo compatto nella barra solo quando si scorre** [conoscenza, è la convenzione iOS per i titoli grandi].
+- **Sessioni a tutto schermo con una X per uscire** [verificata, HIG `modality`: «Always give people an obvious way to dismiss a modal view»].
+- **Conferma prima di chiudere un modale se si perde lavoro dell'utente** [verificata, HIG `modality`]. Applicato: uscita da una lezione con risposte date e da una prova d'esame in corso.
 
-- **Un solo colore di marca** (blu) per le azioni e lo stato attivo. Il verde indica solo successo,
-  il rosso solo errore, l'arancio solo la serie di giorni. Niente colore per sezione.
-- **Ruoli semantici** (come i color role di Material 3): `surface`, `surface-raised`, `ink`, `ink-2`, `accent`,
-  `success`, `danger`, `warning`. Ogni ruolo ha un valore per tema chiaro e uno per tema scuro.
-- **Contrasto**: testo normale almeno 4,5:1, testo grande e componenti grafici almeno 3:1 (WCAG 1.4.3 e 1.4.11).
-  Il tema va verificato con uno script (`tools/check-contrast.mjs`), non a occhio.
-- Il tema scuro non è un'inversione: le superfici usano toni più chiari del fondo (elevazione tonale).
+## 4. Onboarding e impostazioni
 
-## 6. Forma, spaziatura, elevazione
+- **Insegnare con l'interazione** [verificata, HIG `onboarding`: «Teach through interactivity»]. Applicato: l'onboarding dà subito la prima lezione.
+- **Posticipare le impostazioni non essenziali e usare valori predefiniti** [verificata, HIG `onboarding`: «Postpone nonessential setup flows»]. Applicato: il nome, l'obiettivo e la data d'esame stanno nel Profilo.
+- **Una sola schermata di benvenuto**, breve [verificata, HIG `onboarding`: «brief, enjoyable experience»].
+- **Niente impostazioni di aspetto proprie dell'app: l'app segue il sistema** [verificata, HIG `dark-mode`: «Avoid offering an app-specific appearance setting»]. Applicato: il selettore del tema è stato tolto.
+- **Profilo in liste raggruppate, con la freccia sulle righe che eseguono un'azione** [conoscenza, come le impostazioni di sistema; coerente con HIG `lists-and-tables`].
 
-- **Raggi a tre livelli**: 10 px (controlli piccoli), 14 px (pulsanti e campi), 20 px (schede).
-  Nient'altro.
-- **Spaziatura su scala di 4**: 4, 8, 12, 16, 20, 24, 32, 40. Margine laterale 16 px su telefono, 24 px su schermo largo.
-- **Un'ombra** per le schede che stanno sopra allo sfondo; niente ombre sui testi o sulle liste.
+## 5. Tipografia
 
-## 7. Icone
+- **Testo di corpo a 17 pt** [verificata, HIG `typography`: 17 pt di default per il corpo su iOS]. Applicato: 1,0625 rem (17 px con la radice standard).
+- **Evitare pesi leggeri** [verificata, HIG `typography`: «avoid light font weights»]. Applicato: pesi da 400 in su.
+- **Pochi caratteri** [verificata, HIG `typography`]. Applicato: caratteri di sistema più KaTeX per le formule.
+- **Caratteri di sistema per l'interfaccia** [verificata nella sostanza: HIG `typography`, «Consider using the built-in text styles»; Material usa il sistema come base].
 
-- Un solo set di icone: griglia 24 px, tratto 2 px, angoli arrotondati, nessuna forma piena mescolata al tratto.
-- Dove esiste un simbolo matematico, si usa il simbolo stesso (es. $\int$, $\lim$, $\sum$), composto con KaTeX.
-  È più chiaro di un'icona disegnata a mano e richiama il contenuto del corso.
-- Le icone decorative hanno `aria-hidden`; quelle che fanno da unico testo hanno un'etichetta.
+## 6. Icone, colore, stati
 
-## 8. Stati e feedback
+- **Icone con dimensione, peso e stile coerenti, e testo alternativo** [verificata, HIG `icons`]. Applicato: un solo set con tratto di 2 px; icone decorative con `aria-hidden`.
+- **Peso dell'icona in linea con il testo accanto** [verificata, HIG `icons`].
+- **Un solo significato per ogni colore** [verificata, HIG `color`: «Avoid using the same color to mean different things»]. Applicato: blu per le azioni e lo stato attivo, verde solo per il successo, rosso solo per l'errore, arancio per la serie.
+- **Dimensione e forma dei simboli matematici** [conoscenza]: i simboli di sezione sono formule KaTeX, più chiare di icone disegnate a mano per un corso di matematica.
 
-- **Vuoto**: un'icona, una frase che spiega perché è vuoto, un'azione per uscirne. Mai una schermata bianca.
-- **Caricamento**: scheletro della forma finale (o nessuno se la risposta è immediata).
-- **Errore**: spiega che cosa è successo e che cosa fare, senza scusarsi a vuoto.
-- **Feedback di un esercizio**: un foglio in basso con icona, esito in parole ("Corretto" / "Non ancora"),
-  spiegazione, poi un solo pulsante. Come Duolingo, ma con il testo che dice l'esito.
-- **Progressione**: barra di avanzamento sempre visibile durante una sessione; niente numeri che cambiano
-  senza un motivo.
+## 7. Feedback, caricamento, movimento
 
-## 9. Onboarding
+- **Mostrare subito qualcosa** [verificata, HIG `loading`: «Show something as soon as possible»]. Applicato: i contenuti sono locali e appaiono subito.
+- **Indicatori di avanzamento determinati quando possibile, nella stessa posizione** [verificata, HIG `progress-indicators`]. Applicato: anelli e barre con valore, barra di avanzamento sempre in cima alla sessione.
+- **Feedback breve e preciso; niente animazioni sulle interazioni frequenti** [verificata, HIG `motion`: «generally avoid adding motion to UI interactions that occur frequently»]. Applicato: rimosso il rimbalzo sul nodo "Inizia".
+- **Il movimento è opzionale** [verificata, HIG `motion`: «Make motion optional»]. Applicato: `prefers-reduced-motion` azzera le animazioni.
+- **Conferma di un'azione significativa completata** [verificata, HIG `feedback`]. Applicato: riepilogo a fine lezione.
 
-- Due schermate al massimo: la promessa in una frase, poi l'obiettivo giornaliero. Niente elenchi di funzioni.
-- Si può saltare. Si arriva al primo esercizio entro un minuto (principio "prova prima", come Duolingo).
-- Il voto stimato non compare finché non ci sono dati sufficienti: un numero che sembra un verdetto il primo giorno
-  scoraggia e non è affidabile.
+## 8. Materiali e sistema
 
-## 10. Movimento
+- **Liquid Glass** [verificata come presente nell'HIG 2026]: è un materiale nativo di iOS. La web app usa solo una sfocatura leggera della barra superiore e non imita il materiale del sistema.
+- **Material 3: navigazione inferiore, ruoli colore, scala tipografica, forme** [conoscenza, non verificata sul testo]. Applicato come riferimento per la struttura, non come copia.
 
-- Transizioni brevi (150–250 ms), curve standard. Il movimento decorativo (rimbalzi) è al massimo in un punto.
-- Rispetta `prefers-reduced-motion`: senza animazioni non cambia il significato di nulla.
+## 9. Testo e microcopy
 
-## 11. Testo e microcopy
+- **Verbi sui pulsanti**: "Verifica", "Continua", "Ripassa", "Inizia" [conoscenza].
+- **Frasi brevi, niente giudizi sulla persona**: "Non ancora" invece di "Sbagliato" [conoscenza].
 
-- Verbi sui pulsanti: "Verifica", "Continua", "Ripassa", "Inizia". Mai "OK" generico.
-- Frasi brevi, italiano semplice, nessuna frase di riempimento. Il tono è quello di un buon ripetitore.
-- Non dare giudizi sulla persona: "Non ancora" è meglio di "Sbagliato".
+## 10. Verifiche automatiche
 
-## 11b. Decisioni prese nel redesign (e perché)
+- `node tools/check-contrast.mjs`: contrasto WCAG di tutte le coppie testo/sfondo, tema chiaro e scuro, letto dai token reali.
+- `node tools/audit-targets.mjs <url>`: controllo nel browser che segnala ogni elemento interattivo sotto 48 px (richiede Playwright).
 
-- **Sfondo piatto**, senza quadretti: il contenuto è il protagonista (principio 2).
-- **Caratteri di sistema** per l'interfaccia: nessun download da Google Fonts, aspetto nativo su ogni piattaforma.
-- **Un colore di marca**, niente colore per sezione: le sezioni si distinguono per numero, simbolo e posizione.
-- **Simboli di sezione in KaTeX** ($\int$, $\lim$, $\sum$…) sui nodi del percorso: sono l'icona più chiara
-  per un corso di matematica, e non richiedono un set di icone disegnate a mano.
-- **Un'azione principale** nella schermata Percorso ("Continua"), che è la lezione corrente.
-- **Voto stimato nascosto** fino a tre lezioni completate: prima non significa nulla.
-- **Profilo in liste raggruppate** con freccia sulle righe che eseguono un'azione (indicatore di azione).
-- **Stati delle risposte** con colore + icona + testo.
-- **Onboarding in due schermate**, con una formula reale come elemento visivo al posto di un elenco di funzioni.
+## 11. Cosa non so ancora
 
-## 12. Accessibilità: checklist
-
-- Contrasto verificato con `node tools/check-contrast.mjs` (legge i token da `app/app.css`); focus visibile su ogni controllo; ordine di tabulazione logico.
-- Titoli con gerarchia (un `h1` per schermata); tab con `aria-current`; progressi con `role="progressbar"`.
-- Nessuna informazione solo nel colore; nessuna solo nel movimento.
-- Testo che scala con la dimensione scelta dall'utente (unità `rem`, non pixel fissi per il testo).
-- Testi alternativi per i grafici (`aria-label`) e per le formule (il testo LaTeX resta leggibile da lettore di schermo tramite KaTeX).
-
-## Riferimenti
-
-- Apple, *Human Interface Guidelines*: navigazione, barre, layout, tipografia, colore, icone.
-- Google, *Material Design 3*: navigation bar, color roles, type scale, touch targets.
-- W3C, *WCAG 2.2*: 1.4.1, 1.4.3, 1.4.11, 2.5.5, 2.5.8.
-- Duolingo, Anki, Khan Academy, Brilliant: pattern di apprendimento su mobile (osservati, non copiati).
+- Le pagine di Material 3 (navigazione, colore, forme) non le ho lette sul testo ufficiale. Per confermarle serve una copia offline della documentazione.
+- Il comportamento su iPhone e Android reali non è stato provato.

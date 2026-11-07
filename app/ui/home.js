@@ -91,7 +91,7 @@ export function Home({ go }) {
             const cr = crowns(course, st, sk.id);
             const dx = Math.round(Math.sin(i * 0.95) * 44);
             const isCurrent = sk.id === cur && unlocked;
-            const cls = 'node' + (!unlocked ? ' locked' : complete ? ' done' : '') + (isCurrent ? ' current pulse' : '');
+            const cls = 'node' + (!unlocked ? ' locked' : complete ? ' done' : '') + (isCurrent ? ' current' : '');
             const frac = ldone / total;
             const label = !unlocked ? sk.title + ', bloccata' : complete ? sk.title + ', completata' : sk.title + (frac > 0 ? `, ${ldone} di ${total} lezioni` : '');
             return html`<div class=${cls} style=${`--dx:${dx}px`}>
@@ -153,54 +153,24 @@ export function SkillSheet({ skillId, go, onClose }) {
 }
 
 export function Onboarding({ onDone }) {
-  const p = store.st.profile;
-  const [step, setStep] = useState(0);
-  const [name, setName] = useState(p.name || '');
-  const [goal, setGoal] = useState(p.goal || 50);
-  const [examDate, setExamDate] = useState(p.examDate || '');
-  const goals = [
-    [20, 'Leggero', '10 minuti al giorno'],
-    [50, 'Regolare', '20 minuti al giorno'],
-    [100, 'Intenso', '40 minuti al giorno'],
-  ];
+  // Una sola schermata: la promessa, una formula reale, e si parte. Le impostazioni (nome, obiettivo,
+  // data d'esame) restano nel Profilo, con valori predefiniti: HIG, Onboarding, "postpone nonessential setup".
   const finish = (start) => {
-    store.setProfile({ name: name.trim(), goal, examDate, onboarded: true });
+    store.setProfile({ onboarded: true });
     onDone(start);
   };
-  if (step === 0) {
-    return html`<div class="wrap stack" style="padding-top:48px;min-height:80vh;justify-content:space-between">
-      <div class="stack">
-        <div class="brand"><span class="mark" aria-hidden="true">∫</span>Analisi 1</div>
-        <h1>Dalle basi al 30 e lode, una lezione alla volta.</h1>
-        <p class="muted">Lezioni brevi, correzione immediata e ripasso nel momento giusto. Gli esercizi sono quelli dei temi d'esame.</p>
-      </div>
-      <div class="card flat center" style="padding:32px 16px" aria-hidden="true">
-        <span style="font-size:30px" dangerouslySetInnerHTML=${{ __html: tex('\\int_0^1 x^2\\,dx=\\tfrac{1}{3}') }}></span>
-      </div>
-      <div class="stack">
-        <button class="btn block" onClick=${() => setStep(1)}>Inizia</button>
-        <button class="btn quiet block" onClick=${() => finish('test')}>Ho già studiato la matematica</button>
-      </div>
-    </div>`;
-  }
-  return html`<div class="wrap stack" style="padding-top:32px;padding-bottom:40px">
-    <div class="stack-sm">
-      <p class="eyebrow">Ultimo passo</p>
-      <h2>Quanto tempo puoi studiare al giorno?</h2>
+  return html`<div class="wrap stack" style="padding-top:48px;min-height:80vh;justify-content:space-between">
+    <div class="stack">
+      <div class="brand"><span class="mark" aria-hidden="true">∫</span>Analisi 1</div>
+      <h1>Dalle basi al 30 e lode, una lezione alla volta.</h1>
+      <p class="muted">Lezioni brevi, correzione immediata e ripasso nel momento giusto. Gli esercizi sono quelli dei temi d'esame.</p>
     </div>
-    <div class="stack-sm" role="radiogroup" aria-label="Obiettivo giornaliero">
-      ${goals.map(([g, l, t]) => html`<button class=${'opt' + (goal === g ? ' sel' : '')} role="radio" aria-checked=${goal === g} onClick=${() => setGoal(g)}>
-        <span class="stack-sm" style="gap:0;flex:1"><b>${l}</b><span class="small muted">${t}</span></span>
-        ${goal === g && html`<span class="state"><${I.check} /></span>`}
-      </button>`)}
+    <div class="card flat center" style="padding:32px 16px" aria-hidden="true">
+      <span style="font-size:1.875rem" dangerouslySetInnerHTML=${{ __html: tex('\\int_0^1 x^2\\,dx=\\tfrac{1}{3}') }}></span>
     </div>
-    <div class="field"><label for="ob-name">Come ti chiami? <span class="faint">(facoltativo)</span></label>
-      <input id="ob-name" class="input" value=${name} onInput=${(e) => setName(e.currentTarget.value)} /></div>
-    <div class="field"><label for="ob-date">Data dell'esame <span class="faint">(facoltativa)</span></label>
-      <input id="ob-date" type="date" class="input" value=${examDate} onInput=${(e) => setExamDate(e.currentTarget.value)} /></div>
-    <div class="stack-sm" style="margin-top:8px">
+    <div class="stack">
       <button class="btn block" onClick=${() => finish('zero')}>Inizia la prima lezione</button>
-      <button class="btn quiet block" onClick=${() => setStep(0)}>Indietro</button>
+      <button class="btn quiet block" onClick=${() => finish('test')}>Ho già studiato la matematica</button>
     </div>
   </div>`;
 }
