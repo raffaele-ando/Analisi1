@@ -2628,3 +2628,479 @@ Il segno della derivata dice dove la funzione sale o scende. Lo studio si fa com
     },
   ],
 });
+
+// ===========================================================================
+// s08.hopital · De l'Hôpital
+// ===========================================================================
+SKILLS.push({
+  id: 's08.hopital',
+  title: "De l'Hôpital",
+  summary: String.raw`Riconosci le forme indeterminate 0/0 e ∞/∞, applichi la regola di De l'Hôpital (anche due volte) e sai quando non si può usare.`,
+  prereq: ['s08.teoremi', 's08.regole', 's05.notevoli'],
+  examRefs: ['Appello 10/02/2026 · Parte A', 'Itinere 11/11/2025 · Parte B'],
+  lessons: [
+    {
+      id: 's08.hopital.L1',
+      title: 'La regola e le forme indeterminate',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quando un limite è indeterminato',
+          body: String.raw`Un quoziente $\frac{f(x)}{g(x)}$ per $x\to x_0$ è una **forma indeterminata** quando numeratore e denominatore tendono entrambi a $0$ (forma $\frac00$) oppure entrambi a $\pm\infty$ (forma $\frac{\infty}{\infty}$). In quei casi il limite può valere qualunque cosa: va studiato, non calcolato a occhio.
+
+>* **Teorema di De l'Hôpital.** Siano $f,g$ derivabili vicino a $x_0$ (salvo al più in $x_0$), con $g'\neq0$ vicino a $x_0$, e supponi che $\frac{f(x)}{g(x)}$ sia $\frac00$ o $\frac\infty\infty$. Se esiste $\lim\frac{f'(x)}{g'(x)}$ (finito o infinito), allora
+$$\lim_{x\to x_0}\frac{f(x)}{g(x)}=\lim_{x\to x_0}\frac{f'(x)}{g'(x)}.$$
+
+Attenzione: si derivano **numeratore e denominatore separatamente**, non il quoziente.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\lim_{x\\to0}\\frac{e^x-1}{x}$',
+          problem: String.raw`Calcola $\lim_{x\to0}\frac{e^x-1}{x}$.`,
+          steps: [
+            String.raw`Verifico la forma: $e^0-1=0$ e $0=0$, quindi la forma è $\frac00$.`,
+            String.raw`Derivo numeratore e denominatore separatamente: $\frac{D(e^x-1)}{D(x)}=\frac{e^x}{1}$.`,
+            String.raw`Il limite di $\frac{e^x}{1}$ per $x\to0$ è $\frac{1}{1}=1$.`,
+          ],
+          result: String.raw`$\lim_{x\to0}\frac{e^x-1}{x}=1$, coerente con il limite notevole.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\lim_{x\\to+\\infty}\\frac{\\log x}{x}$',
+          problem: String.raw`Calcola $\lim_{x\to+\infty}\frac{\log x}{x}$.`,
+          steps: [
+            String.raw`Verifico la forma: $\log x\to+\infty$ e $x\to+\infty$: è $\frac{\infty}{\infty}$.`,
+            {
+              text: String.raw`Derivo numeratore e denominatore: $D(\log x)=\frac1x$ e $D(x)=1$. Calcola il limite del nuovo quoziente.`,
+              ask: {
+                type: 'mcq',
+                prompt: String.raw`Quanto vale $\lim_{x\to+\infty}\frac{1/x}{1}$?`,
+                options: [String.raw`$0$`, String.raw`$1$`, String.raw`$+\infty$`, String.raw`non esiste`],
+                answer: 0,
+                explain: String.raw`$\frac{1/x}{1}=\frac1x\to0$ per $x\to+\infty$. Il limite è $0$, e per De l'Hôpital anche quello di partenza.`,
+              },
+            },
+          ],
+          result: String.raw`$\lim_{x\to+\infty}\frac{\log x}{x}=0$: il logaritmo cresce più lentamente di $x$.`,
+        },
+        {
+          id: 's08.hopital.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale limite per $x\to0$ è una forma $\frac00$?`,
+          options: [
+            String.raw`$\frac{\sin x}{x}$`,
+            String.raw`$\frac{x}{x+1}$`,
+            String.raw`$\frac{1}{x}$`,
+            String.raw`$\frac{e^x}{x}$`,
+          ],
+          answer: 0,
+          explain: String.raw`$\sin x\to0$ e $x\to0$: forma $\frac00$. $\frac{x}{x+1}$ è $\frac{0}{1}=0$: non indeterminata, basta sostituire. $\frac1x$ e $\frac{e^x}{x}$ hanno denominatore $0$ e numeratore non nullo: il limite è infinito, non indeterminato.`,
+        },
+        {
+          id: 's08.hopital.L1.q2',
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{\sin(2x)}{x}$.`,
+          answer: '2',
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{2\cos(2x)}{1}\to2$. Il risultato è $2$.`,
+        },
+        {
+          id: 's08.hopital.L1.q3',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $\lim\frac{f'(x)}{g'(x)}$ non esiste, allora $\lim\frac{f(x)}{g(x)}$ non esiste.`,
+          answer: false,
+          explain: String.raw`Falso. Controesempio: $f(x)=x+\sin x$, $g(x)=x$ per $x\to+\infty$. Il quoziente $\frac{f}{g}=1+\frac{\sin x}{x}\to1$, ma $\frac{f'}{g'}=1+\cos x$ non ha limite. De l'Hôpital dice solo: se il quoziente delle derivate ha limite, allora quello di partenza ha lo stesso limite.`,
+        },
+        {
+          id: 's08.hopital.L1.q4',
+          type: 'mcq',
+          prompt: String.raw`Per $\lim_{x\to+\infty}\frac{x+\sin x}{x}$ quale affermazione è corretta?`,
+          options: [
+            String.raw`Il limite vale $1$. Il quoziente delle derivate $1+\cos x$ non ha limite, quindi De l'Hôpital non si può usare: si spezza la frazione`,
+            String.raw`De l'Hôpital dà $\frac{1+\cos x}{1}\to2$, quindi il limite vale $2$`,
+            String.raw`Il limite non esiste, perché $\sin x$ oscilla`,
+            String.raw`Il limite vale $0$, perché $\sin x$ è limitato`,
+          ],
+          answer: 0,
+          explain: String.raw`$\frac{x+\sin x}{x}=1+\frac{\sin x}{x}$, e $\frac{\sin x}{x}\to0$ perché $\sin x$ è limitato: il limite vale $1$. De l'Hôpital qui fallisce, perché $1+\cos x$ non ha limite. Il secondo distrattore è falso: $\cos x$ non tende a nulla. Il terzo è falso: il limite c'è. Il quarto confonde il valore di $\frac{\sin x}{x}$ con quello del limite totale.`,
+        },
+        {
+          id: 's08.hopital.L1.q5',
+          type: 'mcq',
+          prompt: String.raw`Quale è la derivata corretta di $\frac{f}{g}$ da usare in De l'Hôpital, dove $\frac fg$ è $\frac00$?`,
+          options: [
+            String.raw`$\frac{f'}{g'}$`,
+            String.raw`$\frac{f'g-fg'}{g^2}$`,
+            String.raw`$f'g'$`,
+            String.raw`$\frac{f}{g'}$`,
+          ],
+          answer: 0,
+          explain: String.raw`Il teorema usa il quoziente delle derivate $\frac{f'}{g'}$, non la derivata del quoziente. La formula con $g^2$ è la regola del quoziente, che non si usa qui: confonderle è l'errore più comune.`,
+        },
+      ],
+    },
+    {
+      id: 's08.hopital.L2',
+      title: 'Ripetere la regola',
+      cards: [
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\lim_{x\\to0}\\frac{e^x-1-x}{x^2}$',
+          problem: String.raw`Calcola $\lim_{x\to0}\frac{e^x-1-x}{x^2}$.`,
+          steps: [
+            String.raw`Forma $\frac00$: $e^0-1-0=0$ e $0^2=0$. Derivo una volta: $\frac{e^x-1}{2x}$.`,
+            String.raw`Il nuovo quoziente è ancora $\frac00$ ($e^0-1=0$, $2\cdot0=0$). Derivo di nuovo: $\frac{e^x}{2}$.`,
+            String.raw`Il limite di $\frac{e^x}{2}$ per $x\to0$ è $\frac12$.`,
+          ],
+          result: String.raw`$\lim_{x\to0}\frac{e^x-1-x}{x^2}=\frac12$. Coerente con $e^x-1-x\sim\frac{x^2}{2}$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\lim_{x\\to0}\\frac{1-\\cos3x}{x^2}$',
+          problem: String.raw`Calcola $\lim_{x\to0}\frac{1-\cos3x}{x^2}$.`,
+          steps: [
+            String.raw`Forma $\frac00$. Derivo: numeratore $3\sin3x$, denominatore $2x$, quindi $\frac{3\sin3x}{2x}$.`,
+            {
+              text: String.raw`È ancora $\frac00$, ma $\frac{3\sin3x}{2x}=\frac32\cdot\frac{\sin3x}{x}$. Calcola il limite del fattore $\frac{\sin3x}{x}$ (con De l'Hôpital o con il notevole).`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\lim_{x\to0}\frac{\sin3x}{x}$?`,
+                answer: '3',
+                explain: String.raw`Derivo: $\frac{3\cos3x}{1}\to3$. Il limite è $3$.`,
+              },
+            },
+          ],
+          result: String.raw`$\frac32\cdot3=\frac92$: quindi $\lim_{x\to0}\frac{1-\cos3x}{x^2}=\frac92$.`,
+        },
+        {
+          id: 's08.hopital.L2.q1',
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{x-\sin x}{x^3}$.`,
+          answer: '1/6',
+          explain: String.raw`Forma $\frac00$. Derivo una volta: $\frac{1-\cos x}{3x^2}$, ancora $\frac00$. Derivo di nuovo: $\frac{\sin x}{6x}\to\frac16$.`,
+        },
+        {
+          id: 's08.hopital.L2.q2',
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{\log(1+x)}{x}$.`,
+          answer: '1',
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{1/(1+x)}{1}\to1$. È anche il limite notevole.`,
+        },
+        {
+          id: 's08.hopital.L2.q3',
+          type: 'expr',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{\sin(x)-x}{x^3}$. Scrivi il valore: questa volta la risposta è un numero.`,
+          answer: '-1/6',
+          explain: String.raw`È l'opposto del limite precedente: $\frac{\sin x-x}{x^3}=-\frac{x-\sin x}{x^3}\to-\frac16$.`,
+        },
+        {
+          id: 's08.hopital.L2.q4',
+          type: 'num',
+          level: 3,
+          source: 'Appello 10/02/2026 · Parte A',
+          prompt: String.raw`Sia $f$ derivabile due volte con $f(0)=f'(0)=0$ e $f''(0)=1$. Quanto vale $\lim_{x\to0}\dfrac{f(x)}{\log(1-x^2)}$?`,
+          answer: '-1/2',
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{f'(x)}{-2x/(1-x^2)}=\frac{f'(x)(1-x^2)}{-2x}$. Il rapporto $\frac{f'(x)}{x}$ ha limite $f''(0)=1$ (perché $f'(0)=0$), quindi il limite è $\frac{1}{-2}=-\frac12$.`,
+        },
+        {
+          id: 's08.hopital.L2.q5',
+          type: 'mcq',
+          prompt: String.raw`Quale è il valore di $\lim_{x\to0}\frac{\log(1+x)-x}{x^2}$?`,
+          options: [
+            String.raw`$-\frac12$`,
+            String.raw`$\frac12$`,
+            String.raw`$1$`,
+            String.raw`$0$`,
+          ],
+          answer: 0,
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{\frac{1}{1+x}-1}{2x}=\frac{-x}{(1+x)2x}=\frac{-1}{2(1+x)}\to-\frac12$. Il segno negativo viene dal fatto che $\log(1+x)<x$.`,
+        },
+        {
+          id: 's08.hopital.L2.q6',
+          type: 'mcq',
+          prompt: String.raw`Dopo una prima applicazione di De l'Hôpital ottieni ancora $\frac00$. Che cosa fai?`,
+          options: [
+            String.raw`Applico di nuovo De l'Hôpital al quoziente delle derivate, se la forma è ancora indeterminata`,
+            String.raw`Concludo che il limite non esiste`,
+            String.raw`Scrivo il limite come $0$ perché il numeratore è nullo`,
+            String.raw`Derivo il quoziente con la regola del quoziente`,
+          ],
+          answer: 0,
+          explain: String.raw`È lecito ripetere la regola, purché ogni volta la forma resti $\frac00$ o $\frac\infty\infty$ e le ipotesi siano verificate. Il secondo distrattore è falso. Il terzo ignora il denominatore. Il quarto è l'errore di confondere il quoziente delle derivate con la derivata del quoziente.`,
+        },
+      ],
+    },
+    {
+      id: 's08.hopital.L3',
+      title: "Trappole d'esame",
+      cards: [
+        {
+          type: 'learn',
+          title: 'Forme che non sono 0/0 o ∞/∞',
+          body: String.raw`Le forme $0\cdot\infty$, $\infty-\infty$, $1^\infty$, $0^0$, $\infty^0$ **non** sono direttamente quozienti: vanno riscritte.
+- $0\cdot\infty$: scrivi il prodotto come quoziente, $f\cdot g=\frac{f}{1/g}$ oppure $\frac{g}{1/f}$.
+- $\infty-\infty$: raccogli o razionalizza, poi riconduci a un quoziente.
+- $1^\infty$, $0^0$, $\infty^0$: passa al logaritmo, $e^{\log(\cdot)}$, e studia il limite dell'esponente.
+
+Se il quoziente è $\frac{0}{1}$ o $\frac{\infty}{1}$, non serve De l'Hôpital: basta sostituire.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\lim_{x\\to0^+}x\\log x$',
+          problem: String.raw`Calcola $\lim_{x\to0^+}x\log x$. Attenzione: è una forma $0\cdot\infty$.`,
+          steps: [
+            String.raw`Forma $0\cdot\infty$: $x\to0$ e $\log x\to-\infty$. Riscrivo come quoziente: $x\log x=\frac{\log x}{1/x}$.`,
+            String.raw`Ora è $\frac{-\infty}{+\infty}$, cioè $\frac\infty\infty$.`,
+            String.raw`Derivo: $\frac{1/x}{-1/x^2}=-x$, che tende a $0$.`,
+          ],
+          result: String.raw`$\lim_{x\to0^+}x\log x=0$.`,
+        },
+        {
+          id: 's08.hopital.L3.q1',
+          type: 'mcq',
+          prompt: String.raw`Per $\lim_{x\to0^+}x\log x$ (forma $0\cdot\infty$), quale riscrittura è corretta per usare De l'Hôpital?`,
+          options: [
+            String.raw`$\dfrac{\log x}{1/x}$`,
+            String.raw`$\dfrac{x}{\log x}$`,
+            String.raw`$\dfrac{x^2}{\log x}$`,
+            String.raw`$\dfrac{\log x}{x^2}$`,
+          ],
+          answer: 0,
+          explain: String.raw`$\frac{\log x}{1/x}=x\log x$ e il quoziente è $\frac{\infty}{\infty}$. Il secondo, $\frac{x}{\log x}$, è $\frac{0}{\infty}$, cioè $0$ senza De l'Hôpital, quindi non è la riscrittura che serve. Gli altri non sono uguali a $x\log x$.`,
+        },
+        {
+          id: 's08.hopital.L3.q2',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Per $\lim_{x\to0}\dfrac{x}{x+1}$ bisogna usare De l'Hôpital.`,
+          answer: false,
+          explain: String.raw`Falso. Il quoziente è $\frac{0}{0+1}=0$: non è indeterminato. De l'Hôpital si usa solo quando la forma è $\frac00$ o $\frac\infty\infty$.`,
+        },
+        {
+          id: 's08.hopital.L3.q3',
+          type: 'open',
+          points: 2,
+          prompt: String.raw`Enuncia il teorema di De l'Hôpital (forma $\frac00$) e spiega in quale caso non si può usare.`,
+          answer: String.raw`Se $f,g$ sono derivabili vicino a $x_0$ con $g'\neq0$, $\frac{f}{g}$ è $\frac00$ (o $\frac\infty\infty$), e $\lim\frac{f'}{g'}$ esiste (finito o infinito), allora $\lim\frac fg=\lim\frac{f'}{g'}$. Non si usa quando la forma non è indeterminata (per esempio $\frac{0}{1}$) o quando $\lim\frac{f'}{g'}$ non esiste, come per $\frac{x+\sin x}{x}$ a $+\infty$.`,
+          rubric: [
+            String.raw`Ipotesi: derivabilità vicino a $x_0$, $g'\neq0$, forma $\frac00$ o $\frac\infty\infty$`,
+            String.raw`Tesi: uguaglianza dei limiti del quoziente e del quoziente delle derivate`,
+            String.raw`Quando non si applica: forma non indeterminata, oppure $\frac{f'}{g'}$ senza limite`,
+          ],
+        },
+        {
+          id: 's08.hopital.L3.q4',
+          type: 'problem',
+          level: 3,
+          source: "Appello 10/02/2026 · Parte B",
+          points: 4,
+          prompt: String.raw`Calcola i seguenti limiti: (a) $\lim_{x\to0}\frac{e^x-1-x}{x^2}$; (b) $\lim_{x\to0}\frac{\log(1+x)}{x}$; (c) $\lim_{x\to+\infty}\frac{x+\sin x}{x}$. Per (c) spiega perché De l'Hôpital non si applica.`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`(a) $\lim_{x\to0}\frac{e^x-1-x}{x^2}$`,
+              answer: '1/2',
+              explain: String.raw`Due applicazioni: $\frac{e^x-1}{2x}$, poi $\frac{e^x}{2}\to\frac12$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`(b) $\lim_{x\to0}\frac{\log(1+x)}{x}$`,
+              answer: '1',
+              explain: String.raw`Una applicazione: $\frac{1/(1+x)}{1}\to1$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`(c) De l'Hôpital è applicabile a $\frac{x+\sin x}{x}$ per $x\to+\infty$?`,
+              options: [
+                String.raw`No: il quoziente delle derivate $1+\cos x$ non ha limite, anche se il limite di partenza esiste`,
+                String.raw`Sì: il risultato è $\frac{1+\cos x}{1}\to2$`,
+                String.raw`Sì: il limite è $0$`,
+                String.raw`No: la forma non è indeterminata`,
+              ],
+              answer: 0,
+              explain: String.raw`Il limite di partenza vale $1$ (si spezza: $1+\frac{\sin x}{x}$). Ma $1+\cos x$ oscilla, quindi De l'Hôpital non fornisce risposta. Il secondo distrattore è falso: $\cos x$ non tende a $1$. Il quarto è falso: la forma è $\frac{\infty}{\infty}$.`,
+            },
+          ],
+          solution: String.raw`(a) $\frac12$ (due applicazioni). (b) $1$ (una applicazione). (c) Il limite vale $1$, spezzando $\frac{x+\sin x}{x}=1+\frac{\sin x}{x}$; De l'Hôpital non si applica perché $\frac{1+\cos x}{1}$ non ha limite.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.hopital.p1',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const a = R.pick([-3, -2, 2, 3, 4]), b = R.pick([1, 2, 3, 5]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{\sin(${a}x)}{${H.coef(b)}x}$.`,
+          answer: H.fracStr(a, b),
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{${a}\cos(${a}x)}{${b}}\to\frac{${a}}{${b}}=${H.fracStr(a, b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.hopital.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.pick([-3, -2, 2, 3]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{1-\cos(${a}x)}{x^2}$.`,
+          answer: H.fracStr(a * a, 2),
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{${a}\sin(${a}x)}{2x}$, ancora $\frac00$. Riscrivo come $\frac{${a}}{2}\cdot${a}\cdot\frac{\sin(${a}x)}{${a}x}\to\frac{${a * a}}{2}=${H.fracStr(a * a, 2)}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.hopital.p3',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.pick([-2, 2, 3]), b = R.pick([1, 2, 3]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{e^{${a}x}-1}{${H.coef(b)}x}$.`,
+          answer: H.fracStr(a, b),
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{${a}e^{${a}x}}{${b}}\to\frac{${a}}{${b}}=${H.fracStr(a, b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.hopital.p4',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.pick([-2, 2, 3, 4]), b = R.pick([1, 2, 3]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{\log(1+${a}x)}{${H.coef(b)}x}$.`,
+          answer: H.fracStr(a, b),
+          explain: String.raw`Forma $\frac00$. Derivo: $\frac{${a}/(1+${a}x)}{${b}}\to\frac{${a}}{${b}}=${H.fracStr(a, b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.hopital.p5',
+      type: 'gen',
+      level: 3,
+      gen: (R) => {
+        const a = R.pick([-2, 2, 3]), b = R.pick([1, 2, 4]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0}\frac{1-\cos(${a}x)}{${H.coef(b)}x^2}$.`,
+          answer: H.fracStr(a * a, 2 * b),
+          explain: String.raw`Il numeratore è $\sim\frac{${a * a}x^2}{2}$ e il denominatore $${H.coef(b)}x^2$: il rapporto tende a $\frac{${a * a}}{2\cdot${b}}=${H.fracStr(a * a, 2 * b)}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.hopital.p6',
+      type: 'num',
+      prompt: String.raw`Calcola $\lim_{x\to0}\frac{x-\sin x}{x^3}$.`,
+      answer: '1/6',
+      explain: String.raw`Due applicazioni: $\frac{1-\cos x}{3x^2}$, poi $\frac{\sin x}{6x}\to\frac16$.`,
+    },
+    {
+      id: 's08.hopital.p7',
+      type: 'mcq',
+      prompt: String.raw`Quale forma indeterminata è $\lim_{x\to+\infty}\dfrac{x^2}{e^x}$?`,
+      options: [
+        String.raw`$\frac\infty\infty$`,
+        String.raw`$\frac00$`,
+        String.raw`$0\cdot\infty$`,
+        String.raw`non è indeterminata`,
+      ],
+      answer: 0,
+      explain: String.raw`Numeratore e denominatore vanno a $+\infty$: forma $\frac\infty\infty$. De l'Hôpital (due volte) dà $\frac{2x}{e^x}$ e poi $\frac{2}{e^x}\to0$.`,
+    },
+    {
+      id: 's08.hopital.p8',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Il teorema di De l'Hôpital vale anche per $\frac{\sin x}{x}$ con $x\to\infty$, perché la derivata del numeratore esiste.`,
+      answer: false,
+      explain: String.raw`Falso. Per $x\to\infty$ il limite di $\frac{\sin x}{x}$ è $0$ (perché $\sin$ è limitato), ma la forma non è $\frac00$ né $\frac\infty\infty$ (il numeratore non tende a nulla né a infinito). Inoltre $\frac{\cos x}{1}$ non ha limite: è un controesempio alla regola.`,
+    },
+    {
+      id: 's08.hopital.p9',
+      type: 'num',
+      prompt: String.raw`Calcola $\lim_{x\to0^+}x\log x$.`,
+      answer: '0',
+      explain: String.raw`Forma $0\cdot\infty$: riscrivo come $\frac{\log x}{1/x}$ (forma $\frac\infty\infty$). Derivo: $\frac{1/x}{-1/x^2}=-x\to0$.`,
+    },
+    {
+      id: 's08.hopital.p10',
+      type: 'mcq',
+      prompt: String.raw`Per $\lim_{x\to0}\frac{e^x-1}{\sin x}$, De l'Hôpital dà:`,
+      options: [
+        String.raw`$\frac{e^x}{\cos x}\to1$`,
+        String.raw`$\frac{e^x-1}{\cos x}\to0$`,
+        String.raw`$\frac{e^x}{\sin x}\to+\infty$`,
+        String.raw`non si può applicare`,
+      ],
+      answer: 0,
+      explain: String.raw`È $\frac00$: derivo numeratore e denominatore separatamente. $\frac{e^x}{\cos x}\to\frac{1}{1}=1$. Il secondo sbaglia la derivata del numeratore; il terzo è sbagliato come limite.`,
+    },
+    {
+      id: 's08.hopital.p11',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Il teorema di De l'Hôpital consente di calcolare $\lim_{x\to0}\dfrac{x}{x+1}$ derivando numeratore e denominatore.`,
+      answer: false,
+      explain: String.raw`Falso: la forma non è indeterminata ($\frac{0}{1}$), quindi basta sostituire, e il limite è $0$.`,
+    },
+    {
+      id: 's08.hopital.p12',
+      type: 'expr',
+      prompt: String.raw`Calcola la derivata del quoziente $\frac{f}{g}$, cioè scrivi $\left(\frac{x^2}{x+1}\right)'$ (come quoziente di polinomi, con $x\neq-1$).`,
+      answer: '(x^2+2*x)/(x+1)^2',
+      vars: ['x'],
+      domain: [0.3, 2.7],
+      explain: String.raw`Regola del quoziente: $\frac{2x(x+1)-x^2}{(x+1)^2}=\frac{x^2+2x}{(x+1)^2}$. È la derivata del quoziente, non il quoziente delle derivate $\frac{2x}{1}$: De l'Hôpital usa il quoziente delle derivate, cioè $\frac{2x}{1}$, ma per calcolare la derivata del quoziente serve la regola del quoziente.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.hopital.fc1',
+      kind: 'thm',
+      front: String.raw`Teorema di De l'Hôpital`,
+      back: String.raw`Se $f,g$ sono derivabili vicino a $x_0$, $g'\neq0$, $\frac fg$ è $\frac00$ o $\frac\infty\infty$ e $\lim\frac{f'}{g'}$ esiste (finito o infinito), allora $\lim\frac fg=\lim\frac{f'}{g'}$.`,
+    },
+    {
+      id: 's08.hopital.fc2',
+      kind: 'def',
+      front: String.raw`Forme indeterminate di un quoziente`,
+      back: String.raw`$\frac00$ (numeratore e denominatore tendono a $0$) e $\frac{\infty}{\infty}$ (entrambi tendono a $\pm\infty$). Solo queste due permettono di usare De l'Hôpital.`,
+    },
+    {
+      id: 's08.hopital.fc3',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "$\left(\frac fg\right)'=\frac{f'}{g'}$"`,
+      back: String.raw`Sbagliato come identità. De l'Hôpital dice che il **limite** di $\frac fg$ è il limite di $\frac{f'}{g'}$. Per derivare un quoziente si usa $\frac{f'g-fg'}{g^2}$.`,
+    },
+    {
+      id: 's08.hopital.fc4',
+      kind: 'errore',
+      front: String.raw`Quando non vale De l'Hôpital?`,
+      back: String.raw`Quando la forma non è $\frac00$ o $\frac\infty\infty$ (per esempio $\frac01$), oppure quando $\lim\frac{f'}{g'}$ non esiste (per esempio $\frac{x+\sin x}{x}$ a $+\infty$).`,
+    },
+    {
+      id: 's08.hopital.fc5',
+      kind: 'metodo',
+      front: String.raw`Come riscrivere $0\cdot\infty$ e $\infty-\infty$`,
+      back: String.raw`$0\cdot\infty$: scrivi il prodotto come quoziente, $f g=\frac{f}{1/g}$. $\infty-\infty$: raccogli o razionalizza, poi riconduci a un quoziente. $1^\infty$, $0^0$, $\infty^0$: passa al logaritmo.`,
+    },
+    {
+      id: 's08.hopital.fc6',
+      kind: 'formula',
+      front: String.raw`Limiti notevoli ricavati con De l'Hôpital`,
+      back: String.raw`$\lim_{x\to0}\frac{e^x-1}{x}=1$, $\lim_{x\to0}\frac{\sin x}{x}=1$, $\lim_{x\to0}\frac{1-\cos x}{x^2}=\frac12$, $\lim_{x\to0}\frac{\log(1+x)}{x}=1$, $\lim_{x\to0}\frac{x-\sin x}{x^3}=\frac16$.`,
+    },
+    {
+      id: 's08.hopital.fc7',
+      kind: 'metodo',
+      front: String.raw`Ripetere De l'Hôpital`,
+      back: String.raw`Se dopo una derivazione la forma è ancora $\frac00$ o $\frac\infty\infty$, si può applicare di nuovo, purché le ipotesi siano verificate ad ogni passo.`,
+    },
+  ],
+});
