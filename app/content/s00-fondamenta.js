@@ -2134,3 +2134,319 @@ Quindi per risolvere $e^{g(x)} = c$ con $c > 0$ basta applicare il logaritmo: $g
     { id: 's00.esplog.fc8', kind: 'metodo', front: 'Equazione con $e^{2x}$ e $e^x$', back: String.raw`Pongo $t = e^x$ con $t>0$, risolvo l'equazione in $t$ (di solito di secondo grado) e torno a $x = \log t$ per ogni $t>0$.` },
   ],
 });
+
+// =====================================================================
+// s00.trig
+// =====================================================================
+// Tabelle per i generatori (valori notevoli e intersezioni sul cerchio, in [0, 2pi))
+const TRIG_EQ = [
+  { f: 'sin', v: '1/2', tex: '\\frac{1}{2}', sol: [[1, 6], [5, 6]] },
+  { f: 'sin', v: 'sqrt(2)/2', tex: '\\frac{\\sqrt{2}}{2}', sol: [[1, 4], [3, 4]] },
+  { f: 'sin', v: 'sqrt(3)/2', tex: '\\frac{\\sqrt{3}}{2}', sol: [[1, 3], [2, 3]] },
+  { f: 'sin', v: '-1/2', tex: '-\\frac{1}{2}', sol: [[7, 6], [11, 6]] },
+  { f: 'cos', v: '1/2', tex: '\\frac{1}{2}', sol: [[1, 3], [5, 3]] },
+  { f: 'cos', v: 'sqrt(2)/2', tex: '\\frac{\\sqrt{2}}{2}', sol: [[1, 4], [7, 4]] },
+  { f: 'cos', v: 'sqrt(3)/2', tex: '\\frac{\\sqrt{3}}{2}', sol: [[1, 6], [11, 6]] },
+  { f: 'cos', v: '-1/2', tex: '-\\frac{1}{2}', sol: [[2, 3], [4, 3]] },
+];
+// Per le disequazioni: s1 < s2 in (0, pi) per il seno, s2 = 2pi - s1 per il coseno (solo valori positivi)
+const TRIG_D = [
+  { f: 'sin', tex: '\\frac{1}{2}', s1: [1, 6], s2: [5, 6] },
+  { f: 'sin', tex: '\\frac{\\sqrt{2}}{2}', s1: [1, 4], s2: [3, 4] },
+  { f: 'sin', tex: '\\frac{\\sqrt{3}}{2}', s1: [1, 3], s2: [2, 3] },
+  { f: 'cos', tex: '\\frac{1}{2}', s1: [1, 3], s2: [5, 3] },
+  { f: 'cos', tex: '\\frac{\\sqrt{2}}{2}', s1: [1, 4], s2: [7, 4] },
+  { f: 'cos', tex: '\\frac{\\sqrt{3}}{2}', s1: [1, 6], s2: [11, 6] },
+];
+
+S.push({
+  id: 's00.trig',
+  title: 'Trigonometria',
+  summary: String.raw`Saprai usare radianti, circonferenza goniometrica, valori notevoli, identità e formule di addizione e duplicazione, e risolvere equazioni e disequazioni elementari. Senza questo non si studia $\sin$ e $\cos$ né i loro grafici.`,
+  prereq: ['s00.equazioni', 's00.disequazioni'],
+  examRefs: ['Appello 06/07/2026 · Parte B (studio di $2\sin x + \cos 2x$)', 'Appello 15/01/2026 · Parte B (periodicità e segno)'],
+  lessons: [
+    {
+      id: 's00.trig.L1',
+      title: 'Radianti e circonferenza goniometrica',
+      cards: [
+        { type: 'learn', title: 'Angoli in radianti', body: String.raw`Un angolo si misura in **radianti**: il radiante è l'angolo che sottende un arco lungo quanto il raggio. Un giro completo vale $2\pi$ radianti, quindi:
+
+>* **Conversione.** $\pi$ rad $= 180^\circ$. Per passare da gradi a radianti si moltiplica per $\dfrac{\pi}{180}$; da radianti a gradi per $\dfrac{180}{\pi}$.
+
+Esempi: $\dfrac{\pi}{2} = 90^\circ$, $\dfrac{\pi}{3} = 60^\circ$, $\dfrac{3\pi}{4} = 135^\circ$. Nei calcoli dell'esame gli angoli si scrivono **sempre** in radianti.` },
+        { type: 'learn', title: 'La circonferenza goniometrica', body: String.raw`Sulla circonferenza di raggio $1$ centrata nell'origine, l'angolo $\theta$ si misura a partire dal semiasse positivo $x$, in senso antiorario. Il punto corrispondente è
+
+$$P = (\cos\theta,\ \sin\theta).$$
+
+Quindi $\cos\theta$ è l'**ascissa** di $P$ e $\sin\theta$ è la sua **ordinata**. Entrambi stanno tra $-1$ e $1$. La funzione $\tan\theta = \dfrac{\sin\theta}{\cos\theta}$ non è definita quando $\cos\theta = 0$.` },
+        { type: 'num', id: 's00.trig.L1.e1', level: 1,
+          prompt: String.raw`Quanto vale $\sin\dfrac{\pi}{6}$?`,
+          answer: '1/2',
+          explain: String.raw`Il punto di angolo $\frac{\pi}{6}$ (cioè $30^\circ$) ha ordinata $\frac{1}{2}$.` },
+        { type: 'num', id: 's00.trig.L1.e2', level: 1,
+          prompt: String.raw`Quanto vale $\cos\dfrac{\pi}{4}$?`,
+          answer: 'sqrt(2)/2',
+          explain: String.raw`Per $\frac{\pi}{4}$ il punto è sulla bisettrice, con $x = y$ e $x^2+y^2 = 1$: quindi $x = \frac{\sqrt{2}}{2}$.` },
+        { type: 'mcq', id: 's00.trig.L1.e3', level: 1,
+          prompt: String.raw`Quanto vale $\cos\dfrac{\pi}{3}$?`,
+          options: [String.raw`$\dfrac{1}{2}$`, String.raw`$\dfrac{\sqrt{3}}{2}$`, String.raw`$\dfrac{\sqrt{2}}{2}$`, String.raw`$1$`],
+          answer: 0,
+          explain: String.raw`Il punto di angolo $\frac{\pi}{3}$ ($60^\circ$) ha ascissa $\frac{1}{2}$. $\frac{\sqrt{3}}{2}$ è il seno di $\frac{\pi}{3}$: è lo scambio più comune tra seno e coseno.` },
+        { type: 'num', id: 's00.trig.L1.e4', level: 1,
+          prompt: String.raw`Converti in gradi l'angolo $\dfrac{3\pi}{4}$.`,
+          answer: '135',
+          explain: String.raw`$\frac{3\pi}{4} \cdot \frac{180}{\pi} = \frac{3 \cdot 180}{4} = 135$ gradi.` },
+        { type: 'num', id: 's00.trig.L1.e5', level: 1,
+          prompt: String.raw`Quanto vale $\tan\dfrac{\pi}{4}$?`,
+          answer: '1',
+          explain: String.raw`$\tan\frac{\pi}{4} = \frac{\sin(\pi/4)}{\cos(\pi/4)} = \frac{\sqrt2/2}{\sqrt2/2} = 1$.` },
+        { type: 'tf', id: 's00.trig.L1.e6', level: 1,
+          prompt: String.raw`Nell'intervallo $[0,2\pi)$ l'equazione $\cos x = \dfrac{1}{2}$ ha due soluzioni.`,
+          answer: true,
+          explain: String.raw`Vero: $x = \frac{\pi}{3}$ e $x = \frac{5\pi}{3}$, i due punti della circonferenza con ascissa $\frac{1}{2}$.` },
+        { type: 'mcq', id: 's00.trig.L1.e7', level: 1,
+          prompt: String.raw`In quale quadrante il seno è negativo e il coseno è positivo?`,
+          options: ['I', 'II', 'III', 'IV'],
+          answer: 3,
+          explain: String.raw`Nel quarto quadrante l'ascissa è positiva e l'ordinata è negativa. Nel secondo quadrante è il contrario, nel terzo entrambe sono negative.` },
+        { type: 'num', id: 's00.trig.L1.e8', level: 2,
+          prompt: String.raw`Quanto vale $\sin\dfrac{7\pi}{6}$?`,
+          answer: '-1/2',
+          explain: String.raw`$\frac{7\pi}{6} = \pi + \frac{\pi}{6}$ è nel terzo quadrante: il seno è negativo, e il suo modulo è $\sin\frac{\pi}{6} = \frac{1}{2}$.` },
+        { type: 'num', id: 's00.trig.L1.e9', level: 2,
+          prompt: String.raw`Quanto vale $\sin\dfrac{5\pi}{2}$?`,
+          answer: '1',
+          explain: String.raw`Un giro completo è $2\pi$, quindi $\frac{5\pi}{2} = \frac{\pi}{2} + 2\pi$: il punto è quello di $\frac{\pi}{2}$, con seno $1$.` },
+      ],
+    },
+    {
+      id: 's00.trig.L2',
+      title: 'Identità, addizione e duplicazione',
+      cards: [
+        { type: 'learn', title: 'L\'identità fondamentale', body: String.raw`Il punto $P = (\cos x, \sin x)$ sta sulla circonferenza di raggio $1$. Per Pitagora:
+
+>* **Identità fondamentale.** $\sin^2 x + \cos^2 x = 1$ per ogni $x$.
+
+Da questa, dividendo per $\cos^2 x$ (se $\cos x \ne 0$): $1 + \tan^2 x = \dfrac{1}{\cos^2 x}$.
+
+Il segno non si ricava dall'identità: se conosco $\sin x$, il segno di $\cos x$ dipende dal quadrante in cui si trova $x$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Sapendo che $\sin x = \dfrac{3}{5}$ e $x \in \left[0, \dfrac{\pi}{2}\right]$, calcola $\cos x$.`,
+          steps: [
+            String.raw`Dall'identità: $\cos^2 x = 1 - \sin^2 x = 1 - \dfrac{9}{25}$.`,
+            { text: String.raw`Quindi $\cos^2 x = \dfrac{16}{25}$, cioè $\cos x = \pm\dfrac{4}{5}$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $1 - \dfrac{9}{25}$?`, answer: '16/25', explain: String.raw`$1 = \frac{25}{25}$, quindi $\frac{25-9}{25} = \frac{16}{25}$.` } },
+            String.raw`In $\left[0,\frac{\pi}{2}\right]$ il coseno è positivo: $\cos x = \dfrac{4}{5}$.`,
+          ],
+          result: String.raw`$\cos x = \dfrac{4}{5}$.` },
+        { id: 's00.trig.L2.e1', type: 'num', level: 2,
+          prompt: String.raw`Sapendo $\cos x = -\dfrac{1}{3}$ e $x \in \left(\pi, \dfrac{3\pi}{2}\right)$, calcola $\sin x$.`,
+          answer: '-2*sqrt(2)/3',
+          explain: String.raw`$\sin^2 x = 1 - \frac{1}{9} = \frac{8}{9}$, quindi $|\sin x| = \frac{2\sqrt2}{3}$. Nel terzo quadrante il seno è negativo: $\sin x = -\frac{2\sqrt{2}}{3}$.` },
+        { type: 'learn', title: 'Formule di addizione e duplicazione', body: String.raw`Per ogni $a, b$:
+
+- $\sin(a+b) = \sin a\cos b + \cos a\sin b$;
+- $\cos(a+b) = \cos a\cos b - \sin a\sin b$.
+
+Caso particolare $a = b = x$ (duplicazione):
+
+- $\sin 2x = 2\sin x\cos x$;
+- $\cos 2x = \cos^2 x - \sin^2 x = 1 - 2\sin^2 x = 2\cos^2 x - 1$.
+
+>! **Errore tipico.** $\cos(a+b) \ne \cos a + \cos b$ e $\sin 2x \ne 2\sin x$. Il seno e il coseno non si distribuiscono su somme o multipli dell'angolo.` },
+        { id: 's00.trig.L2.e2', type: 'mcq', level: 2,
+          prompt: String.raw`Quale uguaglianza NON è un'identità, cioè non vale per ogni $a, b$?`,
+          options: [String.raw`$\sin^2 a + \cos^2 a = 1$`, String.raw`$\cos(a+b) = \cos a\cos b - \sin a\sin b$`, String.raw`$\cos(a+b) = \cos a + \cos b$`, String.raw`$\sin 2a = 2\sin a\cos a$`],
+          answer: 2,
+          explain: String.raw`Le prime tre sono formule corrette. $\cos(a+b) = \cos a + \cos b$ è falsa: con $a = b = \frac{\pi}{2}$ a sinistra c'è $\cos\pi = -1$, a destra $0$. La somma dell'angolo non si distribuisce sul coseno.` },
+        { id: 's00.trig.L2.e3', type: 'num', level: 2,
+          prompt: String.raw`Sapendo $\sin x = \dfrac{1}{3}$, quanto vale $\cos 2x$? Usa $\cos 2x = 1 - 2\sin^2 x$.`,
+          answer: '7/9',
+          explain: String.raw`$\cos 2x = 1 - 2\cdot\frac{1}{9} = 1 - \frac{2}{9} = \frac{7}{9}$.` },
+        { id: 's00.trig.L2.e4', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni $x \in \R$ vale $\sin 2x = 2\sin x$.`,
+          answer: false,
+          explain: String.raw`Falso: con $x = \frac{\pi}{2}$ si ha $\sin\pi = 0$, mentre $2\sin\frac{\pi}{2} = 2$. La formula corretta è $\sin 2x = 2\sin x\cos x$.` },
+        { id: 's00.trig.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\sin 2x$ per $x = \dfrac{\pi}{6}$, usando $\sin 2x = 2\sin x\cos x$.`,
+          answer: 'sqrt(3)/2',
+          explain: String.raw`$2\cdot\frac{1}{2}\cdot\frac{\sqrt3}{2} = \frac{\sqrt3}{2}$. Controllo: $2x = \frac{\pi}{3}$ e $\sin\frac{\pi}{3} = \frac{\sqrt3}{2}$.` },
+        { id: 's00.trig.L2.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\cos\dfrac{\pi}{4}\cos\dfrac{\pi}{3} - \sin\dfrac{\pi}{4}\sin\dfrac{\pi}{3}$ (usa la formula di addizione del coseno).`,
+          answer: '(sqrt(2)-sqrt(6))/4',
+          explain: String.raw`Per la formula di addizione l'espressione è $\cos\left(\frac{\pi}{4}+\frac{\pi}{3}\right) = \cos\frac{7\pi}{12}$. Con i valori: $\frac{\sqrt2}{2}\cdot\frac12 - \frac{\sqrt2}{2}\cdot\frac{\sqrt3}{2} = \frac{\sqrt2 - \sqrt6}{4}$.` },
+        { id: 's00.trig.L2.e7', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\sin\dfrac{\pi}{12}$, sapendo $\dfrac{\pi}{12} = \dfrac{\pi}{4} - \dfrac{\pi}{6}$?`,
+          options: [String.raw`$\dfrac{\sqrt6-\sqrt2}{4}$`, String.raw`$\dfrac{\sqrt6+\sqrt2}{4}$`, String.raw`$\dfrac{\sqrt2}{4}$`, String.raw`$\dfrac{\sqrt3-1}{2}$`],
+          answer: 0,
+          explain: String.raw`$\sin(a-b) = \sin a\cos b - \cos a\sin b$: $\frac{\sqrt2}{2}\cdot\frac{\sqrt3}{2} - \frac{\sqrt2}{2}\cdot\frac{1}{2} = \frac{\sqrt6-\sqrt2}{4}$. Il segno $+$ sbaglia il segno della differenza di angoli.` },
+      ],
+    },
+    {
+      id: 's00.trig.L3',
+      title: 'Equazioni e disequazioni elementari',
+      cards: [
+        { type: 'learn', title: 'Equazioni elementari sul cerchio', body: String.raw`Per $\sin x = c$ con $-1 \le c \le 1$ i punti del cerchio sono due: se $x_0$ è una soluzione, l'altra in $[0,2\pi)$ è $\pi - x_0$.
+
+Per $\cos x = c$ le soluzioni in $[0,2\pi)$ sono $x_0$ e $2\pi - x_0$.
+
+In tutti i casi, le soluzioni generali si ottengono aggiungendo $2k\pi$ con $k \in \mathbb{Z}$.
+
+>* **Regola.** $\sin x = c$ e $\cos x = c$ hanno due soluzioni in $[0,2\pi)$ quando $-1 < c < 1$; una sola se $c = \pm 1$; nessuna se $|c| > 1$.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Risolvi $\sin x = \dfrac{1}{2}$ in $[0,2\pi)$.`,
+          steps: [
+            String.raw`Una soluzione è $x_0 = \frac{\pi}{6}$, perché $\sin\frac{\pi}{6} = \frac{1}{2}$.`,
+            { text: String.raw`L'altra soluzione è $\pi - \frac{\pi}{6} = \frac{5\pi}{6}$: stessa ordinata, ascissa opposta.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\pi - \dfrac{\pi}{6}$? (scrivi come $a\pi/b$, ad esempio 2*pi/3)`, answer: '5*pi/6', explain: String.raw`$\pi = \frac{6\pi}{6}$, quindi $\frac{6\pi - \pi}{6} = \frac{5\pi}{6}$.` } },
+            String.raw`Soluzioni in $[0,2\pi)$: $x = \frac{\pi}{6}$ e $x = \frac{5\pi}{6}$.`,
+          ],
+          result: String.raw`$\sin x = \frac{1}{2} \iff x = \frac{\pi}{6} + 2k\pi$ oppure $x = \frac{5\pi}{6} + 2k\pi$.` },
+        { id: 's00.trig.L3.e1', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $\cos x = -\dfrac{1}{2}$ in $[0,2\pi)$. Scrivi le soluzioni separate da ;`,
+          answer: ['2*pi/3', '4*pi/3'],
+          explain: String.raw`$\cos\frac{2\pi}{3} = -\frac{1}{2}$ e la simmetrica rispetto all'asse $x$ è $2\pi - \frac{2\pi}{3} = \frac{4\pi}{3}$.` },
+        { id: 's00.trig.L3.e2', type: 'set', level: 2,
+          prompt: String.raw`Risolvi $\sin x = \dfrac{\sqrt{2}}{2}$ in $[0,2\pi)$. Scrivi le soluzioni separate da ;`,
+          answer: ['pi/4', '3*pi/4'],
+          explain: String.raw`$x_0 = \frac{\pi}{4}$ e l'altra è $\pi - \frac{\pi}{4} = \frac{3\pi}{4}$.` },
+        { id: 's00.trig.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Quante soluzioni in $\R$ ha $\cos x = 2$?`,
+          options: ['Nessuna', 'Una', 'Due', 'Infinite'],
+          answer: 0,
+          explain: String.raw`Il coseno vale al massimo $1$ in modulo: $\cos x = 2$ è impossibile. Errore comune: pensare che il coseno assuma ogni valore due volte, ma solo per $|c| < 1$.` },
+        { type: 'learn', title: 'Disequazioni sul cerchio', body: String.raw`Per $\sin x > c$ si cerca l'arco del cerchio **sopra** la retta $y = c$: sono i punti con ordinata maggiore di $c$. Per $\cos x \ge c$ si cerca l'arco **a destra** della retta $x = c$.
+
+Il metodo è sempre lo stesso: trovo i due punti di intersezione con la retta, poi scelgo l'arco giusto. Gli estremi sono inclusi o esclusi come nella disuguaglianza.` },
+        { id: 's00.trig.L3.e4', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\sin x > \dfrac{1}{2}$ con $x \in [0,2\pi)$.`,
+          answer: '(pi/6,5*pi/6)',
+          explain: String.raw`Tra $\frac{\pi}{6}$ e $\frac{5\pi}{6}$ il seno supera $\frac{1}{2}$: l'arco sta sopra la retta $y = \frac{1}{2}$. Gli estremi sono esclusi (disuguaglianza stretta).` },
+        { id: 's00.trig.L3.e5', type: 'interval', level: 2,
+          prompt: String.raw`Risolvi $\cos x \le 0$ con $x \in [0,2\pi)$.`,
+          answer: '[pi/2,3*pi/2]',
+          explain: String.raw`Il coseno è $\le 0$ nel secondo e nel terzo quadrante: da $\frac{\pi}{2}$ a $\frac{3\pi}{2}$, estremi inclusi.` },
+        { id: 's00.trig.L3.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Quale soluzione in $[0,\pi/2]$ ha $\tan x = \sqrt{3}$?`,
+          options: [String.raw`$\dfrac{\pi}{3}$`, String.raw`$\dfrac{\pi}{6}$`, String.raw`$\dfrac{\pi}{4}$`, String.raw`$\dfrac{2\pi}{3}$`],
+          answer: 0,
+          explain: String.raw`$\tan\frac{\pi}{3} = \frac{\sqrt3/2}{1/2} = \sqrt3$. $\frac{\pi}{6}$ dà $\frac{1}{\sqrt3}$; $\frac{\pi}{4}$ dà $1$; $\frac{2\pi}{3}$ non sta nell'intervallo.` },
+        { id: 's00.trig.L3.e7', type: 'interval', level: 3, source: 'Appello 06/07/2026 · Parte B (studio di $2\sin x + \cos 2x$)',
+          prompt: String.raw`Per $x \in [0,2\pi]$ sia $f'(x) = 2\cos x\,(1 - 2\sin x)$. Dove è $f'(x) > 0$?`,
+          answer: '[0,pi/6)U(pi/2,5*pi/6)U(3*pi/2,2*pi]',
+          explain: String.raw`Studio separatamente i due fattori. $\cos x > 0$ per $[0,\frac{\pi}{2})\cup(\frac{3\pi}{2},2\pi]$; $1 - 2\sin x > 0$ per $[0,\frac{\pi}{6})\cup(\frac{5\pi}{6},2\pi]$. Il prodotto è positivo dove sono dello stesso segno: $[0,\frac{\pi}{6})$, $(\frac{\pi}{2},\frac{5\pi}{6})$ (entrambi negativi) e $(\frac{3\pi}{2},2\pi]$.` },
+        { id: 's00.trig.L3.e8', type: 'mcq', level: 3, source: 'Appello 06/07/2026 · Parte B (studio di $2\sin x + \cos 2x$)',
+          prompt: String.raw`Per $f(x) = 2\sin x + \cos 2x$ su $[0,2\pi]$, il punto $x = \dfrac{\pi}{2}$ è:`,
+          options: [String.raw`un minimo relativo, con $f(\frac{\pi}{2}) = 1$`, String.raw`un massimo relativo`, String.raw`un punto dove $f$ non è derivabile`, String.raw`uno zero di $f$`],
+          answer: 0,
+          explain: String.raw`$f(\frac{\pi}{2}) = 2 + \cos\pi = 1 \ne 0$. Prima di $\frac{\pi}{2}$ si ha $f' < 0$ (decrescente) e dopo $f' > 0$ (crescente): è un minimo relativo. Il valore $f = 1$ non è zero, quindi il quarto distrattore è falso.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.trig.gen-valori', type: 'gen', level: 1,
+      gen: (R) => {
+        const bs = '\\';
+        const fn = R.pick(['sin', 'cos']);
+        const k = R.pick([1, 2, 3, 4, 5, 7, 8, 9, 10, 11]);
+        const v = fn === 'sin' ? Math.sin((k * Math.PI) / 6) : Math.cos((k * Math.PI) / 6);
+        const EX = [[0, '0', '0'], [0.5, '1/2', '\\frac{1}{2}'], [Math.sqrt(3) / 2, 'sqrt(3)/2', '\\frac{\\sqrt{3}}{2}'], [1, '1', '1']];
+        const hit = EX.find(([n]) => Math.abs(Math.abs(v) - n) < 1e-9);
+        const neg = v < -1e-9;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $${bs}${fn}\,${piTex(k, 6)}$.`,
+          answer: `${neg ? '-' : ''}${hit[1]}`,
+          explain: String.raw`Il punto di angolo $${piTex(k, 6)}$ sta nel quadrante indicato dal suo multiplo di $\frac{\pi}{6}$. Il valore del ${fn === 'sin' ? 'seno' : 'coseno'} è, in modulo, $${hit[2]}$, con segno ${neg ? 'negativo' : 'positivo o nullo'}: quindi $${bs}${fn}\,${piTex(k, 6)} = ${neg ? '-' : ''}${hit[2]}$.`,
+        };
+      } },
+    { id: 's00.trig.gen-eq', type: 'gen', level: 2,
+      gen: (R) => {
+        const e = R.pick(TRIG_EQ);
+        const bs = '\\';
+        return {
+          type: 'set',
+          prompt: String.raw`Risolvi $${bs}${e.f} x = ${e.tex}$ con $x \in [0,2\pi)$. Scrivi le soluzioni separate da ;`,
+          answer: e.sol.map(([p, q]) => piStr(p, q)),
+          explain: String.raw`Sul cerchio $${bs}${e.f}\,x = ${e.tex}$ ha due punti: $x = ${piTex(...e.sol[0])}$ e $x = ${piTex(...e.sol[1])}$. Li trovo dal valore notevole: per il seno le due soluzioni sono simmetriche rispetto all'asse $y$ ($\pi - x_0$), per il coseno rispetto all'asse $x$ ($2\pi - x_0$).`,
+        };
+      } },
+    { id: 's00.trig.gen-disug', type: 'gen', level: 2,
+      gen: (R) => {
+        const e = R.pick(TRIG_D);
+        const bs = '\\';
+        const S1 = piStr(...e.s1), S2 = piStr(...e.s2);
+        const T1 = piTex(...e.s1), T2 = piTex(...e.s2);
+        if (e.f === 'sin') {
+          const op = R.pick(['>', '<']);
+          const answer = op === '>' ? `(${S1},${S2})` : `[0,${S1})U(${S2},2*pi)`;
+          const txt = op === '>'
+            ? `Il seno supera $${e.tex}$ solo nell'arco tra $${T1}$ e $${T2}$.`
+            : `Il seno è sotto $${e.tex}$ fuori dall'arco tra $${T1}$ e $${T2}$; il punto $2\\pi$ non è in $[0,2\\pi)$.`;
+          return { type: 'interval', prompt: String.raw`Risolvi $${bs}sin x ${OPTEX[op]} ${e.tex}$ con $x \in [0,2\pi)$.`, answer, explain: `${txt}` };
+        }
+        const op = R.pick(['>=', '<=']);
+        const answer = op === '>=' ? `[0,${S1}]U[${S2},2*pi)` : `[${S1},${S2}]`;
+        const txt = op === '>='
+          ? `Il coseno è $\\ge ${e.tex}$ vicino a $0$ e vicino a $2\\pi$, cioè fuori dall'arco tra $${T1}$ e $${T2}$. Estremi inclusi, perché la disuguaglianza è larga; $2\\pi$ non è in $[0,2\\pi)$.`
+          : `Il coseno è $\\le ${e.tex}$ nell'arco tra $${T1}$ e $${T2}$, estremi inclusi.`;
+        return { type: 'interval', prompt: String.raw`Risolvi $${bs}cos x ${OPTEX[op]} ${e.tex}$ con $x \in [0,2\pi)$.`, answer, explain: txt };
+      } },
+    { id: 's00.trig.gen-cos2x', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.pick([3, 4, 5, 6, 7]);
+        const a = R.int(1, b - 1);
+        const p = pt(b * b - 2 * a * a, b * b);
+        return {
+          type: 'num',
+          prompt: String.raw`Sapendo $\sin x = \dfrac{${a}}{${b}}$, quanto vale $\cos 2x$?`,
+          answer: p.s,
+          explain: String.raw`Uso $\cos 2x = 1 - 2\sin^2 x = 1 - 2\cdot\dfrac{${a * a}}{${b * b}} = \dfrac{${b * b - 2 * a * a}}{${b * b}}$. Forma ridotta: $${p.t}$.`,
+        };
+      } },
+    { id: 's00.trig.p1', type: 'problem', level: 3, source: 'Appello 06/07/2026 · Parte B (studio di $2\sin x + \cos 2x$)', points: 3,
+      prompt: String.raw`Sia $f(x) = 2\sin x + \cos 2x$ su $[0,2\pi]$. Calcola alcuni valori e classifica il punto $x = \dfrac{\pi}{2}$.`,
+      parts: [
+        { type: 'num', prompt: String.raw`Valore di $f\left(\frac{\pi}{6}\right)$.`, answer: '3/2', explain: String.raw`$2\cdot\frac{1}{2} + \cos\frac{\pi}{3} = 1 + \frac{1}{2} = \frac{3}{2}$.` },
+        { type: 'num', prompt: String.raw`Valore di $f\left(\frac{3\pi}{2}\right)$.`, answer: '-3', explain: String.raw`$2\sin\frac{3\pi}{2} + \cos 3\pi = -2 - 1 = -3$.` },
+        { type: 'num', prompt: String.raw`Valore di $f\left(\frac{\pi}{2}\right)$.`, answer: '1', explain: String.raw`$2\cdot 1 + \cos\pi = 2 - 1 = 1$.` },
+      ],
+      solution: String.raw`Derivata: $f'(x) = 2\cos x - 2\sin 2x = 2\cos x\,(1 - 2\sin x)$. Punti stazionari: $\frac{\pi}{6}$, $\frac{\pi}{2}$, $\frac{5\pi}{6}$, $\frac{3\pi}{2}$. Il segno di $f'$ cambia così: $+$ prima di $\frac{\pi}{6}$, $-$ dopo; in $\frac{\pi}{2}$ passa da $-$ a $+$, quindi è un minimo relativo con $f = 1$; in $\frac{5\pi}{6}$ e $\frac{3\pi}{2}$ si hanno rispettivamente un massimo relativo e un minimo relativo. Il massimo assoluto è $\frac{3}{2}$ e il minimo assoluto è $-3$ in $\frac{3\pi}{2}$.` },
+    { id: 's00.trig.p2', type: 'tf', level: 1,
+      prompt: String.raw`Per ogni $x \in \R$ vale $\sin^2 x + \cos^2 x = 1$.`, answer: true,
+      explain: String.raw`Vero: è l'identità fondamentale, conseguenza del teorema di Pitagora sulla circonferenza di raggio $1$.` },
+    { id: 's00.trig.p3', type: 'mcq', level: 2,
+      prompt: String.raw`Quale soluzione in $[0,\pi)$ ha $\tan x = \sqrt{3}$?`,
+      options: [String.raw`$\dfrac{\pi}{3}$`, String.raw`$\dfrac{\pi}{6}$`, String.raw`$\dfrac{\pi}{4}$`, String.raw`$\dfrac{2\pi}{3}$`],
+      answer: 0,
+      explain: String.raw`$\tan\frac{\pi}{3} = \sqrt3$. L'altra soluzione di $\tan x = \sqrt3$ è $\frac{\pi}{3} + \pi$, fuori dall'intervallo.` },
+    { id: 's00.trig.p4', type: 'num', level: 1,
+      prompt: String.raw`Quanto vale $\cos\dfrac{2\pi}{3}$?`, answer: '-1/2',
+      explain: String.raw`$\frac{2\pi}{3}$ è nel secondo quadrante: l'ascissa è negativa, e il valore assoluto è $\cos\frac{\pi}{3} = \frac{1}{2}$.` },
+    { id: 's00.trig.p5', type: 'num', level: 2,
+      prompt: String.raw`Quanto vale $\sin\left(\dfrac{\pi}{2} + \dfrac{\pi}{3}\right)$?`, answer: '1/2',
+      explain: String.raw`$\sin\left(\frac{\pi}{2}+a\right) = \cos a$, quindi il valore è $\cos\frac{\pi}{3} = \frac{1}{2}$.` },
+    { id: 's00.trig.p6', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni equazione alla sua famiglia di soluzioni (con $k \in \mathbb{Z}$).`,
+      pairs: [
+        [String.raw`$\sin x = 0$`, String.raw`$x = k\pi$`],
+        [String.raw`$\cos x = 1$`, String.raw`$x = 2k\pi$`],
+        [String.raw`$\cos x = 0$`, String.raw`$x = \dfrac{\pi}{2} + k\pi$`],
+        [String.raw`$\sin x = 1$`, String.raw`$x = \dfrac{\pi}{2} + 2k\pi$`],
+      ],
+      explain: String.raw`Gli zeri del seno sono ogni $\pi$; il coseno vale $1$ solo ogni giro completo; gli zeri del coseno sono i punti sull'asse $y$, a distanza $\pi$; il massimo del seno è in $\frac{\pi}{2}$ e si ripete ogni giro.` },
+    { id: 's00.trig.p7', type: 'mcq', level: 1,
+      prompt: String.raw`Quanto vale $\sin\dfrac{\pi}{2} + \cos\pi$?`,
+      options: ['$0$', '$1$', '$-1$', '$2$'], answer: 0,
+      explain: String.raw`$\sin\frac{\pi}{2} = 1$ e $\cos\pi = -1$: la somma è $0$. Errore comune: $\cos\pi = 1$, che dà $2$.` },
+  ],
+  flashcards: [
+    { id: 's00.trig.fc1', kind: 'def', front: 'Radiante', back: String.raw`Angolo che sottende un arco di lunghezza uguale al raggio. $\pi$ rad $= 180^\circ$, giro completo $2\pi$ rad.` },
+    { id: 's00.trig.fc2', kind: 'def', front: 'Circonferenza goniometrica', back: String.raw`Circonferenza di raggio $1$ centrata nell'origine. Il punto di angolo $\theta$ è $P = (\cos\theta,\sin\theta)$.` },
+    { id: 's00.trig.fc3', kind: 'formula', front: 'Valori notevoli', back: String.raw`$\sin$: $0, \frac12, \frac{\sqrt2}{2}, \frac{\sqrt3}{2}, 1$ per $0, \frac{\pi}{6}, \frac{\pi}{4}, \frac{\pi}{3}, \frac{\pi}{2}$. Il coseno si ottiene specchiando: $\cos$ dà i valori in ordine inverso.` },
+    { id: 's00.trig.fc4', kind: 'formula', front: 'Identità fondamentale e tangente', back: String.raw`$\sin^2 x + \cos^2 x = 1$; $\tan x = \dfrac{\sin x}{\cos x}$ per $\cos x \ne 0$; $1 + \tan^2 x = \dfrac{1}{\cos^2 x}$.` },
+    { id: 's00.trig.fc5', kind: 'formula', front: 'Addizione e duplicazione', back: String.raw`$\sin(a\pm b) = \sin a\cos b \pm \cos a\sin b$; $\cos(a\pm b) = \cos a\cos b \mp \sin a\sin b$; $\sin 2x = 2\sin x\cos x$; $\cos 2x = 1-2\sin^2 x = 2\cos^2x-1$.` },
+    { id: 's00.trig.fc6', kind: 'errore', front: 'Errori tipici con seno e coseno', back: String.raw`$\cos(a+b) \ne \cos a + \cos b$; $\sin 2x \ne 2\sin x$; $\sin^2 x + \cos^2 x = 1$ non vale per $\sin x + \cos x$.` },
+    { id: 's00.trig.fc7', kind: 'metodo', front: 'Equazione elementare', back: String.raw`Per $\sin x = c$ con $|c|<1$: $x_0$ e $\pi - x_0$ in $[0,2\pi)$. Per $\cos x = c$: $x_0$ e $2\pi - x_0$. Aggiungo $2k\pi$ per tutte le soluzioni.` },
+    { id: 's00.trig.fc8', kind: 'metodo', front: 'Disequazione sul cerchio', back: String.raw`Trovo i punti di intersezione con la retta $y = c$ (per il seno) o $x = c$ (per il coseno), poi scelgo l'arco che soddisfa la disuguaglianza. Gli estremi seguono la disuguaglianza.` },
+  ],
+});
