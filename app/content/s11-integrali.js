@@ -1755,10 +1755,415 @@ Controllo geometrico: l'integrale è l'area di un quarto di cerchio di raggio $1
   ],
 };
 
+// ---------------------------------------------------------------------------
+// s11.razionali · Funzioni razionali fratte
+// ---------------------------------------------------------------------------
+const razionali = {
+  id: 's11.razionali',
+  title: 'Funzioni razionali fratte',
+  summary: String.raw`Integrare $\frac{N(x)}{D(x)}$: dividere quando serve, scomporre in fratti semplici, usare logaritmi e arcotangente.`,
+  prereq: ['s11.immediati', 's11.sostituzione', 's00.algebra', 's00.equazioni'],
+  examRefs: ['Appello 03/09/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's11.razionali.L1',
+      title: 'Il metodo in tre mosse',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Che cos\'è una razionale',
+          body: String.raw`Una funzione **razionale fratta** è $\dfrac{N(x)}{D(x)}$ con $N$ e $D$ polinomi e $D\neq0$. Per integrarla si seguono tre mosse:
+
+1. se il **grado** di $N$ è maggiore o uguale a quello di $D$, **divido** (come fra numeri): $\dfrac{N}{D}=Q+\dfrac{R}{D}$ con grado di $R$ minore di quello di $D$;
+2. **fattorizzo** $D$ (radici reali, potenze, polinomi di secondo grado senza radici reali);
+3. scrivo $\dfrac{R}{D}$ come somma di **fratti semplici** e integro ciascuno con la tabella della card successiva.`,
+        },
+        {
+          type: 'learn',
+          title: 'I fratti semplici da sapere',
+          body: String.raw`- $\dfrac{A}{x-a}$ → $A\log|x-a|+c$
+- $\dfrac{A}{(x-a)^k}$, con $k\geq2$ → $\dfrac{A}{(1-k)(x-a)^{k-1}}+c$
+- $\dfrac{Ax+B}{x^2+px+q}$ con $p^2-4q<0$ → logaritmo e arcotangente (vedi terza lezione)
+
+Attenzione all'esponente: $\int\frac{dx}{(x-a)^2}=-\dfrac{1}{x-a}$, **non** un logaritmo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\int\\frac{x^2+1}{x-1}\\,dx$',
+          problem: String.raw`Calcola $\displaystyle\int\frac{x^2+1}{x-1}\,dx$ per $x>1$.`,
+          steps: [
+            String.raw`Il grado del numeratore ($2$) è maggiore di quello del denominatore ($1$): divido.`,
+            String.raw`Divisione: $x^2+1=(x-1)(x+1)+2$, quindi $\dfrac{x^2+1}{x-1}=x+1+\dfrac{2}{x-1}$.`,
+            {
+              text: String.raw`Integro i tre pezzi: $\displaystyle\int(x+1)\,dx+\int\frac{2}{x-1}\,dx$. Il secondo dà un logaritmo.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $\dfrac{2}{x-1}$ per $x>1$?`, answer: '2*log(x-1)', domain: [1.5, 3], upToConstant: true, _f: '2/(x-1)', explain: String.raw`$\int\frac{dx}{x-1}=\log|x-1|$; per $x>1$ è $\log(x-1)$. Moltiplico per $2$.` },
+            },
+            String.raw`Risultato: $\dfrac{x^2}{2}+x+2\log(x-1)+c$ per $x>1$.`,
+          ],
+          result: String.raw`$\displaystyle\int\frac{x^2+1}{x-1}\,dx=\frac{x^2}2+x+2\log(x-1)+c$`,
+        },
+        {
+          id: 's11.razionali.L1.e1', type: 'expr', level: 1, upToConstant: true, domain: [2.3, 4],
+          prompt: String.raw`$\displaystyle\int\frac{5}{x-2}\,dx$ (per $x>2$)`,
+          answer: '5*log(x-2)', _f: '5/(x-2)',
+          explain: String.raw`Fratto semplice con $A=5$ e $a=2$: $5\log|x-2|$. Per $x>2$ il valore assoluto si toglie.`,
+        },
+        {
+          id: 's11.razionali.L1.e2', type: 'expr', level: 1, upToConstant: true, domain: [-0.7, 1.5],
+          prompt: String.raw`$\displaystyle\int\frac{dx}{(x+1)^2}$ (per $x>-1$)`,
+          answer: '-1/(x+1)', _f: '1/(x+1)^2',
+          explain: String.raw`È il caso $k=2$: $\int(x+1)^{-2}\,dx=\frac{(x+1)^{-1}}{-1}=-\frac1{x+1}$. Errore tipico: scrivere $\log$.`,
+        },
+        {
+          id: 's11.razionali.L1.e3', type: 'mcq', level: 1,
+          prompt: String.raw`Quale è la decomposizione in fratti semplici di $\dfrac{1}{x(x-1)}$?`,
+          options: [String.raw`$\dfrac{1}{x-1}-\dfrac1x$`, String.raw`$\dfrac1x+\dfrac1{x-1}$`, String.raw`$\dfrac2x-\dfrac1{x-1}$`, String.raw`$\dfrac1{x^2}-\dfrac1{x-1}$`],
+          answer: 0,
+          explain: String.raw`Verifica: $\dfrac1{x-1}-\dfrac1x=\dfrac{x-(x-1)}{x(x-1)}=\dfrac1{x(x-1)}$. Errore tipico: sbagliare il segno di uno dei due fratti. Con $\frac1x+\frac1{x-1}$ il numeratore non torna.`,
+        },
+        {
+          id: 's11.razionali.L1.e4', type: 'num', level: 1,
+          prompt: String.raw`$\displaystyle\int_2^3\frac{dx}{x-1}$`,
+          answer: 'log(2)', _int: ['1/(x-1)', 2, 3],
+          explain: String.raw`$\left[\log(x-1)\right]_2^3=\log2-\log1=\log2$.`,
+        },
+        {
+          id: 's11.razionali.L1.e5', type: 'tf', level: 1,
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x^2+1}=\log(x^2+1)+c$.`,
+          answer: false,
+          explain: String.raw`Falso. $\log(x^2+1)$ è la primitiva di $\frac{2x}{x^2+1}$, non di $\frac1{x^2+1}$. La primitiva di $\frac1{x^2+1}$ è $\arctan x$.`,
+        },
+        {
+          id: 's11.razionali.L1.e6', type: 'cloze', level: 2,
+          prompt: 'Completa la decomposizione.',
+          text: String.raw`$\dfrac{5x-1}{x(x-1)}=\dfrac{A}{x}+\dfrac{B}{x-1}$ con $A=$ [[0]] e $B=$ [[1]].`,
+          blanks: [
+            { options: [String.raw`$-1$`, String.raw`$1$`, String.raw`$-\frac15$`], answer: 1 },
+            { options: [String.raw`$4$`, String.raw`$-4$`, String.raw`$5$`], answer: 0 },
+          ],
+          explain: String.raw`Con $x=0$: $-1=-A$, quindi $A=1$. Con $x=1$: $4=B$. Verifica: $\frac1x+\frac4{x-1}=\frac{x-1+4x}{x(x-1)}=\frac{5x-1}{x(x-1)}$.`,
+        },
+        {
+          id: 's11.razionali.L1.e7', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{x}{x^2+1}\,dx$`,
+          answer: '(1/2)*log(2)', _int: ['x/(x^2+1)', 0, 1],
+          explain: String.raw`Numeratore uguale alla metà della derivata del denominatore: $\frac12\left[\log(x^2+1)\right]_0^1=\frac12\log2$.`,
+        },
+        {
+          id: 's11.razionali.L1.e8', type: 'expr', level: 2, upToConstant: true, domain: [1.5, 3],
+          prompt: String.raw`$\displaystyle\int\frac{x^3}{x^2-1}\,dx$ (per $x>1$)`,
+          answer: 'x^2/2+(1/2)*log(x^2-1)', _f: 'x^3/(x^2-1)',
+          explain: String.raw`Divido: $x^3=x(x^2-1)+x$, quindi $\frac{x^3}{x^2-1}=x+\frac{x}{x^2-1}$. Il secondo pezzo ha numeratore uguale alla metà della derivata del denominatore: $\frac12\log(x^2-1)$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.razionali.L2',
+      title: 'Decomposizione in fratti semplici',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Radici distinte: trovare A e B',
+          body: String.raw`Se $D=(x-a)(x-b)$ con $a\neq b$, scrivo
+$$\frac{N(x)}{(x-a)(x-b)}=\frac{A}{x-a}+\frac{B}{x-b}\qquad\Longrightarrow\qquad N(x)=A(x-b)+B(x-a).$$
+
+Per trovare $A$ pongo $x=a$: il termine con $B$ si annulla e resta $A=\dfrac{N(a)}{a-b}$. Analogamente $B=\dfrac{N(b)}{b-a}$.
+
+Idea: sostituendo una radice alla volta, un solo coefficiente sopravvive. Non serve risolvere un sistema.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio con dissolvenza: $\\int\\frac{3x+5}{(x-1)(x+2)}\\,dx$',
+          problem: String.raw`Calcola $\displaystyle\int\frac{3x+5}{(x-1)(x+2)}\,dx$ per $x>1$.`,
+          steps: [
+            String.raw`Grado del numeratore $1$, del denominatore $2$: niente divisione. Radici del denominatore: $1$ e $-2$.`,
+            String.raw`Scrivo $\dfrac{3x+5}{(x-1)(x+2)}=\dfrac{A}{x-1}+\dfrac{B}{x+2}$, cioè $3x+5=A(x+2)+B(x-1)$.`,
+            String.raw`Pongo $x=1$: $8=3A$, quindi $A=\dfrac83$. Pongo $x=-2$: $-1=-3B$, quindi $B=\dfrac13$.`,
+            {
+              text: String.raw`Integro: $\dfrac83\displaystyle\int\frac{dx}{x-1}+\dfrac13\displaystyle\int\frac{dx}{x+2}$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $\dfrac{1}{x+2}$ per $x>1$?`, answer: 'log(x+2)', domain: [1.5, 3], upToConstant: true, _f: '1/(x+2)', explain: String.raw`$\int\frac{dx}{x+2}=\log|x+2|$, e per $x>1$ è $\log(x+2)$.` },
+            },
+            String.raw`Risultato: $\dfrac83\log(x-1)+\dfrac13\log(x+2)+c$.`,
+          ],
+          result: String.raw`$\displaystyle\int\frac{3x+5}{(x-1)(x+2)}\,dx=\frac83\log(x-1)+\frac13\log(x+2)+c$ per $x>1$`,
+        },
+        {
+          id: 's11.razionali.L2.e1', type: 'expr', level: 2, upToConstant: true, domain: [1.5, 4],
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x^2-1}$ (per $x>1$)`,
+          answer: '(1/2)*log((x-1)/(x+1))', _f: '1/(x^2-1)',
+          explain: String.raw`$\frac1{x^2-1}=\frac12\left(\frac1{x-1}-\frac1{x+1}\right)$. Primitiva $\frac12\log\frac{x-1}{x+1}$ per $x>1$.`,
+        },
+        {
+          id: 's11.razionali.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_2^3\frac{dx}{x^2-1}$`,
+          answer: '(1/2)*log(3/2)', _int: ['1/(x^2-1)', 2, 3],
+          explain: String.raw`$\frac12\left[\log\frac{x-1}{x+1}\right]_2^3=\frac12\left(\log\frac12-\log\frac13\right)=\frac12\log\frac32$.`,
+        },
+        {
+          id: 's11.razionali.L2.e3', type: 'expr', level: 2, upToConstant: true, domain: [2.3, 4],
+          prompt: String.raw`$\displaystyle\int\frac{x-1}{x^2-4}\,dx$ (per $x>2$)`,
+          answer: '(1/4)*log(x-2)+(3/4)*log(x+2)', _f: '(x-1)/(x^2-4)',
+          explain: String.raw`$A=\dfrac{N(2)}{2+2}=\dfrac14$ e $B=\dfrac{N(-2)}{-2-2}=\dfrac{-3}{-4}=\dfrac34$. Primitiva $\frac14\log(x-2)+\frac34\log(x+2)$.`,
+        },
+        {
+          id: 's11.razionali.L2.e4', type: 'expr', level: 2, upToConstant: true, domain: [1.5, 4],
+          prompt: String.raw`$\displaystyle\int\frac{x^2}{x^2-1}\,dx$ (per $x>1$)`,
+          answer: 'x+(1/2)*log((x-1)/(x+1))', _f: 'x^2/(x^2-1)',
+          explain: String.raw`Grado uguale: divido. $\frac{x^2}{x^2-1}=1+\frac1{x^2-1}$. Primitiva $x+\frac12\log\frac{x-1}{x+1}$. Errore tipico: integrare $\frac{x^2}{x^2-1}$ senza dividere.`,
+        },
+        {
+          id: 's11.razionali.L2.e5', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\dfrac{N(x)}{(x-1)(x+1)}$ con $N(1)=4$ e $N(-1)=-2$, quali sono $A$ e $B$ in $\dfrac{A}{x-1}+\dfrac{B}{x+1}$?`,
+          options: [String.raw`$A=2$, $B=1$`, String.raw`$A=4$, $B=-2$`, String.raw`$A=-2$, $B=1$`, String.raw`$A=2$, $B=-1$`],
+          answer: 0,
+          explain: String.raw`$A=\dfrac{N(1)}{1-(-1)}=\dfrac42=2$ e $B=\dfrac{N(-1)}{-1-1}=\dfrac{-2}{-2}=1$. Errore tipico: dimenticare di dividere per la differenza delle radici ($a-b$).`,
+        },
+        {
+          id: 's11.razionali.L2.e6', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{x}{(x+1)(x+2)}\,dx$`,
+          answer: 'log(9/8)', _int: ['x/((x+1)*(x+2))', 0, 1],
+          explain: String.raw`Fratti semplici: $\dfrac{x}{(x+1)(x+2)}=-\dfrac1{x+1}+\dfrac2{x+2}$. Primitiva $-\log(x+1)+2\log(x+2)$. Tra $0$ e $1$: $(2\log3-\log2)-2\log2=\log\frac98$.`,
+        },
+        {
+          id: 's11.razionali.L2.e7', type: 'order', level: 2,
+          prompt: String.raw`Ordina i passi per calcolare $\displaystyle\int\frac{dx}{x^2-4}$. Scarta i passi sbagliati.`,
+          steps: [
+            String.raw`Fattorizzo il denominatore: $x^2-4=(x-2)(x+2)$.`,
+            String.raw`Scrivo $\dfrac1{(x-2)(x+2)}=\dfrac A{x-2}+\dfrac B{x+2}$.`,
+            String.raw`Pongo $x=2$: $1=4A$, quindi $A=\dfrac14$; pongo $x=-2$: $1=-4B$, quindi $B=-\dfrac14$.`,
+            String.raw`Integro: $\dfrac14\log|x-2|-\dfrac14\log|x+2|+c$.`,
+          ],
+          distractors: [String.raw`Integro direttamente $\dfrac1{x^2}-\dfrac14$ senza fattorizzare.`, String.raw`Scrivo $\dfrac1{(x-2)(x+2)}=\dfrac A{x-2}+\dfrac B{x-2}$ con lo stesso denominatore due volte.`],
+          explain: String.raw`Prima si fattorizza il denominatore, poi si trovano $A$ e $B$ con le radici, infine si integra. Il metodo richiede radici distinte: due fratti con lo stesso denominatore non danno una decomposizione corretta.`,
+        },
+        {
+          id: 's11.razionali.L2.e8', type: 'expr', level: 2, upToConstant: true, domain: [0.3, 2.5],
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x(x+3)}$ (per $x>0$)`,
+          answer: '(1/3)*log(x/(x+3))', _f: '1/(x*(x+3))',
+          explain: String.raw`$\frac1{x(x+3)}=\frac13\left(\frac1x-\frac1{x+3}\right)$. Primitiva $\frac13\log\frac{x}{x+3}$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.razionali.L3',
+      title: 'Denominatori senza radici reali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Completare il quadrato',
+          body: String.raw`Se $\Delta=p^2-4q<0$, il polinomio $x^2+px+q$ non ha radici reali e non si fattorizza in $\mathbb{R}$. Lo scrivo come quadrato più costante:
+$$x^2+px+q=\left(x+\frac p2\right)^2+\frac{4q-p^2}{4}.$$
+
+>* **Arcotangente.** Per $\beta>0$: $\displaystyle\int\frac{dx}{(x+\alpha)^2+\beta^2}=\frac1\beta\arctan\frac{x+\alpha}{\beta}+c$.
+
+Se il numeratore è la derivata del denominatore ($2x+p$), il risultato è un logaritmo. Altrimenti lo spezzo in "derivata + costante".`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\int\\frac{2x+3}{x^2+2x+5}\\,dx$',
+          problem: String.raw`Calcola $\displaystyle\int\frac{2x+3}{x^2+2x+5}\,dx$.`,
+          steps: [
+            String.raw`Il denominatore non ha radici reali ($\Delta=4-20<0$). Scrivo il numeratore come derivata del denominatore più una costante: $2x+3=(2x+2)+1$.`,
+            String.raw`Quindi $\displaystyle\int\frac{2x+2}{x^2+2x+5}\,dx+\int\frac{dx}{x^2+2x+5}$.`,
+            {
+              text: String.raw`Il primo integrale dà $\log(x^2+2x+5)$. Il secondo: completo il quadrato, $x^2+2x+5=(x+1)^2+4$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $\dfrac{1}{(x+1)^2+4}$ rispetto a $x$?`, answer: 'atan((x+1)/2)/2', upToConstant: true, _f: '1/((x+1)^2+4)', explain: String.raw`$\frac1{(x+1)^2+4}=\frac14\cdot\frac1{1+\left(\frac{x+1}2\right)^2}$: primitiva $\frac14\cdot2\arctan\frac{x+1}2=\frac12\arctan\frac{x+1}2$.` },
+            },
+            String.raw`Risultato: $\log(x^2+2x+5)+\dfrac12\arctan\dfrac{x+1}2+c$.`,
+          ],
+          result: String.raw`$\displaystyle\int\frac{2x+3}{x^2+2x+5}\,dx=\log(x^2+2x+5)+\frac12\arctan\frac{x+1}2+c$`,
+        },
+        {
+          id: 's11.razionali.L3.e1', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x^2+4}$`,
+          answer: '(1/2)*atan(x/2)', _f: '1/(x^2+4)',
+          explain: String.raw`Con $\alpha=0$ e $\beta=2$: $\frac12\arctan\frac x2$.`,
+        },
+        {
+          id: 's11.razionali.L3.e2', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{x}{x^2+2x+2}\,dx$`,
+          answer: '(1/2)*log(x^2+2*x+2)-atan(x+1)', _f: 'x/(x^2+2*x+2)',
+          explain: String.raw`Scrivo $x=(x+1)-1$: il primo pezzo, con numeratore $x+1$ metà della derivata $2x+2$, dà $\frac12\log(x^2+2x+2)$; il secondo, $-\int\frac{dx}{(x+1)^2+1}$, dà $-\arctan(x+1)$.`,
+        },
+        {
+          id: 's11.razionali.L3.e3', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{dx}{x^2+2x+2}$`,
+          answer: 'atan(2)-pi/4', _int: ['1/(x^2+2*x+2)', 0, 1],
+          explain: String.raw`$x^2+2x+2=(x+1)^2+1$, quindi la primitiva è $\arctan(x+1)$. Tra $0$ e $1$: $\arctan2-\arctan1=\arctan2-\frac\pi4$.`,
+        },
+        {
+          id: 's11.razionali.L3.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Quale è una primitiva di $\dfrac{1}{x^2+9}$?`,
+          options: [String.raw`$\frac13\arctan\frac x3$`, String.raw`$\arctan\frac x9$`, String.raw`$\frac19\arctan\frac x3$`, String.raw`$\log(x^2+9)$`],
+          answer: 0,
+          explain: String.raw`Con $\beta=3$: $\frac1\beta\arctan\frac x\beta=\frac13\arctan\frac x3$. Errore tipico: dimenticare il fattore $\frac1\beta$ o usare $\beta^2$ al posto di $\beta$.`,
+        },
+        {
+          id: 's11.razionali.L3.e5', type: 'expr', level: 3, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x^2-x+1}$`,
+          answer: '(2/sqrt(3))*atan((2*x-1)/sqrt(3))', _f: '1/(x^2-x+1)',
+          explain: String.raw`$x^2-x+1=\left(x-\frac12\right)^2+\frac34$. Con $\beta=\frac{\sqrt3}2$: primitiva $\frac{2}{\sqrt3}\arctan\frac{2x-1}{\sqrt3}$.`,
+          source: 'Variante di Appello 03/09/2026 · Parte B',
+        },
+        {
+          id: 's11.razionali.L3.e6', type: 'num', level: 3,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{dx}{x^2-x+1}$`,
+          answer: '2*pi/(3*sqrt(3))', _int: ['1/(x^2-x+1)', 0, 1],
+          explain: String.raw`Primitiva $\frac2{\sqrt3}\arctan\frac{2x-1}{\sqrt3}$. Tra $0$ e $1$: $\frac2{\sqrt3}\left(\frac\pi6+\frac\pi6\right)=\frac{2\pi}{3\sqrt3}$.`,
+          source: 'Variante di Appello 03/09/2026 · Parte B',
+        },
+        {
+          id: 's11.razionali.L3.e7', type: 'problem', level: 3, points: 4,
+          prompt: String.raw`Calcola $\displaystyle\int_0^1\frac{2x+1}{x^2+2x+5}\,dx$, scomponendo il numeratore.`,
+          parts: [
+            { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_0^1\frac{2x+2}{x^2+2x+5}\,dx$?`, answer: 'log(8/5)', _int: ['(2*x+2)/(x^2+2*x+5)', 0, 1], explain: String.raw`Numeratore derivata del denominatore: $\left[\log(x^2+2x+5)\right]_0^1=\log8-\log5=\log\frac85$.` },
+            { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_0^1\frac{dx}{(x+1)^2+4}$?`, answer: '(1/2)*(pi/4-atan(1/2))', _int: ['1/((x+1)^2+4)', 0, 1], explain: String.raw`Primitiva $\frac12\arctan\frac{x+1}2$. Tra $0$ e $1$: $\frac12\left(\arctan1-\arctan\frac12\right)=\frac12\left(\frac\pi4-\arctan\frac12\right)$.` },
+            { type: 'num', prompt: String.raw`Quanto vale l'integrale finale $\displaystyle\int_0^1\frac{2x+1}{x^2+2x+5}\,dx$?`, answer: 'log(8/5)-(1/2)*(pi/4-atan(1/2))', _int: ['(2*x+1)/(x^2+2*x+5)', 0, 1], explain: String.raw`$2x+1=(2x+2)-1$: il risultato è il primo integrale meno il secondo.` },
+          ],
+          solution: String.raw`$2x+1=(2x+2)-1$, quindi l'integrale è $\displaystyle\int_0^1\frac{2x+2}{x^2+2x+5}\,dx-\int_0^1\frac{dx}{(x+1)^2+4}=\log\frac85-\frac12\left(\frac\pi4-\arctan\frac12\right)$.
+
+>! Attenzione: il secondo termine si sottrae. Il valore numerico è circa $0{,}309$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's11.razionali.p1', type: 'mcq', level: 1,
+      prompt: String.raw`Quale tipo di termine nella decomposizione dà un arcotangente?`,
+      options: [String.raw`$\dfrac{A}{x-a}$`, String.raw`$\dfrac{A}{(x-a)^2}$`, String.raw`$\dfrac{Ax+B}{x^2+px+q}$ con $p^2-4q<0$`, String.raw`$\dfrac{A}{x-a}+\dfrac{B}{x-b}$ con $a\neq b$`],
+      answer: 2,
+      explain: String.raw`Il denominatore irriducibile di secondo grado, con numeratore di primo grado, dà un logaritmo e un arcotangente. Gli altri tre danno solo logaritmi o potenze.`,
+    },
+    {
+      id: 's11.razionali.p2', type: 'tf', level: 1,
+      prompt: String.raw`Se il grado del numeratore è minore di quello del denominatore, non serve dividere.`,
+      answer: true,
+      explain: String.raw`Vero: la divisione è necessaria solo se il grado di $N$ è maggiore o uguale a quello di $D$.`,
+    },
+    {
+      id: 's11.razionali.p3', type: 'cloze', level: 1,
+      prompt: 'Completa la decomposizione.',
+      text: String.raw`$\dfrac1{x^2-1}=\dfrac{A}{x-1}+\dfrac{B}{x+1}$ con $A=$ [[0]] e $B=$ [[1]].`,
+      blanks: [
+        { options: [String.raw`$\frac12$`, String.raw`$-\frac12$`, String.raw`$1$`], answer: 0 },
+        { options: [String.raw`$\frac12$`, String.raw`$-\frac12$`, String.raw`$-1$`], answer: 1 },
+      ],
+      explain: String.raw`Con $x=1$: $1=2A$, quindi $A=\frac12$. Con $x=-1$: $1=-2B$, quindi $B=-\frac12$.`,
+    },
+    {
+      id: 's11.razionali.p4', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per calcolare $\displaystyle\int\frac{x+3}{x^2+2x+3}\,dx$. Scarta i passi sbagliati.`,
+      steps: [
+        String.raw`Completo il quadrato: $x^2+2x+3=(x+1)^2+2$.`,
+        String.raw`Scrivo il numeratore come derivata del denominatore più una costante: $x+3=\frac12(2x+2)+2$.`,
+        String.raw`Il primo pezzo dà $\frac12\log(x^2+2x+3)$.`,
+        String.raw`Il secondo dà $2\cdot\frac1{\sqrt2}\arctan\frac{x+1}{\sqrt2}=\sqrt2\arctan\frac{x+1}{\sqrt2}$.`,
+      ],
+      distractors: [String.raw`Integro direttamente $\frac{x}{x^2+2x+3}+\frac{3}{x^2+2x+3}$ e ottengo due logaritmi.`, String.raw`Scrivo $\dfrac{x+3}{x^2+2x+3}=\dfrac A{x+1}+\dfrac B{x+3}$.`],
+      explain: String.raw`Il denominatore non ha radici reali: non si può fare la decomposizione in fratti semplici con radici. Il percorso giusto è completare il quadrato e spezzare il numeratore.`,
+    },
+    {
+      id: 's11.razionali.p5', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\int_0^1\frac{x}{x^2+1}\,dx$`,
+      answer: '(1/2)*log(2)', _int: ['x/(x^2+1)', 0, 1],
+      explain: String.raw`Metà della derivata del denominatore: $\frac12\log2$.`,
+    },
+    {
+      id: 's11.razionali.p6', type: 'expr', level: 2, upToConstant: true, domain: [2.3, 4],
+      prompt: String.raw`$\displaystyle\int\frac{x-1}{x^2-4}\,dx$ (per $x>2$)`,
+      answer: '(1/4)*log(x-2)+(3/4)*log(x+2)', _f: '(x-1)/(x^2-4)',
+      explain: String.raw`Come nell'esercizio della seconda lezione: $\frac14$ per $\frac1{x-2}$ e $\frac34$ per $\frac1{x+2}$.`,
+    },
+    {
+      id: 's11.razionali.p7', type: 'expr', level: 2, upToConstant: true,
+      prompt: String.raw`$\displaystyle\int\frac{dx}{x^2+6x+10}$`,
+      answer: 'atan(x+3)', _f: '1/(x^2+6*x+10)',
+      explain: String.raw`$x^2+6x+10=(x+3)^2+1$: la primitiva è $\arctan(x+3)$.`,
+    },
+    {
+      id: 's11.razionali.p8', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\int_0^1\frac{dx}{(x+2)(x+3)}$`,
+      answer: 'log(9/8)', _int: ['1/((x+2)*(x+3))', 0, 1],
+      explain: String.raw`$\frac1{(x+2)(x+3)}=\frac1{x+2}-\frac1{x+3}$. Primitiva $\log\frac{x+2}{x+3}$; tra $0$ e $1$: $\log\frac34-\log\frac23=\log\frac98$.`,
+    },
+    {
+      id: 's11.razionali.p9', type: 'expr', level: 2, upToConstant: true, domain: [2.3, 4],
+      prompt: String.raw`$\displaystyle\int\frac{5x+1}{x^2-x-2}\,dx$ (per $x>2$)`,
+      answer: '(11/3)*log(x-2)+(4/3)*log(x+1)', _f: '(5*x+1)/(x^2-x-2)',
+      explain: String.raw`$x^2-x-2=(x-2)(x+1)$. Con $A=\dfrac{11}{3}$ (in $x=2$) e $B=\dfrac43$ (in $x=-1$): primitiva $\frac{11}3\log(x-2)+\frac43\log(x+1)$.`,
+    },
+    {
+      id: 's11.razionali.gen-fratti', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.int(0, 3), b = a + R.int(1, 3);
+        const L = (c) => (c === 0 ? 'x' : `(x-${c})`);
+        const Ls = (c) => (c === 0 ? 'x' : `x-${c}`);
+        return {
+          type: 'expr', upToConstant: true, domain: [b + 0.3, b + 2.5],
+          prompt: String.raw`$\displaystyle\int\frac{dx}{${L(a)}${L(b)}}$ (per $x>${b}$)`,
+          answer: `log((x-${a})/(x-${b}))/(${a - b})`, _f: `1/((x-${a})*(x-${b}))`,
+          explain: String.raw`Decomposizione: $\frac{1}{${L(a)}${L(b)}}=\frac{1}{${a - b}}\left(\frac{1}{${Ls(a)}}-\frac{1}{${Ls(b)}}\right)$. Primitiva $\frac{1}{${a - b}}\log\frac{${Ls(a)}}{${Ls(b)}}$ per $x>${b}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.razionali.gen-quadratico', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.nz(-3, 3), m = R.int(-4, 4), c = R.int(1, 3);
+        return {
+          type: 'expr', upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{${H.lin(k, m)}}{x^2+${c * c}}\,dx$`,
+          answer: `(${k}/2)*log(x^2+${c * c})+(${m}/${c})*atan(x/${c})`, _f: `(${k}*x+(${m}))/(x^2+${c * c})`,
+          explain: String.raw`$${H.lin(k, m)}=\frac{${k}}2(2x)${m === 0 ? '' : m < 0 ? ` - ${-m}` : ` + ${m}`}$. Il primo pezzo dà $\frac{${k}}2\log(x^2+${c * c})$; il secondo, $${m}\int\frac{dx}{x^2+${c * c}}$, dà $\frac{${m}}{${c}}\arctan\frac x${c}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.razionali.gen-definito', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(-2, 1), p = a + R.int(1, 3), q = p + R.int(1, 3);
+        const sh = a === 0 ? 'x' : (a > 0 ? `(x-${a})` : `(x+${-a})`);
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\int_{${p}}^{${q}}\frac{dx}{${sh}^2}$`,
+          answer: H.fracStr(q - p, (p - a) * (q - a)), _int: [`1/(x-(${a}))^2`, p, q],
+          explain: String.raw`Primitiva $-\frac{1}{${sh}}$. Tra $${p}$ e $${q}$: $\frac{1}{${p - a}}-\frac{1}{${q - a}}=${H.frac(q - p, (p - a) * (q - a))}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.razionali.gen-divisione', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.int(0, 2), c = R.int(1, 4);
+        const den = b === 0 ? 'x' : `x-${b}`;
+        const Lb = b === 0 ? 'x' : `x-${b}`;
+        const Ls = b === 0 ? 'x' : `x-${b}`;
+        const qT = b === 0 ? 'x' : `x+${b}`;
+        return {
+          type: 'expr', upToConstant: true, domain: [b + 0.3, b + 2.5],
+          prompt: String.raw`$\displaystyle\int\frac{x^2+${c}}{${den}}\,dx$ (per $x>${b}$)`,
+          answer: `x^2/2+(${b})*x+(${b * b + c})*log(${Lb})`, _f: `(x^2+${c})/(${Lb})`,
+          explain: String.raw`$x^2+${c}=(${Ls})(${qT})+${b * b + c}$, quindi $\frac{x^2+${c}}{${den}}=${qT}+\frac{${b * b + c}}{${den}}$. Integrando: $\frac{x^2}2${b === 0 ? '' : ` + ${b}x`}+${b * b + c}\log(${Lb})$.`,
+        };
+      },
+    },
+  ],
+  flashcards: [
+    { id: 's11.razionali.fc1', kind: 'def', front: 'Funzione razionale fratta', back: String.raw`$\frac{N(x)}{D(x)}$ con $N$ e $D$ polinomi e $D\neq0$.` },
+    { id: 's11.razionali.fc2', kind: 'metodo', front: 'Metodo per integrare una razionale', back: String.raw`1) Se grado $N\geq$ grado $D$, divido; 2) fattorizzo $D$; 3) scrivo i fratti semplici; 4) integro ogni pezzo.` },
+    { id: 's11.razionali.fc3', kind: 'formula', front: 'Primitive dei fratti semplici', back: String.raw`$\int\frac{A}{x-a}=A\log|x-a|+c$; $\int\frac{A}{(x-a)^k}=\frac{A}{(1-k)(x-a)^{k-1}}+c$ per $k\geq2$.` },
+    { id: 's11.razionali.fc4', kind: 'formula', front: 'Arcotangente per denominatore irriducibile', back: String.raw`$\displaystyle\int\frac{dx}{(x+\alpha)^2+\beta^2}=\frac1\beta\arctan\frac{x+\alpha}\beta+c$, $\beta>0$.` },
+    { id: 's11.razionali.fc5', kind: 'metodo', front: 'Trovare $A$ e $B$ con radici distinte', back: String.raw`Se $D=(x-a)(x-b)$: $A=\frac{N(a)}{a-b}$ e $B=\frac{N(b)}{b-a}$ (sostituisco una radice alla volta).` },
+    { id: 's11.razionali.fc6', kind: 'formula', front: 'Numeratore derivata del denominatore', back: String.raw`$\displaystyle\int\frac{f'}{f}=\log|f|+c$; per esempio $\int\frac{2x+p}{x^2+px+q}=\log|x^2+px+q|+c$.` },
+    { id: 's11.razionali.fc7', kind: 'errore', front: 'Errori tipici con le razionali', back: String.raw`Dimenticare la divisione quando il grado di $N$ è maggiore o uguale a quello di $D$; sbagliare il segno dei fratti semplici; usare $\arctan$ quando $\Delta\geq0$.` },
+  ],
+};
+
 export default {
   id: 's11',
   title: 'Integrali',
   subtitle: 'Riemann, primitive, tecniche di integrazione, aree',
   intro: String.raw`All'esame c'è quasi sempre un integrale: una primitiva per parti o di una razionale, un'area, o un integrale improprio. Qui costruisci tutto: dal significato di area fino alle tecniche di calcolo.`,
-  skills: [riemann, immediati, parti, sost],
+  skills: [riemann, immediati, parti, sost, razionali],
 };
