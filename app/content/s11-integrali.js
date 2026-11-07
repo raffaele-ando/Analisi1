@@ -1323,10 +1323,442 @@ $$F(t)=-\frac{\log(1+t)}t+\log t-\log(1+t)+c.$$
   ],
 };
 
+// ---------------------------------------------------------------------------
+// s11.sostituzione · Integrazione per sostituzione
+// ---------------------------------------------------------------------------
+const sost = {
+  id: 's11.sostituzione',
+  title: 'Integrazione per sostituzione',
+  summary: String.raw`Riconoscere una funzione composta con la sua derivata, scegliere il cambio di variabile e, negli integrali definiti, cambiare anche gli estremi.`,
+  prereq: ['s11.immediati', 's11.riemann', 's08.regole', 's00.esplog'],
+  examRefs: [],
+  lessons: [
+    {
+      id: 's11.sostituzione.L1',
+      title: 'La derivata dentro l\'integrale',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Derivata "dentro" e "fuori"',
+          body: String.raw`Molte integrande hanno la forma di una **funzione composta** $f(g(x))$ moltiplicata per la **derivata** $g'(x)$ della parte interna. Esempi che si riconoscono subito: in $2x\,e^{x^2}$ la parte interna è $x^2$ e la sua derivata $2x$ compare già; in $\cos x\,\sin^3x$ la parte interna è $\sin x$ e la sua derivata $\cos x$ compare già.
+
+>* **Regola.** Se $F'=f$, allora $\displaystyle\int f(g(x))\,g'(x)\,dx=F(g(x))+c$.
+
+Perché è vera: derivando $F(g(x))$ con la regola della catena ottengo $f(g(x))\,g'(x)$. La formula è la regola della catena letta al contrario.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\displaystyle\int 2x\,e^{x^2}\,dx$.`,
+          steps: [
+            String.raw`La parte interna è $x^2$; la sua derivata $2x$ compare già nell'integranda.`,
+            String.raw`Pongo $t=x^2$. Allora $dt=2x\,dx$: il pezzo $2x\,dx$ diventa $dt$.`,
+            {
+              text: String.raw`L'integrale diventa $\int e^t\,dt$, la cui primitiva è $e^t$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $e^t$ rispetto a $t$?`, answer: 'e^t', vars: ['t'], upToConstant: true, _f: 'e^t', explain: String.raw`$(e^t)'=e^t$, quindi la primitiva è $e^t$.` },
+            },
+            String.raw`Torno a $x$ con $t=x^2$: $e^{x^2}+c$.`,
+          ],
+          result: String.raw`$\displaystyle\int 2x\,e^{x^2}\,dx=e^{x^2}+c$`,
+        },
+        {
+          type: 'learn',
+          title: 'Riconoscere il pattern',
+          body: String.raw`Prima di sostituire, cerca nell'integranda:
+- una funzione $g(x)$ con dentro un'altra espressione: $\sqrt{x+1}$, $\sin(x^2)$, $e^{x^3}$, $\log x$;
+- la derivata di $g$, anche a meno di un fattore costante.
+
+Esempi: in $\int x\sqrt{x^2+1}\,dx$ si ha $t=x^2+1$ e $dt=2x\,dx$; in $\int\frac{\log x}{x}\,dx$ si ha $t=\log x$ e $dt=\frac{dx}{x}$; in $\int\frac{e^x}{1+e^x}\,dx$ si ha $t=1+e^x$ e $dt=e^x\,dx$.
+
+Se manca un fattore costante, lo porto fuori: $\int x\sqrt{x^2+1}\,dx=\frac12\int 2x\sqrt{x^2+1}\,dx$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e1', type: 'expr', level: 1, upToConstant: true, domain: [0.3, 2.7],
+          prompt: String.raw`$\displaystyle\int 3x^2\,(x^3+1)^4\,dx$`,
+          answer: '(x^3+1)^5/5', _f: '3*x^2*(x^3+1)^4',
+          explain: String.raw`La parte interna è $x^3+1$ e la sua derivata $3x^2$ c'è già. Con $t=x^3+1$ l'integrale diventa $\int t^4\,dt=\frac{t^5}{5}$. Risultato: $\frac{(x^3+1)^5}{5}+c$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e2', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int x\cos(x^2)\,dx$`,
+          answer: 'sin(x^2)/2', _f: 'x*cos(x^2)',
+          explain: String.raw`Con $t=x^2$ si ha $dt=2x\,dx$, quindi $x\,dx=\frac12dt$ e l'integrale è $\frac12\int\cos t\,dt=\frac12\sin t$. Verifica: $\frac{d}{dx}\frac12\sin(x^2)=x\cos(x^2)$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e3', type: 'mcq', level: 1,
+          prompt: String.raw`Per $\displaystyle\int x\,\sin(x^2)\,dx$ quale cambio di variabile funziona?`,
+          options: [String.raw`$t=x^2$`, String.raw`$t=\sin x$`, String.raw`$t=x$`, String.raw`$t=x^3$`],
+          answer: 0,
+          explain: String.raw`Con $t=x^2$ si ha $dt=2x\,dx$, e $x\,dx$ compare nell'integranda. Con $t=\sin x$ serve $\cos x\,dx$, che non c'è. Con $t=x^3$ serve $x^2\,dx$, che non c'è. Con $t=x$ non cambia nulla.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e4', type: 'num', level: 1,
+          prompt: String.raw`$\displaystyle\int_0^1 2x\,e^{x^2}\,dx$`,
+          answer: 'e-1', _int: ['2*x*exp(x^2)', 0, 1],
+          explain: String.raw`Con $t=x^2$ gli estremi diventano $t=0$ e $t=1$ e l'integrale è $\int_0^1 e^t\,dt=e-1$. Stesso risultato valutando la primitiva $e^{x^2}$ tra $0$ e $1$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e5', type: 'tf', level: 1,
+          prompt: String.raw`$\displaystyle\int x\,e^{x^2}\,dx=\frac{e^{x^2}}{2}+c$`,
+          answer: true,
+          explain: String.raw`Vero. Derivando $\frac{e^{x^2}}2$ si ottiene $\frac{2x\,e^{x^2}}2=x\,e^{x^2}$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Quale è una primitiva di $\dfrac{\cos x}{\sin x}$ (per $\sin x>0$)?`,
+          options: [String.raw`$\log|\sin x|+c$`, String.raw`$-\log|\sin x|+c$`, String.raw`$\dfrac{1}{\sin^2x}+c$`, String.raw`$\sin x\cos x+c$`],
+          answer: 0,
+          explain: String.raw`Con $t=\sin x$ si ha $dt=\cos x\,dx$ e l'integrale è $\int\frac{dt}{t}=\log|t|$. Il segno meno è sbagliato: appartiene a $\int\tan x\,dx=-\log|\cos x|$, un altro integrale. $\frac1{\sin^2x}$ è la derivata di $-\cot x$, non una primitiva di questa funzione.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e7', type: 'expr', level: 2, upToConstant: true, domain: [0.2, 1.2],
+          prompt: String.raw`$\displaystyle\int\tan x\,dx$ (per $0<x<\frac\pi2$)`,
+          answer: '-log(cos(x))', _f: 'tan(x)',
+          explain: String.raw`$\tan x=\frac{\sin x}{\cos x}=-\frac{(\cos x)'}{\cos x}$. Con $t=\cos x$ si ottiene $-\int\frac{dt}t=-\log t$. Per $0<x<\frac\pi2$ il coseno è positivo, quindi la primitiva è $-\log(\cos x)$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e8', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\pi/2}\sin x\,\cos^3x\,dx$`,
+          answer: '1/4', _int: ['sin(x)*cos(x)^3', 0, 'pi/2'],
+          explain: String.raw`Parte interna $\cos x$, derivata $-\sin x$. Con $t=\cos x$: $\sin x\,dx=-dt$. Estremi: $x=0\Rightarrow t=1$, $x=\frac\pi2\Rightarrow t=0$. Quindi $\int_1^0(-t^3)\,dt=\int_0^1t^3\,dt=\frac14$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e9', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{e^x}{\sqrt{1+e^x}}\,dx$`,
+          answer: '2*sqrt(1+e^x)', _f: 'e^x/sqrt(1+e^x)',
+          explain: String.raw`Con $t=1+e^x$ si ha $dt=e^x\,dx$ e l'integrale è $\int t^{-1/2}\,dt=2\sqrt t$. Risultato: $2\sqrt{1+e^x}+c$.`,
+        },
+        {
+          id: 's11.sostituzione.L1.e10', type: 'tf', level: 2,
+          prompt: String.raw`Per ogni $f$ continua su $[0,1]$ vale $\displaystyle\int_0^1 f(x^2)\,2x\,dx=\int_0^1 f(t)\,dt$.`,
+          answer: true,
+          explain: String.raw`Vero. Con $t=x^2$ si ha $dt=2x\,dx$; gli estremi restano $0$ e $1$ perché $0^2=0$ e $1^2=1$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.sostituzione.L2',
+      title: 'Sostituire esplicitamente',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il metodo in quattro passi',
+          body: String.raw`Quando la derivata non compare, **la sostituzione la costruisco io**. Quattro passi:
+
+1. scelgo $t=g(x)$: di solito è la parte "difficile" dentro una funzione (una radice, un'esponenziale, un logaritmo);
+2. calcolo $dt=g'(x)\,dx$, cioè $dx=\dfrac{dt}{g'(x)}$, e riscrivo **tutto** in $t$, anche $dx$;
+3. integro in $t$ (spesso diventa un'integrale immediato o razionale);
+4. torno a $x$ sostituendo $t=g(x)$.
+
+>! Errore tipico: sostituire la $x$ e lasciare $dx$. Ogni $x$ e ogni $dx$ devono diventare $t$ e $dt$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\int x\\sqrt{x+1}\\,dx$',
+          problem: String.raw`Calcola $\displaystyle\int x\sqrt{x+1}\,dx$.`,
+          steps: [
+            String.raw`Pongo $t=x+1$. Allora $x=t-1$ e $dt=dx$ (la derivata di $x+1$ è $1$).`,
+            String.raw`L'integrale diventa $\displaystyle\int (t-1)\sqrt t\,dt=\int\left(t^{3/2}-t^{1/2}\right)dt$.`,
+            {
+              text: String.raw`Primitive termine a termine: $\frac25t^{5/2}-\frac23t^{3/2}$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $t^{3/2}-t^{1/2}$ rispetto a $t$ (per $t>0$)?`, answer: '2/5*t^(5/2)-2/3*t^(3/2)', vars: ['t'], domain: [0.3, 2.7], upToConstant: true, _f: 't^(3/2)-t^(1/2)', explain: String.raw`$\int t^{3/2}\,dt=\frac{t^{5/2}}{5/2}=\frac25t^{5/2}$ e $\int t^{1/2}\,dt=\frac23t^{3/2}$.` },
+            },
+            String.raw`Torno a $x$: $\frac25(x+1)^{5/2}-\frac23(x+1)^{3/2}+c$.`,
+          ],
+          result: String.raw`$\displaystyle\int x\sqrt{x+1}\,dx=\frac25(x+1)^{5/2}-\frac23(x+1)^{3/2}+c$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\int\\frac{dx}{1+\\sqrt x}$',
+          problem: String.raw`Calcola $\displaystyle\int\frac{dx}{1+\sqrt x}$ per $x>0$.`,
+          steps: [
+            String.raw`La radice è la parte "difficile": pongo $t=\sqrt x$, cioè $x=t^2$.`,
+            String.raw`Allora $dx=2t\,dt$. Sostituisco: $\displaystyle\int\frac{2t}{1+t}\,dt$.`,
+            {
+              text: String.raw`Divido: $\frac{2t}{1+t}=2-\frac{2}{1+t}$, quindi l'integrale vale $2t-2\log(1+t)$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $\frac{2t}{1+t}$ rispetto a $t$ (per $t>0$)?`, answer: '2*t-2*log(1+t)', vars: ['t'], domain: [0.3, 2.7], upToConstant: true, _f: '2*t/(1+t)', explain: String.raw`$\frac{2t}{1+t}=\frac{2(1+t)-2}{1+t}=2-\frac{2}{1+t}$. Primitiva: $2t-2\log(1+t)$.` },
+            },
+            String.raw`Torno a $x$ con $t=\sqrt x$: $2\sqrt x-2\log(1+\sqrt x)+c$.`,
+          ],
+          result: String.raw`$\displaystyle\int\frac{dx}{1+\sqrt x}=2\sqrt x-2\log(1+\sqrt x)+c$`,
+        },
+        {
+          type: 'learn',
+          title: 'Quale $t$ scegliere',
+          body: String.raw`La sostituzione è utile quando l'integranda diventa **più semplice**: un polinomio, una razionale, un'esponenziale o un'immediata. Casi frequenti:
+
+- **radici**: con $\sqrt[n]{\cdot}$ dentro, pongo $t=\sqrt[n]{\cdot}$ e la radice sparisce;
+- **esponenziali**: con $e^x$ dentro, pongo $t=e^x$ e $dt=e^x\,dx$;
+- **logaritmi**: con $\log x$ dentro, pongo $t=\log x$ e $dt=\dfrac{dx}{x}$;
+- **funzioni trigonometriche**: se compare $\cos x$ insieme a $\sin x$ (o viceversa), pongo $t$ uguale alla funzione la cui derivata compare.
+
+Se dopo il cambio l'integranda non si semplifica, prova un'altra scelta o un altro metodo (per parti, vedi s11.parti).`,
+        },
+        {
+          id: 's11.sostituzione.L2.e1', type: 'expr', level: 2, upToConstant: true, domain: [1.5, 4],
+          prompt: String.raw`$\displaystyle\int\frac{dx}{x\log x}$ (per $x>1$)`,
+          answer: 'log(log(x))', _f: '1/(x*log(x))',
+          explain: String.raw`Con $t=\log x$ si ha $dt=\frac{dx}{x}$. L'integrale diventa $\int\frac{dt}{t}=\log t$. Quindi $\log(\log x)+c$ per $x>1$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e2', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{1}e^{\sqrt x}\,dx$`,
+          answer: '2', _int: ['exp(sqrt(x))', 0, 1],
+          explain: String.raw`Con $t=\sqrt x$: $x=t^2$, $dx=2t\,dt$, estremi $0$ e $1$. Quindi $\int_0^1 2t\,e^t\,dt$. Per parti: $\left[2(t-1)e^t\right]_0^1=0-(-2)=2$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e3', type: 'expr', level: 2, upToConstant: true, domain: [0.3, 2],
+          prompt: String.raw`$\displaystyle\int x^3e^{x^2}\,dx$`,
+          answer: '(x^2-1)*e^(x^2)/2', _f: 'x^3*e^(x^2)',
+          explain: String.raw`Con $t=x^2$: $dt=2x\,dx$ e $x^3\,dx=x^2\cdot x\,dx=\frac12t\,dt$. L'integrale è $\frac12\int te^t\,dt=\frac12(t-1)e^t$ (per parti). Risultato: $\frac{(x^2-1)e^{x^2}}2+c$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e4', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{e^{2x}}{e^x+1}\,dx$`,
+          answer: 'e^x-log(1+e^x)', _f: 'e^(2x)/(e^x+1)',
+          explain: String.raw`Scrivo $e^{2x}\,dx=e^x\cdot e^x\,dx$ e pongo $t=e^x$, $dt=e^x\,dx$: l'integrale è $\int\frac{t}{t+1}\,dt=\int\left(1-\frac1{t+1}\right)dt=t-\log(1+t)$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_1^4\frac{dx}{x+\sqrt x}$`,
+          answer: '2*log(3/2)', _int: ['1/(x+sqrt(x))', 1, 4],
+          explain: String.raw`Con $t=\sqrt x$: $x+\sqrt x=t^2+t=t(t+1)$ e $dx=2t\,dt$. Estremi: $x=1\Rightarrow t=1$, $x=4\Rightarrow t=2$. Quindi $\int_1^2\frac{2t}{t(t+1)}\,dt=\int_1^2\frac{2}{t+1}\,dt=2\log\frac32$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e6', type: 'cloze', level: 2,
+          prompt: 'Completa il cambio di variabile.',
+          text: String.raw`Nell'integrale $\displaystyle\int\frac{x}{1+x^4}\,dx$ pongo $t=x^2$: allora [[0]] e l'integrale diventa [[1]].`,
+          blanks: [
+            { options: [String.raw`$dt=2x\,dx$`, String.raw`$dt=x\,dx$`, String.raw`$dt=4x^3\,dx$`], answer: 0 },
+            { options: [String.raw`$\displaystyle\int\frac{dt}{1+t}$`, String.raw`$\displaystyle\frac12\int\frac{dt}{1+t^2}$`, String.raw`$\displaystyle\int\frac{dt}{1+t^2}$`], answer: 1 },
+          ],
+          explain: String.raw`Con $t=x^2$: $dt=2x\,dx$, quindi $x\,dx=\frac12dt$; inoltre $x^4=t^2$. Il fattore $\frac12$ resta fuori dall'integrale.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e7', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{1}x\sqrt{1-x^2}\,dx$`,
+          answer: '1/3', _int: ['x*sqrt(1-x^2)', 0, 1],
+          explain: String.raw`Con $t=1-x^2$: $dt=-2x\,dx$. Estremi: $x=0\Rightarrow t=1$, $x=1\Rightarrow t=0$. L'integrale è $\int_1^0\left(-\tfrac12\sqrt t\right)dt=\frac12\int_0^1\sqrt t\,dt=\frac12\cdot\frac23=\frac13$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e8', type: 'order', level: 2,
+          prompt: String.raw`Ordina i passi per calcolare $\displaystyle\int_0^{\pi/2}\sin x\,\cos^2x\,dx$. Scarta i passi sbagliati.`,
+          steps: [
+            String.raw`Pongo $t=\cos x$: allora $dt=-\sin x\,dx$.`,
+            String.raw`Estremi: $x=0\Rightarrow t=1$, $x=\frac\pi2\Rightarrow t=0$.`,
+            String.raw`L'integrale diventa $\displaystyle\int_1^0(-t^2)\,dt=\int_0^1t^2\,dt$.`,
+            String.raw`Risultato: $\frac13$.`,
+          ],
+          distractors: [String.raw`Lascio gli estremi $0$ e $\frac\pi2$ e integro $\displaystyle\int_0^{\pi/2}t^2\,dt$.`, String.raw`Pongo $t=\sin x$, quindi $dt=\cos x\,dx$, che è presente nell'integranda.`],
+          explain: String.raw`Il segno meno di $dt$ si assorbe scambiando gli estremi. I due passi sbagliati: gli estremi di $x$ non valgono per $t$; e $t=\sin x$ non funziona perché serve $\cos x\,dx$, mentre l'integranda ha $\sin x\,dx$.`,
+        },
+        {
+          id: 's11.sostituzione.L2.e9', type: 'open', level: 2, points: 2,
+          prompt: String.raw`Si spieghi come si usa il cambio di variabile $t=g(x)$ per calcolare $\int f(g(x))\,g'(x)\,dx$, e perché in $\int f(g(x))\,dx$ senza il fattore $g'(x)$ la sostituzione non funziona.`,
+          answer: String.raw`Si pone $t=g(x)$, da cui $dt=g'(x)\,dx$. L'integrale diventa $\int f(t)\,dt=F(t)+c$, dove $F'=f$; si torna a $x$ con $t=g(x)$. Senza il fattore $g'(x)$ resta $dx=\frac{dt}{g'(x)}$, e $g'(x)$ dipende ancora da $x$: l'integrale non si scrive più solo in $t$.`,
+          rubric: ['Scrive $t=g(x)$ e $dt=g\'(x)\\,dx$', 'Ottiene $\\int f(t)\\,dt$ e torna alla variabile $x$', 'Spiega che il fattore $g\'(x)$ serve a eliminare $dx$', 'Chiude con la formula $F(g(x))+c$'],
+        },
+      ],
+    },
+    {
+      id: 's11.sostituzione.L3',
+      title: 'Integrali definiti e radici trigonometriche',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Cambiare anche gli estremi',
+          body: String.raw`Nell'integrale **definito** puoi cambiare variabile e cambiare anche gli estremi. Se $t=g(x)$:
+
+>* $$\int_a^b f(g(x))\,g'(x)\,dx=\int_{g(a)}^{g(b)} f(t)\,dt.$$
+
+Poi calcoli in $t$, con i nuovi estremi, senza tornare a $x$. Se preferisci tornare a $x$, trovi la primitiva in $t$, sostituisci $t=g(x)$ e valuti agli estremi originali $a$ e $b$.
+
+>! Errore tipico: cambiare variabile e tenere gli estremi $a$ e $b$. Sono estremi di $x$: in $t$ diventano $g(a)$ e $g(b)$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\displaystyle\int_0^1\frac{2x}{(1+x^2)^2}\,dx$ con un cambio di variabile.`,
+          steps: [
+            String.raw`Pongo $t=1+x^2$, quindi $dt=2x\,dx$. Estremi: $x=0\Rightarrow t=1$, $x=1\Rightarrow t=2$.`,
+            String.raw`L'integrale diventa $\displaystyle\int_1^2 t^{-2}\,dt$.`,
+            {
+              text: String.raw`Una primitiva di $t^{-2}$ è $-\frac1t$. Valuto: $-\frac12-(-1)$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\int_1^2 \frac{dt}{t^2}$?`, answer: '1/2', _int: ['1/x^2', 1, 2], explain: String.raw`Primitiva $-\frac1t$: $-\frac12+1=\frac12$.` },
+            },
+            String.raw`Risultato: $\displaystyle\int_0^1\frac{2x}{(1+x^2)^2}\,dx=\frac12$.`,
+          ],
+          result: String.raw`$\displaystyle\int_0^1\frac{2x}{(1+x^2)^2}\,dx=\frac12$`,
+        },
+        {
+          id: 's11.sostituzione.L3.e1', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\displaystyle\int\frac{x}{\sqrt{1+x^2}}\,dx$`,
+          answer: 'sqrt(1+x^2)', _f: 'x/sqrt(1+x^2)',
+          explain: String.raw`Parte interna $1+x^2$, derivata $2x$: con $t=1+x^2$ l'integrale è $\frac12\int t^{-1/2}\,dt=\sqrt t$. Risultato: $\sqrt{1+x^2}+c$.`,
+        },
+        {
+          id: 's11.sostituzione.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\log 3}e^x\,(1+e^x)\,dx$`,
+          answer: '6', _int: ['exp(x)*(1+exp(x))', 0, 'log(3)'],
+          explain: String.raw`Con $t=1+e^x$: $dt=e^x\,dx$. Estremi: $x=0\Rightarrow t=2$, $x=\log3\Rightarrow t=4$. L'integrale è $\int_2^4 t\,dt=\frac{16-4}2=6$.`,
+        },
+        {
+          id: 's11.sostituzione.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Nell'integrale $\displaystyle\int_1^{e}\frac{(\log x)^2}{x}\,dx$ con $t=\log x$, quali sono gli estremi in $t$?`,
+          options: [String.raw`$0$ e $1$`, String.raw`$1$ e $e$`, String.raw`$1$ e $0$`, String.raw`$0$ e $e$`],
+          answer: 0,
+          explain: String.raw`$t=\log x$: per $x=1$ si ha $t=0$; per $x=e$ si ha $t=1$. Errore tipico: lasciare $1$ ed $e$, che sono estremi di $x$. L'integrale in $t$ è $\int_0^1t^2\,dt=\frac13$.`,
+        },
+        {
+          id: 's11.sostituzione.L3.e4', type: 'open', level: 3, points: 3,
+          prompt: String.raw`Si enunci la formula di integrazione per sostituzione per gli integrali definiti, con $g$ di classe $C^1$, e si spieghi perché cambiano gli estremi.`,
+          answer: String.raw`Se $g:[a,b]\to\R$ è derivabile con $g'$ continua e $f$ è continua sull'immagine di $g$, allora $\displaystyle\int_a^b f(g(x))\,g'(x)\,dx=\int_{g(a)}^{g(b)}f(t)\,dt$. Gli estremi cambiano perché $t=g(x)$: il punto $x=a$ corrisponde a $t=g(a)$ e $x=b$ a $t=g(b)$. Se $G$ è una primitiva di $f$, entrambi i membri valgono $G(g(b))-G(g(a))$, perché $\frac{d}{dx}G(g(x))=f(g(x))g'(x)$.`,
+          rubric: ['Ipotesi: $g$ derivabile con $g\'$ continua, $f$ continua', 'Formula con estremi $g(a)$ e $g(b)$', 'Spiega il cambio degli estremi come corrispondenza $x\\mapsto t=g(x)$', 'Verifica con la primitiva $G(g(x))$ o con la regola della catena'],
+        },
+        {
+          id: 's11.sostituzione.L3.e5', type: 'problem', level: 3, points: 4,
+          prompt: String.raw`Calcola $\displaystyle\int_0^1\sqrt{1-x^2}\,dx$ con la sostituzione $x=\sin t$, $t\in\left[0,\frac\pi2\right]$.`,
+          parts: [
+            { type: 'expr', prompt: String.raw`Scrivi l'integranda $\sqrt{1-x^2}\,dx$ in $t$ (usa $dx=\cos t\,dt$ e $\sqrt{1-\sin^2t}=\cos t$ su $\left[0,\frac\pi2\right]$).`, answer: 'cos(t)^2', vars: ['t'], domain: [0.2, 1.3], explain: String.raw`$\sqrt{1-\sin^2t}=\cos t$ (positivo su $\left[0,\frac\pi2\right]$) e $dx=\cos t\,dt$: l'integranda è $\cos^2t$.` },
+            { type: 'expr', prompt: String.raw`Una primitiva di $\cos^2t$ (usa $\cos^2t=\frac{1+\cos2t}2$).`, answer: 't/2+sin(2*t)/4', vars: ['t'], domain: [0.2, 1.3], upToConstant: true, explain: String.raw`$\int\cos^2t\,dt=\int\frac{1+\cos2t}2\,dt=\frac t2+\frac{\sin2t}4$. Derivando: $\frac12+\frac{\cos2t}2=\cos^2t$.` },
+            { type: 'num', prompt: String.raw`Estremi: $x=0\Rightarrow t=0$ e $x=1\Rightarrow t=\frac\pi2$. Quanto vale l'integrale finale?`, answer: 'pi/4', explain: String.raw`Tra $0$ e $\frac\pi2$: $\left(\frac\pi4+\frac{\sin\pi}4\right)-0=\frac\pi4$.` },
+          ],
+          solution: String.raw`$\displaystyle\int_0^1\sqrt{1-x^2}\,dx=\int_0^{\pi/2}\cos^2t\,dt=\left[\frac t2+\frac{\sin2t}4\right]_0^{\pi/2}=\frac\pi4$.
+
+Controllo geometrico: l'integrale è l'area di un quarto di cerchio di raggio $1$, cioè $\frac{\pi}{4}$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's11.sostituzione.p1', type: 'mcq', level: 1,
+      prompt: String.raw`Quale integrale si risolve con $t=\sin x$?`,
+      options: [String.raw`$\displaystyle\int\cos x\,\sin^2x\,dx$`, String.raw`$\displaystyle\int\sin^3x\,dx$`, String.raw`$\displaystyle\int\frac{x}{\sin x}\,dx$`, String.raw`$\displaystyle\int\sin(x^2)\,dx$`],
+      answer: 0,
+      explain: String.raw`Con $t=\sin x$ serve $dt=\cos x\,dx$ nell'integranda: c'è solo nel primo caso. Negli altri la derivata di $\sin x$ non compare.`,
+    },
+    {
+      id: 's11.sostituzione.p2', type: 'tf', level: 1,
+      prompt: String.raw`Se $t=g(x)$ allora $\displaystyle\int f(g(x))\,dx=\int f(t)\,dt$.`,
+      answer: false,
+      explain: String.raw`Falso: manca il fattore $g'(x)$. La formula corretta è $\int f(g(x))\,g'(x)\,dx=\int f(t)\,dt$, perché $dx$ diventa $\frac{dt}{g'(x)}$.`,
+    },
+    {
+      id: 's11.sostituzione.p3', type: 'cloze', level: 1,
+      prompt: 'Completa il cambio di variabile.',
+      text: String.raw`Per $\displaystyle\int\frac{\log x}{x}\,dx$ pongo $t=$ [[0]]: allora [[1]] e l'integrale diventa $\displaystyle\int$ [[2]].`,
+      blanks: [
+        { options: [String.raw`$\log x$`, String.raw`$\frac1x$`, String.raw`$x$`], answer: 0 },
+        { options: [String.raw`$dx$`, String.raw`$\frac{dx}{x}$`, String.raw`$\log x\,dx$`], answer: 1 },
+        { options: [String.raw`$\frac1t\,dt$`, String.raw`$t\,dt$`, String.raw`$t^2\,dt$`], answer: 1 },
+      ],
+      explain: String.raw`Con $t=\log x$: $dt=\frac{dx}{x}$, e l'integrale è $\int t\,dt$.`,
+    },
+    {
+      id: 's11.sostituzione.p4', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per calcolare $\displaystyle\int_0^1 2x\sqrt{1+x^2}\,dx$. Scarta i passi sbagliati.`,
+      steps: [
+        String.raw`Pongo $t=1+x^2$, quindi $dt=2x\,dx$.`,
+        String.raw`Estremi: $x=0\Rightarrow t=1$, $x=1\Rightarrow t=2$.`,
+        String.raw`L'integrale diventa $\displaystyle\int_1^2\sqrt t\,dt$.`,
+        String.raw`Primitiva $\frac23t^{3/2}$; valuto tra $1$ e $2$: $\frac23\left(2\sqrt2-1\right)$.`,
+      ],
+      distractors: [String.raw`Lascio gli estremi $0$ e $1$ e integro $\displaystyle\int_0^1\sqrt t\,dt$.`, String.raw`Scrivo $dt=2\,dx$ e dimentico la $x$ davanti all'integrale.`],
+      explain: String.raw`Il cambio di variabile trasforma $dx$ in $\frac{dt}{2x}$ e il $2x$ si elimina; gli estremi sono quelli di $t$. Con gli estremi di $x$ (passo scartato) il risultato sarebbe sbagliato.`,
+    },
+    {
+      id: 's11.sostituzione.p5', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\int_0^{\log 3}e^x\,(1+e^x)\,dx$`,
+      answer: '6', _int: ['exp(x)*(1+exp(x))', 0, 'log(3)'],
+      explain: String.raw`Con $t=1+e^x$: estremi $2$ e $4$. $\int_2^4t\,dt=6$.`,
+    },
+    {
+      id: 's11.sostituzione.p6', type: 'expr', level: 2, upToConstant: true,
+      prompt: String.raw`$\displaystyle\int\frac{\sin x}{\cos^3x}\,dx$ (per $0<x<\frac\pi2$)`,
+      answer: '1/(2*cos(x)^2)', _f: 'sin(x)/cos(x)^3', domain: [0.2, 1.2],
+      explain: String.raw`Con $t=\cos x$: $\sin x\,dx=-dt$, l'integrale è $-\int t^{-3}\,dt=\frac{t^{-2}}{2}$. Risultato: $\frac1{2\cos^2x}$.`,
+    },
+    {
+      id: 's11.sostituzione.gen-potenza', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.int(1, 4), n = R.int(1, 4);
+        return {
+          type: 'expr', upToConstant: true,
+          prompt: String.raw`$\displaystyle\int x\,(x^2+${a})^{${n}}\,dx$`,
+          answer: `(x^2+${a})^${n + 1}/${2 * (n + 1)}`, _f: `x*(x^2+${a})^${n}`,
+          explain: String.raw`Con $t=x^2+${a}$ si ha $dt=2x\,dx$: l'integrale è $\frac12\int t^{${n}}\,dt=\frac{t^{${n + 1}}}{${2 * (n + 1)}}$. Risultato: $\frac{(x^2+${a})^{${n + 1}}}{${2 * (n + 1)}}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.sostituzione.gen-esp', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 3), b = R.int(1, 2);
+        const ca = H.coef(a);
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\int_0^{${b}} x\,e^{${ca}x^2}\,dx$`,
+          answer: `(e^(${a * b * b})-1)/${2 * a}`, _int: [`x*exp(${a}*x^2)`, 0, b],
+          explain: String.raw`Con $t=${a}x^2$ si ha $dt=${2 * a}x\,dx$, quindi l'integrale è $\frac{1}{${2 * a}}\int e^t\,dt$. Primitiva $\frac{e^{${a}x^2}}{${2 * a}}$; tra $0$ e $${b}$: $\frac{e^{${a * b * b}}-1}{${2 * a}}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.sostituzione.gen-trig', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 3), n = R.int(1, 4);
+        const ax = a === 1 ? 'x' : `${a}x`;
+        const cf = H.coef(a);
+        const sp = n === 1 ? String.raw`\sin(${ax})` : String.raw`\sin^{${n}}(${ax})`;
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\int_0^{\pi/${2 * a}} ${cf}\cos(${ax})\,${sp}\,dx$`,
+          answer: `1/${n + 1}`, _int: [`${a}*cos(${a}*x)*sin(${a}*x)^${n}`, 0, `pi/${2 * a}`],
+          explain: String.raw`$${cf}\cos(${ax})$ è la derivata di $\sin(${ax})$: con $t=\sin(${ax})$ l'integrale è $\int_0^1 t^{${n}}\,dt=\frac1{${n + 1}}$ (estremi $0$ e $\sin\frac\pi2=1$).`,
+        };
+      },
+    },
+    {
+      id: 's11.sostituzione.gen-cerchio', type: 'gen', level: 3,
+      gen: (R) => {
+        const c = R.int(1, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\int_0^{${c}}\sqrt{${c * c}-x^2}\,dx$ (usa la geometria)`,
+          answer: `pi*${c * c}/4`, _int: [`sqrt(${c * c}-x^2)`, 0, c],
+          explain: String.raw`$y=\sqrt{${c * c}-x^2}$ è la semicirconferenza di raggio $${c}$; su $[0,${c}]$ è un quarto di cerchio di area $\frac{\pi\,${c * c}}{4}$. (Con $x=${c}\sin t$ si ottiene lo stesso risultato.)`,
+        };
+      },
+    },
+    {
+      id: 's11.sostituzione.gen-radice', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 4);
+        return {
+          type: 'expr', upToConstant: true, domain: [0.3, 2.7],
+          prompt: String.raw`$\displaystyle\int x\,\sqrt{x^2+${a}}\,dx$`,
+          answer: `(x^2+${a})^(3/2)/3`, _f: `x*sqrt(x^2+${a})`,
+          explain: String.raw`Con $t=x^2+${a}$: $dt=2x\,dx$ e l'integrale è $\frac12\int\sqrt t\,dt=\frac13t^{3/2}$. Risultato: $\frac13(x^2+${a})^{3/2}+c$.`,
+        };
+      },
+    },
+  ],
+  flashcards: [
+    { id: 's11.sostituzione.fc1', kind: 'formula', front: 'Sostituzione per primitive', back: String.raw`$\int f(g(x))\,g'(x)\,dx=F(g(x))+c$, dove $F'=f$.` },
+    { id: 's11.sostituzione.fc2', kind: 'metodo', front: 'Metodo in quattro passi', back: String.raw`1) $t=g(x)$; 2) $dx=\frac{dt}{g'(x)}$ e tutto in $t$; 3) integro in $t$; 4) torno a $x$.` },
+    { id: 's11.sostituzione.fc3', kind: 'formula', front: 'Sostituzione per integrali definiti', back: String.raw`$\displaystyle\int_a^b f(g(x))\,g'(x)\,dx=\int_{g(a)}^{g(b)}f(t)\,dt$: cambiano gli estremi.` },
+    { id: 's11.sostituzione.fc4', kind: 'metodo', front: 'Quale $t$ scegliere', back: String.raw`La funzione "dentro" $g$ la cui derivata compare nell'integranda, a meno di una costante. Radici: $t=\sqrt[n]{\cdot}$; esponenziali: $t=e^x$; logaritmi: $t=\log x$.` },
+    { id: 's11.sostituzione.fc5', kind: 'errore', front: 'Errori tipici con il cambio di variabile', back: String.raw`Lasciare $dx$ invece di $\frac{dt}{g'(x)}$; dimenticare il fattore $g'(x)$; tenere gli estremi di $x$ negli integrali in $t$.` },
+    { id: 's11.sostituzione.fc6', kind: 'formula', front: 'Due primitive da riconoscere', back: String.raw`$\int\frac{f'}{f}=\log|f|+c$; $\int f'f^\alpha=\frac{f^{\alpha+1}}{\alpha+1}+c$ ($\alpha\neq-1$).` },
+    { id: 's11.sostituzione.fc7', kind: 'def', front: 'Cambio di variabile', back: String.raw`Scrivere l'integrale in una nuova variabile $t=g(x)$ (o $x=\varphi(t)$) perché la nuova integranda sia più semplice.` },
+  ],
+};
+
 export default {
   id: 's11',
   title: 'Integrali',
   subtitle: 'Riemann, primitive, tecniche di integrazione, aree',
   intro: String.raw`All'esame c'è quasi sempre un integrale: una primitiva per parti o di una razionale, un'area, o un integrale improprio. Qui costruisci tutto: dal significato di area fino alle tecniche di calcolo.`,
-  skills: [riemann, immediati, parti],
+  skills: [riemann, immediati, parti, sost],
 };
