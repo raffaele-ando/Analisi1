@@ -874,10 +874,577 @@ $$s_n\ge\log(n+1)\to+\infty .$$`,
   ],
 };
 
+// =====================================================================
+// s13.positivi — termini positivi, confronto, asintotico, radice, rapporto, integrale
+// =====================================================================
+/** 1/n^p in LaTeX (p = 1, 2, 3 o 1/2) */
+const invPow = (p) => (p === 1 ? String.raw`\frac1n` : p === 0.5 ? String.raw`\frac{1}{\sqrt n}` : String.raw`\frac{1}{n^{${p}}}`);
+/** n^q come prefattore (q = 0, 1/2, 1, 3/2, 2) */
+const preTex = (q) => ({ 0: '', 0.5: String.raw`\sqrt n\,`, 1: 'n', 1.5: String.raw`n\sqrt n\,`, 2: 'n^{2}' })[q];
+const decTex = (x) => (Number.isInteger(x) ? String(x) : H.frac(Math.round(x * 2), 2));
+const decStr = (x) => (Number.isInteger(x) ? String(x) : H.fracStr(Math.round(x * 2), 2));
+/** funzioni elementari che per x -> 0 valgono ~ k x^m */
+const SMALL = [
+  { t: (a) => String.raw`\sin${a}`, m: 1, k: [1, 1], eq: (a) => a, name: String.raw`\sin x\sim x` },
+  { t: (a) => String.raw`\tan${a}`, m: 1, k: [1, 1], eq: (a) => a, name: String.raw`\tan x\sim x` },
+  { t: (a) => String.raw`\arctan${a}`, m: 1, k: [1, 1], eq: (a) => a, name: String.raw`\arctan x\sim x` },
+  { t: (a) => String.raw`\log\left(1+${a}\right)`, m: 1, k: [1, 1], eq: (a) => a, name: String.raw`\log(1+x)\sim x` },
+  { t: (a) => String.raw`\left(e^{${a}}-1\right)`, m: 1, k: [1, 1], eq: (a) => a, name: String.raw`e^x-1\sim x` },
+  { t: (a) => String.raw`\left(1-\cos${a}\right)`, m: 2, k: [1, 2], name: String.raw`1-\cos x\sim\frac{x^2}2` },
+  { t: (a) => String.raw`\left(\sqrt{1+${a}}-1\right)`, m: 1, k: [1, 2], name: String.raw`\sqrt{1+x}-1\sim\frac x2` },
+];
+
+const POS = {
+  id: 's13.positivi',
+  title: 'Serie a termini positivi: i criteri',
+  summary: String.raw`Usi confronto (con dimostrazione), confronto asintotico, radice, rapporto e criterio integrale per decidere il carattere di una serie a termini positivi.`,
+  prereq: ['s13.necessaria', 's06.gerarchia', 's10.sviluppi', 's12.criteri'],
+  examRefs: ['Appello 11/06/2026 · A', 'Appello 10/02/2026 · B', 'Appello 03/09/2026 · B'],
+  lessons: [
+    {
+      id: 's13.positivi.L1',
+      title: 'Termini positivi e criterio del confronto',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Niente oscillazioni',
+          body: String.raw`Se $a_n\ge0$ (almeno definitivamente), ogni nuovo termine fa **crescere** la somma parziale: $s_{n+1}=s_n+a_{n+1}\ge s_n$.
+
+>* Una serie a termini non negativi **non è mai indeterminata**: converge se $(s_n)$ è limitata, altrimenti diverge a $+\infty$.
+
+È il teorema delle successioni monotone applicato a $(s_n)$. Quindi per una serie a termini positivi basta capire se le somme parziali restano limitate. Lo si fa **confrontando** con serie note.`,
+        },
+        {
+          type: 'learn',
+          title: 'Il criterio del confronto',
+          body: String.raw`>* **Criterio del confronto.** Siano $0\le a_n\le b_n$ (definitivamente). Allora:
+>* - se $\sum b_n$ converge, anche $\sum a_n$ converge;
+>* - se $\sum a_n$ diverge, anche $\sum b_n$ diverge.
+
+Intuizione: la serie più piccola non può superare quella più grande.
+
+>! Le altre due direzioni non dicono niente: se la più grande diverge, la più piccola può fare di tutto; se la più piccola converge, la più grande pure.`,
+        },
+        {
+          type: 'example',
+          title: 'Dimostrazione del confronto',
+          problem: String.raw`Siano $0\le a_n\le b_n$ per ogni $n$, $s_n=\sum_{k=1}^na_k$, $t_n=\sum_{k=1}^nb_k$. Dimostra che se $\sum b_n$ converge allora $\sum a_n$ converge.`,
+          steps: [
+            String.raw`Sommando le disuguaglianze $a_k\le b_k$ per $k=1,\dots,n$: $s_n\le t_n$.`,
+            String.raw`$(t_n)$ è crescente (termini $\ge0$) e converge a $T$: quindi $t_n\le T$ per ogni $n$.`,
+            {
+              text: String.raw`Allora $s_n\le t_n\le T$: $(s_n)$ è crescente e limitata superiormente.`,
+              ask: { type: 'mcq', prompt: String.raw`Perché $(s_n)$ è crescente?`, options: [String.raw`Perché $a_n\ge0$`, String.raw`Perché $a_n\le b_n$`, String.raw`Perché $t_n$ converge`], answer: 0, explain: String.raw`$s_{n+1}-s_n=a_{n+1}\ge0$. La disuguaglianza $a_n\le b_n$ serve invece per la limitatezza.` },
+            },
+            String.raw`Per il teorema sulle successioni monotone $s_n$ converge (a un valore $\le T$).`,
+            String.raw`Per la seconda parte: se $s_n\to+\infty$, da $t_n\ge s_n$ segue $t_n\to+\infty$ (confronto tra successioni).`,
+          ],
+          result: String.raw`Se $a_n\le b_n$ vale solo definitivamente, si tolgono i primi termini: il carattere non cambia.`,
+        },
+        {
+          id: 's13.positivi.L1.c1', type: 'mcq', level: 1,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac1{n^2+n+1}$.`,
+          options: [String.raw`Converge: $\frac1{n^2+n+1}\le\frac1{n^2}$`, String.raw`Diverge: $\frac1{n^2+n+1}\le\frac1n$`, 'Non si può dire'],
+          answer: 0,
+          explain: String.raw`$n^2+n+1\ge n^2$, quindi $0<a_n\le\frac1{n^2}$, che converge: per confronto anche $\sum a_n$ converge. La seconda opzione sbaglia direzione: essere **minore** di una serie divergente non dice nulla.`,
+        },
+        {
+          id: 's13.positivi.L1.c2', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{2+\sin n}{n}$.`,
+          options: [String.raw`Diverge a $+\infty$`, 'Converge', String.raw`È indeterminata, perché $\sin n$ oscilla`],
+          answer: 0,
+          explain: String.raw`$2+\sin n\ge1$, quindi $a_n\ge\frac1n>0$: per confronto con l'armonica diverge. Non può essere indeterminata: i termini sono positivi.`,
+        },
+        {
+          id: 's13.positivi.L1.c3', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{|\sin n|}{n^2}$.`,
+          options: ['Converge', String.raw`Diverge a $+\infty$`, 'Non si può dire: il seno non ha limite'],
+          answer: 0,
+          explain: String.raw`$0\le\frac{|\sin n|}{n^2}\le\frac1{n^2}$, e $\sum\frac1{n^2}$ converge. Il confronto non richiede che $a_n$ abbia una forma "pulita": basta una maggiorazione.`,
+        },
+        {
+          id: 's13.positivi.L1.c4', type: 'tf', level: 2,
+          prompt: String.raw`Se $0\le a_n\le\frac1n$ per ogni $n$, allora $\sum a_n$ diverge.`,
+          answer: false,
+          explain: String.raw`Falso: essere più piccoli di una serie divergente non dà informazioni. Per esempio $a_n=\frac1{n^2}\le\frac1n$ e converge; $a_n=\frac1{2n}\le\frac1n$ e diverge.`,
+        },
+        {
+          id: 's13.positivi.L1.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\displaystyle\sum_{n=1}^{+\infty}\frac1{n+\sqrt n}$, quale confronto funziona?`,
+          options: [String.raw`$\frac1{n+\sqrt n}\ge\frac1{2n}$: diverge`, String.raw`$\frac1{n+\sqrt n}\le\frac1n$: diverge`, String.raw`$\frac1{n+\sqrt n}\le\frac1{\sqrt n}$: converge`],
+          answer: 0,
+          explain: String.raw`$\sqrt n\le n$ dà $n+\sqrt n\le2n$, quindi $a_n\ge\frac1{2n}$ e $\sum\frac1{2n}$ diverge. Le altre due maggiorano con serie divergenti: non concludono nulla (e la terza conclude pure il falso).`,
+        },
+        {
+          id: 's13.positivi.L1.c6', type: 'order', level: 3, source: 'Appello 11/06/2026 · A',
+          prompt: String.raw`Riordina la dimostrazione: "se $0\le a_n\le b_n$ e $\sum b_n$ converge, allora $\sum a_n$ converge".`,
+          steps: [
+            String.raw`Siano $s_n=\sum_{k=1}^na_k$ e $t_n=\sum_{k=1}^nb_k$; da $a_k\le b_k$ segue $s_n\le t_n$.`,
+            String.raw`$(t_n)$ è crescente e converge a $T\in\R$, quindi $t_n\le T$ per ogni $n$.`,
+            String.raw`Dunque $s_n\le T$: $(s_n)$ è limitata superiormente.`,
+            String.raw`$(s_n)$ è crescente perché $a_n\ge0$.`,
+            String.raw`Una successione crescente e limitata converge: $\sum a_n$ converge.`,
+          ],
+          distractors: [String.raw`Poiché $a_n\le b_n$ e $b_n\to0$, anche $a_n\to0$, quindi $\sum a_n$ converge.`, String.raw`$(s_n)$ è crescente perché $a_n\le b_n$.`],
+          explain: String.raw`Il primo distrattore usa il viceversa (falso) della condizione necessaria. Il secondo sbaglia il motivo della monotonia: serve $a_n\ge0$.`,
+        },
+        {
+          id: 's13.positivi.L1.c7', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac1{n\,2^n}$.`,
+          options: [String.raw`Converge: $\frac1{n2^n}\le\frac1{2^n}$`, String.raw`Diverge: $\frac1{n2^n}\le\frac1n$`, String.raw`Diverge: non soddisfa la condizione necessaria`],
+          answer: 0,
+          explain: String.raw`$n\ge1$ dà $\frac1{n2^n}\le\frac1{2^n}$, geometrica di ragione $\frac12$: converge. (La somma vale $\log2$: lo vedrai con le serie di Taylor.)`,
+        },
+        {
+          id: 's13.positivi.L1.c8', type: 'open', level: 3, source: 'Appello 11/06/2026 · A',
+          prompt: String.raw`Enunciare e dimostrare il criterio del confronto per le serie a termini non negativi.`,
+          answer: String.raw`**Enunciato.** Siano $0\le a_n\le b_n$ per ogni $n$ (basta definitivamente). Se $\sum b_n$ converge, allora $\sum a_n$ converge; se $\sum a_n$ diverge, allora $\sum b_n$ diverge.
+
+**Dimostrazione.** Siano $s_n=\sum_{k=1}^na_k$, $t_n=\sum_{k=1}^nb_k$. Da $a_k\le b_k$ si ha $s_n\le t_n$. Entrambe sono crescenti (termini $\ge0$).
+
+Se $\sum b_n$ converge a $T$, allora $t_n\le T$ per ogni $n$ (successione crescente), quindi $s_n\le T$: $(s_n)$ è crescente e limitata, perciò converge. Se $\sum a_n$ diverge, $s_n\to+\infty$ e da $t_n\ge s_n$ segue $t_n\to+\infty$.
+
+Se la disuguaglianza vale solo per $n\ge n_0$, si applica la prova alle serie da $n_0$: togliere un numero finito di termini non cambia il carattere.`,
+          rubric: [
+            String.raw`Enunciato completo con l'ipotesi $0\le a_n\le b_n$ e le due conclusioni`,
+            String.raw`Confronto delle somme parziali $s_n\le t_n$`,
+            String.raw`Monotonia di $s_n$ dovuta ad $a_n\ge0$`,
+            String.raw`Limitatezza $s_n\le T$ e teorema delle successioni monotone`,
+            'Parte sulla divergenza (o osservazione sul "definitivamente")',
+          ],
+        },
+      ],
+    },
+    {
+      id: 's13.positivi.L2',
+      title: 'Confronto asintotico',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Conta solo come si comporta per n grande',
+          body: String.raw`>* **Confronto asintotico.** Siano $a_n,b_n>0$ e $\displaystyle\frac{a_n}{b_n}\to\ell$.
+>* - $0<\ell<+\infty$ (in particolare $a_n\sim b_n$): le due serie hanno **lo stesso carattere**;
+>* - $\ell=0$: se $\sum b_n$ converge, converge anche $\sum a_n$;
+>* - $\ell=+\infty$: se $\sum b_n$ diverge, diverge anche $\sum a_n$.
+
+**Ricetta.** Trova la parte principale: $a_n\sim\frac{c}{n^p}$ (con $c>0$). Allora $\sum a_n$ converge $\iff p>1$.
+
+Strumenti: potenza dominante nei polinomi, limiti notevoli ($\sin x\sim x$, $\log(1+x)\sim x$, $e^x-1\sim x$, $1-\cos x\sim\frac{x^2}2$) e sviluppi di Taylor con $x=\frac1n\to0$.`,
+        },
+        {
+          type: 'example',
+          title: 'Una razionale',
+          problem: String.raw`Studia $\displaystyle\sum_{n=1}^{+\infty}\frac{n+1}{n^3+2}$.`,
+          steps: [
+            String.raw`Termini positivi. Tengo le potenze dominanti: $n+1\sim n$, $n^3+2\sim n^3$.`,
+            String.raw`$a_n\sim\frac{n}{n^3}=\frac1{n^2}$.`,
+            String.raw`$\sum\frac1{n^2}$ converge ($p=2>1$): per confronto asintotico converge anche $\sum a_n$.`,
+          ],
+          result: 'Converge.',
+        },
+        {
+          type: 'example',
+          title: 'Con un limite notevole',
+          problem: String.raw`Studia $\displaystyle\sum_{n=1}^{+\infty}\left(1-\cos\frac1n\right)$.`,
+          steps: [
+            String.raw`$\frac1n\in(0,1]$, quindi $\cos\frac1n<1$: termini positivi.`,
+            {
+              text: String.raw`Con $x=\frac1n\to0$: $1-\cos x\sim\frac{x^2}2$, quindi $a_n\sim\frac1{2n^2}$.`,
+              ask: { type: 'num', prompt: String.raw`$a_n\sim\frac{c}{n^p}$: quanto vale $p$?`, answer: '2', explain: String.raw`$1-\cos\frac1n\sim\frac12\cdot\frac1{n^2}$: $p=2$ (e $c=\frac12$).` },
+            },
+            String.raw`$p=2>1$: converge.`,
+          ],
+          result: String.raw`Converge. Confronta: $\sum\sin\frac1n$ invece diverge, perché $\sin\frac1n\sim\frac1n$.`,
+        },
+        {
+          id: 's13.positivi.L2.c1', type: 'num', level: 1,
+          prompt: String.raw`$a_n=\dfrac{\sqrt n}{n^2+1}\sim\dfrac1{n^p}$. Quanto vale $p$?`,
+          answer: '3/2',
+          explain: String.raw`$a_n\sim\frac{n^{1/2}}{n^2}=\frac1{n^{3/2}}$: $p=\frac32>1$, la serie converge.`,
+        },
+        {
+          id: 's13.positivi.L2.c2', type: 'mcq', level: 1,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\log\left(1+\frac1{n^2}\right)$.`,
+          options: ['Converge', String.raw`Diverge a $+\infty$`, 'Indeterminata'],
+          answer: 0,
+          explain: String.raw`$\log(1+x)\sim x$ con $x=\frac1{n^2}$: $a_n\sim\frac1{n^2}$, converge.`,
+        },
+        {
+          id: 's13.positivi.L2.c3', type: 'mcq', level: 1,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\left(e^{1/n}-1\right)$.`,
+          options: [String.raw`Diverge a $+\infty$`, 'Converge', String.raw`Converge, perché $e^{1/n}-1\to0$`],
+          answer: 0,
+          explain: String.raw`$e^x-1\sim x$: $a_n\sim\frac1n$, come l'armonica: diverge. Che $a_n\to0$ è solo la condizione necessaria.`,
+        },
+        {
+          id: 's13.positivi.L2.c4', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\left(\sqrt{n+1}-\sqrt n\right)$.`,
+          options: [String.raw`Diverge a $+\infty$`, 'Converge', 'Non soddisfa la condizione necessaria'],
+          answer: 0,
+          explain: String.raw`Razionalizzo: $\sqrt{n+1}-\sqrt n=\frac1{\sqrt{n+1}+\sqrt n}\sim\frac1{2\sqrt n}$, $p=\frac12\le1$: diverge. (È anche telescopica: $s_n=\sqrt{n+1}-1\to+\infty$.) La condizione necessaria invece vale.`,
+        },
+        {
+          id: 's13.positivi.L2.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{\log n}{n^2}$.`,
+          options: ['Converge', String.raw`Diverge: $\log n\to+\infty$`, String.raw`Non si può dire: non è $\sim\frac c{n^p}$`],
+          answer: 0,
+          explain: String.raw`Confronto con $b_n=\frac1{n^{3/2}}$: $\frac{a_n}{b_n}=\frac{\log n}{\sqrt n}\to0$ (gerarchia degli infiniti). Caso $\ell=0$ con $\sum b_n$ convergente: converge. Il logaritmo "pesa" meno di qualunque potenza $n^\varepsilon$.`,
+        },
+        {
+          id: 's13.positivi.L2.c6', type: 'tf', level: 2,
+          prompt: String.raw`$\displaystyle\sum_{n=2}^{+\infty}\frac{\log n}{n}$ diverge.`,
+          answer: true,
+          explain: String.raw`Vero: per $n\ge3$ $\log n>1$, quindi $\frac{\log n}n>\frac1n$ e per confronto con l'armonica diverge.`,
+        },
+        {
+          id: 's13.positivi.L2.c7', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n=1}^{+\infty}n^\alpha\sin\frac1{n^2}$?`,
+          answer: '(-inf,1)',
+          explain: String.raw`$\sin\frac1{n^2}\sim\frac1{n^2}$ (positivo), quindi $a_n\sim\frac{n^\alpha}{n^2}=\frac1{n^{2-\alpha}}$. Converge sse $2-\alpha>1\iff\alpha<1$.`,
+        },
+        {
+          id: 's13.positivi.L2.c8', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{\arctan n}{n^2}$.`,
+          options: ['Converge', String.raw`Diverge, perché $\arctan n\to\frac\pi2\neq0$`, 'Indeterminata'],
+          answer: 0,
+          explain: String.raw`$a_n\sim\frac{\pi/2}{n^2}$: stesso carattere di $\sum\frac1{n^2}$, converge. La condizione necessaria riguarda $a_n$, non un suo fattore: qui $a_n\to0$.`,
+        },
+        {
+          id: 's13.positivi.L2.c9', type: 'tf', level: 3,
+          prompt: String.raw`Se $a_n\sim b_n$ e $\sum b_n$ converge, allora $\sum a_n$ converge, anche quando $b_n$ cambia segno.`,
+          answer: false,
+          explain: String.raw`Falso: il confronto asintotico richiede termini **positivi**. Controesempio: $b_n=\frac{(-1)^n}{\sqrt n}$ (converge per Leibniz), $a_n=b_n+\frac1n$: $\frac{a_n}{b_n}=1+\frac{(-1)^n}{\sqrt n}\to1$, ma $\sum a_n$ diverge (somma di una convergente e dell'armonica).`,
+        },
+      ],
+    },
+    {
+      id: 's13.positivi.L3',
+      title: 'Rapporto, radice e criterio integrale',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Quando ci sono fattoriali o potenze n-esime',
+          body: String.raw`Per $a_n>0$:
+
+>* **Criterio del rapporto.** Se $\dfrac{a_{n+1}}{a_n}\to\ell$: per $\ell<1$ la serie converge, per $\ell>1$ diverge.
+>* **Criterio della radice.** Se $\sqrt[n]{a_n}\to\ell$: per $\ell<1$ converge, per $\ell>1$ diverge.
+
+>! Se $\ell=1$ il criterio **non dice nulla**: $\sum\frac1n$ e $\sum\frac1{n^2}$ danno entrambe $\ell=1$. Allora si usa il confronto (asintotico).
+
+Il rapporto è comodo con $n!$ e $c^n$; la radice con espressioni elevate alla $n$.`,
+        },
+        {
+          type: 'example',
+          title: 'Criterio del rapporto',
+          problem: String.raw`Studia $\displaystyle\sum_{n=1}^{+\infty}\frac{n}{2^n}$.`,
+          steps: [
+            String.raw`$\frac{a_{n+1}}{a_n}=\frac{n+1}{2^{n+1}}\cdot\frac{2^n}{n}=\frac{n+1}{2n}$.`,
+            {
+              text: String.raw`$\frac{n+1}{2n}\to\frac12$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\ell=\lim\frac{a_{n+1}}{a_n}$?`, answer: '1/2', explain: String.raw`$\frac{n+1}{2n}=\frac12\left(1+\frac1n\right)\to\frac12$.` },
+            },
+            String.raw`$\ell=\frac12<1$: la serie converge.`,
+          ],
+          result: String.raw`Converge (la somma vale $2$).`,
+        },
+        {
+          id: 's13.positivi.L3.c1', type: 'num', level: 1,
+          prompt: String.raw`Per $\displaystyle\sum\frac{3^n}{n^2}$ calcola $\ell=\lim\frac{a_{n+1}}{a_n}$.`,
+          answer: '3',
+          explain: String.raw`$\frac{3^{n+1}}{(n+1)^2}\cdot\frac{n^2}{3^n}=3\left(\frac n{n+1}\right)^2\to3>1$: diverge (del resto $a_n\to+\infty$).`,
+        },
+        {
+          id: 's13.positivi.L3.c2', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\frac{n!}{n^n}$.`,
+          options: [String.raw`Converge: $\ell=\frac1e$`, String.raw`Diverge: $\ell=e$`, String.raw`Non si può dire: $\ell=1$`],
+          answer: 0,
+          explain: String.raw`$\frac{a_{n+1}}{a_n}=\frac{(n+1)!}{(n+1)^{n+1}}\cdot\frac{n^n}{n!}=\frac{n^n}{(n+1)^n}=\frac1{\left(1+\frac1n\right)^n}\to\frac1e<1$: converge.`,
+        },
+        {
+          id: 's13.positivi.L3.c3', type: 'num', level: 2,
+          prompt: String.raw`Per $\displaystyle\sum\left(\frac{n}{2n+1}\right)^n$ calcola $\ell=\lim\sqrt[n]{a_n}$.`,
+          answer: '1/2',
+          explain: String.raw`$\sqrt[n]{a_n}=\frac n{2n+1}\to\frac12<1$: converge per il criterio della radice.`,
+        },
+        {
+          id: 's13.positivi.L3.c4', type: 'mcq', level: 2,
+          prompt: String.raw`Per $\displaystyle\sum\frac1{n^2}$ il criterio del rapporto dà $\ell=1$. Che cosa si conclude?`,
+          options: ['Niente dal rapporto: si usa la serie armonica generalizzata, e converge', String.raw`Diverge, perché $\ell\ge1$`, String.raw`Converge, perché $\ell\le1$`],
+          answer: 0,
+          explain: String.raw`Con $\ell=1$ il criterio è inconcludente. $\sum\frac1{n^2}$ converge ($p=2$), $\sum\frac1n$ diverge, ed entrambe hanno $\ell=1$.`,
+        },
+        {
+          id: 's13.positivi.L3.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=0}^{+\infty}\frac{2^n}{n!}$.`,
+          options: [String.raw`Converge: $\ell=0$`, String.raw`Diverge: $2^n\to+\infty$`, String.raw`Diverge: $\ell=2$`],
+          answer: 0,
+          explain: String.raw`$\frac{a_{n+1}}{a_n}=\frac{2}{n+1}\to0<1$: converge. Il fattoriale cresce più di ogni esponenziale ($\frac{b^n}{n!}\to0$). La somma è $e^2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Criterio integrale',
+          body: String.raw`>* **Criterio integrale.** Sia $f:[1,+\infty)\to\R$ continua, positiva e **decrescente**. Allora $\sum_{n\ge1}f(n)$ e $\int_1^{+\infty}f(x)\,dx$ hanno lo stesso carattere.
+
+Perché: su $[k,k+1]$ vale $f(k+1)\le f(x)\le f(k)$; integrando e sommando,
+$$\sum_{k=2}^{n+1}f(k)\le\int_1^{n+1}f(x)\,dx\le\sum_{k=1}^{n}f(k).$$
+Dai campioni $\int_1^{+\infty}\frac{dx}{x^\alpha}$ (converge sse $\alpha>1$) e $\int_2^{+\infty}\frac{dx}{x\log^\beta x}$ (converge sse $\beta>1$):
+
+>* $\displaystyle\sum_{n\ge2}\frac1{n^\alpha\log^\beta n}$ converge $\iff\alpha>1$, oppure $\alpha=1$ e $\beta>1$.`,
+          plot: { fns: [{ f: '1/x^2', label: '1/x²' }], x: [0.5, 6], y: [0, 1.2], points: [[1, 1], [2, 0.25], [3, 0.1111], [4, 0.0625], [5, 0.04]] },
+        },
+        {
+          type: 'example',
+          title: 'Una serie con il logaritmo',
+          problem: String.raw`Studia $\displaystyle\sum_{n=2}^{+\infty}\frac1{n\log n}$.`,
+          steps: [
+            String.raw`$f(x)=\frac1{x\log x}$ è continua, positiva e decrescente su $[2,+\infty)$ (il denominatore cresce).`,
+            {
+              text: String.raw`Con $t=\log x$: $\int_2^{M}\frac{dx}{x\log x}=\log(\log M)-\log(\log2)$.`,
+              ask: { type: 'mcq', prompt: String.raw`Quanto vale $\lim_{M\to+\infty}\log(\log M)$?`, options: [String.raw`$+\infty$`, '0', '1'], answer: 0, explain: String.raw`$\log M\to+\infty$ e quindi anche $\log(\log M)\to+\infty$, molto lentamente.` },
+            },
+            String.raw`L'integrale diverge, quindi diverge anche la serie.`,
+          ],
+          result: String.raw`$\sum\frac1{n\log n}$ diverge, mentre $\sum\frac1{n\log^2n}$ converge.`,
+        },
+        {
+          id: 's13.positivi.L3.c6', type: 'interval', level: 2,
+          prompt: String.raw`Per quali $\beta\in\R$ converge $\displaystyle\sum_{n=2}^{+\infty}\frac{1}{n\,(\log n)^\beta}$?`,
+          answer: '(1,inf)',
+          explain: String.raw`Con il criterio integrale e $t=\log x$: $\int_2^{+\infty}\frac{dx}{x\log^\beta x}=\int_{\log2}^{+\infty}\frac{dt}{t^\beta}$, che converge sse $\beta>1$.`,
+        },
+        {
+          id: 's13.positivi.L3.c7', type: 'mcq', level: 3,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}n^2e^{-n}$.`,
+          options: [String.raw`Converge: $\sqrt[n]{a_n}\to\frac1e$`, String.raw`Diverge: $n^2\to+\infty$`, String.raw`Non si può dire: $\ell=1$`],
+          answer: 0,
+          explain: String.raw`$\sqrt[n]{n^2e^{-n}}=\frac{(\sqrt[n]n)^2}{e}\to\frac1e<1$, perché $\sqrt[n]n\to1$. Converge. (Anche il rapporto: $\left(\frac{n+1}n\right)^2e^{-1}\to\frac1e$.)`,
+        },
+        {
+          id: 's13.positivi.L3.c8', type: 'match', level: 2,
+          prompt: 'Abbina ogni serie al criterio più rapido.',
+          pairs: [
+            [String.raw`$\sum\frac{5^n}{n!}$`, 'rapporto'],
+            [String.raw`$\sum\left(\frac{n+1}{3n}\right)^n$`, 'radice'],
+            [String.raw`$\sum\frac{n+3}{n^3+1}$`, 'confronto asintotico'],
+            [String.raw`$\sum\frac1{n\log^3n}$`, 'criterio integrale'],
+          ],
+          explain: String.raw`Fattoriali → rapporto. Potenza $n$-esima → radice. Razionali → parte principale $\frac1{n^2}$. Logaritmi al denominatore con $\frac1n$ → integrale (o la tabella dei campioni).`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's13.positivi.gen-rapporto', type: 'gen', level: 2,
+      gen: (R) => {
+        const f = R.int(0, 5);
+        const c = R.int(2, 5);
+        const k = R.int(1, 3);
+        const nk2 = k === 1 ? 'n' : `n^{${k}}`;
+        let term, ell, ellS, calc;
+        if (f === 0) {
+          term = String.raw`\frac{${nk2}}{${c}^n}`;
+          ell = 1 / c; ellS = `1/${c}`;
+          calc = String.raw`\frac{a_{n+1}}{a_n}=\left(\frac{n+1}{n}\right)^{${k}}\cdot\frac1{${c}}\to\frac1{${c}}`;
+        } else if (f === 1) {
+          term = String.raw`\frac{${c}^n}{${nk2}}`;
+          ell = c; ellS = String(c);
+          calc = String.raw`\frac{a_{n+1}}{a_n}=${c}\left(\frac{n}{n+1}\right)^{${k}}\to${c}`;
+        } else if (f === 2) {
+          term = String.raw`\frac{${c}^n}{n!}`;
+          ell = 0; ellS = '0';
+          calc = String.raw`\frac{a_{n+1}}{a_n}=\frac{${c}^{n+1}}{(n+1)!}\cdot\frac{n!}{${c}^n}=\frac{${c}}{n+1}\to0`;
+        } else if (f === 3) {
+          term = String.raw`\frac{n!}{${c}^n}`;
+          ell = Infinity; ellS = 'inf';
+          calc = String.raw`\frac{a_{n+1}}{a_n}=\frac{n+1}{${c}}\to+\infty`;
+        } else if (f === 4) {
+          let d = R.int(2, 6);
+          if (d === c) d = c + 1;
+          term = String.raw`\frac{${c}^n}{${d}^n\,${nk2}}`;
+          ell = c / d; ellS = H.fracStr(c, d);
+          calc = String.raw`\frac{a_{n+1}}{a_n}=\frac{${c}}{${d}}\left(\frac{n}{n+1}\right)^{${k}}\to${H.frac(c, d)}`;
+        } else {
+          const cc = R.pick([1, 2, 3, 5, 6]);
+          term = String.raw`\frac{${cc === 1 ? '' : `${cc}^n`}(n!)^2}{(2n)!}`;
+          ell = cc / 4; ellS = H.fracStr(cc, 4);
+          calc = String.raw`\frac{a_{n+1}}{a_n}=${cc === 1 ? '' : cc}\frac{(n+1)^2}{(2n+2)(2n+1)}=${cc === 1 ? '' : cc}\frac{n+1}{2(2n+1)}\to${H.frac(cc, 4)}`;
+        }
+        const conv = ell < 1;
+        return {
+          type: 'problem',
+          prompt: String.raw`Si studi con il criterio del rapporto $\displaystyle\sum_{n=1}^{+\infty}${term}$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`$\ell=\displaystyle\lim_{n\to\infty}\frac{a_{n+1}}{a_n}$ (scrivi inf se è $+\infty$)`, answer: ellS, explain: String.raw`$${calc}$.` },
+            { type: 'mcq', prompt: 'Carattere della serie', options: ['Converge', String.raw`Diverge a $+\infty$`, 'Il criterio non decide'], answer: conv ? 0 : 1, explain: conv ? String.raw`$\ell<1$: converge.` : String.raw`$\ell>1$: diverge (i termini non tendono nemmeno a $0$).` },
+          ],
+          solution: String.raw`Termini positivi. $${calc}$, quindi per il criterio del rapporto la serie ${conv ? 'converge' : 'diverge'}.`,
+        };
+      },
+    },
+    {
+      id: 's13.positivi.gen-radice', type: 'gen', level: 2,
+      gen: (R) => {
+        const f = R.int(0, 2);
+        if (f === 2) {
+          const c = R.int(2, 4);
+          return {
+            type: 'problem',
+            prompt: String.raw`Si studi $\displaystyle\sum_{n=1}^{+\infty}\frac{\left(1+\frac1n\right)^{n^2}}{${c}^n}$.`,
+            parts: [
+              { type: 'num', prompt: String.raw`$\ell=\displaystyle\lim\sqrt[n]{a_n}$`, answer: `e/${c}`, explain: String.raw`$\sqrt[n]{a_n}=\frac{\left(1+\frac1n\right)^n}{${c}}\to\frac e{${c}}$.` },
+              { type: 'mcq', prompt: 'Carattere', options: ['Converge', String.raw`Diverge a $+\infty$`, 'Il criterio non decide'], answer: c > Math.E ? 0 : 1, explain: c > Math.E ? String.raw`$e\approx2{,}718<${c}$: $\ell<1$, converge.` : String.raw`$e\approx2{,}718>2$: $\ell>1$, diverge.` },
+            ],
+            solution: String.raw`Criterio della radice: $\sqrt[n]{a_n}=\frac{(1+1/n)^n}{${c}}\to\frac e{${c}}$, ${c > Math.E ? 'minore di 1: converge' : 'maggiore di 1: diverge'}.`,
+          };
+        }
+        let a, c;
+        do {
+          a = R.int(1, 5);
+          c = R.int(1, 5);
+        } while (a === c || H.gcd(a, c) !== 1);
+        const b = R.int(1, 4), d = R.int(1, 4);
+        const base = String.raw`\left(\frac{${H.lin(a, b, 'n')}}{${H.lin(c, d, 'n')}}\right)`;
+        const conv = a < c;
+        if (f === 0) {
+          return {
+            type: 'problem',
+            prompt: String.raw`Si studi con il criterio della radice $\displaystyle\sum_{n=1}^{+\infty}${base}^{n}$.`,
+            parts: [
+              { type: 'num', prompt: String.raw`$\ell=\displaystyle\lim\sqrt[n]{a_n}$`, answer: H.fracStr(a, c), explain: String.raw`$\sqrt[n]{a_n}=\frac{${H.lin(a, b, 'n')}}{${H.lin(c, d, 'n')}}\to${H.frac(a, c)}$.` },
+              { type: 'mcq', prompt: 'Carattere', options: ['Converge', String.raw`Diverge a $+\infty$`, 'Il criterio non decide'], answer: conv ? 0 : 1, explain: conv ? String.raw`$\ell<1$: converge.` : String.raw`$\ell>1$: diverge.` },
+            ],
+            solution: String.raw`Termini positivi; $\sqrt[n]{a_n}\to${H.frac(a, c)}$, ${conv ? 'minore di 1: converge' : 'maggiore di 1: diverge'}.`,
+          };
+        }
+        return {
+          type: 'problem',
+          prompt: String.raw`Si studi $\displaystyle\sum_{n=1}^{+\infty}${base}^{n^2}$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`$\ell=\displaystyle\lim\sqrt[n]{a_n}$ (scrivi inf se è $+\infty$)`, answer: conv ? '0' : 'inf', explain: String.raw`$\sqrt[n]{a_n}=${base}^{n}$: la base tende a $${H.frac(a, c)}$, ${conv ? 'minore di 1, quindi la potenza $n$-esima tende a $0$' : 'maggiore di 1, quindi la potenza $n$-esima tende a $+\\infty$'}.` },
+            { type: 'mcq', prompt: 'Carattere', options: ['Converge', String.raw`Diverge a $+\infty$`, 'Il criterio non decide'], answer: conv ? 0 : 1, explain: conv ? String.raw`$\ell=0<1$: converge.` : String.raw`$\ell=+\infty$: diverge.` },
+          ],
+          solution: String.raw`Criterio della radice: $\sqrt[n]{a_n}=${base}^n\to${conv ? '0' : '+\\infty'}$, quindi la serie ${conv ? 'converge' : 'diverge'}.`,
+        };
+      },
+    },
+    {
+      id: 's13.positivi.gen-asint', type: 'gen', level: 2,
+      gen: (R) => {
+        let F, p, q, s;
+        do {
+          F = R.pick(SMALL);
+          p = R.pick([1, 2, 3, 0.5]);
+          q = R.pick([0, 0, 1, 2, 0.5, 1.5]);
+          s = F.m * p - q;
+        } while (s <= 0 || s > 5);
+        const arg = invPow(p);
+        const [kn, kd] = F.k;
+        const cT = H.frac(kn, kd);
+        const conv = s > 1;
+        const sT = decTex(s);
+        const pre = preTex(q);
+        return {
+          type: 'problem',
+          prompt: String.raw`Si studi $\displaystyle\sum_{n=1}^{+\infty}${pre}${F.t(arg)}$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`Scrivi $a_n\sim\dfrac{c}{n^p}$: quanto vale $p$?`, answer: decStr(s), explain: String.raw`Da $${F.name}$ con $x=${arg}\to0$: $${F.t(arg)}\sim${cT === '1' ? '' : cT}\left(${arg}\right)^{${F.m}}$, quindi $a_n\sim\frac{${cT === '1' ? '1' : cT}\,n^{${decTex(q)}}}{n^{${decTex(F.m * p)}}}$ e $p=${sT}$.` },
+            { type: 'mcq', prompt: 'Carattere della serie', options: ['Converge', String.raw`Diverge a $+\infty$`], answer: conv ? 0 : 1, explain: conv ? String.raw`$p=${sT}>1$: converge per confronto asintotico con $\sum\frac1{n^{${sT}}}$.` : String.raw`$p=${sT}\le1$: diverge per confronto asintotico con $\sum\frac1{n^{${sT}}}$.` },
+          ],
+          solution: String.raw`Termini positivi. $${F.name}$ per $x\to0$; con $x=${arg}$: $a_n\sim\frac{${cT}}{n^{${sT}}}$. Per confronto asintotico con l'armonica generalizzata la serie ${conv ? 'converge' : 'diverge'} ($p=${sT}$).`,
+        };
+      },
+    },
+    {
+      id: 's13.positivi.gen-razionale', type: 'gen', level: 1,
+      gen: (R) => {
+        const d1 = R.int(0, 2);
+        const d2 = d1 + R.int(1, 3);
+        const a = R.int(1, 4), b = R.int(1, 4);
+        const P = [a];
+        for (let i = 0; i < d1; i++) P.push(R.int(0, 5));
+        const Q = [b];
+        for (let i = 0; i < d2; i++) Q.push(R.chance(0.6) ? 0 : R.int(1, 5));
+        if (Q[Q.length - 1] === 0) Q[Q.length - 1] = R.int(1, 5);
+        const p = d2 - d1;
+        const conv = p > 1;
+        return {
+          type: 'tuple',
+          prompt: String.raw`$a_n=\dfrac{${H.poly(P, 'n')}}{${H.poly(Q, 'n')}}\sim\dfrac{c}{n^p}$. Trova $c$ e $p$; poi deduci il carattere di $\sum a_n$.`,
+          labels: ['c', 'p'],
+          answer: [H.fracStr(a, b), String(p)],
+          explain: String.raw`Restano le potenze dominanti: $a_n\sim\frac{${H.coef(a) || '1'}${d1 === 0 ? '' : d1 === 1 ? 'n' : `n^{${d1}}`}}{${H.coef(b)}n^{${d2}}}=\frac{${H.frac(a, b)}}{n^{${p}}}$. Quindi $c=${H.frac(a, b)}$, $p=${p}$: la serie ${conv ? 'converge ($p>1$)' : 'diverge ($p=1$, come l\'armonica)'}.`,
+        };
+      },
+    },
+    {
+      id: 's13.positivi.p1', type: 'cloze', level: 1,
+      text: String.raw`Siano $a_n,b_n>0$ con $\frac{a_n}{b_n}\to\ell$. Se $0<\ell<+\infty$ le serie [[0]]. Se $\ell=0$ e $\sum b_n$ [[1]], allora $\sum a_n$ converge. Se $\ell=+\infty$ e $\sum b_n$ [[2]], allora $\sum a_n$ diverge.`,
+      blanks: [
+        { options: ['hanno lo stesso carattere', 'hanno la stessa somma', 'convergono entrambe'], answer: 0 },
+        { options: ['converge', 'diverge'], answer: 0 },
+        { options: ['diverge', 'converge'], answer: 0 },
+      ],
+      explain: String.raw`$\ell=0$ significa $a_n$ "molto più piccolo" di $b_n$: eredita la convergenza. $\ell=+\infty$: $a_n$ molto più grande, eredita la divergenza. Il carattere è lo stesso, la somma no.`,
+    },
+    {
+      id: 's13.positivi.p2', type: 'tf', level: 1,
+      prompt: String.raw`Se il criterio del rapporto dà $\ell=1$, la serie diverge.`,
+      answer: false,
+      explain: String.raw`Falso: con $\ell=1$ il criterio non decide. $\sum\frac1{n^2}$ (converge) e $\sum\frac1n$ (diverge) hanno entrambe $\ell=1$.`,
+    },
+    {
+      id: 's13.positivi.p3', type: 'interval', level: 3,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\sum_{n=2}^{+\infty}\frac1{n^\alpha\log n}$?`,
+      answer: '(1,inf)',
+      explain: String.raw`Campione $\frac1{n^\alpha\log^\beta n}$ con $\beta=1$: converge sse $\alpha>1$, oppure $\alpha=1$ e $\beta>1$. Qui $\beta=1$, quindi $\alpha=1$ dà $\sum\frac1{n\log n}$, divergente. Risposta: $\alpha>1$.`,
+    },
+    {
+      id: 's13.positivi.p4', type: 'mcq', level: 2,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n=2}^{+\infty}\frac1{(\log n)^n}$.`,
+      options: [String.raw`Converge: $\sqrt[n]{a_n}=\frac1{\log n}\to0$`, String.raw`Diverge: $\log n$ cresce lentamente`, String.raw`Non si può dire: $\ell=1$`],
+      answer: 0,
+      explain: String.raw`Criterio della radice: $\sqrt[n]{a_n}=\frac1{\log n}\to0<1$, converge.`,
+    },
+    {
+      id: 's13.positivi.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n=2}^{+\infty}\frac1{\log n}$.`,
+      options: [String.raw`Diverge a $+\infty$`, 'Converge', String.raw`Converge, perché $\frac1{\log n}\to0$`],
+      answer: 0,
+      explain: String.raw`$\log n<n$, quindi $\frac1{\log n}>\frac1n$: per confronto con l'armonica diverge.`,
+    },
+    {
+      id: 's13.positivi.p6', type: 'mcq', level: 3,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n=1}^{+\infty}\left(\frac1n-\sin\frac1n\right)$.`,
+      options: ['Converge', String.raw`Diverge a $+\infty$`, String.raw`Non si sa: $\frac1n$ e $\sin\frac1n$ divergono entrambe`],
+      answer: 0,
+      explain: String.raw`Taylor: $\sin x=x-\frac{x^3}6+o(x^3)$, quindi $x-\sin x\sim\frac{x^3}6$ e $a_n\sim\frac1{6n^3}$ (positivo): converge. Non si può spezzare in $\sum\frac1n-\sum\sin\frac1n$: sarebbe $\infty-\infty$.`,
+    },
+    {
+      id: 's13.positivi.p7', type: 'tf', level: 2,
+      prompt: String.raw`Se $a_n\ge0$ e $\sum a_n$ converge, allora $\sum a_n^2$ converge.`,
+      answer: true,
+      explain: String.raw`Vero: $a_n\to0$, quindi definitivamente $0\le a_n\le1$ e $a_n^2\le a_n$; per confronto $\sum a_n^2$ converge.`,
+    },
+  ],
+  flashcards: [
+    { id: 's13.positivi.fc1', kind: 'thm', front: 'Serie a termini non negativi', back: String.raw`$a_n\ge0\Rightarrow s_n$ crescente: la serie converge (se $s_n$ è limitata) o diverge a $+\infty$. Mai indeterminata.` },
+    { id: 's13.positivi.fc2', kind: 'thm', front: 'Criterio del confronto', back: String.raw`$0\le a_n\le b_n$ definitivamente. $\sum b_n$ converge $\Rightarrow\sum a_n$ converge; $\sum a_n$ diverge $\Rightarrow\sum b_n$ diverge.` },
+    { id: 's13.positivi.fc3', kind: 'dim', front: 'Dimostrazione del criterio del confronto', back: String.raw`$s_n\le t_n$ sommando $a_k\le b_k$. $t_n\uparrow T$ quindi $t_n\le T$; allora $s_n\le T$. $s_n$ crescente ($a_n\ge0$) e limitata ⇒ converge. Se $s_n\to+\infty$, $t_n\ge s_n\to+\infty$.` },
+    { id: 's13.positivi.fc4', kind: 'thm', front: 'Confronto asintotico', back: String.raw`$a_n,b_n>0$, $\frac{a_n}{b_n}\to\ell$. $0<\ell<\infty$: stesso carattere. $\ell=0$: $\sum b$ conv ⇒ $\sum a$ conv. $\ell=\infty$: $\sum b$ div ⇒ $\sum a$ div.` },
+    { id: 's13.positivi.fc5', kind: 'thm', front: 'Criterio del rapporto', back: String.raw`$a_n>0$, $\frac{a_{n+1}}{a_n}\to\ell$: $\ell<1$ converge, $\ell>1$ diverge, $\ell=1$ nessuna informazione.` },
+    { id: 's13.positivi.fc6', kind: 'thm', front: 'Criterio della radice', back: String.raw`$a_n\ge0$, $\sqrt[n]{a_n}\to\ell$: $\ell<1$ converge, $\ell>1$ diverge, $\ell=1$ nessuna informazione.` },
+    { id: 's13.positivi.fc7', kind: 'thm', front: 'Criterio integrale', back: String.raw`$f$ continua, positiva, decrescente su $[1,+\infty)$: $\sum f(n)$ e $\int_1^{+\infty}f$ hanno lo stesso carattere.` },
+    { id: 's13.positivi.fc8', kind: 'formula', front: String.raw`Serie campione $\sum\frac1{n^\alpha\log^\beta n}$`, back: String.raw`Converge $\iff\alpha>1$, oppure $\alpha=1$ e $\beta>1$.` },
+    { id: 's13.positivi.fc9', kind: 'metodo', front: 'Scegliere il criterio', back: String.raw`1) $a_n\to0$? 2) Razionali, radici, funzioni di $\frac1n$: parte principale $\frac c{n^p}$. 3) $n!$, $c^n$: rapporto. 4) Potenze alla $n$: radice. 5) $\log$ con $\frac1n$: integrale.` },
+    { id: 's13.positivi.fc10', kind: 'errore', front: 'Confronto nella direzione sbagliata', back: String.raw`$a_n\le\frac1n$ non dice nulla; $a_n\ge\frac1{n^2}$ non dice nulla. Si maggiora con una convergente o si minora con una divergente.` },
+  ],
+};
+
 export default {
   id: 's13',
   title: 'Serie numeriche',
   subtitle: 'Somme parziali, criteri di convergenza, serie con parametri',
   intro: String.raw`Le serie compaiono in ogni tema: in Parte A (condizione necessaria, criterio del confronto, vero/falso sulle somme) e in Parte B (carattere di una serie con parametro, 2–4 punti). Qui impari a sommare infiniti termini e a decidere se la somma esiste.`,
-  skills: [DEF, NEC],
+  skills: [DEF, NEC, POS],
 };

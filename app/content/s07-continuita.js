@@ -1146,6 +1146,372 @@ Controesempi: (1) intervallo non chiuso: $f(x)=x$ su $(0,1)$ non ha max né min;
   ],
 };
 
+const sInv = {
+  id: 's07.inversa',
+  title: 'Monotonia, invertibilità e inversa continua',
+  summary: String.raw`Colleghi monotonia e iniettività, calcoli l'inversa e il suo dominio e sai quando l'inversa di una funzione continua è continua.`,
+  prereq: ['s07.def', 's03.proprieta', 's03.simmetrie', 's00.esplog', 's00.trig'],
+  examRefs: ['Appello 03/09/2026 · A'],
+  lessons: [
+    {
+      id: 's07.inversa.L1',
+      title: 'Monotonia e iniettività',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Funzioni monotone',
+          body: String.raw`Sia $f:A\to\R$.
+
+>* $f$ è **strettamente crescente** su $A$ se per ogni $x_1,x_2\in A$:
+$$x_1<x_2\ \Longrightarrow\ f(x_1)<f(x_2).$$
+
+- **crescente** (debolmente): $x_1<x_2\Rightarrow f(x_1)\le f(x_2)$;
+- **strettamente decrescente**: $x_1<x_2\Rightarrow f(x_1)>f(x_2)$.
+
+Una funzione strettamente monotona è **iniettiva**: se $x_1\neq x_2$, uno dei due è più piccolo e i valori sono diversi. Quindi è **invertibile** da $A$ sulla sua immagine $f(A)$, e l'inversa $f^{-1}:f(A)\to A$ è monotona dello stesso tipo.`,
+        },
+        {
+          id: 's07.inversa.L1.q1',
+          type: 'cloze',
+          text: String.raw`$f:A\to\R$ è strettamente crescente se per ogni $x_1,x_2\in A$ con [[0]] si ha [[1]].`,
+          blanks: [
+            { options: [String.raw`$x_1<x_2$`, String.raw`$x_1\neq x_2$`, String.raw`$x_1\le x_2$`], answer: 0 },
+            { options: [String.raw`$f(x_1)<f(x_2)$`, String.raw`$f(x_1)\le f(x_2)$`, String.raw`$f'(x)>0$`], answer: 0 },
+          ],
+          explain: String.raw`La definizione confronta i **valori** in due punti ordinati, con disuguaglianza stretta. Con $\le$ si ottiene "crescente" in senso debole. $f'>0$ è una condizione sufficiente (per funzioni derivabili su un intervallo), non la definizione.`,
+          level: 1,
+          source: 'Appello 03/09/2026 · A',
+        },
+        {
+          id: 's07.inversa.L1.q2',
+          type: 'mcq',
+          prompt: String.raw`Quale funzione è strettamente crescente su tutto $\R$?`,
+          options: [String.raw`$x^3+x$`, String.raw`$x^2$`, String.raw`$e^{-x}$`, String.raw`$\sin x$`],
+          answer: 0,
+          explain: String.raw`$x^3$ e $x$ sono strettamente crescenti, la somma pure. $x^2$ decresce su $(-\infty,0]$; $e^{-x}$ è strettamente **de**crescente; $\sin x$ è periodica, quindi non monotona.`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L1.q3',
+          type: 'tf',
+          prompt: String.raw`Ogni funzione iniettiva è strettamente monotona.`,
+          answer: false,
+          explain: String.raw`Controesempio: $f(x)=\frac1x$ su $\R\setminus\{0\}$ è iniettiva, ma $f(-1)<f(1)$ e $f(1)>f(2)$: non è monotona. Il guaio è che il dominio non è un intervallo. **Per funzioni continue su un intervallo** invece iniettiva $\Leftrightarrow$ strettamente monotona.`,
+          level: 2,
+        },
+        {
+          id: 's07.inversa.L1.q4',
+          type: 'mcq',
+          prompt: String.raw`$f$ è strettamente crescente e $g$ è strettamente decrescente (su $\R$). Allora $f\circ g$ è:`,
+          options: ['strettamente decrescente', 'strettamente crescente', 'non monotona in generale', 'costante'],
+          answer: 0,
+          explain: String.raw`$x_1<x_2\Rightarrow g(x_1)>g(x_2)\Rightarrow f(g(x_1))>f(g(x_2))$. Regola dei segni: crescente∘crescente e decrescente∘decrescente sono crescenti; misto è decrescente. Es.: $e^{-x}$.`,
+          level: 1,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: calcolare l\'inversa',
+          problem: String.raw`$f(x)=e^{2x}+1$. Trova $f^{-1}$ e il suo dominio.`,
+          steps: [
+            String.raw`$f$ è strettamente crescente (composta di crescenti), quindi invertibile su $f(\R)$.`,
+            String.raw`Immagine: $e^{2x}$ assume tutti i valori in $(0,+\infty)$, quindi $f(\R)=(1,+\infty)$.`,
+            {
+              text: String.raw`Risolvo $y=e^{2x}+1$ rispetto a $x$: $e^{2x}=y-1$, quindi $x=\frac12\log(y-1)$.`,
+              ask: { type: 'expr', prompt: String.raw`Ricava $x$ in funzione di $y$ da $e^{2x}=y-1$.`, answer: 'log(y-1)/2', vars: ['y'], domain: [1.5, 5], explain: String.raw`Applico $\log$: $2x=\log(y-1)$.` },
+            },
+            String.raw`Rinomino la variabile: $f^{-1}(x)=\frac12\log(x-1)$, con dominio $(1,+\infty)$ = immagine di $f$.`,
+          ],
+          result: String.raw`$f^{-1}(x)=\frac12\log(x-1)$, $\ x>1$.`,
+          plot: { fns: [{ f: 'exp(2x)+1', label: 'f' }, { f: 'log(x-1)/2', label: 'f⁻¹' }, { f: 'x', label: 'y = x' }], x: [-3, 5], y: [-3, 5] },
+        },
+        {
+          id: 's07.inversa.L1.q5',
+          type: 'expr',
+          prompt: String.raw`Calcola l'inversa di $f(x)=3x-6$ (scrivi $f^{-1}(x)$).`,
+          answer: '(x+6)/3',
+          explain: String.raw`$y=3x-6\Rightarrow x=\frac{y+6}3$. Rinomino: $f^{-1}(x)=\frac{x+6}3$. Errore tipico: scrivere $\frac1{3x-6}$, che è il **reciproco**, non l'inversa.`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L1.q6',
+          type: 'interval',
+          prompt: String.raw`Qual è il dominio dell'inversa di $f(x)=2+\log(x-1)$, $x>1$?`,
+          answer: 'R',
+          explain: String.raw`Il dominio di $f^{-1}$ è l'immagine di $f$. $\log(x-1)$ assume tutti i valori reali per $x>1$, quindi l'immagine è $\R$. Infatti $f^{-1}(x)=1+e^{x-2}$, definita ovunque.`,
+          level: 2,
+        },
+        {
+          id: 's07.inversa.L1.q7',
+          type: 'expr',
+          prompt: String.raw`Calcola l'inversa di $f(x)=x^3+2$.`,
+          answer: 'cbrt(x-2)',
+          domain: [2.5, 9],
+          explain: String.raw`$y=x^3+2\Rightarrow x=\sqrt[3]{y-2}$. $f$ è strettamente crescente su $\R$ e l'immagine è $\R$, quindi $f^{-1}(x)=\sqrt[3]{x-2}$ per ogni $x$. (Scrivi la radice cubica come cbrt(x-2) oppure (x-2)^(1/3) se $x>2$.)`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L1.q8',
+          type: 'mcq',
+          prompt: String.raw`$f(x)=x^2$ su $\R$ non è invertibile. Quale restrizione la rende invertibile con inversa $\sqrt{x}$?`,
+          options: [String.raw`$[0,+\infty)$`, String.raw`$(-\infty,0]$`, String.raw`$[-1,1]$`, String.raw`$\R\setminus\{0\}$`],
+          answer: 0,
+          explain: String.raw`Su $[0,+\infty)$ $x^2$ è strettamente crescente e l'inversa è $\sqrt x$. Su $(-\infty,0]$ è invertibile ma l'inversa è $-\sqrt x$. Su $[-1,1]$ e su $\R\setminus\{0\}$ non è iniettiva ($f(-1)=f(1)$).`,
+          level: 2,
+        },
+      ],
+    },
+    {
+      id: 's07.inversa.L2',
+      title: "Continuità dell'inversa",
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il teorema',
+          body: String.raw`>* **Teorema (continuità dell'inversa).** Sia $I$ un **intervallo** e $f:I\to\R$ continua e strettamente monotona. Allora $J=f(I)$ è un intervallo e $f^{-1}:J\to I$ è **continua** (e strettamente monotona dello stesso tipo).
+
+Grazie a questo teorema sono continue tutte le inverse "classiche":
+- $\log x$, inversa di $e^x$;
+- $\sqrt[n]{x}$, inversa di $x^n$ (su $[0,+\infty)$ se $n$ è pari);
+- $\arcsin:[-1,1]\to[-\frac\pi2,\frac\pi2]$, inversa di $\sin$ ristretta a $[-\frac\pi2,\frac\pi2]$;
+- $\arccos:[-1,1]\to[0,\pi]$, inversa di $\cos$ ristretta a $[0,\pi]$;
+- $\arctan:\R\to(-\frac\pi2,\frac\pi2)$, inversa di $\tan$ ristretta a $(-\frac\pi2,\frac\pi2)$.`,
+          plot: { fns: [{ f: 'asin(x)', label: 'arcsin' }, { f: 'acos(x)', label: 'arccos' }, { f: 'atan(x)', label: 'arctan' }], x: [-3, 3], y: [-2, 3.5] },
+        },
+        {
+          id: 's07.inversa.L2.q1',
+          type: 'match',
+          prompt: 'Abbina ogni inversa al suo codominio (insieme dei valori).',
+          pairs: [
+            [String.raw`$\arcsin$`, String.raw`$[-\frac\pi2,\frac\pi2]$`],
+            [String.raw`$\arccos$`, String.raw`$[0,\pi]$`],
+            [String.raw`$\arctan$`, String.raw`$(-\frac\pi2,\frac\pi2)$`],
+            [String.raw`$\log$`, String.raw`$\R$`],
+          ],
+          explain: String.raw`I valori dell'inversa sono il dominio della restrizione scelta: $\sin$ su $[-\frac\pi2,\frac\pi2]$, $\cos$ su $[0,\pi]$, $\tan$ su $(-\frac\pi2,\frac\pi2)$ (aperto: $\tan$ non è definita agli estremi), $e^x$ su $\R$.`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L2.q2',
+          type: 'num',
+          prompt: String.raw`Calcola $\arccos\left(-\frac12\right)$.`,
+          answer: '2*pi/3',
+          explain: String.raw`Cerco $\theta\in[0,\pi]$ con $\cos\theta=-\frac12$: $\theta=\frac{2\pi}3$. Errore tipico: $-\frac\pi3$, che non sta in $[0,\pi]$.`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L2.q3',
+          type: 'num',
+          prompt: String.raw`Calcola $\arcsin\left(\sin\frac{3\pi}{4}\right)$.`,
+          answer: 'pi/4',
+          explain: String.raw`$\sin\frac{3\pi}4=\frac{\sqrt2}2$ e l'unico angolo in $[-\frac\pi2,\frac\pi2]$ con quel seno è $\frac\pi4$. $\arcsin(\sin x)=x$ vale solo per $x\in[-\frac\pi2,\frac\pi2]$: rispondere $\frac{3\pi}4$ è l'errore tipico.`,
+          level: 2,
+        },
+        {
+          type: 'learn',
+          title: "Perché serve l'intervallo",
+          body: String.raw`Se il dominio **non** è un intervallo, l'inversa di una funzione continua e strettamente crescente può essere discontinua.
+
+Esempio: $f(x)=x$ su $[0,1)$ e $f(x)=x-1$ su $[2,3]$. $f$ è continua (nel suo dominio) e strettamente crescente, con immagine $[0,2]$. Ma
+$$f^{-1}(y)=\begin{cases} y & 0\le y<1\\ y+1 & 1\le y\le2\end{cases}$$
+ha un **salto** in $y=1$: il "buco" $[1,2)$ nel dominio di $f$ diventa un salto di $f^{-1}$.`,
+          plot: { fns: [{ f: 'x<1 ? x : x+1', label: 'f⁻¹' }], x: [0, 2], y: [0, 3.2], points: [[1, 2]], open: [[1, 1]] },
+        },
+        {
+          id: 's07.inversa.L2.q4',
+          type: 'tf',
+          prompt: String.raw`Se $f$ è continua e strettamente monotona su un insieme qualunque $A$, allora $f^{-1}$ è continua su $f(A)$.`,
+          answer: false,
+          explain: String.raw`Serve che $A$ sia un **intervallo**. Controesempio: $f(x)=x$ su $[0,1)$, $f(x)=x-1$ su $[2,3]$; l'inversa salta in $y=1$.`,
+          level: 2,
+        },
+        {
+          id: 's07.inversa.L2.q5',
+          type: 'mcq',
+          prompt: String.raw`$f:\R\to\R$, $f(x)=x^5+x^3+x$. Che cosa si può dire di $f^{-1}$?`,
+          options: [
+            String.raw`Esiste, è definita su $\R$, continua e strettamente crescente`,
+            String.raw`Non esiste perché non si sa risolvere $y=x^5+x^3+x$`,
+            String.raw`Esiste ma non è continua`,
+            String.raw`Esiste ed è strettamente decrescente`,
+          ],
+          answer: 0,
+          explain: String.raw`$f$ è somma di potenze dispari strettamente crescenti, continua su $\R$ e $\lim_{x\to\pm\infty}f=\pm\infty$: immagine $\R$. Per il teorema, $f^{-1}:\R\to\R$ è continua e strettamente crescente. Non serve una formula esplicita per sapere che l'inversa esiste.`,
+          level: 2,
+        },
+        {
+          id: 's07.inversa.L2.q6',
+          type: 'num',
+          prompt: String.raw`Per $f(x)=x^3+x+1$ calcola $f^{-1}(3)$.`,
+          answer: '1',
+          explain: String.raw`Cerco $x$ con $x^3+x+1=3$: $x=1$ funziona ($1+1+1=3$) ed è l'unico perché $f$ è strettamente crescente. Quindi $f^{-1}(3)=1$. Errore tipico: calcolare $f(3)=31$.`,
+          level: 2,
+        },
+        {
+          id: 's07.inversa.L2.q7',
+          type: 'interval',
+          prompt: String.raw`Dominio di $g(x)=\arcsin(2x-1)$.`,
+          answer: '[0,1]',
+          explain: String.raw`$\arcsin$ è definita su $[-1,1]$: $-1\le2x-1\le1\iff0\le x\le1$.`,
+          level: 1,
+        },
+        {
+          id: 's07.inversa.L2.q8',
+          type: 'open',
+          prompt: String.raw`Enunciare il teorema di continuità della funzione inversa e mostrare con un esempio che l'ipotesi "dominio intervallo" non si può togliere.`,
+          answer: String.raw`**Teorema.** Sia $I\subseteq\R$ un intervallo e $f:I\to\R$ continua e strettamente monotona. Allora $f(I)$ è un intervallo e $f^{-1}:f(I)\to I$ è continua e strettamente monotona (dello stesso tipo di $f$).
+
+**Controesempio.** $f(x)=x$ su $[0,1)$, $f(x)=x-1$ su $[2,3]$: continua e strettamente crescente sul suo dominio, che non è un intervallo; l'inversa vale $y$ per $0\le y<1$ e $y+1$ per $1\le y\le2$, discontinua in $y=1$.`,
+          rubric: ['Ipotesi: I intervallo, f continua e strettamente monotona', 'Tesi: f(I) intervallo e inversa continua', 'Monotonia dell\'inversa dello stesso tipo', 'Controesempio corretto con dominio non intervallo'],
+          level: 3,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's07.inversa.gen-lineare',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const a = R.pick([2, 3, 4, 5, -2, -3, -4]), b = R.nz(-8, 8);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola l'inversa di $f(x)=${H.lin(a, b)}$.`,
+          answer: `(x-(${b}))/(${a})`,
+          explain: String.raw`$y=${H.lin(a, b)}\Rightarrow ${H.coef(a)}x=y${b > 0 ? ' - ' + b : ' + ' + -b}\Rightarrow x=\frac{y${b > 0 ? ' - ' + b : ' + ' + -b}}{${a}}$. Quindi $f^{-1}(x)=\frac{x${b > 0 ? ' - ' + b : ' + ' + -b}}{${a}}$.`,
+        };
+      },
+    },
+    {
+      id: 's07.inversa.gen-esp',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const k = R.int(1, 3), b = R.pick([1, 2, 3, -1, -2]), c = R.int(-3, 3);
+        const ex = String.raw`e^{${b === 1 ? '' : b === -1 ? '-' : b}x}`;
+        const ftex = `${k === 1 ? '' : k}${ex}${c === 0 ? '' : ' ' + H.signed(c)}`;
+        const ymc = c === 0 ? 'x' : `x ${c > 0 ? '-' : '+'} ${Math.abs(c)}`;
+        const arg = k === 1 ? ymc : String.raw`\frac{${ymc}}{${k}}`;
+        const pre = b === 1 ? '' : b === -1 ? '-' : String.raw`\frac{1}{${b}}`;
+        const inv = String.raw`${b < 0 && b !== -1 ? '-' + String.raw`\frac{1}{${-b}}` : pre}\log\left(${arg}\right)`;
+        return {
+          type: 'expr',
+          prompt: String.raw`$f(x)=${ftex}$ è strettamente monotona. Calcola $f^{-1}(x)$.`,
+          answer: `log((x-(${c}))/${k})/(${b})`,
+          domain: [c + 0.4, c + 6],
+          explain: String.raw`Risolvo $y=${ftex}$: $${ex}=${k === 1 ? '' : String.raw`\frac{1}{${k}}`}(${c === 0 ? 'y' : `y ${c > 0 ? '-' : '+'} ${Math.abs(c)}`})$, poi applico il logaritmo e divido per $${b}$. Risultato: $f^{-1}(x)=${inv}$, definita per $x>${c}$ (l'immagine di $f$ è $(${c},+\infty)$).`,
+        };
+      },
+    },
+    {
+      id: 's07.inversa.gen-fratta',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        let a, b, c, d;
+        do {
+          a = R.int(-3, 3); b = R.int(-4, 4); c = R.nz(-2, 2); d = R.int(-4, 4);
+        } while (a * d - b * c === 0);
+        const num = H.lin(a, b), den = H.lin(c, d);
+        const p = a / c; // asintoto orizzontale y = a/c, escluso dal dominio dell'inversa
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola l'inversa di $f(x)=\frac{${num}}{${den}}$.`,
+          answer: `((${b})-(${d})*x)/((${c})*x-(${a}))`,
+          domain: [p + 0.5, p + 4],
+          explain: String.raw`$y(${den})=${num}\Rightarrow ${H.coef(c)}xy${d === 0 ? '' : ' ' + H.signed(d, 'y')}=${num}$. Porto a sinistra i termini con $x$: $x(${H.lin(c, -a).replace('x', 'y')})=${H.lin(-d, b).replace('x', 'y')}$. Quindi $f^{-1}(x)=\frac{${H.lin(-d, b)}}{${H.lin(c, -a)}}$, definita per $x\neq${H.frac(a, c)}$.`,
+        };
+      },
+    },
+    {
+      id: 's07.inversa.gen-composta',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const fns = [
+          ['e^{x}', 1], ['x^3', 1], [String.raw`\log x`, 1], [String.raw`\arctan x`, 1], [String.raw`\sqrt{x}`, 1],
+          ['e^{-x}', -1], [String.raw`\frac{1}{x}\ (x>0)`, -1], [String.raw`-x^3`, -1], [String.raw`\text{arccot}\, x`, -1],
+        ];
+        const [ft, fs] = R.pick(fns), [gt, gs] = R.pick(fns);
+        const ans = fs * gs > 0 ? 0 : 1;
+        const word = (s) => (s > 0 ? 'strettamente crescente' : 'strettamente decrescente');
+        return {
+          type: 'mcq',
+          prompt: String.raw`Siano $f(x)=${ft}$ e $g(x)=${gt}$. Dove la composta $f\circ g$ è definita, è:`,
+          options: ['strettamente crescente', 'strettamente decrescente', 'non monotona'],
+          noShuffle: true,
+          answer: ans,
+          explain: String.raw`$f$ è ${word(fs)}, $g$ è ${word(gs)}. La composta segue la regola dei segni: ${fs * gs > 0 ? 'stesso verso dà crescente' : 'versi opposti danno decrescente'}.`,
+        };
+      },
+    },
+    {
+      id: 's07.inversa.p1',
+      type: 'open',
+      prompt: String.raw`Dare la definizione di funzione strettamente crescente.`,
+      source: 'Appello 03/09/2026 · A',
+      points: 1,
+      answer: String.raw`$f:A\to\R$ è strettamente crescente in $A$ se per ogni $x_1,x_2\in A$ con $x_1<x_2$ si ha $f(x_1)<f(x_2)$.`,
+      rubric: ['Quantificazione su tutte le coppie di punti del dominio', 'Ipotesi x₁ < x₂', 'Tesi f(x₁) < f(x₂) con disuguaglianza stretta'],
+      level: 1,
+    },
+    {
+      id: 's07.inversa.p2',
+      type: 'tf',
+      prompt: String.raw`Se $f$ è continua su un intervallo $I$ e iniettiva, allora è strettamente monotona su $I$.`,
+      answer: true,
+      explain: String.raw`È un teorema (si dimostra con i valori intermedi): se non fosse monotona, ci sarebbero tre punti $x_1<x_2<x_3$ con $f(x_2)$ "sopra" o "sotto" entrambi gli altri, e un valore verrebbe assunto due volte. Senza continuità o senza intervallo è falso.`,
+      level: 2,
+    },
+    {
+      id: 's07.inversa.p3',
+      type: 'num',
+      prompt: String.raw`Calcola $\arctan(-1)+\arcsin\frac{\sqrt3}{2}$.`,
+      answer: 'pi/12',
+      explain: String.raw`$\arctan(-1)=-\frac\pi4$, $\arcsin\frac{\sqrt3}2=\frac\pi3$. Somma: $-\frac{3\pi}{12}+\frac{4\pi}{12}=\frac{\pi}{12}$.`,
+      level: 1,
+    },
+    {
+      id: 's07.inversa.p4',
+      type: 'interval',
+      prompt: String.raw`Immagine di $f(x)=\arctan x+\frac\pi2$ (cioè dominio della sua inversa).`,
+      answer: '(0,pi)',
+      explain: String.raw`$\arctan$ assume i valori di $(-\frac\pi2,\frac\pi2)$ (estremi esclusi): traslando di $\frac\pi2$ si ottiene $(0,\pi)$.`,
+      level: 2,
+    },
+    {
+      id: 's07.inversa.p5',
+      type: 'mcq',
+      prompt: String.raw`Perché $\log x$ è continua su $(0,+\infty)$?`,
+      options: [
+        String.raw`Perché è l'inversa di $e^x$, continua e strettamente crescente sull'intervallo $\R$`,
+        String.raw`Perché è derivabile, e lo si sa perché è continua`,
+        String.raw`Perché è un polinomio`,
+        String.raw`Perché è limitata`,
+      ],
+      answer: 0,
+      explain: String.raw`È un'applicazione diretta del teorema di continuità dell'inversa. La seconda opzione è un ragionamento circolare; $\log$ non è un polinomio e non è limitata.`,
+      level: 1,
+    },
+    {
+      id: 's07.inversa.p6',
+      type: 'expr',
+      prompt: String.raw`Calcola l'inversa di $f(x)=\log(2x+1)-3$, $x>-\frac12$.`,
+      answer: '(e^(x+3)-1)/2',
+      explain: String.raw`$y+3=\log(2x+1)\Rightarrow 2x+1=e^{y+3}\Rightarrow x=\frac{e^{y+3}-1}{2}$. L'immagine di $f$ è $\R$, quindi $f^{-1}(x)=\frac{e^{x+3}-1}2$ per ogni $x$.`,
+      level: 2,
+    },
+  ],
+  flashcards: [
+    { id: 's07.inversa.fc1', kind: 'def', front: 'Funzione strettamente crescente', back: String.raw`$\forall x_1,x_2\in A$: $x_1<x_2\Rightarrow f(x_1)<f(x_2)$.` },
+    { id: 's07.inversa.fc2', kind: 'thm', front: 'Monotonia e iniettività', back: String.raw`Strettamente monotona $\Rightarrow$ iniettiva (quindi invertibile su $f(A)$). Il viceversa vale per $f$ **continua su un intervallo**.` },
+    { id: 's07.inversa.fc3', kind: 'thm', front: "Continuità dell'inversa", back: String.raw`$I$ intervallo, $f:I\to\R$ continua e strettamente monotona $\Rightarrow$ $f(I)$ è un intervallo e $f^{-1}:f(I)\to I$ è continua e strettamente monotona.` },
+    { id: 's07.inversa.fc4', kind: 'formula', front: 'Inverse trigonometriche: domini e codomini', back: String.raw`$\arcsin:[-1,1]\to[-\frac\pi2,\frac\pi2]$; $\arccos:[-1,1]\to[0,\pi]$; $\arctan:\R\to(-\frac\pi2,\frac\pi2)$.` },
+    { id: 's07.inversa.fc5', kind: 'metodo', front: "Calcolare l'inversa", back: String.raw`Verifica la stretta monotonia, trova l'immagine $f(A)$, risolvi $y=f(x)$ rispetto a $x$, poi rinomina $y\to x$. Dominio di $f^{-1}$ = immagine di $f$.` },
+    { id: 's07.inversa.fc6', kind: 'errore', front: String.raw`$\arcsin(\sin x)=x$?`, back: String.raw`Solo per $x\in[-\frac\pi2,\frac\pi2]$. Es.: $\arcsin(\sin\frac{3\pi}4)=\frac\pi4$.` },
+  ],
+};
+
 export default {
   id: 's07',
   title: 'Continuità',
@@ -1154,6 +1520,6 @@ export default {
   skills: [
     sDef,
     sTeo,
-    // @@SKILLS
+    sInv,
   ],
 };

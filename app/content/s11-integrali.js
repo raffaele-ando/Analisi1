@@ -907,10 +907,426 @@ Poi si usa la **formula fondamentale** $\int_a^bf=G(b)-G(a)$ per gli integrali d
   ],
 };
 
+// ---------------------------------------------------------------------------
+// s11.parti · Integrazione per parti
+// ---------------------------------------------------------------------------
+const parti = {
+  id: 's11.parti',
+  title: 'Integrazione per parti',
+  summary: String.raw`Usare $\int fg'=fg-\int f'g$: scegliere bene i ruoli, ripetere, e risolvere gli integrali "per ricorsione".`,
+  prereq: ['s11.immediati', 's08.regole'],
+  examRefs: ['Appello 15/01/2026 · Es. 1', 'Itinere 15/01/2026 · Es. 3', 'Appello 11/06/2026 · Es. 4', 'Appello 06/07/2026 · Es. 4'],
+  lessons: [
+    {
+      id: 's11.parti.L1',
+      title: 'La formula per parti',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Da dove viene',
+          body: String.raw`Dalla derivata del prodotto $(fg)'=f'g+fg'$, integrando:
+
+>* **Integrazione per parti.** $\displaystyle\int f(x)\,g'(x)\,dx=f(x)\,g(x)-\int f'(x)\,g(x)\,dx$
+>* e per gli integrali definiti: $\displaystyle\int_a^b fg'=\big[fg\big]_a^b-\int_a^b f'g$.
+
+Si usa per i **prodotti**. Scelgo:
+- $f$ = **fattore finito**, da derivare: polinomi, $\log x$, $\arctan x$ (derivandoli si semplificano);
+- $g'$ = **fattore differenziale**, da integrare: $e^x$, $\sin x$, $\cos x$, potenze $x^\alpha$ quando c'è un $\log$.
+
+L'obiettivo: il nuovo integrale $\int f'g$ deve essere **più facile** di quello di partenza.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\int xe^x\\,dx$',
+          problem: String.raw`Calcola $\int xe^x\,dx$.`,
+          steps: [
+            String.raw`$f=x$ (derivata $1$), $g'=e^x$ (primitiva $g=e^x$).`,
+            String.raw`$\int xe^x\,dx=xe^x-\int1\cdot e^x\,dx$.`,
+            {
+              text: String.raw`$=xe^x-e^x+c=(x-1)e^x+c$.`,
+              ask: { type: 'expr', prompt: 'Scrivi una primitiva.', answer: '(x-1)*e^x', upToConstant: true, _f: 'x*e^x', explain: String.raw`$xe^x-e^x$. Verifica: $((x-1)e^x)'=e^x+(x-1)e^x=xe^x$.` },
+            },
+          ],
+          result: String.raw`$\int xe^x\,dx=(x-1)e^x+c$`,
+        },
+        {
+          id: 's11.parti.L1.e1', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\int x\cos x\,dx$`,
+          answer: 'x*sin(x)+cos(x)', _f: 'x*cos(x)',
+          explain: String.raw`$f=x$, $g'=\cos x$, $g=\sin x$: $x\sin x-\int\sin x=x\sin x+\cos x$. Attenzione al segno: $-\int\sin x=+\cos x$.`,
+        },
+        {
+          id: 's11.parti.L1.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Per $\int x\,e^{2x}\,dx$ qual è la scelta giusta?`,
+          options: [String.raw`$f=x$ da derivare, $g'=e^{2x}$ da integrare`, String.raw`$f=e^{2x}$ da derivare, $g'=x$ da integrare`, 'Non serve: è immediato', String.raw`Sostituzione $t=x^2$`],
+          answer: 0,
+          explain: String.raw`Derivando $x$ diventa $1$ e resta $\int\frac12e^{2x}$, immediato. Con la scelta opposta comparirebbe $\int\frac{x^2}{2}\cdot2e^{2x}$: peggio di prima. Non è immediato perché $x$ non è la derivata di $2x$ a meno di costanti... e moltiplica, non compone.`,
+        },
+        {
+          type: 'example',
+          title: "Esempio d'esame: $\\int x\\log x\\,dx$",
+          problem: String.raw`Calcola $\int x\log x\,dx$ (serve per l'area dell'Appello 15/01/2026).`,
+          steps: [
+            String.raw`Il $\log$ va **derivato**: $f=\log x$, $f'=\frac1x$; $g'=x$, $g=\frac{x^2}2$.`,
+            String.raw`$\int x\log x\,dx=\frac{x^2}2\log x-\int\frac{x^2}2\cdot\frac1x\,dx=\frac{x^2}2\log x-\int\frac x2\,dx$.`,
+            {
+              text: String.raw`$=\frac{x^2}2\log x-\frac{x^2}4+c$.`,
+              ask: { type: 'expr', prompt: 'Scrivi una primitiva.', answer: 'x^2/2*log(x)-x^2/4', upToConstant: true, domain: [0.5, 3], _f: 'x*log(x)', explain: String.raw`$\int\frac x2=\frac{x^2}4$.` },
+            },
+          ],
+          result: String.raw`$\int x\log x\,dx=\frac{x^2}2\log x-\frac{x^2}4+c$`,
+        },
+        {
+          id: 's11.parti.L1.e3', type: 'expr', level: 2, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`$\int\log x\,dx$ (suggerimento: $\log x=1\cdot\log x$)`,
+          answer: 'x*log(x)-x', _f: 'log(x)',
+          explain: String.raw`$f=\log x$, $g'=1$, $g=x$: $x\log x-\int x\cdot\frac1x\,dx=x\log x-x$. Il trucco del fattore $1$ funziona anche per $\arctan x$.`,
+        },
+        {
+          id: 's11.parti.L1.e4', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int x\sin(2x)\,dx$`,
+          answer: '-x*cos(2x)/2+sin(2x)/4', _f: 'x*sin(2x)',
+          explain: String.raw`$g'=\sin2x$, $g=-\frac{\cos2x}2$: $-\frac{x\cos2x}{2}+\frac12\int\cos2x=-\frac{x\cos2x}2+\frac{\sin2x}4$.`,
+        },
+        {
+          id: 's11.parti.L1.e5', type: 'expr', level: 2, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`$\int x^2\log x\,dx$`,
+          answer: 'x^3/3*log(x)-x^3/9', _f: 'x^2*log(x)',
+          explain: String.raw`$f=\log x$, $g=\frac{x^3}3$: $\frac{x^3}3\log x-\int\frac{x^2}3=\frac{x^3}3\log x-\frac{x^3}9$.`,
+        },
+        {
+          id: 's11.parti.L1.e6', type: 'num', level: 1,
+          prompt: String.raw`$\displaystyle\int_0^1xe^x\,dx$`,
+          answer: '1', _int: ['x*e^x', 0, 1],
+          explain: String.raw`$\left[(x-1)e^x\right]_0^1=0-(-1)=1$.`,
+        },
+        {
+          id: 's11.parti.L1.e7', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_1^e\log x\,dx$`,
+          answer: '1', _int: ['log(x)', 1, 'e'],
+          explain: String.raw`$\left[x\log x-x\right]_1^e=(e-e)-(0-1)=1$.`,
+        },
+        {
+          id: 's11.parti.L1.e8', type: 'tf', level: 1,
+          prompt: String.raw`In $\int x^3\log x\,dx$ conviene derivare $x^3$ e integrare $\log x$.`,
+          answer: false,
+          explain: String.raw`Falso: il $\log$ si **deriva** (diventa $\frac1x$) e $x^3$ si integra. Integrare $\log x$ produrrebbe $x\log x-x$, più complicato.`,
+        },
+      ],
+    },
+    {
+      id: 's11.parti.L2',
+      title: 'Due volte e "per ricorsione"',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Ripetere e tornare al punto di partenza',
+          body: String.raw`- Con un polinomio di grado $n$ per $e^x$, $\sin x$, $\cos x$ applico la formula $n$ volte: ogni volta il grado scende di $1$.
+- Con $e^{ax}\sin bx$ o $e^{ax}\cos bx$ nessun fattore si semplifica. Applico la formula **due volte** (stessa scelta dei ruoli!) e ritrovo l'integrale di partenza $I$: ottengo un'**equazione** del tipo $I=A-I$, da cui $I=\frac A2$. È l'integrazione **per ricorsione**.
+
+>! Al secondo passaggio non invertire i ruoli: torneresti indietro e otterresti $I=I$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio d\'esame: $\\int e^{-x}\\sin x\\,dx$',
+          problem: String.raw`Calcola $I=\int e^{-x}\sin x\,dx$ (Appello 06/07/2026).`,
+          steps: [
+            String.raw`$f=\sin x$, $g'=e^{-x}$, $g=-e^{-x}$: $I=-e^{-x}\sin x+\int e^{-x}\cos x\,dx$.`,
+            String.raw`Di nuovo con $f=\cos x$, $g'=e^{-x}$: $\int e^{-x}\cos x\,dx=-e^{-x}\cos x-\int e^{-x}\sin x\,dx=-e^{-x}\cos x-I$.`,
+            {
+              text: String.raw`Quindi $I=-e^{-x}\sin x-e^{-x}\cos x-I$, cioè $2I=-e^{-x}(\sin x+\cos x)$.`,
+              ask: { type: 'mcq', prompt: 'Che equazione ottieni per $I$?', options: [String.raw`$2I=-e^{-x}(\sin x+\cos x)$`, String.raw`$0=-e^{-x}(\sin x+\cos x)$`, String.raw`$I=I$`], answer: 0, explain: String.raw`$I$ compare a destra con segno $-$: porto a sinistra e ottengo $2I$.` },
+            },
+            {
+              text: String.raw`$I=-\frac12e^{-x}(\sin x+\cos x)+c$.`,
+              ask: { type: 'expr', prompt: 'Scrivi $I$ (senza costante).', answer: '-e^(-x)*(sin(x)+cos(x))/2', upToConstant: true, _f: 'e^(-x)*sin(x)', explain: String.raw`Divido per $2$. Verifica derivando: $\frac12e^{-x}(\sin x+\cos x)-\frac12e^{-x}(\cos x-\sin x)=e^{-x}\sin x$.` },
+            },
+          ],
+          result: String.raw`$\int e^{-x}\sin x\,dx=-\frac12e^{-x}(\sin x+\cos x)+c$`,
+        },
+        {
+          id: 's11.parti.L2.e1', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int x^2e^x\,dx$`,
+          answer: '(x^2-2x+2)*e^x', _f: 'x^2*e^x',
+          explain: String.raw`Due volte: $x^2e^x-2\int xe^x=x^2e^x-2(x-1)e^x=(x^2-2x+2)e^x$.`,
+        },
+        {
+          id: 's11.parti.L2.e2', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int e^x\cos x\,dx$`,
+          answer: 'e^x*(sin(x)+cos(x))/2', _f: 'e^x*cos(x)',
+          explain: String.raw`$I=e^x\cos x+\int e^x\sin x=e^x\cos x+e^x\sin x-I$ (entrambe le volte $g'=e^x$). Quindi $I=\frac{e^x(\sin x+\cos x)}{2}$.`,
+        },
+        {
+          id: 's11.parti.L2.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Calcolando $\int e^{x}\sin x\,dx$, al primo passo scelgo $g'=e^x$; al secondo scelgo invece $f=e^x$ e $g'=\cos x$. Che cosa succede?`,
+          options: [String.raw`Ottengo $I=I$: un'identità inutile`, String.raw`Ottengo $2I=e^x(\sin x-\cos x)$`, 'Ottengo un integrale immediato', String.raw`Ottengo $I=0$`],
+          answer: 0,
+          explain: String.raw`Invertire i ruoli "disfa" il primo passaggio: si torna esattamente al punto di partenza. Per la ricorsione la scelta deve restare la stessa ($g'=e^x$ entrambe le volte).`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio: $\\int\\arctan x\\,dx$',
+          problem: String.raw`Calcola $\int\arctan x\,dx$.`,
+          steps: [
+            String.raw`$f=\arctan x$, $f'=\frac1{1+x^2}$; $g'=1$, $g=x$.`,
+            String.raw`$\int\arctan x\,dx=x\arctan x-\int\frac{x}{1+x^2}dx$.`,
+            {
+              text: String.raw`$=x\arctan x-\frac12\log(1+x^2)+c$.`,
+              ask: { type: 'expr', prompt: String.raw`Quanto vale $\int\frac{x}{1+x^2}dx$?`, answer: 'log(1+x^2)/2', upToConstant: true, _f: 'x/(1+x^2)', explain: String.raw`Tipo $\frac{f'}f$ a meno del fattore $\frac12$.` },
+            },
+          ],
+          result: String.raw`$x\arctan x-\frac12\log(1+x^2)+c$`,
+        },
+        {
+          id: 's11.parti.L2.e4', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int x\arctan x\,dx$`,
+          answer: '((x^2+1)*atan(x)-x)/2', _f: 'x*atan(x)',
+          explain: String.raw`$g=\frac{x^2}2$: $\frac{x^2}2\arctan x-\frac12\int\frac{x^2}{1+x^2}=\frac{x^2}2\arctan x-\frac12(x-\arctan x)$.`,
+        },
+        {
+          id: 's11.parti.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^\pi e^{-x}\sin x\,dx$`,
+          answer: '(1+e^(-pi))/2', _int: ['e^(-x)*sin(x)', 0, 'pi'],
+          explain: String.raw`$\left[-\frac12e^{-x}(\sin x+\cos x)\right]_0^\pi=-\frac12e^{-\pi}(0-1)+\frac12(0+1)=\frac{1+e^{-\pi}}2$.`,
+        },
+        {
+          id: 's11.parti.L2.e6', type: 'expr', level: 3, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`$\int\log^2x\,dx$`,
+          answer: 'x*log(x)^2-2x*log(x)+2x', _f: 'log(x)^2',
+          explain: String.raw`$g'=1$: $x\log^2x-\int x\cdot\frac{2\log x}{x}=x\log^2x-2(x\log x-x)$.`,
+        },
+        {
+          id: 's11.parti.L2.e7', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int x^2\cos x\,dx$`,
+          answer: 'x^2*sin(x)+2x*cos(x)-2sin(x)', _f: 'x^2*cos(x)',
+          explain: String.raw`$x^2\sin x-2\int x\sin x$ e $\int x\sin x=-x\cos x+\sin x$. Totale $x^2\sin x+2x\cos x-2\sin x$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.parti.L3',
+      title: "Per parti all'esame",
+      cards: [
+        {
+          type: 'learn',
+          title: 'Lo schema dei temi',
+          body: String.raw`Nei temi recenti compaiono integrande come
+$$\frac{\log(1+t)}{t^2},\qquad\frac{\arctan x}{x^2},\qquad x\log x,\qquad e^{-x}\sin x.$$
+Strategia per le prime due: **integro la potenza** ($\int\frac{dx}{x^2}=-\frac1x$) e **derivo** $\log$ o $\arctan$. Il nuovo integrale è una **funzione razionale**, che si spezza in fratti semplici:
+$$\frac{1}{t(1+t)}=\frac1t-\frac1{1+t},\qquad \frac1{x(1+x^2)}=\frac1x-\frac{x}{1+x^2}.$$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio: $\\int\\frac{\\arctan x}{x^2}dx$ (Appello 11/06/2026)',
+          problem: String.raw`Calcola una primitiva di $\frac{\arctan x}{x^2}$ per $x>0$.`,
+          steps: [
+            String.raw`$f=\arctan x$, $g'=\frac1{x^2}$, $g=-\frac1x$: $-\frac{\arctan x}x+\int\frac{dx}{x(1+x^2)}$.`,
+            {
+              text: String.raw`Fratti semplici: $\frac1{x(1+x^2)}=\frac Ax+\frac{Bx+C}{1+x^2}$ con $A=1$, $B=-1$, $C=0$.`,
+              ask: { type: 'tuple', prompt: String.raw`Trova $A,B,C$ in $\frac1{x(1+x^2)}=\frac Ax+\frac{Bx+C}{1+x^2}$.`, labels: ['A', 'B', 'C'], answer: ['1', '-1', '0'], explain: String.raw`$1=A(1+x^2)+(Bx+C)x$: per $x=0$, $A=1$; coefficiente di $x^2$: $A+B=0$; di $x$: $C=0$.` },
+            },
+            String.raw`$\int\left(\frac1x-\frac x{1+x^2}\right)dx=\log x-\frac12\log(1+x^2)$.`,
+            String.raw`Totale: $-\frac{\arctan x}x+\log x-\frac12\log(1+x^2)+c$.`,
+          ],
+          result: String.raw`$\int\frac{\arctan x}{x^2}dx=-\frac{\arctan x}x+\log x-\frac12\log(1+x^2)+c$`,
+        },
+        {
+          id: 's11.parti.L3.e1', type: 'expr', level: 3, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`Scrivi una primitiva di $\frac{\arctan x}{x^2}$ per $x>0$.`,
+          answer: '-atan(x)/x+log(x)-log(1+x^2)/2', _f: 'atan(x)/x^2', source: 'Appello 11/06/2026 · Es. 4',
+          explain: String.raw`Per parti con $g=-\frac1x$, poi $\frac1{x(1+x^2)}=\frac1x-\frac{x}{1+x^2}$: $-\frac{\arctan x}x+\log x-\frac12\log(1+x^2)$.`,
+        },
+        {
+          id: 's11.parti.L3.e2', type: 'problem', level: 3, points: 4, source: 'Itinere 15/01/2026 · Es. 3',
+          prompt: String.raw`Sia $f(t)=\dfrac{\log(1+t)}{t^2}$, $t>0$. (a) Si calcoli una primitiva di $f$. (b) Si calcoli $\displaystyle\int_1^{+\infty}f(t)\,dt$.`,
+          parts: [
+            { type: 'expr', prompt: String.raw`(a) Una primitiva di $f$ (variabile $t$).`, answer: '-log(1+t)/t+log(t)-log(1+t)', vars: ['t'], domain: [0.5, 3], upToConstant: true, _f: 'log(1+t)/t^2', explain: String.raw`Per parti ($g=-\frac1t$): $-\frac{\log(1+t)}t+\int\frac{dt}{t(1+t)}$ e $\frac1{t(1+t)}=\frac1t-\frac1{1+t}$.` },
+            { type: 'num', prompt: String.raw`(b) $\int_1^{+\infty}f(t)\,dt$`, answer: '2*log(2)', _int: ['log(1+x)/x^2', 1, 'inf'], explain: String.raw`$F(t)=-\frac{\log(1+t)}t+\log\frac{t}{1+t}\to0$ per $t\to+\infty$; $F(1)=-\log2-\log2=-2\log2$. Valore $0-(-2\log2)=2\log2$.` },
+          ],
+          solution: String.raw`**(a)** Per parti con $f=\log(1+t)$, $g'=\frac1{t^2}$, $g=-\frac1t$:
+$$\int\frac{\log(1+t)}{t^2}dt=-\frac{\log(1+t)}{t}+\int\frac{dt}{t(1+t)}.$$
+Poiché $\frac1{t(1+t)}=\frac1t-\frac1{1+t}$:
+$$F(t)=-\frac{\log(1+t)}t+\log t-\log(1+t)+c.$$
+**(b)** $F(t)=-\frac{\log(1+t)}t+\log\frac t{1+t}$. Per $t\to+\infty$: $\frac{\log(1+t)}t\to0$ e $\log\frac t{1+t}\to\log1=0$. $F(1)=-\log2+0-\log2=-2\log2$. Quindi $\int_1^{+\infty}f=\lim_{M\to+\infty}F(M)-F(1)=2\log2$.`,
+        },
+        {
+          id: 's11.parti.L3.e3', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_1^e x\log x\,dx$`,
+          answer: '(e^2+1)/4', _int: ['x*log(x)', 1, 'e'],
+          explain: String.raw`$\left[\frac{x^2}2\log x-\frac{x^2}4\right]_1^e=\left(\frac{e^2}2-\frac{e^2}4\right)-\left(0-\frac14\right)=\frac{e^2+1}4$.`,
+        },
+        {
+          id: 's11.parti.L3.e4', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\pi/2}x\cos x\,dx$`,
+          answer: 'pi/2-1', _int: ['x*cos(x)', 0, 'pi/2'],
+          explain: String.raw`$\left[x\sin x+\cos x\right]_0^{\pi/2}=\frac\pi2+0-(0+1)=\frac\pi2-1$.`,
+        },
+        {
+          id: 's11.parti.L3.e5', type: 'order', level: 2,
+          prompt: String.raw`Ordina i passi per calcolare $I=\int e^x\sin x\,dx$ per ricorsione. Scarta il passo sbagliato.`,
+          steps: [
+            String.raw`Scelgo $g'=e^x$, $f=\sin x$: $I=e^x\sin x-\int e^x\cos x\,dx$.`,
+            String.raw`Di nuovo con $g'=e^x$, $f=\cos x$: $\int e^x\cos x\,dx=e^x\cos x+\int e^x\sin x\,dx=e^x\cos x+I$.`,
+            String.raw`Sostituisco: $I=e^x\sin x-e^x\cos x-I$.`,
+            String.raw`Risolvo: $I=\frac{e^x(\sin x-\cos x)}2+c$.`,
+          ],
+          distractors: [String.raw`Al secondo passo scelgo $f=e^x$ e $g'=\cos x$.`],
+          explain: String.raw`La scelta dei ruoli resta la stessa nei due passaggi; poi si risolve l'equazione in $I$. Verifica: $\left(\frac{e^x(\sin x-\cos x)}2\right)'=\frac{e^x(\sin x-\cos x)+e^x(\cos x+\sin x)}2=e^x\sin x$.`,
+        },
+        {
+          id: 's11.parti.L3.e6', type: 'expr', level: 3, upToConstant: true,
+          prompt: String.raw`$\int\log(1+x^2)\,dx$`,
+          answer: 'x*log(1+x^2)-2x+2*atan(x)', _f: 'log(1+x^2)',
+          explain: String.raw`$g'=1$: $x\log(1+x^2)-\int\frac{2x^2}{1+x^2}dx$ e $\frac{2x^2}{1+x^2}=2-\frac2{1+x^2}$. Risultato $x\log(1+x^2)-2x+2\arctan x$.`,
+        },
+        {
+          id: 's11.parti.L3.e7', type: 'mcq', level: 2,
+          prompt: String.raw`Quale integrale **non** richiede l'integrazione per parti?`,
+          options: [String.raw`$\int xe^{x^2}dx$`, String.raw`$\int xe^{x}dx$`, String.raw`$\int x\log x\,dx$`, String.raw`$\int e^x\sin x\,dx$`],
+          answer: 0,
+          explain: String.raw`In $\int xe^{x^2}$ il fattore $x$ è (metà) la derivata dell'esponente: è quasi immediato, $\frac12e^{x^2}$. Gli altri sono prodotti "veri" e servono le parti.`,
+        },
+        {
+          id: 's11.parti.L3.e8', type: 'num', level: 3,
+          prompt: String.raw`$\displaystyle\int_0^1\arctan x\,dx$`,
+          answer: 'pi/4-log(2)/2', _int: ['atan(x)', 0, 1],
+          explain: String.raw`$\left[x\arctan x-\frac12\log(1+x^2)\right]_0^1=\frac\pi4-\frac12\log2$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's11.parti.gen-exp', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3), b = R.int(-3, 3), k = R.pick([1, 2, 3, -1, -2]);
+        // ∫(ax+b)e^{kx} = e^{kx}((ax+b)/k - a/k^2) = e^{kx}(a k x + b k - a)/k^2
+        const ek = k === 1 ? 'e^{x}' : k === -1 ? 'e^{-x}' : `e^{${k}x}`;
+        const p1 = a * k, p0 = b * k - a, d = k * k;
+        const inner = H.poly([p1, p0]);
+        return {
+          type: 'expr', upToConstant: true, domain: [-1, 1.5],
+          prompt: String.raw`Calcola $\int(${H.lin(a, b)})\,${ek}\,dx$.`,
+          answer: `e^(${k}*x)*((${p1})*x+(${p0}))/${d}`, _f: `((${a})*x+(${b}))*e^(${k}*x)`,
+          explain: String.raw`Per parti con $f=${H.lin(a, b)}$, $g=${H.frac(1, k)}${ek}$: $${H.frac(1, k)}(${H.lin(a, b)})${ek}-${H.frac(a, k)}\int ${ek}\,dx$. Risultato: $${d === 1 ? '' : `\\frac{1}{${d}}`}(${inner})${ek}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.parti.gen-trig', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3), b = R.int(-2, 2), k = R.int(1, 3), isSin = R.chance();
+        const kx = k === 1 ? 'x' : `${k}x`, L = H.lin(a, b), Ls = `((${a})*x+(${b}))`;
+        // sin: -(ax+b)cos(kx)/k + a sin(kx)/k^2 ; cos: (ax+b) sin(kx)/k + a cos(kx)/k^2
+        const ans = isSin ? `-${Ls}*cos(${k}x)/${k}+(${a})*sin(${k}x)/${k * k}` : `${Ls}*sin(${k}x)/${k}+(${a})*cos(${k}x)/${k * k}`;
+        const t1 = isSin ? String.raw`-${H.frac(1, k) === '1' ? '' : H.frac(1, k)}(${L})\cos(${kx})` : String.raw`${H.frac(1, k) === '1' ? '' : H.frac(1, k)}(${L})\sin(${kx})`;
+        const t2c = H.frac(a, k * k);
+        const t2 = `${a > 0 ? '+' : ''}${t2c === '1' ? '' : t2c === '-1' ? '-' : t2c}\\${isSin ? 'sin' : 'cos'}(${kx})`;
+        return {
+          type: 'expr', upToConstant: true,
+          prompt: String.raw`Calcola $\int(${L})${'\\'}${isSin ? 'sin' : 'cos'}(${kx})\,dx$.`,
+          answer: ans, _f: `${Ls}*${isSin ? 'sin' : 'cos'}(${k}x)`,
+          explain: String.raw`Per parti: derivo $${L}$ (derivata $${a}$) e integro $${'\\'}${isSin ? 'sin' : 'cos'}(${kx})$. Risultato: $${t1}${t2}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.parti.gen-log', type: 'gen', level: 2,
+      gen: (R) => {
+        const n = R.int(1, 4), c = R.nz(-3, 3) * (n + 1);
+        // ∫ c x^n log x = c x^{n+1}/(n+1) log x - c x^{n+1}/(n+1)^2
+        const xn = n === 1 ? 'x' : `x^{${n}}`, xn1 = `x^{${n + 1}}`;
+        return {
+          type: 'expr', upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`Calcola $\int ${H.coef(c)}${xn}\log x\,dx$.`,
+          answer: `${c / (n + 1)}*x^${n + 1}*log(x)-(${c})*x^${n + 1}/${(n + 1) ** 2}`, _f: `${c}*x^${n}*log(x)`,
+          explain: String.raw`Il $\log$ si deriva: $f=\log x$, $g=${sumTex([[c, n + 1, xn1]])}$. Poi $\int g\cdot\frac1x=\int ${sumTex([[c, n + 1, n === 1 ? 'x' : `x^{${n}}`]])}\,dx$. Risultato: $${sumTex([[c, n + 1, xn1 + '\\log x'], [-c, (n + 1) ** 2, xn1]])}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.parti.gen-ricorsione', type: 'gen', level: 3,
+      gen: (R) => {
+        const a = R.pick([1, -1, 2, -2]), b = R.pick([1, 2, 3]), isSin = R.chance();
+        const ea = a === 1 ? 'e^{x}' : a === -1 ? 'e^{-x}' : `e^{${a}x}`, bx = b === 1 ? 'x' : `${b}x`;
+        const D = a * a + b * b;
+        // sin: e^{ax}(a sin bx - b cos bx)/D ; cos: e^{ax}(a cos bx + b sin bx)/D
+        const ans = isSin ? `e^(${a}*x)*((${a})*sin(${b}x)-(${b})*cos(${b}x))/${D}` : `e^(${a}*x)*((${a})*cos(${b}x)+(${b})*sin(${b}x))/${D}`;
+        const inner = isSin ? `${H.coef(a)}\\sin(${bx})-${H.coef(b)}\\cos(${bx})` : `${H.coef(a)}\\cos(${bx})+${H.coef(b)}\\sin(${bx})`;
+        return {
+          type: 'expr', upToConstant: true, domain: [-1, 1.5],
+          prompt: String.raw`Calcola $\int ${ea}${'\\'}${isSin ? 'sin' : 'cos'}(${bx})\,dx$.`,
+          answer: ans, _f: `e^(${a}*x)*${isSin ? 'sin' : 'cos'}(${b}x)`,
+          explain: String.raw`Per ricorsione: due volte per parti integrando sempre $${ea}$. Si ottiene $I\left(1+\frac{${b * b}}{${a * a}}\right)=\dots$, cioè $I=\frac{${ea}\left(${inner}\right)}{${D}}+c$. Verifica derivando.`.replace('+-', '-'),
+        };
+      },
+    },
+    {
+      id: 's11.parti.gen-def', type: 'gen', level: 2,
+      gen: (R) => {
+        const n = R.int(1, 3);
+        // ∫_1^e x^n log x = (n e^{n+1} + 1)/(n+1)^2
+        const xn = n === 1 ? 'x' : `x^{${n}}`, d = (n + 1) ** 2;
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\int_1^e ${xn}\log x\,dx$`,
+          answer: `(${n}*e^${n + 1}+1)/${d}`, _int: [`x^${n}*log(x)`, 1, 'e'],
+          explain: String.raw`Primitiva $\frac{x^{${n + 1}}}{${n + 1}}\log x-\frac{x^{${n + 1}}}{${d}}$. In $e$: $\frac{e^{${n + 1}}}{${n + 1}}-\frac{e^{${n + 1}}}{${d}}=\frac{${n === 1 ? '' : n}e^{${n + 1}}}{${d}}$; in $1$: $-\frac1{${d}}$. Valore $\frac{${n === 1 ? '' : n}e^{${n + 1}}+1}{${d}}$.`,
+        };
+      },
+    },
+    {
+      id: 's11.parti.p1', type: 'cloze', level: 1,
+      prompt: 'Completa la formula.',
+      text: String.raw`$\int f(x)g'(x)\,dx=$ [[0]] $-\int$ [[1]] $dx$. Conviene scegliere come $f$ (da derivare) [[2]].`,
+      blanks: [
+        { options: ['$f(x)g(x)$', "$f'(x)g'(x)$", "$f(x)g'(x)$"], answer: 0 },
+        { options: ["$f'(x)g(x)$", "$f(x)g'(x)$", "$f'(x)g'(x)$"], answer: 0 },
+        { options: ['$\\log x$ o $\\arctan x$ o un polinomio', '$e^x$', '$\\sin x$'], answer: 0 },
+      ],
+      explain: String.raw`Viene da $(fg)'=f'g+fg'$. Si derivano i fattori che derivando si semplificano.`,
+    },
+    {
+      id: 's11.parti.p2', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Ricavare la formula di integrazione per parti e spiegare come si scelgono i fattori, con un esempio.`,
+      answer: String.raw`Da $(fg)'=f'g+fg'$, integrando (teorema fondamentale): $fg=\int f'g+\int fg'$, cioè $\int fg'=fg-\int f'g$. Si sceglie come $f$ il fattore che derivando si semplifica (polinomi, $\log$, $\arctan$) e come $g'$ quello di cui si sa la primitiva ($e^x$, $\sin$, $\cos$). Esempio: $\int x\log x=\frac{x^2}2\log x-\int\frac x2=\frac{x^2}2\log x-\frac{x^2}4+c$.`,
+      rubric: ['Parte dalla derivata del prodotto', 'Scrive correttamente la formula', 'Criterio di scelta dei fattori', 'Esempio svolto correttamente'],
+    },
+    {
+      id: 's11.parti.p3', type: 'expr', level: 3, upToConstant: true, domain: [0.5, 3],
+      prompt: String.raw`$\int\frac{\log x}{x^2}\,dx$`,
+      answer: '-(log(x)+1)/x', _f: 'log(x)/x^2',
+      explain: String.raw`$g=-\frac1x$: $-\frac{\log x}x+\int\frac1{x^2}=-\frac{\log x}x-\frac1x$.`,
+    },
+    {
+      id: 's11.parti.p4', type: 'tf', level: 2,
+      prompt: String.raw`$\int e^{-x}\sin x\,dx=-\frac12e^{-x}(\sin x+\cos x)+c$.`,
+      answer: true,
+      explain: String.raw`Vero: derivando $-\frac12e^{-x}(\sin x+\cos x)$ si ottiene $\frac12e^{-x}(\sin x+\cos x)-\frac12e^{-x}(\cos x-\sin x)=e^{-x}\sin x$.`,
+    },
+    {
+      id: 's11.parti.p5', type: 'num', level: 3,
+      prompt: String.raw`$\displaystyle\int_0^1x^2e^x\,dx$`,
+      answer: 'e-2', _int: ['x^2*e^x', 0, 1],
+      explain: String.raw`$\left[(x^2-2x+2)e^x\right]_0^1=e-2$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's11.parti.fc1', kind: 'formula', front: 'Integrazione per parti', back: String.raw`$\int fg'=fg-\int f'g$; $\int_a^bfg'=[fg]_a^b-\int_a^bf'g$.` },
+    { id: 's11.parti.fc2', kind: 'metodo', front: 'Come scegliere $f$ e $g\'$', back: String.raw`Derivo polinomi, $\log$, $\arctan$; integro $e^x$, $\sin$, $\cos$, potenze. Il nuovo integrale deve essere più semplice.` },
+    { id: 's11.parti.fc3', kind: 'metodo', front: 'Metodo "per ricorsione"', back: String.raw`Per $e^{ax}\sin bx$, $e^{ax}\cos bx$: due volte per parti con gli **stessi ruoli**, ritrovo $I$ e risolvo l'equazione.` },
+    { id: 's11.parti.fc4', kind: 'formula', front: '$\\int\\log x$, $\\int x\\log x$, $\\int\\arctan x$', back: String.raw`$x\log x-x$; $\frac{x^2}2\log x-\frac{x^2}4$; $x\arctan x-\frac12\log(1+x^2)$.` },
+    { id: 's11.parti.fc5', kind: 'formula', front: '$\\int e^{-x}\\sin x\\,dx$', back: String.raw`$-\frac12e^{-x}(\sin x+\cos x)+c$.` },
+    { id: 's11.parti.fc6', kind: 'formula', front: '$\\int\\frac{\\arctan x}{x^2}dx$', back: String.raw`$-\frac{\arctan x}x+\log|x|-\frac12\log(1+x^2)+c$.` },
+    { id: 's11.parti.fc7', kind: 'formula', front: '$\\int\\frac{\\log(1+t)}{t^2}dt$', back: String.raw`$-\frac{\log(1+t)}t+\log|t|-\log(1+t)+c$.` },
+    { id: 's11.parti.fc8', kind: 'formula', front: '$\\int e^{ax}\\sin bx\\,dx$ e $\\int e^{ax}\\cos bx\\,dx$', back: String.raw`$\frac{e^{ax}(a\sin bx-b\cos bx)}{a^2+b^2}$; $\frac{e^{ax}(a\cos bx+b\sin bx)}{a^2+b^2}$.` },
+  ],
+};
+
 export default {
   id: 's11',
   title: 'Integrali',
   subtitle: 'Riemann, primitive, tecniche di integrazione, aree',
   intro: String.raw`All'esame c'è quasi sempre un integrale: una primitiva per parti o di una razionale, un'area, o un integrale improprio. Qui costruisci tutto: dal significato di area fino alle tecniche di calcolo.`,
-  skills: [riemann, immediati],
+  skills: [riemann, immediati, parti],
 };
