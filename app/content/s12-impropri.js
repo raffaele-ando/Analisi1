@@ -1066,11 +1066,495 @@ const criteri = {
   practice: critPractice,
   flashcards: critFlashcards,
 };
+// ---------------------------------------------------------------------------
+// s12.parametri · Convergenza al variare di parametri (livello esame)
+// ---------------------------------------------------------------------------
+
+const parL1 = {
+  id: 's12.parametri.L1',
+  title: 'Il parametro come esponente',
+  cards: [
+    {
+      type: 'learn',
+      title: 'Un parametro è un esponente',
+      body: String.raw`Un **parametro** (per esempio $\alpha$ o $\beta$) è un numero che non conosciamo, e l'integrale dipende da lui. La domanda d'esame è: **per quali valori del parametro l'integrale converge?**
+
+Il parametro di solito compare come **esponente**. Per esempio $\displaystyle\int_1^{+\infty}\frac{dx}{x^{\alpha}}$ converge se $\alpha>1$ e diverge altrimenti.
+
+La risposta non è un numero, ma un **insieme**: un intervallo, o una condizione fra più parametri.`,
+      plot: { fns: [{ f: 'x^(-1/2)', label: 'x^(-1/2)' }, { f: 'x^(-2)', label: 'x^(-2)' }], x: [0.4, 4], y: [0, 2.5] },
+    },
+    {
+      type: 'learn',
+      title: 'Spezzare nei punti critici',
+      body: String.raw`Un integrale con parametri si studia **un punto critico alla volta**. I punti critici sono gli estremi illimitati (come $+\infty$), gli estremi dove $f$ diverge e gli eventuali punti interni dove $f$ diverge.
+
+Si spezza l'intervallo in pezzi, ciascuno con un solo punto critico:
+
+$$\int_a^{b}f=\int_a^{c}f+\int_c^{b}f.$$
+
+>* L'integrale converge **se e solo se converge ogni pezzo**. Quindi le condizioni trovate per i vari punti vanno **intersecate**, non unite.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_0^{+\\infty}\\frac{dx}{x^{\\alpha}(1+x)}$',
+      problem: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_0^{+\infty}\frac{dx}{x^{\alpha}(1+x)}$?`,
+      steps: [
+        String.raw`Punti critici: $x=0$ (dove $x^{-\alpha}$ può divergere) e $x=+\infty$. Spezzo in $\int_0^1+\int_1^{+\infty}$.`,
+        String.raw`In $0^+$ il fattore $1+x\to1$, quindi $f\sim\dfrac{1}{x^{\alpha}}$. Il campione in $0$ converge sse $\alpha<1$.`,
+        {
+          text: String.raw`In $+\infty$ invece $1+x\sim x$, quindi $f\sim\dfrac{1}{x^{\alpha+1}}$. Il campione all'infinito converge sse $\alpha+1>1$, cioè $\alpha>0$.`,
+          ask: {
+            type: 'num',
+            prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\frac{x^{\alpha+1}}{x^{\alpha}(1+x)}$? (scrivi il numero)`,
+            answer: '1',
+            explain: String.raw`Semplifico $x^{\alpha}$: resta $\dfrac{x}{1+x}\to1$. Quindi $f$ e $x^{-\alpha-1}$ hanno la stessa natura.`,
+          },
+        },
+        String.raw`Intersezione delle due condizioni: $\alpha<1$ **e** $\alpha>0$.`,
+      ],
+      result: String.raw`$\displaystyle\int_0^{+\infty}\frac{dx}{x^{\alpha}(1+x)}$ converge sse $0<\alpha<1$`,
+    },
+    {
+      id: 's12.parametri.L1.e1', type: 'interval', level: 1,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_0^{1}x^{\alpha}\,dx$?`,
+      answer: '(-1,+inf)',
+      explain: String.raw`Il punto critico è $0$, con esponente $\alpha$ positivo o negativo. Il campione in $0$ converge sse $-\alpha<1$, cioè $\alpha>-1$. Per $\alpha=-1$ si ottiene $\log t\to-\infty$: diverge.`,
+    },
+    {
+      id: 's12.parametri.L1.e2', type: 'interval', level: 1,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_1^{+\infty}x^{\alpha}\,dx$?`,
+      answer: '(-inf,-1)',
+      explain: String.raw`Il punto critico è $+\infty$. Converge sse $-\alpha>1$, cioè $\alpha<-1$. Con $\alpha=-1$ si ottiene $\log t\to+\infty$, quindi diverge.`,
+    },
+    {
+      id: 's12.parametri.L1.e3', type: 'mcq', level: 2,
+      prompt: String.raw`Quale condizione su $\alpha$ rende convergente $\displaystyle\int_0^1\frac{x^{\alpha}}{\sqrt x}\,dx$?`,
+      options: [
+        String.raw`$\alpha>-\frac12$`,
+        String.raw`$\alpha<\frac12$`,
+        String.raw`$\alpha>\frac12$`,
+        String.raw`$\alpha>-1$`,
+      ],
+      answer: 0,
+      explain: String.raw`L'integranda è $x^{\alpha-\frac12}$. Il campione in $0$ converge sse $\alpha-\frac12>-1$, cioè $\alpha>-\frac12$. Scrivere $\alpha>-1$ dimentica la radice al denominatore.`,
+    },
+    {
+      id: 's12.parametri.L1.e4', type: 'tf', level: 2,
+      prompt: String.raw`Se un integrale richiede $\alpha>1$ in $+\infty$ e $\alpha<1$ in un punto critico, allora non converge per nessun valore di $\alpha$.`,
+      answer: true,
+      explain: String.raw`Vero: l'intersezione di $(1,+\infty)$ e $(-\infty,1)$ è vuota. In questo caso la risposta finale è l'insieme vuoto.`,
+    },
+    {
+      id: 's12.parametri.L1.e5', type: 'order', level: 2,
+      prompt: String.raw`Metti in ordine il metodo per discutere la convergenza di un integrale con parametro.`,
+      steps: [
+        String.raw`Individuo i punti critici: estremi illimitati e punti dove l'integranda diverge.`,
+        String.raw`Spezzo l'intervallo in pezzi con un solo punto critico ciascuno.`,
+        String.raw`Per ogni pezzo trovo la parte principale dell'integranda, con il parametro.`,
+        String.raw`Applico il campione a ogni pezzo e ottengo una condizione sul parametro.`,
+        String.raw`Interseco le condizioni: l'insieme trovato è l'insieme di convergenza.`,
+      ],
+      distractors: [
+        String.raw`Calcolo la primitiva con il parametro e controllo solo il limite in un punto.`,
+        String.raw`Concludo "converge" appena un pezzo converge.`,
+      ],
+      explain: String.raw`Il metodo chiude con un'intersezione: l'integrale converge solo se convergono tutti i pezzi. Scegliere un valore del parametro a caso non dimostra nulla per gli altri valori.`,
+    },
+  ],
+};
+
+const parL2 = {
+  id: 's12.parametri.L2',
+  title: 'Parti principali e casi d\'esame',
+  cards: [
+    {
+      type: 'learn',
+      title: 'Le equivalenze da ricordare',
+      body: String.raw`Per discutere un integrale con parametri servono le **parti principali** vicino a ogni punto critico. Le più frequenti:
+
+>* $1-\cos x\sim\dfrac{x^2}{2}$ e $e^x-1-x\sim\dfrac{x^2}{2}$ per $x\to0$;
+>* $e^x-1-x\sim e^x$ per $x\to+\infty$;
+>* $\sin x\sim x$ e $\log(1+x)\sim x$ per $x\to0$;
+>* $\arctan x\to\dfrac\pi2$ per $x\to+\infty$: la parte principale è la **costante** $\dfrac\pi2$, non $x$.
+
+Le potenze di un equivalente si trattano così: $\left(\dfrac{x^2}{2}\right)^{\alpha}=2^{-\alpha}x^{2\alpha}$. Gli equivalenti si usano sui **fattori** di prodotti e quozienti, non sugli addendi di una somma.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_0^1\\frac{(1-\\cos x)^{\\alpha}}{e^x-1-x}\\,dx$',
+      problem: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^1\frac{(1-\cos x)^{\alpha}}{e^x-1-x}\,dx$? L'unico punto critico è $x=0$.`,
+      steps: [
+        String.raw`In $0^+$ numeratore e denominatore sono infinitesimi: $1-\cos x\sim\dfrac{x^2}{2}$ ed $e^x-1-x\sim\dfrac{x^2}{2}$.`,
+        {
+          text: String.raw`Quindi $f\sim\dfrac{(x^2/2)^{\alpha}}{x^2/2}=2^{1-\alpha}\,x^{2\alpha-2}$. Il pezzo in $0$ si studia con l'esponente $e=2\alpha-2$.`,
+          ask: {
+            type: 'interval',
+            prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^1x^{2\alpha-2}\,dx$?`,
+            answer: '(1/2,+inf)',
+            explain: String.raw`Il campione in $0$ con $x^{e}$ converge sse $e>-1$. Qui $e=2\alpha-2$: $2\alpha-2>-1$, cioè $\alpha>\frac12$.`,
+          },
+        },
+        String.raw`Su $(0,1]$ la funzione $e^x-1-x$ si annulla solo in $0$, quindi non ci sono altri punti critici. La condizione è $\alpha>\frac12$.`,
+      ],
+      result: String.raw`$\displaystyle\int_0^1\frac{(1-\cos x)^{\alpha}}{e^x-1-x}\,dx$ converge sse $\alpha>\frac12$`,
+    },
+    {
+      type: 'learn',
+      title: 'Punti critici interni',
+      body: String.raw`Un punto critico può trovarsi **dentro** l'intervallo. Succede quando numeratore o denominatore si annullano in un punto interno. Per esempio $1-\cos x=0$ in $x=2k\pi$. Se l'esponente $\gamma$ è negativo, $(1-\cos x)^{\gamma}$ diverge proprio in quei punti, e vanno studiati come punti critici.
+
+>! Non basta guardare gli estremi: prima di concludere "converge per ogni parametro" controlla **tutti** gli zeri nell'intervallo di integrazione.`,
+    },
+    {
+      id: 's12.parametri.L2.e1', type: 'mcq', level: 2,
+      prompt: String.raw`Quale condizione su $\alpha$ serve per la convergenza di $\displaystyle\int_0^1\frac{(1-\cos x)^{\alpha}}{e^x-1-x}\,dx$ in $x=0$?`,
+      options: [
+        String.raw`$\alpha>\frac12$`,
+        String.raw`$\alpha>1$`,
+        String.raw`$\alpha>0$`,
+        String.raw`$\alpha<\frac12$`,
+      ],
+      answer: 0,
+      explain: String.raw`Vicino a $0$ l'integranda è $\sim 2^{1-\alpha}x^{2\alpha-2}$, integrabile sse $2\alpha-2>-1$, cioè $\alpha>\frac12$. "$\alpha>1$" nasce da un esponente sbagliato. "$\alpha>0$" confonde la condizione con la positività di $\alpha$.`,
+    },
+    {
+      id: 's12.parametri.L2.e2', type: 'tf', level: 2,
+      prompt: String.raw`Nell'integrale $\displaystyle\int_0^1\frac{(1-\cos x)^{\alpha}}{(e^x-1-x)(1-x)^{\beta}}\,dx$ la condizione in $x=1$ è $\beta<1$.`,
+      answer: true,
+      explain: String.raw`Vero. In $x=1$ il numeratore e il primo fattore del denominatore sono positivi e finiti ($1-\cos1>0$, $e-2>0$). L'unico responsabile è $(1-x)^{-\beta}$, integrabile sse $\beta<1$.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_1^{+\\infty}\\frac{\\arctan x}{x^{\\beta+\\frac12}}\\,dx$',
+      problem: String.raw`Per quali $\beta$ converge $\displaystyle\int_1^{+\infty}\frac{\arctan x}{x^{\beta+\frac12}}\,dx$?`,
+      steps: [
+        String.raw`Unico punto critico: $+\infty$. Per $x\to+\infty$ l'arcotangente **non** tende a $0$: tende a $\dfrac\pi2$.`,
+        String.raw`Quindi $\arctan x\sim\dfrac\pi2$ e $f\sim\dfrac\pi2\cdot x^{-(\beta+\frac12)}$.`,
+        {
+          text: String.raw`Con $\gamma=\beta+\frac12$ il campione all'infinito converge sse $\gamma>1$, cioè $\beta+\frac12>1$, ossia $\beta>\frac12$.`,
+          ask: {
+            type: 'interval',
+            prompt: String.raw`Per quali $\gamma$ converge $\displaystyle\int_1^{+\infty}\frac{dx}{x^{\gamma}}$?`,
+            answer: '(1,+inf)',
+            explain: String.raw`Campione all'infinito: converge sse $\gamma>1$.`,
+          },
+        },
+      ],
+      result: String.raw`$\displaystyle\int_1^{+\infty}\frac{\arctan x}{x^{\beta+\frac12}}\,dx$ converge sse $\beta>\frac12$`,
+    },
+    {
+      id: 's12.parametri.L2.e3', type: 'mcq', level: 2,
+      prompt: String.raw`Quale parte principale usare per $\arctan x$ quando $x\to+\infty$?`,
+      options: [
+        String.raw`La costante $\frac\pi2$`,
+        String.raw`$x$`,
+        String.raw`$0$`,
+        String.raw`$\frac1x$`,
+      ],
+      answer: 0,
+      explain: String.raw`$\arctan x$ è limitata e tende a $\frac\pi2\neq0$: la parte principale è la costante. "$x$" è falso: $\arctan x$ non cresce come $x$. Anche $\arctan x\sim x$ vale solo per $x\to0$, e non per $x\to+\infty$.`,
+    },
+    {
+      id: 's12.parametri.L2.e4', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\gamma$ converge $\displaystyle\int_1^{+\infty}\frac{\arctan x}{x^{\gamma}}\,dx$?`,
+      answer: '(1,+inf)',
+      explain: String.raw`Come nell'esempio: $\arctan x\sim\frac\pi2$, quindi l'integrale converge sse $\gamma>1$.`,
+    },
+    {
+      id: 's12.parametri.L2.e5', type: 'num', level: 3,
+      source: 'Appello 11/06/2026 · B4',
+      prompt: String.raw`Per $\beta=\frac32$ calcola $\displaystyle\int_1^{+\infty}\frac{\arctan x}{x^{2}}\,dx$ (valore esatto).`,
+      answer: 'pi/4+log(2)/2',
+      explain: String.raw`Per parti con $u=\arctan x$ e $v=-\frac1x$: $\left[-\frac{\arctan x}{x}\right]_1^{+\infty}+\int_1^{+\infty}\frac{dx}{x(1+x^2)}$. Il primo termine vale $0+\frac\pi4$. Poi $\frac{1}{x(1+x^2)}=\frac1x-\frac{x}{1+x^2}$, con primitiva $\log\frac{x}{\sqrt{1+x^2}}$, che da $1$ a $+\infty$ dà $0-\log\frac{1}{\sqrt2}=\frac12\log2$. Totale $\frac\pi4+\frac12\log2\approx1{,}132$.`,
+    },
+    {
+      id: 's12.parametri.L2.e6', type: 'mcq', level: 2,
+      prompt: String.raw`Quale condizione su $\delta$ serve per $\displaystyle\int_1^{+\infty}\frac{(1-\cos x)^{\gamma}}{(e^x-1-x)(x-1)^{\delta}}\,dx$ in $x=1^+$?`,
+      options: [
+        String.raw`$\delta<1$`,
+        String.raw`$\delta>1$`,
+        String.raw`$\gamma>\frac12$`,
+        String.raw`Nessuna condizione`,
+      ],
+      answer: 0,
+      explain: String.raw`In $x=1$ si ha $1-\cos1>0$ e $e-2>0$: nessuno dei due fattori si annulla. Quindi l'unico responsabile è $(x-1)^{-\delta}$, integrabile sse $\delta<1$. Il parametro $\gamma$ non c'entra in $x=1$.`,
+    },
+  ],
+};
+
+const parL3 = {
+  id: 's12.parametri.L3',
+  title: "Discussione d'esame completa",
+  cards: [
+    {
+      type: 'learn',
+      title: 'Attenzione: il parametro $\\gamma$ negativo',
+      body: String.raw`Il secondo integrale dell'appello del 10/02/2026 (B5) è $\displaystyle\int_1^{+\infty}\frac{(1-\cos x)^{\gamma}}{(e^x-1-x)(x-1)^{\delta}}\,dx$. La soluzione ufficiale dice che converge sse $\delta<1$, per ogni $\gamma$. Questa affermazione non è corretta per $\gamma$ negativi.
+
+>! Nota: in $[1,+\infty)$ la funzione $1-\cos x$ si annulla in $x=2k\pi$. Vicino a quei punti $1-\cos x\sim\dfrac{(x-2k\pi)^2}{2}$, quindi $(1-\cos x)^{\gamma}\sim c\,|x-2k\pi|^{2\gamma}$, integrabile sse $2\gamma>-1$. La condizione corretta è $\delta<1$ **e** $\gamma>-\dfrac12$. All'infinito, con $e^x$ al denominatore, non ci sono altre condizioni.`,
+    },
+    {
+      id: 's12.parametri.L3.e1', type: 'order', level: 3,
+      prompt: String.raw`Metti in ordine la discussione completa di un integrale con parametri, come all'esame.`,
+      steps: [
+        String.raw`Elenco i punti critici: estremi illimitati, estremi dove l'integranda diverge, zeri interni del denominatore o esponenti negativi.`,
+        String.raw`Spezzo l'intervallo in pezzi con un solo punto critico ciascuno.`,
+        String.raw`Per ogni pezzo trovo la parte principale dell'integranda, con il parametro.`,
+        String.raw`Applico il campione a ogni pezzo e ottengo una condizione per ciascun punto critico.`,
+        String.raw`Interseco le condizioni: scrivo l'insieme dei parametri che rende convergenti tutti i pezzi.`,
+      ],
+      distractors: [
+        String.raw`Calcolo la primitiva con il parametro e controllo solo il limite in un punto.`,
+        String.raw`Concludo "converge" appena un pezzo converge.`,
+      ],
+      explain: String.raw`La discussione chiude sempre con un'intersezione. Un pezzo che converge non garantisce la convergenza del resto.`,
+    },
+    {
+      type: 'example',
+      title: 'Esempio svolto: $\\displaystyle\\int_1^{+\\infty}\\frac{\\log^{1-\\beta}x}{(x-1)^{\\alpha}}\\,dx$',
+      problem: String.raw`Per quali $\alpha,\beta$ converge $\displaystyle\int_1^{+\infty}\frac{\log^{1-\beta}x}{(x-1)^{\alpha}}\,dx$?`,
+      steps: [
+        String.raw`Punti critici: $x=1$ (dove $\log x\to0$ e $(x-1)^{-\alpha}$ può divergere) e $x=+\infty$. Spezzo in $\int_1^2+\int_2^{+\infty}$.`,
+        String.raw`In $1^+$ si ha $\log x\sim x-1$, quindi $\log^{1-\beta}x\sim(x-1)^{1-\beta}$ e l'integranda è $\sim(x-1)^{1-\alpha-\beta}$.`,
+        {
+          text: String.raw`Con $s=1-\alpha-\beta$ il campione in $1^+$ converge sse $s>-1$, cioè $\alpha+\beta<2$.`,
+          ask: {
+            type: 'interval',
+            prompt: String.raw`Per quali $s$ converge $\displaystyle\int_1^{2}(x-1)^{s}\,dx$?`,
+            answer: '(-1,+inf)',
+            explain: String.raw`Campione in $1^+$ con esponente $s$: converge sse $s>-1$.`,
+          },
+        },
+        String.raw`In $+\infty$: se $\alpha\le1$ non c'è convergenza compatibile con $\alpha+\beta<2$. Per $\alpha=1$ servirebbe $\beta>2$, che contraddice $\beta<1$. Per $\alpha>1$ la potenza $x^{-\alpha}$ domina il logaritmo e converge.`,
+        String.raw`Quindi l'integrale converge sse $\alpha>1$ **e** $\alpha+\beta<2$.`,
+      ],
+      result: String.raw`$\displaystyle\int_1^{+\infty}\frac{\log^{1-\beta}x}{(x-1)^{\alpha}}\,dx$ converge sse $\alpha>1$ e $\alpha+\beta<2$`,
+    },
+    {
+      id: 's12.parametri.L3.e2', type: 'mcq', level: 3,
+      source: 'Itinere 15/01/2026 · B1 (a)',
+      prompt: String.raw`Per $\displaystyle\int_1^{+\infty}\frac{\log^{1-\beta}x}{(x-1)^{\alpha}}\,dx$, quale insieme di parametri rende convergente l'integrale?`,
+      options: [
+        String.raw`$\alpha>1$ e $\alpha+\beta<2$`,
+        String.raw`$\alpha<1$ e $\beta>2$`,
+        String.raw`Per ogni $\alpha,\beta$`,
+        String.raw`$\alpha>1$ e $\alpha+\beta>2$`,
+      ],
+      answer: 0,
+      explain: String.raw`In $1^+$ serve $\alpha+\beta<2$; all'infinito serve $\alpha>1$. Il caso $\alpha<1$ e $\beta>2$ fallisce all'infinito. Il caso $\alpha>1$ e $\alpha+\beta>2$ fallisce in $1^+$.`,
+    },
+    {
+      id: 's12.parametri.L3.e3', type: 'problem', level: 3,
+      source: 'Appello 10/02/2026 · B5',
+      prompt: String.raw`Discutere la convergenza di $\displaystyle\int_0^1\frac{(1-\cos x)^{\alpha}}{(e^x-1-x)(1-x)^{\beta}}\,dx$ e di $\displaystyle\int_1^{+\infty}\frac{(1-\cos x)^{\gamma}}{(e^x-1-x)(x-1)^{\delta}}\,dx$.`,
+      parts: [
+        {
+          type: 'interval',
+          prompt: String.raw`(a) Condizione su $\alpha$ in $0$ per il primo integrale.`,
+          answer: '(1/2,+inf)',
+          explain: String.raw`Vicino a $0$: $f\sim2^{1-\alpha}x^{2\alpha-2}$, integrabile sse $\alpha>\frac12$.`,
+        },
+        {
+          type: 'interval',
+          prompt: String.raw`(b) Condizione su $\beta$ in $1$ per il primo integrale.`,
+          answer: '(-inf,1)',
+          explain: String.raw`In $1$ si ha $(1-x)^{-\beta}$ e il resto è positivo e finito: integrabile sse $\beta<1$.`,
+        },
+        {
+          type: 'interval',
+          prompt: String.raw`(c) Condizione su $\delta$ in $1^+$ per il secondo integrale.`,
+          answer: '(-inf,1)',
+          explain: String.raw`In $1^+$ resta $(x-1)^{-\delta}$: integrabile sse $\delta<1$.`,
+        },
+        {
+          type: 'interval',
+          prompt: String.raw`(d) Condizione su $\gamma$ per il secondo integrale, tenendo conto dei punti $x=2k\pi$.`,
+          answer: '(-1/2,+inf)',
+          explain: String.raw`Vicino a $2k\pi$ l'integranda è $\sim c\,|x-2k\pi|^{2\gamma}$, integrabile sse $\gamma>-\frac12$. All'infinito non ci sono altre condizioni.`,
+        },
+      ],
+      solution: String.raw`Primo integrale: in $0$ serve $\alpha>\frac12$, in $1$ serve $\beta<1$; converge sse $\alpha>\frac12$ e $\beta<1$. Secondo integrale: in $1^+$ serve $\delta<1$; i punti $x=2k\pi$ richiedono $\gamma>-\frac12$; all'infinito la presenza di $e^x$ rende integrabile ogni termine. Converge sse $\delta<1$ e $\gamma>-\frac12$.
+
+>! Nota: la soluzione ufficiale riporta "per ogni $\gamma$", che vale solo per $\gamma>-\frac12$ (vedi la card sul parametro $\gamma$ negativo).`,
+      points: 4,
+    },
+    {
+      id: 's12.parametri.L3.e4', type: 'problem', level: 3,
+      source: 'Appello 03/09/2026 · B4',
+      prompt: String.raw`Sia $f_a(x)=\dfrac{x^a+1}{x^a+x^2}$ su $[1,+\infty)$. Per quali $a\in\R$ è integrabile su $[1,+\infty)$?`,
+      parts: [
+        {
+          type: 'mcq',
+          prompt: String.raw`(a) Per $0<a<2$, quale parte principale ha $f_a$ per $x\to+\infty$?`,
+          options: [
+            String.raw`$x^{a-2}$`,
+            String.raw`$x^{-2}$`,
+            String.raw`$1$`,
+            String.raw`$x^{a}$`,
+          ],
+          answer: 0,
+          explain: String.raw`Per $0<a<2$ il numeratore è $\sim x^a$ e il denominatore è $\sim x^2$: $f_a\sim x^{a-2}$.`,
+        },
+        {
+          type: 'interval',
+          prompt: String.raw`(b) Per quali $a\in\R$ l'integrale converge? Considera tutti i valori di $a$.`,
+          answer: '(-inf,1)',
+          explain: String.raw`Per $0<a<2$: serve $a-2<-1$, cioè $a<1$. Per $a\le0$: $f_a\sim\dfrac{c}{x^2}$, sempre integrabile. Per $a\ge2$: $f_a$ non tende a $0$ (tende a $1$ se $a>2$, a $\frac12$ se $a=2$): diverge.`,
+        },
+      ],
+      solution: String.raw`Per $0<a<2$ si ha $f_a\sim x^{a-2}$, integrabile sse $a<1$. Per $a\le0$ si ha $f_a\sim\dfrac{c}{x^2}$, sempre integrabile. Per $a\ge2$ la funzione non tende a $0$, quindi diverge. Insieme di convergenza: $a<1$.`,
+      points: 3,
+    },
+    {
+      id: 's12.parametri.L3.e5', type: 'tf', level: 2,
+      prompt: String.raw`In un integrale con un solo parametro, la risposta alla domanda "per quali valori converge?" è sempre un intervallo.`,
+      answer: false,
+      explain: String.raw`Falso. Con più parametri la condizione può essere una disuguaglianza fra di essi (per esempio $\alpha+\beta<2$), e può essere l'insieme vuoto. Con un solo parametro l'insieme è spesso un intervallo, ma non è una regola: va controllato caso per caso.`,
+    },
+    {
+      id: 's12.parametri.L3.e6', type: 'mcq', level: 2,
+      prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^{+\infty}\frac{x^{\alpha}}{1+x^3}\,dx$?`,
+      options: [
+        String.raw`$(-1,2)$`,
+        String.raw`$(-1,3)$`,
+        String.raw`$(0,2)$`,
+        String.raw`$(-\infty,2)$`,
+      ],
+      answer: 0,
+      explain: String.raw`In $0$: $x^{\alpha}$ è integrabile sse $\alpha>-1$. In $+\infty$: $f\sim x^{\alpha-3}$, integrabile sse $\alpha-3<-1$, cioè $\alpha<2$. Intersezione $(-1,2)$.`,
+    },
+  ],
+};
+
+const parPractice = [
+  {
+    id: 's12.parametri.gen-zero', type: 'gen', level: 2,
+    gen: (R) => {
+      const k = R.int(0, 2);
+      const sh = k > 0 ? `+${k}` : '';
+      return {
+        type: 'interval',
+        prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_0^{1}\frac{dx}{x^{\alpha${sh}}}$?`,
+        answer: `(-inf,${1 - k})`,
+        explain: String.raw`Il punto critico è $0$. Con esponente $e=\alpha${sh}$ l'integrale converge sse $e<1$, cioè $\alpha<${1 - k}$.`,
+      };
+    },
+  },
+  {
+    id: 's12.parametri.gen-inf', type: 'gen', level: 2,
+    gen: (R) => {
+      const k = R.int(0, 2);
+      const sh = k > 0 ? `+${k}` : '';
+      return {
+        type: 'interval',
+        prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_1^{+\infty}\frac{dx}{x^{\alpha${sh}}}$?`,
+        answer: `(${1 - k},+inf)`,
+        explain: String.raw`Il punto critico è $+\infty$. Con esponente $e=\alpha${sh}$ l'integrale converge sse $e>1$, cioè $\alpha>${1 - k}$.`,
+      };
+    },
+  },
+  {
+    id: 's12.parametri.gen-due-punti', type: 'gen', level: 3,
+    gen: (R) => {
+      const k = R.pick([1, 2, 3]);
+      return {
+        type: 'interval',
+        prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_0^{+\infty}\frac{dx}{x^{\alpha}\,(1+x^{${k}})}$?`,
+        answer: `(${1 - k},1)`,
+        explain: String.raw`In $0$ l'integranda è $\sim x^{-\alpha}$: serve $\alpha<1$. In $+\infty$ è $\sim x^{-\alpha-${k}}$: serve $\alpha+${k}>1$, cioè $\alpha>${1 - k}$. Intersezione $(${1 - k},1)$.`,
+      };
+    },
+  },
+  {
+    id: 's12.parametri.gen-rapporto', type: 'gen', level: 3,
+    gen: (R) => {
+      const m = R.int(0, 2);
+      const num = m === 0 ? '1' : `x^{${m}}`;
+      return {
+        type: 'interval',
+        prompt: String.raw`Per quali $\alpha\in\R$ converge $\displaystyle\int_1^{+\infty}\frac{${num}}{x^{\alpha}+1}\,dx$?`,
+        answer: `(${m + 1},+inf)`,
+        explain: String.raw`Per $x\to+\infty$ e $\alpha>0$ la funzione è $\sim x^{${m}-\alpha}$. Converge sse $\alpha-${m}>1$, cioè $\alpha>${m + 1}$.`,
+      };
+    },
+  },
+  {
+    id: 's12.parametri.p5', type: 'interval', level: 2,
+    prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^{1}\frac{\sin x}{x^{\alpha}}\,dx$?`,
+    answer: '(-inf,2)',
+    explain: String.raw`In $0$: $\frac{\sin x}{x^{\alpha}}\sim x^{1-\alpha}$, integrabile sse $1-\alpha>-1$, cioè $\alpha<2$.`,
+  },
+  {
+    id: 's12.parametri.p6', type: 'interval', level: 2,
+    prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_1^{+\infty}\frac{\log x}{x^{\alpha}}\,dx$?`,
+    answer: '(1,+inf)',
+    explain: String.raw`Il logaritmo cresce più lentamente di ogni potenza: $\dfrac{\log x}{x^{\alpha}}\sim\dfrac{1}{x^{\alpha-\varepsilon}}$ per ogni $\varepsilon>0$. Converge sse $\alpha>1$.`,
+  },
+  {
+    id: 's12.parametri.p7', type: 'interval', level: 2,
+    prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^{1}\frac{dx}{x^{2\alpha}}$?`,
+    answer: '(-inf,1/2)',
+    explain: String.raw`Campione in $0$ con esponente $2\alpha$: converge sse $2\alpha<1$, cioè $\alpha<\frac12$.`,
+  },
+  {
+    id: 's12.parametri.p8', type: 'tf', level: 2,
+    prompt: String.raw`Se $\int_1^{+\infty}f_\alpha$ converge sse $\alpha>1$ e $\int_0^1f_\alpha$ converge sse $\alpha<0$, allora $\int_0^{+\infty}f_\alpha$ non converge per nessun $\alpha$.`,
+    answer: true,
+    explain: String.raw`Vero: l'integrale su $[0,+\infty)$ converge sse convergono entrambi i pezzi, cioè sse $\alpha>1$ e $\alpha<0$ insieme. Le due condizioni sono incompatibili.`,
+  },
+  {
+    id: 's12.parametri.p9', type: 'num', level: 1,
+    prompt: String.raw`Per $\alpha=\frac32$ calcola $\displaystyle\int_1^{+\infty}\frac{dx}{x^{\alpha}}$.`,
+    answer: '2',
+    explain: String.raw`Primitiva $-2x^{-1/2}$. Il valore è $0-(-2)=2$.`,
+  },
+  {
+    id: 's12.parametri.p10', type: 'open', level: 3,
+    prompt: String.raw`Spiega perché $\displaystyle\int_0^{+\infty}\frac{dx}{x^{\alpha}}$ non converge per nessun $\alpha\in\R$.`,
+    answer: String.raw`Spezzo in $\int_0^1+\int_1^{+\infty}$. Il pezzo in $0$ richiede $\alpha<1$; il pezzo in $+\infty$ richiede $\alpha>1$. Le due condizioni sono incompatibili: nessun $\alpha$ rende convergenti entrambi i pezzi.`,
+    rubric: [
+      String.raw`Spezzare in $\int_0^1+\int_1^{+\infty}$`,
+      String.raw`Condizione in $0$: $\alpha<1$`,
+      String.raw`Condizione in $+\infty$: $\alpha>1$`,
+      String.raw`Incompatibilità delle condizioni, quindi insieme vuoto`,
+    ],
+    explain: String.raw`La risposta corretta spezza l'integrale: senza spezzarlo non si vede che servono entrambe le condizioni.`,
+    points: 3,
+  },
+  {
+    id: 's12.parametri.p11', type: 'interval', level: 2,
+    prompt: String.raw`Per quali $\alpha$ converge $\displaystyle\int_0^{+\infty}\frac{x^{\alpha}}{(1+x)^2}\,dx$?`,
+    answer: '(-1,1)',
+    explain: String.raw`In $0$ serve $\alpha>-1$. In $+\infty$ la funzione è $\sim x^{\alpha-2}$, integrabile sse $\alpha<1$. Intersezione $(-1,1)$.`,
+  },
+];
+
+const parFlashcards = [
+  { id: 's12.parametri.fc1', kind: 'metodo', front: String.raw`Discutere un integrale con parametro`, back: String.raw`Individuo i punti critici; spezzo; per ogni pezzo trovo la parte principale con il parametro e applico il campione; interseco le condizioni.` },
+  { id: 's12.parametri.fc2', kind: 'errore', front: String.raw`Errore tipico: unione invece di intersezione`, back: String.raw`L'integrale converge sse convergono **tutti** i pezzi. Le condizioni si intersecano, non si uniscono.` },
+  { id: 's12.parametri.fc3', kind: 'formula', front: String.raw`Equivalenti utili con parametro`, back: String.raw`$\left(1-\cos x\right)^{\alpha}\sim\left(\dfrac{x^2}{2}\right)^{\alpha}$ e $e^x-1-x\sim\dfrac{x^2}{2}$ per $x\to0$; $e^x-1-x\sim e^x$ per $x\to+\infty$.` },
+  { id: 's12.parametri.fc4', kind: 'formula', front: String.raw`Arcotangente all'infinito`, back: String.raw`$\arctan x\to\dfrac\pi2$ per $x\to+\infty$: la parte principale è la costante $\dfrac\pi2$, non $x$.` },
+  { id: 's12.parametri.fc5', kind: 'errore', front: String.raw`Errore tipico: punti critici interni`, back: String.raw`Gli zeri di $1-\cos x$ in $x=2k\pi$ sono punti critici se l'esponente è negativo: l'integranda vi diverge con $|x-2k\pi|^{2\gamma}$, integrabile sse $\gamma>-\frac12$.` },
+  { id: 's12.parametri.fc6', kind: 'formula', front: String.raw`Campione con esponente spostato`, back: String.raw`$\displaystyle\int_1^{+\infty}\frac{dx}{x^{\alpha+k}}$ converge sse $\alpha>1-k$; $\displaystyle\int_0^{1}\frac{dx}{x^{\alpha+k}}$ converge sse $\alpha<1-k$.` },
+  { id: 's12.parametri.fc7', kind: 'metodo', front: String.raw`Estremi dell'insieme di convergenza`, back: String.raw`Il valore critico che annulla l'esponente di un campione (per esempio $\alpha=1$) di solito **non** è incluso: lì il campione diverge.` },
+];
+
+const parametri = {
+  id: 's12.parametri',
+  title: 'Convergenza al variare di parametri',
+  summary: String.raw`Discutere per quali valori di $\alpha,\beta,\gamma$ un integrale improprio converge: si spezza nei punti critici, si trova la parte principale di ciascun pezzo e si intersecano le condizioni.`,
+  prereq: ['s12.criteri', 's06.ordine', 's06.o', 's10.sviluppi'],
+  examRefs: ['Itinere 15/01/2026 · B1 (a)', 'Appello 15/01/2026 · B3 (a)', 'Appello 10/02/2026 · B5', 'Appello 11/06/2026 · B4', 'Appello 03/09/2026 · B4'],
+  lessons: [parL1, parL2, parL3],
+  practice: parPractice,
+  flashcards: parFlashcards,
+};
 
 export default {
   id: 's12',
   title: 'Integrali impropri',
   subtitle: 'Prima e seconda specie, criteri di convergenza, parametri',
   intro: String.raw`All'esame compare quasi ogni anno un integrale improprio: un'area che va all'infinito, una funzione illimitata vicino a un estremo, oppure un parametro da discutere. Qui impari a calcolarli come limiti e a decidere se convergono.`,
-  skills: [def, criteri],
+  skills: [def, criteri, parametri],
 };
