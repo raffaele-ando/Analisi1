@@ -613,4 +613,576 @@ Si può sviluppare in potenze di $x$, ma solo se serve davvero: spesso la forma 
   ],
 });
 
+// ===========================================================================
+// s10.sviluppi · Sviluppi di Mac Laurin notevoli e di funzioni composte
+// ===========================================================================
+SKILLS.push({
+  id: 's10.sviluppi',
+  title: 'Sviluppi notevoli e funzioni composte',
+  summary: String.raw`Ricordare gli sviluppi di Mac Laurin notevoli e costruire lo sviluppo di $f(u(x))$, di prodotti e di quozienti fino all'ordine richiesto.`,
+  prereq: ['s10.formula'],
+  examRefs: ['Appello 11/06/2026 · Es. B', 'Appello 06/07/2026 · Es. B'],
+  lessons: [
+    {
+      id: 's10.sviluppi.L1',
+      title: 'La tabella degli sviluppi da ricordare',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Gli sviluppi di Mac Laurin',
+          body: String.raw`Gli sviluppi in $x_0=0$ si chiamano di **Mac Laurin**: sono le formule di Taylor con $x_0=0$. Si ricavano una volta sola e poi si usano sempre. All'esame si scrivono senza dimostrazione, ma vanno ricordati: quasi ogni limite con gli infinitesimi si risolve riportando le funzioni a questi sviluppi.
+
+Quando scrivi $o(x^n)$, l'esponente $n$ dice fino a dove arriva lo sviluppo: il termine $x^n$ è incluso e il resto è trascurabile rispetto a $x^n$.`,
+          plot: { fns: ['log(1+x)', 'x-x^2/2+x^3/3'], x: [-0.9, 2], y: [-2, 1.5] },
+        },
+        {
+          type: 'learn',
+          title: 'La tabella',
+          body: String.raw`Per $x\to0$:
+- $e^x=1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+o(x^3)$
+- $\sin x=x-\dfrac{x^3}{6}+o(x^3)$ (solo potenze dispari)
+- $\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$ (solo potenze pari)
+- $\log(1+x)=x-\dfrac{x^2}{2}+\dfrac{x^3}{3}+o(x^3)$
+- $\dfrac{1}{1-x}=1+x+x^2+x^3+o(x^3)$
+- $(1+x)^\alpha=1+\alpha x+\dfrac{\alpha(\alpha-1)}{2}x^2+o(x^2)$
+- $\arctan x=x-\dfrac{x^3}{3}+o(x^3)$
+- $\tan x=x+\dfrac{x^3}{3}+o(x^3)$
+
+> Il logaritmo è sempre quello naturale: $\log=\ln$. Lo sviluppo di $\dfrac{1}{1+x}$ si ottiene da $\dfrac{1}{1-x}$ cambiando $x$ in $-x$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\sqrt{1+x}$',
+          problem: String.raw`Scrivi $\sqrt{1+x}$ fino a $o(x^2)$.`,
+          steps: [
+            String.raw`Uso lo sviluppo di $(1+x)^\alpha$ con $\alpha=\dfrac12$, perché $\sqrt{1+x}=(1+x)^{1/2}$.`,
+            String.raw`Il coefficiente di $x$ è $\alpha=\dfrac12$.`,
+            String.raw`Il coefficiente di $x^2$ è $\dfrac{\alpha(\alpha-1)}{2}=\dfrac{\frac12\cdot\left(-\frac12\right)}{2}=-\dfrac18$.`,
+          ],
+          result: String.raw`$\sqrt{1+x}=1+\dfrac x2-\dfrac{x^2}{8}+o(x^2)$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\cos x$ fino a $o(x^5)$',
+          problem: String.raw`Scrivi $\cos x$ fino a $o(x^5)$.`,
+          steps: [
+            String.raw`Lo sviluppo di $\cos x$ contiene solo potenze pari: $1$, $x^2$, $x^4$, \dots`,
+            {
+              text: String.raw`Il termine in $x^4$ è $\dfrac{x^4}{24}$: il denominatore viene da $4!=24$ e il segno è $+$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale il coefficiente di $x^4$ in $\cos x$?`,
+                answer: '1/24',
+                explain: String.raw`Il coefficiente di $x^4$ è $\dfrac{f^{(4)}(0)}{4!}$. Per $\cos x$ si ha $f^{(4)}(0)=\cos 0=1$, quindi $\dfrac{1}{24}$.`,
+              },
+            },
+          ],
+          result: String.raw`$\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^5)$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.sviluppi.L1.q1',
+          level: 1,
+          prompt: String.raw`Qual è lo sviluppo di $\arctan x$ fino a $o(x^3)$?`,
+          options: [
+            String.raw`$x-\dfrac{x^3}{3}+o(x^3)$`,
+            String.raw`$x+\dfrac{x^3}{3}+o(x^3)$`,
+            String.raw`$x-\dfrac{x^2}{2}+o(x^3)$`,
+            String.raw`$x-\dfrac{x^3}{6}+o(x^3)$`,
+          ],
+          answer: 0,
+          explain: String.raw`$\dfrac{d}{dx}\arctan x=\dfrac{1}{1+x^2}=1-x^2+o(x^2)$. Integrando si ottiene $x-\dfrac{x^3}{3}$. Il secondo distrattore sbaglia il segno. Il terzo è lo sviluppo di $\log(1+x)$ fermato al grado sbagliato. Il quarto è lo sviluppo di $\sin x$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.sviluppi.L1.q2',
+          level: 1,
+          prompt: String.raw`Lo sviluppo di Mac Laurin di $\cos x$ contiene solo potenze pari di $x$.`,
+          answer: true,
+          explain: String.raw`$\cos$ è una funzione pari, quindi nel suo sviluppo in $0$ compaiono solo potenze pari: $1$, $x^2$, $x^4$, e così via.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.sviluppi.L1.q3',
+          level: 1,
+          prompt: String.raw`Scrivi lo sviluppo di $\log(1+x)$ fino a $o(x^2)$ (senza resto).`,
+          answer: 'x-x^2/2',
+          vars: ['x'],
+          explain: String.raw`Dalla tabella: $\log(1+x)=x-\dfrac{x^2}{2}+o(x^2)$. Il termine di grado $1$ è $x$, quello di grado $2$ è $-\dfrac{x^2}{2}$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.sviluppi.L1.q4',
+          level: 2,
+          prompt: String.raw`Qual è il coefficiente di $x^3$ nello sviluppo di $\arctan x$?`,
+          answer: '-1/3',
+          explain: String.raw`Dalla tabella $\arctan x=x-\dfrac{x^3}{3}+o(x^3)$: il coefficiente è $-\dfrac13$. Il segno negativo viene dall'integrazione di $1-x^2$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.sviluppi.L1.q5',
+          level: 2,
+          prompt: String.raw`Scrivi lo sviluppo di $\dfrac{1}{1-x}$ fino a $o(x^3)$ (senza resto).`,
+          answer: '1+x+x^2+x^3',
+          vars: ['x'],
+          explain: String.raw`La serie geometrica dà $\dfrac{1}{1-x}=1+x+x^2+x^3+o(x^3)$: ogni coefficiente vale $1$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.sviluppi.L1.q6',
+          level: 2,
+          prompt: String.raw`Qual è lo sviluppo di $\dfrac{1}{1+x}$ fino a $o(x^2)$?`,
+          options: [
+            String.raw`$1-x+x^2+o(x^2)$`,
+            String.raw`$1+x+x^2+o(x^2)$`,
+            String.raw`$1-x+o(x^2)$`,
+            String.raw`$1+x+o(x^2)$`,
+          ],
+          answer: 0,
+          explain: String.raw`Con $\alpha=-1$ nello sviluppo di $(1+x)^\alpha$: il coefficiente di $x$ è $\alpha=-1$, quello di $x^2$ è $\dfrac{\alpha(\alpha-1)}{2}=1$. Il secondo distrattore ignora il segno. Il terzo dimentica il termine $x^2$. Il quarto ha il segno sbagliato.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.sviluppi.L1.q7',
+          level: 1,
+          prompt: String.raw`Lo sviluppo di Mac Laurin di $\sin x$ contiene solo potenze dispari di $x$.`,
+          answer: true,
+          explain: String.raw`$\sin$ è dispari: nel suo sviluppo compaiono solo $x$, $x^3$, $x^5$, con coefficienti alternati in segno.`,
+        },
+      ],
+    },
+    {
+      id: 's10.sviluppi.L2',
+      title: 'Funzioni composte, prodotti, quozienti',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Sostituire $u$ nello sviluppo',
+          body: String.raw`Lo sviluppo di $f(u)$ vale anche quando $u$ è una funzione di $x$ che tende a $0$. Basta scrivere lo sviluppo con $u$ al posto di $x$ e poi sostituire $u=u(x)$.
+
+Attenzione all'**o-piccolo**. Se $u\sim x^k$, cioè $u$ si comporta come $x^k$, allora $o(u^n)=o(x^{kn})$. Per esempio, con $u=x^2$:
+$$o(u^3)=o(x^6),\qquad o(u^2)=o(x^4).$$
+Sostituendo cambia il grado dei termini e anche quello del resto: bisogna riscriverlo.`,
+        },
+        {
+          type: 'learn',
+          title: 'Prodotti e quozienti',
+          body: String.raw`Per moltiplicare due sviluppi si moltiplicano i polinomi e si tengono solo i termini fino all'ordine richiesto. Ogni fattore va sviluppato abbastanza da coprire l'ordine finale.
+
+Esempio: $x\sin x=x\left(x-\dfrac{x^3}{6}+o(x^3)\right)=x^2-\dfrac{x^4}{6}+o(x^4)$.
+
+Per un quoziente si sviluppano $\dfrac{1}{1\pm u}$ e poi si moltiplica per il numeratore.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\sin(x^2)$',
+          problem: String.raw`Scrivi lo sviluppo di $\sin(x^2)$ fino a $o(x^6)$.`,
+          steps: [
+            String.raw`Lo sviluppo di $\sin u$ è $u-\dfrac{u^3}{6}+o(u^3)$. Pongo $u=x^2$.`,
+            String.raw`$u^3=x^6$, e $o(u^3)=o(x^6)$ perché $u=x^2$.`,
+          ],
+          result: String.raw`$\sin(x^2)=x^2-\dfrac{x^6}{6}+o(x^6)$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: prodotto $e^x\sin x$',
+          problem: String.raw`Scrivi $e^x\sin x$ fino a $o(x^3)$.`,
+          steps: [
+            String.raw`Fattori fino a $x^3$: $e^x=1+x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+o(x^3)$ e $\sin x=x-\dfrac{x^3}{6}+o(x^3)$.`,
+            String.raw`Moltiplico e tengo i termini fino a $x^3$: $x$ viene da $1\cdot x$; $x^2$ viene da $x\cdot x$; $x^3$ viene da $\dfrac{x^2}{2}\cdot x$ e da $1\cdot\left(-\dfrac{x^3}{6}\right)$.`,
+            String.raw`Il coefficiente di $x^3$ è $\dfrac12-\dfrac16=\dfrac13$.`,
+          ],
+          result: String.raw`$e^x\sin x=x+x^2+\dfrac{x^3}{3}+o(x^3)$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.sviluppi.L2.q1',
+          level: 2,
+          prompt: String.raw`Qual è lo sviluppo di $e^x\cos x$ fino a $o(x^2)$?`,
+          options: [
+            String.raw`$1+x+o(x^2)$`,
+            String.raw`$1+x+x^2+o(x^2)$`,
+            String.raw`$1+x+\dfrac{x^2}{2}+o(x^2)$`,
+            String.raw`$1+x-x^2+o(x^2)$`,
+          ],
+          answer: 0,
+          explain: String.raw`$(1+x+\dfrac{x^2}{2})\left(1-\dfrac{x^2}{2}\right)=1+x+0\cdot x^2+o(x^2)$: il termine $x^2$ si annulla. Il secondo distrattore dimentica $-\dfrac{x^2}{2}$ di $\cos x$. Il terzo dimentica $\cos x$. Il quarto ha un errore di segno.`,
+        },
+        {
+          type: 'num',
+          id: 's10.sviluppi.L2.q2',
+          level: 2,
+          prompt: String.raw`Qual è il coefficiente di $x^2$ nello sviluppo di $e^x\sin x$?`,
+          answer: '1',
+          explain: String.raw`$x^2$ viene dal prodotto $x\cdot x$, con $x$ da $e^x$ e $x$ da $\sin x$. Il coefficiente è $1$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.sviluppi.L2.q3',
+          level: 2,
+          prompt: String.raw`Scrivi lo sviluppo di $x\sin x$ fino a $o(x^4)$ (senza resto).`,
+          answer: 'x^2-x^4/6',
+          vars: ['x'],
+          explain: String.raw`$x\sin x=x\left(x-\dfrac{x^3}{6}+o(x^3)\right)=x^2-\dfrac{x^4}{6}+o(x^4)$.`,
+        },
+        {
+          type: 'num',
+          id: 's10.sviluppi.L2.q4',
+          level: 2,
+          prompt: String.raw`Qual è il coefficiente di $x^4$ nello sviluppo di $\log(1+x^2)$?`,
+          answer: '-1/2',
+          explain: String.raw`Con $u=x^2$: $\log(1+u)=u-\dfrac{u^2}{2}+o(u^2)$. Il termine $-\dfrac{u^2}{2}=-\dfrac{x^4}{2}$ dà il coefficiente $-\dfrac12$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.sviluppi.L2.q5',
+          level: 2,
+          prompt: String.raw`Se $u\sim x^2$ per $x\to0$, allora $o(u^3)=o(x^6)$.`,
+          answer: true,
+          explain: String.raw`$u\sim x^2$ significa $u/x^2\to1$, quindi $u^3/x^6\to1$. Un infinitesimo rispetto a $u^3$ è quindi trascurabile anche rispetto a $x^6$.`,
+        },
+        {
+          type: 'order',
+          id: 's10.sviluppi.L2.q6',
+          level: 2,
+          prompt: String.raw`Ordina i passi per sviluppare $\sin(x^2)$ fino a $o(x^6)$.`,
+          steps: [
+            String.raw`Scrivo lo sviluppo di $\sin u$ con $u$ al posto di $x$: $\sin u=u-\dfrac{u^3}{6}+o(u^3)$.`,
+            String.raw`Pongo $u=x^2$: $u^3=x^6$ e $o(u^3)=o(x^6)$.`,
+            String.raw`Semplifico: $\sin(x^2)=x^2-\dfrac{x^6}{6}+o(x^6)$.`,
+          ],
+          distractors: [
+            String.raw`Moltiplico lo sviluppo di $\sin x$ per se stesso.`,
+            String.raw`Tengo $-\dfrac{x^3}{6}$, perché il grado di $x^3$ non cambia con la sostituzione.`,
+          ],
+          explain: String.raw`Prima si scrive lo sviluppo nella variabile $u$, poi si sostituisce, poi si riscrive il resto. Il grado dei termini cambia con la sostituzione.`,
+        },
+        {
+          type: 'cloze',
+          id: 's10.sviluppi.L2.q7',
+          level: 2,
+          text: String.raw`Per sviluppare $e^{-x^2}$ si pone [[0]] nello sviluppo di $e^u$. Poiché $u^2=x^4$, il resto $o(u^2)$ diventa [[1]].`,
+          blanks: [
+            { options: [String.raw`$u=-x^2$`, String.raw`$u=x^2$`, String.raw`$u=-x$`], answer: 0 },
+            { options: [String.raw`$o(x^4)$`, String.raw`$o(x^2)$`, String.raw`$o(x^3)$`], answer: 0 },
+          ],
+          explain: String.raw`Con $u=-x^2$ si ha $u^2=x^4$ e il resto diventa $o(x^4)$. Lo sviluppo è $e^{-x^2}=1-x^2+\dfrac{x^4}{2}+o(x^4)$.`,
+        },
+        {
+          type: 'open',
+          id: 's10.sviluppi.L2.q8',
+          level: 2,
+          points: 2,
+          prompt: String.raw`Spiega perché in $\sin(x^2)$ il termine $-\dfrac{u^3}{6}$ diventa $-\dfrac{x^6}{6}$, e non $-\dfrac{x^3}{6}$.`,
+          answer: String.raw`Perché $u=x^2$, quindi $u^3=(x^2)^3=x^6$: l'esponente di $u$ si moltiplica per quello di $x$. Il termine di grado $3$ in $u$ diventa un termine di grado $6$ in $x$, e il resto $o(u^3)$ diventa $o(x^6)$.`,
+          rubric: [
+            'Sostituzione u = x^2 nel termine u^3',
+            'Potenze: (x^2)^3 = x^6',
+            'Il resto cambia: o(u^3) diventa o(x^6)',
+          ],
+        },
+      ],
+    },
+    {
+      id: 's10.sviluppi.L3',
+      title: 'Quozienti, ordine necessario e caso d\'esame',
+      cards: [
+        {
+          type: 'learn',
+          title: "Quante cifre servono nello sviluppo",
+          body: String.raw`Per un quoziente $\dfrac{f(x)}{x^k}$ il denominatore è di ordine $k$. Per calcolare il limite il numeratore va sviluppato **fino a $o(x^k)$**, e il termine di grado $k$ deve comparire. Se lo sviluppo si ferma prima, il termine $x^k$ finisce nel resto e il limite non si vede.
+
+Esempio: $\dfrac{x-\sin x}{x^3}$. Con $\sin x=x-\dfrac{x^3}{6}+o(x^3)$ il numeratore è $\dfrac{x^3}{6}+o(x^3)$, quindi il limite è $\dfrac16$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $1-\\cos(\\log(1+\\sqrt x))$',
+          problem: String.raw`Dimostra che $1-\cos\big(\log(1+\sqrt x)\big)=\dfrac x2+o(x)$ per $x\to0^+$.`,
+          steps: [
+            String.raw`Pongo $t=\sqrt x\to0$. Dallo sviluppo di $\log(1+t)$: $\log(1+t)=t-\dfrac{t^2}{2}+o(t^2)$. Con $t^2=x$: $u:=\log(1+\sqrt x)=\sqrt x-\dfrac x2+o(x)$.`,
+            String.raw`Dallo sviluppo di $\cos u$: $1-\cos u=\dfrac{u^2}{2}+o(u^2)$, e $o(u^2)=o(x)$ perché $u^2\sim x$.`,
+            String.raw`Calcolo $u^2=\left(\sqrt x-\dfrac x2+o(x)\right)^2=x-x^{3/2}+o(x^{3/2})$.`,
+            String.raw`Quindi $1-\cos u=\dfrac{x-x^{3/2}}{2}+o(x)=\dfrac x2+o(x)$, perché $x^{3/2}=o(x)$.`,
+          ],
+          result: String.raw`$1-\cos\big(\log(1+\sqrt x)\big)=\dfrac x2+o(x)$`,
+        },
+        {
+          type: 'num',
+          id: 's10.sviluppi.L3.q1',
+          level: 3,
+          source: 'Appello 11/06/2026 · Es. B',
+          prompt: String.raw`Nello sviluppo $1-\cos\big(\log(1+\sqrt x)\big)=c\,x+o(x)$, quanto vale $c$?`,
+          answer: '1/2',
+          explain: String.raw`Dallo sviluppo appena visto il termine principale è $\dfrac x2$, quindi $c=\dfrac12$. Il termine $-\dfrac{x^{3/2}}{2}$ è già nel resto $o(x)$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\dfrac{1}{1+x^2}$ fino a $o(x^4)$',
+          problem: String.raw`Scrivi $\dfrac{1}{1+x^2}$ fino a $o(x^4)$.`,
+          steps: [
+            String.raw`Uso $\dfrac{1}{1-t}=1+t+t^2+o(t^2)$ con $t=-x^2$.`,
+            {
+              text: String.raw`Quindi $\dfrac{1}{1+x^2}=1-x^2+x^4+o(x^4)$: il termine in $x^4$ viene da $t^2=x^4$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale il coefficiente di $x^4$ in $\dfrac{1}{1+x^2}$?`,
+                answer: '1',
+                explain: String.raw`$t^2=(-x^2)^2=x^4$ ha coefficiente $1$.`,
+              },
+            },
+          ],
+          result: String.raw`$\dfrac{1}{1+x^2}=1-x^2+x^4+o(x^4)$`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.sviluppi.L3.q2',
+          level: 2,
+          prompt: String.raw`Per calcolare $\displaystyle\lim_{x\to0}\dfrac{x-\sin x}{x^3}$, fino a quale ordine va sviluppato $\sin x$?`,
+          options: [
+            String.raw`fino a $o(x^2)$`,
+            String.raw`fino a $o(x^3)$`,
+            String.raw`fino a $o(x)$, perché $\sin x\sim x$`,
+            String.raw`non serve sviluppare $\sin x$`,
+          ],
+          answer: 1,
+          explain: String.raw`Il numeratore è di ordine $3$. Con $o(x^2)$ non si vede il termine $x^3$. Con $o(x)$ si ottiene solo $x-x=0$. Serve lo sviluppo fino a $o(x^3)$, che contiene $-\dfrac{x^3}{6}$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.sviluppi.L3.q3',
+          level: 2,
+          prompt: String.raw`Scrivi $\dfrac{e^x-1}{x}$ fino a $o(x^2)$ (senza resto).`,
+          answer: '1+x/2+x^2/6',
+          vars: ['x'],
+          explain: String.raw`$e^x-1=x+\dfrac{x^2}{2}+\dfrac{x^3}{6}+o(x^3)$. Dividendo per $x$: $1+\dfrac x2+\dfrac{x^2}{6}+o(x^2)$.`,
+        },
+        {
+          type: 'expr',
+          id: 's10.sviluppi.L3.q4',
+          level: 3,
+          prompt: String.raw`Scrivi $\dfrac{\sin x}{1+x}$ fino a $o(x^3)$ (senza resto).`,
+          answer: 'x-x^2+(5/6)*x^3',
+          vars: ['x'],
+          explain: String.raw`$\sin x=x-\dfrac{x^3}{6}+o(x^3)$ e $\dfrac{1}{1+x}=1-x+x^2+o(x^2)$. Il prodotto fino a $x^3$: $x\cdot(1-x+x^2)-\dfrac{x^3}{6}=x-x^2+\dfrac56x^3$. Gli altri termini sono $o(x^3)$.`,
+        },
+        {
+          type: 'tf',
+          id: 's10.sviluppi.L3.q5',
+          level: 2,
+          prompt: String.raw`Lo sviluppo di $\sqrt{1+x}$ fino a $o(x^2)$ è $1+\dfrac x2-\dfrac{x^2}{8}+o(x^2)$.`,
+          answer: true,
+          explain: String.raw`Con $\alpha=\dfrac12$ si ottengono i coefficienti $\dfrac12$ e $\dfrac{\frac12\cdot(-\frac12)}{2}=-\dfrac18$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's10.sviluppi.L3.q6',
+          level: 2,
+          prompt: String.raw`Se $f(x)=x+o(x^2)$ e $g(x)=2+o(x)$ per $x\to0$, quale è lo sviluppo di $f\cdot g$?`,
+          options: [
+            String.raw`$2x+o(x^2)$`,
+            String.raw`$2+o(x)$`,
+            String.raw`$x+o(x^2)$`,
+            String.raw`$2x^2+o(x^2)$`,
+          ],
+          answer: 0,
+          explain: String.raw`$(x+o(x^2))(2+o(x))=2x+x\cdot o(x)+2\,o(x^2)+o(x^2)\,o(x)=2x+o(x^2)$. Il secondo distrattore perde il termine $x$. Il terzo ignora il fattore $2$. Il quarto moltiplica male.`,
+        },
+        {
+          type: 'open',
+          id: 's10.sviluppi.L3.q7',
+          level: 2,
+          points: 2,
+          prompt: String.raw`Spiega perché nel quoziente $\dfrac{f(x)}{x^k}$ il numeratore va sviluppato fino a $o(x^k)$ e non di meno.`,
+          answer: String.raw`Il limite dipende dai termini di grado al più $k$. Se lo sviluppo del numeratore si ferma prima di $x^k$, il termine di grado $k$ resta nel resto e non si può dire quanto valga il limite. Il termine di grado $k$ è la parte principale del numeratore, e determina il limite.`,
+          rubric: [
+            'Il limite dipende dai termini di grado al più k',
+            'Uno sviluppo fermato prima di x^k non determina il limite',
+            'Il termine di grado k è la parte principale del numeratore',
+          ],
+        },
+        {
+          type: 'problem',
+          id: 's10.sviluppi.L3.q8',
+          level: 3,
+          source: 'Esercizio di tipo esame',
+          points: 3,
+          prompt: String.raw`Sia $f(x)=\sqrt{1+\sin x}$. (a) Scrivi $\sin x$ fino a $o(x^2)$. (b) Scrivi $f$ fino a $o(x^2)$ (senza resto).`,
+          parts: [
+            {
+              type: 'expr',
+              prompt: String.raw`$\sin x$ fino a $o(x^2)$ (senza resto).`,
+              answer: 'x',
+              vars: ['x'],
+              explain: String.raw`$\sin x=x-\dfrac{x^3}{6}+o(x^3)=x+o(x^2)$, perché $x^3=o(x^2)$.`,
+            },
+            {
+              type: 'expr',
+              prompt: String.raw`$f(x)$ fino a $o(x^2)$ (senza resto).`,
+              answer: '1+x/2-x^2/8',
+              vars: ['x'],
+              explain: String.raw`Con $u=\sin x=x+o(x^2)$: $\sqrt{1+u}=1+\dfrac u2-\dfrac{u^2}{8}+o(u^2)$. Qui $\dfrac u2=\dfrac x2+o(x^2)$ e $u^2=x^2+o(x^2)$, quindi $f(x)=1+\dfrac x2-\dfrac{x^2}{8}+o(x^2)$.`,
+            },
+          ],
+          solution: String.raw`(a) $\sin x=x+o(x^2)$. (b) Lo sviluppo di $\sqrt{1+u}$ è $1+\dfrac u2-\dfrac{u^2}{8}+o(u^2)$. Sostituendo $u=x+o(x^2)$ si ottiene $f(x)=1+\dfrac x2-\dfrac{x^2}{8}+o(x^2)$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's10.sviluppi.g1', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi lo sviluppo di $e^{${H.coef(a)}x^2}$ fino a $o(x^4)$ (senza resto).`,
+          answer: `1+(${a})*x^2+(${a * a}/2)*x^4`,
+          vars: ['x'],
+          explain: String.raw`Con $u=(${a})x^2$: $e^u=1+u+\dfrac{u^2}{2}+o(u^2)$. Il resto $o(u^2)$ è $o(x^4)$. Quindi $1+(${a})x^2+\dfrac{${a * a}}{2}x^4$.`,
+        };
+      },
+    },
+    {
+      id: 's10.sviluppi.g2', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi lo sviluppo di $\sin(${H.coef(a)}x)$ fino a $o(x^3)$ (senza resto).`,
+          answer: `(${a})*x-(${a ** 3})/6*x^3`,
+          vars: ['x'],
+          explain: String.raw`Con $u=${H.coef(a)}x$: $\sin u=u-\dfrac{u^3}{6}+o(u^3)$. Si ottiene $u=(${a})x$ e $u^3=(${a ** 3})x^3$, quindi $\sin(${H.coef(a)}x)=(${a})x-\dfrac{(${a ** 3})}{6}x^3+o(x^3)$.`,
+        };
+      },
+    },
+    {
+      id: 's10.sviluppi.g3', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi lo sviluppo di $x\cos(${H.coef(a)}x)$ fino a $o(x^3)$ (senza resto).`,
+          answer: `x-(${a * a}/2)*x^3`,
+          vars: ['x'],
+          explain: String.raw`$\cos(${H.coef(a)}x)=1-\dfrac{(${a})^2x^2}{2}+o(x^2)$. Moltiplicando per $x$: $x-\dfrac{${a * a}}{2}x^3+o(x^3)$.`,
+        };
+      },
+    },
+    {
+      id: 's10.sviluppi.g4', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        const s = a < 0 ? '' : '+';
+        return {
+          type: 'expr',
+          prompt: String.raw`Scrivi lo sviluppo di $\dfrac{1}{1${s}${H.coef(a)}x}$ fino a $o(x^2)$ (senza resto).`,
+          answer: `1-(${a})*x+(${a * a})*x^2`,
+          vars: ['x'],
+          explain: String.raw`Dallo sviluppo di $\dfrac{1}{1+t}=1-t+t^2+o(t^2)$ con $t=(${a})x$: $1-(${a})x+(${a * a})x^2+o(x^2)$.`,
+        };
+      },
+    },
+    {
+      id: 's10.sviluppi.p1', type: 'num', level: 1,
+      prompt: String.raw`Qual è il coefficiente di $x^4$ nello sviluppo di $\cos x$?`,
+      answer: '1/24',
+      explain: String.raw`Dalla tabella $\cos x=1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$.`,
+    },
+    {
+      id: 's10.sviluppi.p2', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi lo sviluppo di $\sqrt{1+x}$ fino a $o(x^2)$ (senza resto).`,
+      answer: '1+x/2-x^2/8',
+      vars: ['x'],
+      explain: String.raw`Con $\alpha=\dfrac12$: $1+\dfrac12x+\dfrac{\frac12(\frac12-1)}{2}x^2=1+\dfrac x2-\dfrac{x^2}{8}$.`,
+    },
+    {
+      id: 's10.sviluppi.p3', type: 'mcq', level: 2,
+      prompt: String.raw`Qual è lo sviluppo di $\cos(x^2)$ fino a $o(x^4)$?`,
+      options: [
+        String.raw`$1-\dfrac{x^4}{2}+o(x^4)$`,
+        String.raw`$1-\dfrac{x^2}{2}+o(x^4)$`,
+        String.raw`$1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$`,
+        String.raw`$1-x^4+o(x^4)$`,
+      ],
+      answer: 0,
+      explain: String.raw`Con $u=x^2$: $\cos u=1-\dfrac{u^2}{2}+o(u^2)$, e $u^2=x^4$. Il secondo distrattore dimentica la composizione. Il terzo copia lo sviluppo di $\cos x$ senza sostituire. Il quarto sbaglia il coefficiente.`,
+    },
+    {
+      id: 's10.sviluppi.p4', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi lo sviluppo di $e^x\cos x$ fino a $o(x^2)$ (senza resto).`,
+      answer: '1+x',
+      vars: ['x'],
+      explain: String.raw`Il termine $x^2$ si annulla: $\dfrac{x^2}{2}-\dfrac{x^2}{2}=0$.`,
+    },
+    {
+      id: 's10.sviluppi.p5', type: 'num', level: 2,
+      prompt: String.raw`Qual è il coefficiente di $x^3$ nello sviluppo di $x\log(1+x)$?`,
+      answer: '-1/2',
+      explain: String.raw`$x\log(1+x)=x\left(x-\dfrac{x^2}{2}+\dfrac{x^3}{3}\right)=x^2-\dfrac{x^3}{2}+\dfrac{x^4}{3}$: il coefficiente di $x^3$ è $-\dfrac12$.`,
+    },
+    {
+      id: 's10.sviluppi.p6', type: 'order', level: 2,
+      prompt: String.raw`Ordina i passi per sviluppare $\log(1+x^2)$ fino a $o(x^4)$.`,
+      steps: [
+        String.raw`Scrivo $\log(1+u)=u-\dfrac{u^2}{2}+o(u^2)$.`,
+        String.raw`Pongo $u=x^2$ e noto che $o(u^2)=o(x^4)$.`,
+        String.raw`Ottengo $\log(1+x^2)=x^2-\dfrac{x^4}{2}+o(x^4)$.`,
+      ],
+      explain: String.raw`Prima lo sviluppo nella variabile $u$, poi la sostituzione, poi il resto riscritto nella variabile $x$.`,
+    },
+    {
+      id: 's10.sviluppi.p7', type: 'tf', level: 1,
+      prompt: String.raw`Lo sviluppo di Mac Laurin di $\sin x$ contiene solo potenze dispari di $x$.`,
+      answer: true,
+      explain: String.raw`$\sin$ è una funzione dispari: il suo sviluppo in $0$ contiene solo potenze dispari.`,
+    },
+    {
+      id: 's10.sviluppi.p8', type: 'match', level: 1,
+      prompt: String.raw`Abbina ogni funzione al suo sviluppo fino a $o(x^3)$.`,
+      pairs: [
+        [String.raw`$\cos x$`, String.raw`$1-\dfrac{x^2}{2}+o(x^3)$`],
+        [String.raw`$\log(1+x)$`, String.raw`$x-\dfrac{x^2}{2}+\dfrac{x^3}{3}+o(x^3)$`],
+        [String.raw`$\dfrac{1}{1-x}$`, String.raw`$1+x+x^2+x^3+o(x^3)$`],
+      ],
+      explain: String.raw`Il coseno ha solo potenze pari, il logaritmo ha coefficienti $1,-\dfrac12,\dfrac13$, la serie geometrica ha tutti i coefficienti uguali a $1$.`,
+    },
+    {
+      id: 's10.sviluppi.p9', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\dfrac{e^x-1-x}{x^2}$.`,
+      answer: '1/2',
+      explain: String.raw`$e^x-1-x=\dfrac{x^2}{2}+o(x^2)$, quindi il limite è $\dfrac12$.`,
+    },
+    {
+      id: 's10.sviluppi.p10', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Perché per $\cos(x^2)$ il resto $o(u^2)$ diventa $o(x^4)$ e non resta $o(x^2)$?`,
+      answer: String.raw`Perché $u=x^2$ e $u^2=x^4$. Un infinitesimo rispetto a $u^2$ è trascurabile rispetto a $x^4$, perché il suo ordine si moltiplica per quello della sostituzione.`,
+      rubric: [
+        'Il resto è o(u^2) con u = x^2',
+        'u^2 = x^4, quindi o(u^2) = o(x^4)',
+        'Il grado del resto cambia con la sostituzione',
+      ],
+    },
+    {
+      id: 's10.sviluppi.p11', type: 'expr', level: 3,
+      prompt: String.raw`Scrivi $\dfrac{\sin x}{1+x}$ fino a $o(x^3)$ (senza resto).`,
+      answer: 'x-x^2+(5/6)*x^3',
+      vars: ['x'],
+      explain: String.raw`Dalla tabella e dalla serie geometrica con $t=-x$: $\dfrac{\sin x}{1+x}=\left(x-\dfrac{x^3}{6}\right)(1-x+x^2)+o(x^3)=x-x^2+\dfrac56x^3+o(x^3)$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's10.sviluppi.fc1', kind: 'formula', front: String.raw`Sviluppo di Mac Laurin di $e^x$`, back: String.raw`$1+x+\dfrac{x^2}{2}+\dots+\dfrac{x^n}{n!}+o(x^n)$` },
+    { id: 's10.sviluppi.fc2', kind: 'formula', front: String.raw`Sviluppo di $\sin x$`, back: String.raw`$x-\dfrac{x^3}{6}+o(x^3)$: solo potenze dispari.` },
+    { id: 's10.sviluppi.fc3', kind: 'formula', front: String.raw`Sviluppo di $\cos x$`, back: String.raw`$1-\dfrac{x^2}{2}+\dfrac{x^4}{24}+o(x^4)$: solo potenze pari.` },
+    { id: 's10.sviluppi.fc4', kind: 'formula', front: String.raw`Sviluppo di $\log(1+x)$`, back: String.raw`$x-\dfrac{x^2}{2}+\dfrac{x^3}{3}+o(x^3)$. In generale il termine di grado $k$ è $\dfrac{(-1)^{k+1}}{k}x^k$.` },
+    { id: 's10.sviluppi.fc5', kind: 'formula', front: String.raw`Sviluppo di $(1+x)^\alpha$`, back: String.raw`$1+\alpha x+\dfrac{\alpha(\alpha-1)}{2}x^2+o(x^2)$` },
+    { id: 's10.sviluppi.fc6', kind: 'formula', front: String.raw`Sviluppo di $\dfrac{1}{1-x}$ e di $\dfrac{1}{1+x}$`, back: String.raw`$\dfrac{1}{1-x}=1+x+\dots+x^n+o(x^n)$. Cambiando $x$ in $-x$: $\dfrac{1}{1+x}=1-x+x^2-\dots+(-1)^nx^n+o(x^n)$.` },
+    { id: 's10.sviluppi.fc7', kind: 'formula', front: String.raw`Sviluppi di $\arctan x$ e $\tan x$`, back: String.raw`$\arctan x=x-\dfrac{x^3}{3}+o(x^3)$; $\tan x=x+\dfrac{x^3}{3}+o(x^3)$.` },
+    { id: 's10.sviluppi.fc8', kind: 'metodo', front: String.raw`Come sviluppare $f(u(x))$ con $u\to0$`, back: String.raw`Sviluppa $f(u)$ con la tabella, sostituisci $u=u(x)$, e riscrivi $o(u^n)$ come $o(x^{kn})$ se $u\sim x^k$.` },
+    { id: 's10.sviluppi.fc9', kind: 'metodo', front: String.raw`Come sviluppare prodotti e quozienti`, back: String.raw`Prodotto: moltiplica gli sviluppi e tieni i termini fino all'ordine richiesto. Quoziente: sviluppa $\dfrac{1}{1\pm u}$, moltiplica per il numeratore, e sviluppa il numeratore fino a $o(x^k)$ se il denominatore è $x^k$.` },
+    { id: 's10.sviluppi.fc10', kind: 'errore', front: String.raw`Errore tipico con le composizioni`, back: String.raw`Scrivere $o(u^3)=o(x^3)$ quando $u=x^2$. Corretto: $o(u^3)=o(x^6)$.` },
+    { id: 's10.sviluppi.fc11', kind: 'errore', front: String.raw`Errore tipico nei quozienti`, back: String.raw`Fermarsi a $o(x)$ per $\dfrac{x-\sin x}{x^3}$: così il termine $x^3$ non compare e il limite resta nascosto.` },
+  ],
+});
+
 // @@END
