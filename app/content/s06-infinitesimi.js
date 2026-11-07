@@ -1247,3 +1247,568 @@ Questi bastano per la maggior parte degli esercizi d'esame di questa sezione. Gl
     },
   ],
 });
+
+// ===========================================================================
+// s06.gerarchia · Confronto, gerarchia degli infiniti, stime asintotiche
+// ===========================================================================
+SKILLS.push({
+  id: 's06.gerarchia',
+  title: 'Gerarchia e stime asintotiche',
+  summary: String.raw`Confrontare la velocità di crescita di potenze, logaritmi ed esponenziali, stimare somme e radici per $x\to+\infty$ e $n\to\infty$ e usare le stime nelle serie.`,
+  prereq: ['s06.o', 's04.monotone', 's05.notevoli'],
+  examRefs: ['Itinere 11/11/2025 · Es. B4', 'Appello 10/02/2026 · Es. B3'],
+  lessons: [
+    {
+      id: 's06.gerarchia.L1',
+      title: 'Gerarchia degli infiniti',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Chi cresce più in fretta',
+          body: String.raw`Per $x\to+\infty$ alcune funzioni crescono molto più in fretta di altre. Si scrive $f\ll g$ se $\dfrac{f}{g}\to0$: $g$ cresce molto più in fretta di $f$. La gerarchia è
+
+$$\log x\ \ll\ x^{\alpha}\ \ll\ b^{x}\ \ll\ x^{x}\qquad(\alpha>0,\ b>1).$$
+
+Il logaritmo è lentissimo: ogni potenza positiva di $x$ lo batte. L'esponenziale batte ogni potenza, qualunque sia l'esponente.`,
+        },
+        {
+          type: 'learn',
+          title: 'Nella somma vince il dominante',
+          body: String.raw`Se $f\ll g$ per $x\to+\infty$, allora $f+g\sim g$: nella somma vince il termine dominante. Esempi:
+
+- $x^3+\log x\sim x^3$;
+- $x^2+x^2\log x\sim x^2\log x$, perché $x^2=o(x^2\log x)$.
+
+Quindi nei limiti a $\infty$ si può trascurare il termine più piccolo, ma non i termini dello stesso ordine di grandezza.`,
+        },
+        {
+          type: 'learn',
+          title: 'Vicino a 0: il logaritmo perde contro le potenze',
+          body: String.raw`Per $x\to0^+$ il logaritmo tende a $-\infty$, ma le potenze positive di $x$ lo battono: $x^{\alpha}\log x\to0$ per ogni $\alpha>0$. In particolare $x\log x\to0$ e $\sqrt{x}\,\log x\to0$.
+
+Questo è lo stesso fatto della gerarchia, letto con $x\to0^+$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{x^3+2^x}{x^5+\log x}$.`,
+          steps: [
+            String.raw`Al numeratore domina $2^x$: un esponenziale batte ogni potenza. Il numeratore è $\sim 2^x$.`,
+            {
+              text: String.raw`Al denominatore domina $x^5$, perché $\log x=o(x^5)$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`A cosa è equivalente il denominatore $x^5+\log x$ per $x\to+\infty$?`,
+                answer: 'x^5',
+                vars: ['x'],
+                explain: String.raw`Nella somma vince il termine dominante: $x^5+\log x\sim x^5$.`,
+              },
+            },
+            String.raw`Il rapporto è $\sim\dfrac{2^x}{x^5}\to+\infty$, perché l'esponenziale batte la potenza.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{x^3+2^x}{x^5+\log x}=+\infty$`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L1.e1',
+          level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{\log x}{\sqrt{x}}$.`,
+          answer: '0',
+          explain: String.raw`Il logaritmo è $o$ di ogni potenza positiva di $x$: qui $\sqrt x=x^{1/2}$. Il limite è $0$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.gerarchia.L1.e2',
+          level: 1,
+          prompt: String.raw`Per $x\to+\infty$, quale funzione cresce più in fretta?`,
+          options: [String.raw`$x^{100}$`, String.raw`$2^{x}$`, String.raw`$x^{100}\log x$`],
+          answer: 1,
+          explain: String.raw`$2^x$ batte qualunque potenza, anche $x^{100}$. Sbagliate le altre due: sono potenze (con un logaritmo) e crescono più lentamente.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.gerarchia.L1.e3',
+          level: 2,
+          prompt: String.raw`Per $x\to+\infty$, quale affermazione è vera?`,
+          options: [String.raw`$x^{3}\ll\log x$`, String.raw`$\log x\ll x^{3}$`, String.raw`$x^{3}\sim\log x$`],
+          answer: 1,
+          explain: String.raw`$\dfrac{\log x}{x^3}\to0$: il logaritmo è trascurabile. Sbagliata la prima: il rapporto $\dfrac{x^3}{\log x}\to+\infty$. Sbagliata la terza: il rapporto $\dfrac{x^3}{\log x}$ non tende a $1$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.gerarchia.L1.e4',
+          level: 2,
+          prompt: String.raw`Per $x\to0^+$ vale $x\log x\to0$.`,
+          answer: true,
+          explain: String.raw`Una potenza positiva di $x$ batte il logaritmo: $x^{\alpha}\log x\to0$ con $\alpha=1$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L1.e5',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}x^{2}\log x$.`,
+          answer: '0',
+          explain: String.raw`$x^2\log x\to0$, perché la potenza $x^2$ batte il logaritmo.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L1.e6',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{x^{4}-3^{x}}{x^{4}+2^{x}}$.`,
+          answer: '-inf',
+          explain: String.raw`Il numeratore è $\sim-3^x$ e il denominatore è $\sim 2^x$: il rapporto è $\sim-\left(\tfrac32\right)^x\to-\infty$.`,
+        },
+        {
+          type: 'order',
+          id: 's06.gerarchia.L1.e7',
+          level: 2,
+          prompt: String.raw`Ordina per $x\to+\infty$ le funzioni dalla più lenta alla più veloce.`,
+          steps: [
+            String.raw`$\log x$`,
+            String.raw`$\sqrt{x}$`,
+            String.raw`$x^{2}$`,
+            String.raw`$2^{x}$`,
+          ],
+          explain: String.raw`Prima il logaritmo, poi le potenze in ordine di esponente, infine l'esponenziale: $\log x\ll\sqrt x\ll x^2\ll 2^x$.`,
+        },
+      ],
+    },
+    {
+      id: 's06.gerarchia.L2',
+      title: 'Stime asintotiche con radici e frazioni',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Equivalenza a infinito',
+          body: String.raw`Per $x\to+\infty$ (o per $n\to\infty$) si scrive $f\sim g$ se $\dfrac{f}{g}\to1$. Esempi:
+
+- $x^2+3x\sim x^2$, perché $\dfrac{x^2+3x}{x^2}=1+\dfrac3x\to1$;
+- $\sqrt{x^2+x}\sim x$, perché $\dfrac{\sqrt{x^2+x}}{x}=\sqrt{1+\dfrac1x}\to1$.`,
+          plot: { fns: ['sqrt(x^2+x)', 'x'], x: [0, 5], y: [0, 6] },
+        },
+        {
+          type: 'learn',
+          title: 'Raccogli il termine dominante',
+          body: String.raw`Per stimare un quoziente di somme a $\infty$, raccogli la potenza dominante sia al numeratore sia al denominatore:
+
+$$\frac{3x^2+x}{5x^2-\sqrt{x}}=\frac{x^2\left(3+\frac1x\right)}{x^2\left(5-x^{-3/2}\right)}\longrightarrow\frac35.$$
+
+I termini raccolti tendono a zero: il limite è il rapporto dei coefficienti dominanti.`,
+        },
+        {
+          type: 'learn',
+          title: 'Attenzione: le differenze di radici',
+          body: String.raw`>! Attenzione: in una differenza, due termini dominanti uguali possono annullarsi. Da $\sqrt{n^2+n}\sim n$ **non** segue $\sqrt{n^2+n}-n\sim0$: i termini principali si cancellano.
+
+Bisogna razionalizzare:
+$$\sqrt{n^2+n}-n=\frac{n}{\sqrt{n^2+n}+n}=\frac{1}{\sqrt{1+\frac1n}+1}\longrightarrow\frac12.$$`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto (con un passo da completare)',
+          problem: String.raw`Calcola $\displaystyle\lim_{n\to\infty}n\left(\sqrt{1+\frac1n}-1\right)$.`,
+          steps: [
+            String.raw`La differenza di radici si razionalizza: $\sqrt{1+\frac1n}-1=\dfrac{1/n}{\sqrt{1+\frac1n}+1}$.`,
+            {
+              text: String.raw`Quindi $n\left(\sqrt{1+\frac1n}-1\right)=\dfrac{1}{\sqrt{1+\frac1n}+1}$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale il limite per $n\to\infty$ di $\dfrac{1}{\sqrt{1+\frac1n}+1}$?`,
+                answer: '1/2',
+                explain: String.raw`Per $n\to\infty$ si ha $\dfrac1n\to0$, quindi il denominatore tende a $2$.`,
+              },
+            },
+          ],
+          result: String.raw`$\displaystyle\lim_{n\to\infty}n\left(\sqrt{1+\frac1n}-1\right)=\frac12$`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L2.e1',
+          level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to\infty}\frac{3n^2-n}{2n^2+5}$.`,
+          answer: '3/2',
+          explain: String.raw`Raccolgo $n^2$: $\dfrac{n^2(3-\frac1n)}{n^2(2+\frac5{n^2})}\to\dfrac32$.`,
+        },
+        {
+          type: 'mcq',
+          id: 's06.gerarchia.L2.e2',
+          level: 2,
+          prompt: String.raw`Quale affermazione è vera per $n\to\infty$?`,
+          options: [String.raw`$\sqrt{n^2+n}\sim n$`, String.raw`$\sqrt{n^2+1}\sim n^2$`, String.raw`$\sqrt{n^2+n}-n\sim n$`],
+          answer: 0,
+          explain: String.raw`Vera: $\dfrac{\sqrt{n^2+n}}{n}=\sqrt{1+\frac1n}\to1$. Sbagliata $\sqrt{n^2+1}\sim n^2$: la radice è $\sim n$, non $n^2$. Sbagliata la terza: $\sqrt{n^2+n}-n\to\frac12$, quindi non è $\sim n$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.gerarchia.L2.e3',
+          level: 2,
+          prompt: String.raw`Per $n\to\infty$ si ha $\sqrt{n^2+n}-n\to0$.`,
+          answer: false,
+          explain: String.raw`Il limite vale $\dfrac12$: i termini principali si cancellano, quindi bisogna razionalizzare.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L2.e4',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{x^2+\sin x}{x^2+1}$.`,
+          answer: '1',
+          explain: String.raw`$\sin x$ è limitato, quindi $\dfrac{\sin x}{x^2}\to0$: il limite è $1$.`,
+        },
+        {
+          type: 'expr',
+          id: 's06.gerarchia.L2.e5',
+          level: 2,
+          prompt: String.raw`Scrivi l'equivalente di $\sqrt{x^2+3}$ per $x\to+\infty$.`,
+          answer: 'x',
+          vars: ['x'],
+          explain: String.raw`$\dfrac{\sqrt{x^2+3}}{x}=\sqrt{1+\frac{3}{x^2}}\to1$: quindi $\sqrt{x^2+3}\sim x$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L2.e6',
+          level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{\sqrt{x^2+3}}{x+1}$.`,
+          answer: '1',
+          explain: String.raw`Al numeratore $\sqrt{x^2+3}\sim x$ e al denominatore $x+1\sim x$: il rapporto va a $1$.`,
+        },
+        {
+          type: 'problem',
+          id: 's06.gerarchia.L2.e7',
+          level: 2,
+          source: 'Itinere 11/11/2025 · Es. B4',
+          points: 4,
+          prompt: String.raw`Calcola i limiti delle successioni $a_n=\dfrac{\log(n+1)}{n^{1/3}}$, $b_n=\left(1+\dfrac2n\right)^{n/2}$, $c_n=n\left(\sqrt{1+\dfrac1n}-1\right)$.`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`Limite di $a_n$.`,
+              answer: '0',
+              explain: String.raw`Il logaritmo è $o$ di ogni potenza positiva di $n$: il limite è $0$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Limite di $b_n$.`,
+              answer: 'e',
+              explain: String.raw`Con $m=\dfrac n2\to\infty$ si ha $\left(1+\dfrac1m\right)^{m}\to e$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Limite di $c_n$.`,
+              answer: '1/2',
+              explain: String.raw`Razionalizzando: $c_n=\dfrac{1}{\sqrt{1+\frac1n}+1}\to\dfrac12$.`,
+            },
+          ],
+          solution: String.raw`$a_n\to0$; $b_n\to e$; $c_n=\dfrac{1}{\sqrt{1+\frac1n}+1}\to\dfrac12$.`,
+        },
+      ],
+    },
+    {
+      id: 's06.gerarchia.L3',
+      title: 'Stime per le serie e parametri',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il metodo: stimare il termine e leggere l\'esponente',
+          body: String.raw`Per una serie a termini positivi, se $a_n\sim c\,n^{\gamma}$ con $c>0$, la serie $\sum a_n$ ha lo stesso carattere di $\sum n^{\gamma}$. Per la serie armonica generalizzata:
+$$\sum_{n\ge1}n^{\gamma}\ \text{converge}\iff \gamma<-1.$$
+
+Quindi basta stimare il termine generale con un'espressione $c\,n^{\gamma}$ e leggere l'esponente $\gamma$. Il valore di $c$ non conta, purché sia diverso da $0$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Stimare una differenza di radici',
+          body: String.raw`Per $n\to\infty$ si ha, usando $(1+t)^{\alpha}-1\sim\alpha t$ con $t=\frac1n$:
+$$(n^3+n^2)^{1/5}-n^{3/5}=n^{3/5}\left[\left(1+\tfrac1n\right)^{1/5}-1\right]\sim\frac15\,n^{3/5}\cdot\frac1n=\frac15\,n^{-2/5}.$$
+
+Il numeratore è dunque $\sim\dfrac15 n^{-2/5}$: l'esponente $-\frac25$ è quello che conta per la serie.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Stima il termine $a_n=\dfrac{(n^3+n^2)^{1/5}-n^{3/5}}{\log\left(1+\dfrac{2}{n^2}\right)}$ per $n\to\infty$.`,
+          steps: [
+            String.raw`Il numeratore è $\sim\dfrac15 n^{-2/5}$ (vedi la card precedente).`,
+            {
+              text: String.raw`Per il denominatore si usa $\log(1+t)\sim t$ con $t=\dfrac{2}{n^2}\to0$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`A cosa è equivalente $\log\left(1+\dfrac{2}{n^2}\right)$ per $n\to\infty$?`,
+                answer: '2/n^2',
+                vars: ['n'],
+                explain: String.raw`Con $t=\dfrac2{n^2}\to0$ si ha $\log(1+t)\sim t$, cioè $\dfrac{2}{n^2}$.`,
+              },
+            },
+            String.raw`Il rapporto è $\sim\dfrac{\frac15 n^{-2/5}}{2n^{-2}}=\dfrac1{10}\,n^{8/5}$.`,
+          ],
+          result: String.raw`$a_n\sim\dfrac1{10}\,n^{8/5}$ per $n\to\infty$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L3.e1',
+          level: 2,
+          prompt: String.raw`Nell'esempio, $a_n\sim c\,n^{\gamma}$ con $c\neq0$. Quanto vale $\gamma$?`,
+          answer: '8/5',
+          explain: String.raw`Dall'esempio, $a_n\sim\dfrac1{10}n^{8/5}$: l'esponente è $\dfrac85$.`,
+        },
+        {
+          type: 'interval',
+          id: 's06.gerarchia.L3.e2',
+          level: 2,
+          prompt: String.raw`Per quali $\alpha\in\mathbb R$ converge $\displaystyle\sum_{n\ge1}n^{\alpha}a_n$, con $a_n$ dell'esempio?`,
+          answer: '(-inf,-13/5)',
+          explain: String.raw`Il termine è $\sim\dfrac1{10}n^{\alpha+8/5}$: la serie converge sse $\alpha+\dfrac85<-1$, cioè $\alpha<-\dfrac{13}{5}$.`,
+        },
+        {
+          type: 'num',
+          id: 's06.gerarchia.L3.e3',
+          level: 2,
+          prompt: String.raw`Determina l'esponente $\gamma$ tale che $\dfrac{\sqrt[3]{n^2+1}}{n}\sim c\,n^{\gamma}$ per $n\to\infty$.`,
+          answer: '-1/3',
+          explain: String.raw`$\sqrt[3]{n^2+1}\sim n^{2/3}$, quindi il quoziente è $\sim n^{2/3-1}=n^{-1/3}$.`,
+        },
+        {
+          type: 'tf',
+          id: 's06.gerarchia.L3.e4',
+          level: 2,
+          prompt: String.raw`Se $a_n\sim b_n$ con $a_n,b_n>0$ e $\sum b_n$ diverge, allora $\sum a_n$ diverge.`,
+          answer: true,
+          explain: String.raw`È il confronto asintotico per termini positivi: le due serie hanno lo stesso carattere.`,
+        },
+        {
+          type: 'order',
+          id: 's06.gerarchia.L3.e5',
+          level: 3,
+          prompt: String.raw`Metti in ordine i passi per studiare la convergenza di una serie con un parametro.`,
+          steps: [
+            String.raw`Stimo ogni fattore del termine generale con un equivalente $c\,n^{\beta}$.`,
+            String.raw`Sommo gli esponenti per ottenere l'esponente $\gamma$ del termine.`,
+            String.raw`Applico la serie armonica generalizzata: converge se $\gamma<-1$.`,
+          ],
+          distractors: [String.raw`Concludo la convergenza guardando la sola forma del termine, senza stimarlo.`],
+          explain: String.raw`Il passo sbagliato è concludere senza stimare il termine generale.`,
+        },
+        {
+          type: 'open',
+          id: 's06.gerarchia.L3.e6',
+          level: 3,
+          points: 2,
+          prompt: String.raw`Perché, per una serie a termini positivi, basta conoscere l'esponente $\gamma$ del termine $a_n\sim c\,n^{\gamma}$ per decidere la convergenza?`,
+          answer: String.raw`Per il confronto asintotico: se $a_n\sim c\,n^{\gamma}$ con $c>0$, le serie $\sum a_n$ e $\sum n^{\gamma}$ hanno lo stesso carattere. La serie armonica generalizzata $\sum n^{\gamma}$ converge se e solo se $\gamma<-1$, quindi si conclude da $\gamma$.`,
+          rubric: [
+            'Enuncia il confronto asintotico per termini positivi',
+            'Ricorda la serie armonica generalizzata: converge sse esponente minore di -1',
+            'Conclude correttamente dal solo esponente',
+          ],
+        },
+        {
+          type: 'problem',
+          id: 's06.gerarchia.L3.e7',
+          level: 3,
+          source: 'Appello 10/02/2026 · Es. B3',
+          points: 4,
+          prompt: String.raw`Per $\alpha\in\mathbb R$ studia la convergenza di $\displaystyle\sum_{n\ge1}\frac{n^{\alpha}\left[(2n^3+n^2)^{1/5}-(2n^3)^{1/5}\right]}{\log\left(1+\tan\dfrac{2}{n^2}\right)}$ (termini positivi).`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`Esponente $\beta$ tale che il numeratore (senza $n^{\alpha}$) è $\sim c\,n^{\beta}$.`,
+              answer: '-2/5',
+              explain: String.raw`$(2n^3+n^2)^{1/5}-(2n^3)^{1/5}\sim\dfrac{2^{1/5}}{10}\,n^{-2/5}$.`,
+            },
+            {
+              type: 'num',
+              prompt: String.raw`Esponente $\gamma$ tale che il denominatore è $\sim c'\,n^{\gamma}$.`,
+              answer: '-2',
+              explain: String.raw`$\log\left(1+\tan\dfrac2{n^2}\right)\sim\tan\dfrac2{n^2}\sim\dfrac2{n^2}$: esponente $-2$.`,
+            },
+            {
+              type: 'interval',
+              prompt: String.raw`Valori di $\alpha$ per cui la serie converge.`,
+              answer: '(-inf,-13/5)',
+              explain: String.raw`Il termine è $\sim c\,n^{\alpha-\frac25+2}=c\,n^{\alpha+\frac85}$ con $c>0$: converge sse $\alpha+\dfrac85<-1$.`,
+            },
+          ],
+          solution: String.raw`Il numeratore è $\sim\dfrac{2^{1/5}}{10}n^{-2/5}$ e il denominatore è $\sim\dfrac{2}{n^2}$: il termine è $\sim c\,n^{\alpha+8/5}$ con $c=\dfrac{2^{1/5}}{20}>0$. La serie converge sse $\alpha<-\dfrac{13}{5}$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's06.gerarchia.gen-rapporto-potenze', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.int(1, 3), q = R.int(1, 3);
+        const a = R.nz(-3, 3), c = R.nz(-3, 3);
+        const L = p === q ? H.fracStr(a, c) : p > q ? (a / c > 0 ? 'inf' : '-inf') : '0';
+        const concl = p === q
+          ? String.raw`Stesso grado: il limite è il rapporto dei coefficienti, $${H.frac(a, c)}$.`
+          : p > q
+            ? String.raw`Grado $${p}>${q}$ al numeratore: il limite è $${a / c > 0 ? '+\\infty' : '-\\infty'}$.`
+            : String.raw`Grado $${p}<${q}$ al numeratore: il limite è $0$.`;
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{${H.coef(a)}${xk(p)}}{${H.coef(c)}${xk(q)}}$`,
+          answer: L,
+          explain: String.raw`Il rapporto è $\dfrac{${a}}{${c}}\,x^{${p - q}}$. ${concl}`,
+        };
+      },
+    },
+    {
+      id: 's06.gerarchia.gen-esponenziale', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.pick([2, 3]);
+        const p = R.int(1, 2), q = R.int(1, 2);
+        const A = R.nz(-3, 3), B = R.nz(-3, 3), D = R.nz(-3, 3);
+        const L = B / D > 0 ? 'inf' : '-inf';
+        const bt = (Math.abs(B) === 1 ? '' : `${Math.abs(B)}\\cdot `) + `${c}^{x}`;
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{${H.coef(A)}${xk(p)}${B < 0 ? '-' : '+'}${bt}}{${H.coef(D)}${xk(q)}}$`,
+          answer: L,
+          explain: String.raw`Al numeratore domina $${c}^{x}$, perché un esponenziale batte le potenze; al denominatore domina $${H.coef(D)}${xk(q)}$. Il rapporto è $\sim\dfrac{${B}}{${D}}\cdot\dfrac{${c}^{x}}{x^{${q}}}\to${L === 'inf' ? '+\\infty' : '-\\infty'}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.gerarchia.gen-radice-differenza', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-6, 6);
+        return {
+          type: 'num',
+          prompt: String.raw`$\displaystyle\lim_{n\to\infty}\left(\sqrt{n^{2}${sg(a)}${H.coef(a)}n}-n\right)$`,
+          answer: H.fracStr(a, 2),
+          explain: String.raw`$\sqrt{n^2${sg(a)}${H.coef(a)}n}-n=\dfrac{${H.coef(a)}n}{\sqrt{n^2${sg(a)}${H.coef(a)}n}+n}=\dfrac{${a}}{\sqrt{1+\frac{${a}}{n}}+1}\to${H.frac(a, 2)}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.gerarchia.gen-esponente-radice', type: 'gen', level: 2,
+      gen: (R) => {
+        const r = R.pick([2, 3]);
+        const p = R.int(1, 5);
+        let s = R.int(0, 5);
+        if (s === p) s = p + 1;
+        const t = R.int(0, 3);
+        const M = Math.max(p, s);
+        const L = H.fracStr(M - t * r, r);
+        return {
+          type: 'num',
+          prompt: String.raw`Per $n\to\infty$ determina l'esponente $\gamma$ tale che $a_n\sim c\,n^{\gamma}$, con $a_n=\dfrac{\sqrt[${r}]{n^{${p}}+n^{${s}}}}{${t === 0 ? '1' : `n^{${t}}`}}$.`,
+          answer: L,
+          explain: String.raw`Nella radice domina $n^{${M}}$, quindi $\sqrt[${r}]{\cdot}\sim n^{${M}/${r}}$ e $a_n\sim n^{${M}/${r}-${t}}$: $\gamma=${L}$.`,
+        };
+      },
+    },
+    {
+      id: 's06.gerarchia.p1', type: 'num', level: 1,
+      prompt: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{\log x}{x}$`,
+      answer: '0',
+      explain: String.raw`Il logaritmo è $o$ di ogni potenza positiva: il limite è $0$.`,
+    },
+    {
+      id: 's06.gerarchia.p2', type: 'mcq', level: 1,
+      prompt: String.raw`Per $x\to+\infty$, quale affermazione è vera?`,
+      options: [String.raw`$x^{2}\log x\ll x^{3}$`, String.raw`$x^{3}\ll x^{2}\log x$`, String.raw`$x^{2}\log x\sim x^{3}$`],
+      answer: 0,
+      explain: String.raw`$\dfrac{x^2\log x}{x^3}=\dfrac{\log x}{x}\to0$: vera. Le altre due sono false: $x^3/(x^2\log x)\to+\infty$, e il rapporto non tende a $1$.`,
+    },
+    {
+      id: 's06.gerarchia.p3', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\lim_{x\to0^+}\sqrt{x}\,\log x$`,
+      answer: '0',
+      explain: String.raw`Una potenza positiva di $x$ batte il logaritmo: $x^{1/2}\log x\to0$.`,
+    },
+    {
+      id: 's06.gerarchia.p4', type: 'expr', level: 2,
+      prompt: String.raw`Scrivi l'equivalente per $x\to+\infty$ di $x^3-5x^2+\sqrt{x}$.`,
+      answer: 'x^3',
+      vars: ['x'],
+      explain: String.raw`Nella somma vince il termine di grado massimo: $x^3-5x^2+\sqrt{x}\sim x^3$.`,
+    },
+    {
+      id: 's06.gerarchia.p5', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\lim_{n\to\infty}\frac{3^{n}+n^{2}}{3^{n}-2^{n}}$`,
+      answer: '1',
+      explain: String.raw`Al numeratore e al denominatore domina $3^n$: il rapporto va a $1$.`,
+    },
+    {
+      id: 's06.gerarchia.p6', type: 'tf', level: 1,
+      prompt: String.raw`Per $n\to\infty$ vale $\sqrt{n^2+1}-n\to0$.`,
+      answer: true,
+      explain: String.raw`$\sqrt{n^2+1}-n=\dfrac{1}{\sqrt{n^2+1}+n}\to0$.`,
+    },
+    {
+      id: 's06.gerarchia.p7', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni successione al suo limite per $n\to\infty$.`,
+      pairs: [
+        [String.raw`$\dfrac{n^2+1}{3n^2}$`, String.raw`$\dfrac13$`],
+        [String.raw`$\dfrac{\log n}{n}$`, String.raw`$0$`],
+        [String.raw`$\dfrac{5^n}{4^n}$`, String.raw`$+\infty$`],
+        [String.raw`$\left(1+\dfrac1n\right)^{2n}$`, String.raw`$e^2$`],
+      ],
+      explain: String.raw`Il primo è il rapporto dei coefficienti; il secondo ha il logaritmo sotto una potenza; il terzo ha l'esponenziale in base maggiore al numeratore; il quarto è il limite notevole $(1+\tfrac1m)^{m}\to e$ con $m=2n$, cioè $e^2$.`,
+    },
+    {
+      id: 's06.gerarchia.p8', type: 'cloze', level: 2,
+      text: String.raw`Per $x\to+\infty$ vale $x^{\alpha}\ll$ [[0]] per ogni $\alpha>0$.`,
+      blanks: [
+        { options: [String.raw`$2^{x}$`, String.raw`$\log x$`, String.raw`$\dfrac1x$`], answer: 0 },
+      ],
+      explain: String.raw`$2^x$ batte ogni potenza. Il logaritmo cresce più lentamente di $x^{\alpha}$, e $\dfrac1x$ tende a $0$.`,
+    },
+    {
+      id: 's06.gerarchia.p9', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha$ si ha $\dfrac{x^{\alpha}}{\log x}\to+\infty$ per $x\to+\infty$?`,
+      answer: '(0,+inf)',
+      explain: String.raw`Per $\alpha>0$ la potenza batte il logaritmo. Per $\alpha=0$ il rapporto è $\dfrac1{\log x}\to0$; per $\alpha<0$ tende a $0$.`,
+    },
+    {
+      id: 's06.gerarchia.p10', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\lim_{n\to\infty}\frac{n^{2}+n\log n}{n^{2}+1}$`,
+      answer: '1',
+      explain: String.raw`$n\log n=o(n^2)$: il numeratore è $\sim n^2$ e il limite è $1$.`,
+    },
+    {
+      id: 's06.gerarchia.p11', type: 'tf', level: 2,
+      prompt: String.raw`Se $a_n\sim b_n$ con $a_n,b_n>0$ e $\sum b_n$ converge, allora $\sum a_n$ converge.`,
+      answer: true,
+      explain: String.raw`Per il confronto asintotico, per termini positivi le due serie hanno lo stesso carattere.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's06.gerarchia.fc1', kind: 'def',
+      front: String.raw`Che cosa significa $f\ll g$ per $x\to+\infty$?`,
+      back: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{f(x)}{g(x)}=0$: $g$ cresce molto più in fretta di $f$.`,
+    },
+    {
+      id: 's06.gerarchia.fc2', kind: 'formula',
+      front: String.raw`Gerarchia degli infiniti per $x\to+\infty$`,
+      back: String.raw`$\log x\ll x^{\alpha}\ll b^{x}\ll x^{x}$, con $\alpha>0$ e $b>1$.`,
+    },
+    {
+      id: 's06.gerarchia.fc3', kind: 'metodo',
+      front: String.raw`Come si sceglie il termine da tenere in una somma a $\infty$?`,
+      back: String.raw`Si tiene il termine dominante: l'esponenziale batte le potenze, una potenza batte il logaritmo. Le somme con termini dello stesso ordine si sommano.`,
+    },
+    {
+      id: 's06.gerarchia.fc4', kind: 'thm',
+      front: String.raw`Enunciato del confronto asintotico per serie a termini positivi`,
+      back: String.raw`Se $a_n,b_n>0$ e $a_n\sim b_n$, allora $\sum a_n$ e $\sum b_n$ hanno lo stesso carattere.`,
+    },
+    {
+      id: 's06.gerarchia.fc5', kind: 'thm',
+      front: String.raw`Per quali $\gamma$ converge $\displaystyle\sum_{n\ge1} n^{\gamma}$?`,
+      back: String.raw`Se e solo se $\gamma<-1$ (serie armonica generalizzata).`,
+    },
+    {
+      id: 's06.gerarchia.fc6', kind: 'errore',
+      front: String.raw`Errore tipico: $\sqrt{n^2+n}-n\sim 0$ perché $\sqrt{n^2+n}\sim n$`,
+      back: String.raw`I termini principali si cancellano: $\sqrt{n^2+n}-n\to\dfrac12$. Bisogna razionalizzare.`,
+    },
+    {
+      id: 's06.gerarchia.fc7', kind: 'formula',
+      front: String.raw`Ordine di $\sqrt[r]{n^p+n^s}$ per $n\to\infty$`,
+      back: String.raw`$\sim n^{\max(p,s)/r}$: domina l'esponente massimo dentro la radice.`,
+    },
+  ],
+});
