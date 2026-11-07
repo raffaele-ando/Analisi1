@@ -155,6 +155,7 @@ p { margin: 0; }
   .tabbar { top: 0; bottom: 0; right: auto; width: 96px; border-top: 0; border-right: 1px solid var(--line); padding-top: 64px; }
   .tabbar nav { grid-template-columns: 1fr; grid-auto-rows: 72px; height: auto; }
   .main { padding-left: 96px; padding-bottom: 40px; }
+  .topbar { padding-left: 96px; }
   .footer-check { left: 96px; }
 }
 

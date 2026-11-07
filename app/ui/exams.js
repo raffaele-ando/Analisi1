@@ -192,9 +192,9 @@ export function ExamRunner({ exam: examProp, resume, onExit, go }) {
       ${qs[tab].map((q, n) => html`<${ExamQuestion} q=${q} n=${n + 1} value=${att.answers[q.id]} onChange=${(v) => setAns(q.id, v)} review=${review} score=${att.graded?.[q.id]} />`)}
     </div>
     <div class="footer-check"><div class="wrap">
-      ${!review && !confirm && html`<button class="btn block green" onClick=${() => setConfirm(true)}>Consegna</button>`}
+      ${!review && !confirm && html`<button class="btn block" onClick=${() => setConfirm(true)}>Consegna</button>`}
       ${!review && confirm && html`<div class="stack-sm"><b>Consegnare il compito?</b><span class="small muted">Dopo la consegna non potrai più modificare le risposte.</span>
-        <div class="row-wrap"><button class="btn green" style="flex:1" onClick=${submit}>Consegna</button><button class="btn ghost" style="flex:1" onClick=${() => setConfirm(false)}>Continua a scrivere</button></div></div>`}
+        <div class="row-wrap"><button class="btn" style="flex:1" onClick=${submit}>Consegna</button><button class="btn ghost" style="flex:1" onClick=${() => setConfirm(false)}>Continua a scrivere</button></div></div>`}
       ${review && html`<button class="btn block" disabled=${openPending} onClick=${finalize}>${openPending ? 'Correggi tutte le domande di teoria' : 'Calcola il voto'}</button>`}
     </div></div>
   </div>`;

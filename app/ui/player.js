@@ -230,7 +230,7 @@ function TheoryFooter({ card, step, setStep, askOk, onNext }) {
 function CheckFooter({ card, ready, result, onCheck, onNext, explain, setExplain, value }) {
   if (!result)
     return html`<div class="footer-check"><div class="wrap">
-      <button class="btn block green" disabled=${!ready} onClick=${onCheck}>Verifica</button>
+      <button class="btn block" disabled=${!ready} onClick=${onCheck}>Verifica</button>
     </div></div>`;
   const ok = result.ok;
   const ans = !ok && card.type !== 'problem' ? answerTex(card) : '';
@@ -253,7 +253,7 @@ function CheckFooter({ card, ready, result, onCheck, onNext, explain, setExplain
       ${explain?.error && html`<p class="small">${explain.error}</p>`}
       ${!ok && ai.available && !explain?.text && html`<button class="btn quiet" disabled=${explain?.busy} onClick=${askAi}><${I.ai} /> ${explain?.busy ? 'Sto scrivendo…' : 'Spiegamelo in un altro modo'}</button>`}
     </div>
-    <button class=${'btn block ' + (ok ? 'green' : 'red')} onClick=${onNext} autofocus>Continua</button>
+    <button class="btn block" onClick=${onNext} autofocus>Continua</button>
   </div></div>`;
 }
 
