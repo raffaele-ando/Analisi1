@@ -1012,3 +1012,498 @@ Ogni volta che c'è una funzione dentro un'altra, non dimenticare il fattore $g'
     },
   ],
 });
+
+// ===========================================================================
+// s08.inversa · Derivata dell'inversa, inverse trigonometriche, iperboliche
+// ===========================================================================
+SKILLS.push({
+  id: 's08.inversa',
+  title: "Derivata dell'inversa",
+  summary: String.raw`Calcoli la derivata di una funzione inversa senza conoscerne la formula, e ricordi le derivate di arcsin, arccos, arctan e delle funzioni iperboliche.`,
+  prereq: ['s08.regole', 's07.inversa'],
+  examRefs: ['Itinere 11/11/2025 · Parte A', 'Appello 15/01/2026 · Parte A'],
+  lessons: [
+    {
+      id: 's08.inversa.L1',
+      title: "Il teorema della derivata dell'inversa",
+      cards: [
+        {
+          type: 'learn',
+          title: 'Idea: scambiare gli assi',
+          body: String.raw`Il grafico di $f^{-1}$ è quello di $f$ riflesso rispetto alla bisettrice $y=x$. Una retta che sale con pendenza $2$ diventa una retta che sale con pendenza $\frac12$: le pendenze si invertono.
+
+>* **Teorema della derivata dell'inversa.** Sia $f$ continua e strettamente monotona su un intervallo, derivabile in $x_0$ con $f'(x_0)\neq0$. Allora $f^{-1}$ è derivabile in $y_0=f(x_0)$ e
+$$(f^{-1})'(y_0)=\frac{1}{f'(x_0)}.$$
+Il calcolo si fa senza conoscere la formula di $f^{-1}$, che di solito non si riesce a scrivere.`,
+          plot: { fns: [{ f: 'e^x', label: 'f' }, { f: 'log(x)', label: 'f^{-1}' }, { f: 'x', label: 'y=x' }], x: [-2, 2.5], y: [-2, 3] },
+        },
+        {
+          id: 's08.inversa.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Sia $f$ invertibile e derivabile con $f'(1)=2$, $f(1)=3$. Quanto vale $(f^{-1})'(3)$?`,
+          options: [
+            String.raw`$\frac12$`,
+            String.raw`$2$`,
+            String.raw`$-2$`,
+            String.raw`$-\frac12$`,
+          ],
+          answer: 0,
+          explain: String.raw`$(f^{-1})'(3)=\frac{1}{f'(1)}=\frac12$, perché $f(1)=3$. Il distrattore $2$ dà la derivata di $f$ invece dell'inversa; i segni negativi non compaiono: la pendenza resta positiva.`,
+        },
+        {
+          id: 's08.inversa.L1.q2',
+          type: 'num',
+          prompt: String.raw`Sia $f(x)=x^3+x$. Calcola $(f^{-1})'(2)$, sapendo che $f(1)=2$.`,
+          answer: '1/4',
+          explain: String.raw`$f'(x)=3x^2+1$, quindi $f'(1)=4$. Per il teorema $(f^{-1})'(2)=\frac{1}{f'(1)}=\frac14$. Non serve scrivere $f^{-1}$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: derivata del logaritmo',
+          problem: String.raw`Usa il teorema dell'inversa per calcolare la derivata di $\log x$, sapendo che è l'inversa di $e^y$.`,
+          steps: [
+            String.raw`Sia $f(y)=e^y$, la cui inversa è $f^{-1}(x)=\log x$. Vale $f'(y)=e^y$.`,
+            String.raw`Per il teorema: $(\log)'(x)=\dfrac{1}{f'(\log x)}$, cioè $\dfrac{1}{e^{\log x}}$.`,
+            String.raw`Poiché $e^{\log x}=x$ per $x>0$, il denominatore è $x$.`,
+          ],
+          result: String.raw`$D(\log x)=\frac{1}{x}$ per $x>0$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: derivata di $\\log(x+1)$',
+          problem: String.raw`Calcola la derivata di $y=\log(x+1)$ con il teorema dell'inversa: scrivi $x$ in funzione di $y$, poi inverti.`,
+          steps: [
+            String.raw`Dalla relazione $y=\log(x+1)$ ricavo $x$: $x=e^y-1$. Questa è la funzione "inversa" da derivare rispetto a $y$.`,
+            {
+              text: String.raw`Calcola $\frac{dx}{dy}$ dalla relazione $x=e^y-1$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Quanto vale $\frac{dx}{dy}$ per $x=e^y-1$?`,
+                answer: 'e^y',
+                vars: ['y'],
+                explain: String.raw`La derivata di $e^y-1$ rispetto a $y$ è $e^y$ (la costante $-1$ sparisce).`,
+              },
+            },
+            {
+              text: String.raw`Per il teorema $\frac{dy}{dx}=\frac{1}{\frac{dx}{dy}}=\frac{1}{e^y}$. Ora esprimi $e^y$ in funzione di $x$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Quanto vale $e^y$ in funzione di $x$, sapendo che $x=e^y-1$?`,
+                answer: 'x+1',
+                vars: ['x'],
+                explain: String.raw`Da $x=e^y-1$ segue $e^y=x+1$.`,
+              },
+            },
+          ],
+          result: String.raw`$D\log(x+1)=\frac{1}{x+1}$, per $x>-1$.`,
+        },
+        {
+          type: 'learn',
+          title: 'La formula da ricordare',
+          body: String.raw`Quando $f^{-1}$ è composta con una funzione, la regola è la stessa:
+$$(f^{-1})'(y)=\frac{1}{f'\big(f^{-1}(y)\big)}.$$
+Il trucco pratico: scrivi $y=f(x)$, ricava $x$ in funzione di $y$ quando serve, e calcola $\frac{dx}{dy}$. Poi $\frac{dy}{dx}=\frac{1}{dx/dy}$. Se $f'(x)=0$ la formula non si applica, e la derivata dell'inversa, se esiste, è infinita.`,
+        },
+        {
+          type: 'expr',
+          id: 's08.inversa.L1.q3',
+          prompt: String.raw`Sia $f(x)=e^{2x}$, invertibile, con inversa $g(y)=\frac12\log y$. Calcola $g'(y)$ in funzione di $y$.`,
+          answer: '1/(2*y)',
+          vars: ['y'],
+          domain: [0.3, 2.7],
+          explain: String.raw`$f'(x)=2e^{2x}$. Per il teorema $g'(y)=\frac{1}{f'(g(y))}=\frac{1}{2e^{2\cdot\frac12\log y}}=\frac{1}{2y}$.`,
+        },
+        {
+          id: 's08.inversa.L1.q4',
+          type: 'mcq',
+          prompt: String.raw`Quanto vale $(\log)'(e)$, cioè la derivata del logaritmo nel punto $y=e$?`,
+          options: [
+            String.raw`$\frac{1}{e}$`,
+            String.raw`$e$`,
+            String.raw`$1$`,
+            String.raw`$e^2$`,
+          ],
+          answer: 0,
+          explain: String.raw`$D(\log x)=\frac{1}{x}$, quindi in $x=e$ il valore è $\frac1e$. Il distrattore $e$ inverte la derivata; $1$ confonde il punto con la derivata; $e^2$ non ha motivo di comparire.`,
+        },
+        {
+          id: 's08.inversa.L1.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $f'(x_0)=0$, allora $f^{-1}$ è derivabile in $f(x_0)$ e $(f^{-1})'(f(x_0))=0$.`,
+          answer: false,
+          explain: String.raw`Falso. La formula $\frac{1}{f'(x_0)}$ richiede $f'(x_0)\neq0$: qui non si applica. Per $f(x)=x^3$ in $x_0=0$ l'inversa, la radice cubica, ha derivata infinita in $0$ (tangente verticale), non $0$.`,
+        },
+        {
+          id: 's08.inversa.L1.q6',
+          type: 'num',
+          prompt: String.raw`Sia $f(x)=x^3+3x$, con $f(1)=4$. Calcola $(f^{-1})'(4)$.`,
+          answer: '1/6',
+          explain: String.raw`$f'(x)=3x^2+3$, quindi $f'(1)=6$. Per il teorema $(f^{-1})'(4)=\frac{1}{6}$.`,
+        },
+        {
+          id: 's08.inversa.L1.q7',
+          type: 'expr',
+          level: 2,
+          source: 'Itinere 11/11/2025 · Parte A',
+          prompt: String.raw`Usa il teorema della funzione inversa per calcolare la derivata di $y=\log(x+1)$, per $x>-1$.`,
+          answer: '1/(x+1)',
+          vars: ['x'],
+          domain: [0.3, 2.7],
+          explain: String.raw`Con $x=e^y-1$ si ha $\frac{dx}{dy}=e^y=x+1$, quindi $\frac{dy}{dx}=\frac{1}{x+1}$. Il risultato coincide con la regola della composta $\frac{g'}{g}$, ma il metodo dell'inversa è quello richiesto in Parte A.`,
+        },
+      ],
+    },
+    {
+      id: 's08.inversa.L2',
+      title: 'Derivate di arcsin, arccos e arctan',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Le inverse trigonometriche',
+          body: String.raw`Le inverse trigonometriche si derivano con il teorema dell'inversa. Sia $y=\arcsin x$, cioè $x=\sin y$ con $y\in[-\frac\pi2,\frac\pi2]$: allora $\frac{dx}{dy}=\cos y=\sqrt{1-\sin^2y}=\sqrt{1-x^2}$, perché $\cos y\geq0$ su quell'intervallo.
+
+>* **Formule.** Per $|x|<1$:
+$$D(\arcsin x)=\frac{1}{\sqrt{1-x^2}},\qquad D(\arccos x)=-\frac{1}{\sqrt{1-x^2}}.$$
+Per ogni $x\in\R$: $D(\arctan x)=\frac{1}{1+x^2}$.
+
+Attenzione: $\arcsin$ e $\arccos$ non sono derivabili in $\pm1$, dove la derivata diventa infinita (tangente verticale).`,
+          plot: { fns: [{ f: 'asin(x)', label: 'arcsin' }, { f: 'atan(x)', label: 'arctan' }], x: [-1.5, 1.5], y: [-2, 2] },
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: arctan di $3x$',
+          problem: String.raw`Calcola la derivata di $f(x)=\arctan(3x)$.`,
+          steps: [
+            String.raw`Derivata esterna: $D(\arctan u)=\frac{1}{1+u^2}$. Derivata interna: $u=3x$, con $u'=3$.`,
+            String.raw`Regola della catena: $f'(x)=\frac{1}{1+(3x)^2}\cdot3=\frac{3}{1+9x^2}$.`,
+          ],
+          result: String.raw`$f'(x)=\frac{3}{1+9x^2}$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: arcsin di $x/2$',
+          problem: String.raw`Calcola la derivata di $f(x)=\arcsin\left(\frac x2\right)$ per $|x|<2$.`,
+          steps: [
+            String.raw`Esterna: $\frac{1}{\sqrt{1-u^2}}$ con $u=\frac{x}{2}$. Interna: $u=\frac x2$.`,
+            {
+              text: String.raw`Calcola la derivata interna $u'(x)$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Quanto vale $u'(x)$ per $u(x)=\frac{x}{2}$?`,
+                answer: '1/2',
+                vars: ['x'],
+                explain: String.raw`$D\left(\frac{x}{2}\right)=\frac12$, costante.`,
+              },
+            },
+            {
+              text: String.raw`Sostituisci $u=\frac x2$ nella radice: $1-u^2=1-\frac{x^2}{4}$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Scrivi $1-u^2$ con $u=\frac x2$, in funzione di $x$.`,
+                answer: '1-x^2/4',
+                vars: ['x'],
+                explain: String.raw`$1-\left(\frac x2\right)^2=1-\frac{x^2}{4}$.`,
+              },
+            },
+          ],
+          result: String.raw`$f'(x)=\frac{1}{2\sqrt{1-x^2/4}}=\frac{1}{\sqrt{4-x^2}}$.`,
+        },
+        {
+          id: 's08.inversa.L2.q1',
+          type: 'mcq',
+          prompt: String.raw`Qual è il dominio di $D(\arcsin x)=\dfrac{1}{\sqrt{1-x^2}}$?`,
+          options: [
+            String.raw`$(-1,1)$`,
+            String.raw`$\R$`,
+            String.raw`$[-1,1]$`,
+            String.raw`$\left(-\frac\pi2,\frac\pi2\right)$`,
+          ],
+          answer: 0,
+          explain: String.raw`La radice richiede $1-x^2>0$, quindi $|x|<1$: agli estremi la derivata diverge. $\R$ è falso: $\arcsin$ è definita solo su $[-1,1]$. $[-1,1]$ include gli estremi, dove non si deriva. L'ultimo è l'intervallo dei valori di $\arcsin$, non il dominio della derivata.`,
+        },
+        {
+          id: 's08.inversa.L2.q2',
+          type: 'expr',
+          prompt: String.raw`Calcola $D\big(\arctan(x^2)\big)$.`,
+          answer: '2*x/(1+x^4)',
+          vars: ['x'],
+          explain: String.raw`Esterna $\frac{1}{1+u^2}$ con $u=x^2$, interna $u'=2x$: $\frac{2x}{1+(x^2)^2}=\frac{2x}{1+x^4}$.`,
+        },
+        {
+          id: 's08.inversa.L2.q3',
+          type: 'num',
+          prompt: String.raw`Calcola la derivata di $\arctan x$ nel punto $x=1$.`,
+          answer: '1/2',
+          explain: String.raw`$D(\arctan x)=\frac{1}{1+x^2}$, e in $x=1$ vale $\frac{1}{2}$.`,
+        },
+        {
+          id: 's08.inversa.L2.q4',
+          type: 'expr',
+          level: 2,
+          prompt: String.raw`Calcola $D(\arccos x)$ per $|x|<1$.`,
+          answer: '-1/sqrt(1-x^2)',
+          vars: ['x'],
+          domain: [-0.7, 0.7],
+          explain: String.raw`Il segno meno distingue $\arccos$ da $\arcsin$: $\arccos$ è decrescente, quindi la derivata è negativa, con lo stesso modulo $\frac{1}{\sqrt{1-x^2}}$.`,
+        },
+        {
+          id: 's08.inversa.L2.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? $D(\arctan x)=\dfrac{1}{1+x^2}$ per ogni $x\in\R$.`,
+          answer: true,
+          explain: String.raw`Vero. $\arctan$ è definita su tutto $\R$ e la sua derivata non ha problemi di dominio: il denominatore $1+x^2$ non si annulla mai.`,
+        },
+        {
+          id: 's08.inversa.L2.q6',
+          type: 'expr',
+          level: 3,
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\arcsin\!\big(x^2\big)$, per $|x|<1$.`,
+          answer: '2*x/sqrt(1-x^4)',
+          vars: ['x'],
+          domain: [-0.7, 0.7],
+          explain: String.raw`Esterna $\frac{1}{\sqrt{1-u^2}}$ con $u=x^2$, interna $2x$: $\frac{2x}{\sqrt{1-x^4}}$. Il dominio della derivata è $|x|<1$ perché $\arcsin$ richiede $|x^2|\le1$ e la derivata richiede $|x^2|<1$.`,
+        },
+      ],
+    },
+    {
+      id: 's08.inversa.L3',
+      title: 'Funzioni iperboliche',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Seno e coseno iperbolici',
+          body: String.raw`Le funzioni iperboliche sono combinazioni di esponenziali:
+$$\sinh x=\frac{e^x-e^{-x}}{2},\qquad \cosh x=\frac{e^x+e^{-x}}{2},\qquad \tanh x=\frac{\sinh x}{\cosh x}.$$
+Derivate: $D(\sinh x)=\cosh x$, $D(\cosh x)=\sinh x$, $D(\tanh x)=\dfrac{1}{\cosh^2x}$. Identità fondamentale: $\cosh^2x-\sinh^2x=1$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\sinh(2x)$',
+          problem: String.raw`Calcola la derivata di $f(x)=\sinh(2x)$.`,
+          steps: [
+            String.raw`Derivata esterna: $D(\sinh u)=\cosh u$. Derivata interna: $u=2x$, con $u'=2$.`,
+            String.raw`Regola della catena: $f'(x)=\cosh(2x)\cdot2=2\cosh(2x)$.`,
+          ],
+          result: String.raw`$f'(x)=2\cosh(2x)$.`,
+        },
+        {
+          id: 's08.inversa.L3.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale identità vale per ogni $x\in\R$?`,
+          options: [
+            String.raw`$\cosh^2x-\sinh^2x=1$`,
+            String.raw`$\cosh^2x+\sinh^2x=1$`,
+            String.raw`$\cosh x+\sinh x=0$`,
+            String.raw`$\sinh x\cosh x=1$`,
+          ],
+          answer: 0,
+          explain: String.raw`$\cosh^2x-\sinh^2x=\frac{(e^x+e^{-x})^2-(e^x-e^{-x})^2}{4}=\frac{4}{4}=1$. La somma $\cosh^2x+\sinh^2x$ non è costante. Il terzo distrattore è falso: $\cosh x+\sinh x=e^x$. Il quarto: il prodotto non è costante.`,
+        },
+        {
+          id: 's08.inversa.L3.q2',
+          type: 'expr',
+          prompt: String.raw`Calcola $D\big(\cosh(x^2)\big)$.`,
+          answer: '2*x*sinh(x^2)',
+          vars: ['x'],
+          explain: String.raw`$D(\cosh u)=\sinh u\cdot u'$ con $u=x^2$, $u'=2x$: $2x\sinh(x^2)$.`,
+        },
+        {
+          id: 's08.inversa.L3.q3',
+          type: 'expr',
+          prompt: String.raw`Calcola $D(\log(\cosh x))$.`,
+          answer: 'tanh(x)',
+          vars: ['x'],
+          explain: String.raw`$D(\log g)=\frac{g'}{g}$ con $g=\cosh x$, $g'=\sinh x$: $\frac{\sinh x}{\cosh x}=\tanh x$.`,
+        },
+        {
+          id: 's08.inversa.L3.q4',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? $D(\tanh x)=\dfrac{1}{\cosh^2x}$ per ogni $x\in\R$.`,
+          answer: true,
+          explain: String.raw`Vero: $D\frac{\sinh x}{\cosh x}=\frac{\cosh^2x-\sinh^2x}{\cosh^2x}=\frac{1}{\cosh^2x}$, per l'identità fondamentale.`,
+        },
+        {
+          id: 's08.inversa.L3.q5',
+          type: 'num',
+          prompt: String.raw`Calcola la derivata di $\sinh x$ nel punto $x=0$.`,
+          answer: '1',
+          explain: String.raw`$D(\sinh x)=\cosh x$, e $\cosh0=\frac{e^0+e^0}{2}=1$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.inversa.p1',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.nz(-3, 3);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\arctan\!\big(${H.coef(a)}x\big)$.`,
+          answer: `${a}/(1+${a * a}*x^2)`,
+          vars: ['x'],
+          explain: String.raw`Regola della catena: $\frac{1}{1+u^2}\cdot u'$ con $u=${H.coef(a)}x$ e $u'=${a}$. Quindi $f'(x)=\frac{${a}}{1+${a * a}x^2}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.inversa.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.pick([2, 3, -2, -3]);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\arcsin(${a}x)$, per $|x|<\frac{1}{${Math.abs(a)}}$.`,
+          answer: `${a}/sqrt(1-${a * a}*x^2)`,
+          vars: ['x'],
+          domain: [-0.2, 0.2],
+          explain: String.raw`$D(\arcsin u)=\frac{u'}{\sqrt{1-u^2}}$ con $u=${a}x$, $u'=${a}$: $f'(x)=\frac{${a}}{\sqrt{1-${a * a}x^2}}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.inversa.p3',
+      type: 'gen',
+      level: 1,
+      gen: (R) => {
+        const a = R.nz(-4, 4);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola la derivata di $\arctan(${H.coef(a)}x)$ nel punto $x=0$.`,
+          answer: String(a),
+          explain: String.raw`$f'(x)=\frac{${a}}{1+${a * a}x^2}$, quindi $f'(0)=${a}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.inversa.p4',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.pick([2, 3, -2, -3]);
+        return {
+          type: 'expr',
+          prompt: String.raw`Calcola $f'(x)$ se $f(x)=\sinh(${a}x)$.`,
+          answer: `${a}*cosh(${a}*x)`,
+          vars: ['x'],
+          explain: String.raw`$D(\sinh u)=\cosh u\cdot u'$ con $u=${a}x$: $f'(x)=${a}\cosh(${a}x)$.`,
+        };
+      },
+    },
+    {
+      id: 's08.inversa.p5',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const b = R.pick([2, 3, 4]);
+        return {
+          type: 'expr',
+          prompt: String.raw`Usa il teorema dell'inversa: se $f(y)=e^{${b}y}$ ha inversa $g(x)$, calcola $g'(x)$ in funzione di $x$.`,
+          answer: `1/(${b}*x)`,
+          vars: ['x'],
+          domain: [0.3, 2.7],
+          explain: String.raw`$f'(y)=${b}e^{${b}y}$. Poiché $e^{${b}g(x)}=x$, la formula dà $g'(x)=\frac{1}{${b}x}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.inversa.p6',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Per $f(x)=x^3$ l'inversa $\sqrt[3]{x}$ ha derivata finita in $0$.`,
+      answer: false,
+      explain: String.raw`Falso. Qui $f'(0)=0$, e la formula dell'inversa non si applica: la radice cubica ha derivata infinita in $0$.`,
+    },
+    {
+      id: 's08.inversa.p7',
+      type: 'mcq',
+      prompt: String.raw`Per $f(x)=2x+e^x$, con $f(0)=1$, quanto vale $(f^{-1})'(1)$?`,
+      options: [
+        String.raw`$\frac13$`,
+        String.raw`$3$`,
+        String.raw`$\frac12$`,
+        String.raw`$1$`,
+      ],
+      answer: 0,
+      explain: String.raw`$f'(x)=2+e^x$, quindi $f'(0)=3$. Per il teorema $(f^{-1})'(1)=\frac{1}{3}$. Il distrattore $3$ dà la derivata di $f$ e non dell'inversa.`,
+    },
+    {
+      id: 's08.inversa.p8',
+      type: 'num',
+      prompt: String.raw`Calcola $\arctan'(1)$, cioè $D(\arctan x)$ in $x=1$, scrivendo il risultato come frazione.`,
+      answer: '1/2',
+      explain: String.raw`$D(\arctan x)=\frac{1}{1+x^2}$, in $x=1$ vale $\frac12$.`,
+    },
+    {
+      id: 's08.inversa.p9',
+      type: 'order',
+      prompt: String.raw`Riordina i passi della dimostrazione del teorema della derivata dell'inversa.`,
+      steps: [
+        String.raw`Per $y\neq y_0$ poni $x=f^{-1}(y)$ e $x_0=f^{-1}(y_0)$, così che $y=f(x)$ e $y_0=f(x_0)$.`,
+        String.raw`Poiché $f$ è iniettiva, $x\neq x_0$; poiché $f^{-1}$ è continua, $x\to x_0$ quando $y\to y_0$.`,
+        String.raw`Scrivo il rapporto incrementale di $f^{-1}$: $\frac{f^{-1}(y)-f^{-1}(y_0)}{y-y_0}=\frac{x-x_0}{f(x)-f(x_0)}$.`,
+        String.raw`Per $y\to y_0$ il rapporto a destra è il reciproco di $\frac{f(x)-f(x_0)}{x-x_0}\to f'(x_0)\neq0$: il limite vale $\frac{1}{f'(x_0)}$.`,
+      ],
+      distractors: [
+        String.raw`Calcolo $(f^{-1})'(y_0)=f'(y_0)$, derivando $f$ direttamente nel punto $y_0$.`,
+        String.raw`Scambio numeratore e denominatore: $\frac{f^{-1}(y)-f^{-1}(y_0)}{y-y_0}=\frac{y-y_0}{f(x)-f(x_0)}$.`,
+      ],
+      explain: String.raw`La dimostrazione passa per la sostituzione $x=f^{-1}(y)$: il rapporto incrementale dell'inversa è il reciproco di quello di $f$, e la continuità di $f^{-1}$ garantisce $x\to x_0$.`,
+    },
+    {
+      id: 's08.inversa.p10',
+      type: 'expr',
+      prompt: String.raw`Calcola $f'(x)$ se $f(x)=\dfrac{1}{\sqrt{1-x^2}}$, per $|x|<1$, scrivendola come potenza.`,
+      answer: 'x*(1-x^2)^(-3/2)',
+      vars: ['x'],
+      domain: [-0.7, 0.7],
+      explain: String.raw`$f(x)=(1-x^2)^{-1/2}$. Chain rule: $-\frac12(1-x^2)^{-3/2}\cdot(-2x)=x(1-x^2)^{-3/2}$.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.inversa.fc1',
+      kind: 'thm',
+      front: String.raw`Teorema della derivata dell'inversa`,
+      back: String.raw`Se $f$ è continua e strettamente monotona su un intervallo, derivabile in $x_0$ con $f'(x_0)\neq0$, allora $f^{-1}$ è derivabile in $y_0=f(x_0)$ e $(f^{-1})'(y_0)=\dfrac{1}{f'(x_0)}$.`,
+    },
+    {
+      id: 's08.inversa.fc2',
+      kind: 'dim',
+      front: String.raw`Idea della dimostrazione: derivata dell'inversa`,
+      back: String.raw`Poni $x=f^{-1}(y)$, $x_0=f^{-1}(y_0)$. Il rapporto incrementale di $f^{-1}$ è $\frac{x-x_0}{f(x)-f(x_0)}$, cioè il reciproco di quello di $f$. Per continuità di $f^{-1}$, $x\to x_0$ quando $y\to y_0$; poiché $f'(x_0)\neq0$ il limite è $\frac{1}{f'(x_0)}$.`,
+    },
+    {
+      id: 's08.inversa.fc3',
+      kind: 'formula',
+      front: String.raw`Derivate delle inverse trigonometriche`,
+      back: String.raw`$D(\arcsin x)=\frac{1}{\sqrt{1-x^2}}$, $D(\arccos x)=-\frac{1}{\sqrt{1-x^2}}$ (per $|x|<1$); $D(\arctan x)=\frac{1}{1+x^2}$ (per ogni $x$).`,
+    },
+    {
+      id: 's08.inversa.fc4',
+      kind: 'formula',
+      front: String.raw`Derivate delle funzioni iperboliche`,
+      back: String.raw`$D(\sinh x)=\cosh x$, $D(\cosh x)=\sinh x$, $D(\tanh x)=\dfrac{1}{\cosh^2x}$. Identità: $\cosh^2x-\sinh^2x=1$.`,
+    },
+    {
+      id: 's08.inversa.fc5',
+      kind: 'metodo',
+      front: String.raw`Calcolare la derivata di una funzione inversa senza formula`,
+      back: String.raw`Calcola $f'$ nel punto corrispondente, poi usa $(f^{-1})'(y)=\frac{1}{f'(f^{-1}(y))}$. Serve che $f'\neq0$ in quel punto. Per trovare $f^{-1}(y)$ risolvi $y=f(x)$ rispetto a $x$.`,
+    },
+    {
+      id: 's08.inversa.fc6',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "$(f^{-1})'(y_0)=f'(y_0)$"`,
+      back: String.raw`Sbagliato. La derivata dell'inversa è il reciproco della derivata di $f$ nel punto $x_0=f^{-1}(y_0)$, non in $y_0$.`,
+    },
+    {
+      id: 's08.inversa.fc7',
+      kind: 'errore',
+      front: String.raw`Dove non vale la formula della derivata dell'inversa?`,
+      back: String.raw`Dove $f'(x_0)=0$ (o non esiste). Per esempio $f(x)=x^3$ in $0$: la radice cubica ha tangente verticale in $0$, derivata infinita.`,
+    },
+  ],
+});
