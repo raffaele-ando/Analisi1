@@ -562,3 +562,579 @@ Verifica: fissato $M>0$, $\frac1{(x-3)^2}>M\iff(x-3)^2<\frac1M\iff|x-3|<\frac1{\
     { id: 's05.def.fc11', kind: 'errore', front: 'Errore tipico: il valore nel punto', back: String.raw`Il limite per $x\to x_0$ **non** dipende da $f(x_0)$ (che può anche non esistere). Coincide con $f(x_0)$ solo se $f$ è continua in $x_0$.` },
   ],
 });
+
+// ===========================================================================
+// s05.calcolo · Algebra dei limiti, forme indeterminate, raccoglimento, razionalizzazione, composte
+// ===========================================================================
+
+/** Polinomio casuale di grado n con coefficiente direttivo lead (coefficienti interi piccoli). */
+function randPoly(R, n, lead) {
+  const c = [lead];
+  for (let i = 0; i < n; i++) c.push(R.int(-6, 6));
+  return c;
+}
+/** (x - r)(x - s) espanso: coefficienti [1, -(r+s), rs] */
+const quadRoots = (r, s) => [1, -(r + s), r * s];
+
+SKILLS.push({
+  id: 's05.calcolo',
+  title: 'Calcolo dei limiti',
+  summary: String.raw`Usare l'algebra dei limiti, riconoscere le 7 forme indeterminate e scioglierle con raccoglimento, scomposizione, razionalizzazione, cambio di variabile e confronto.`,
+  prereq: ['s05.def', 's00.algebra', 's04.limiti'],
+  examRefs: ['Itinere 11/11/2025 · Es. 3', 'Appello 15/01/2026 · Es. 1'],
+  lessons: [
+    {
+      id: 's05.calcolo.L1',
+      title: 'Algebra dei limiti e forme indeterminate',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Le regole di calcolo',
+          body: String.raw`>* **Algebra dei limiti.** Se $f\to L$ e $g\to M$ (finiti) allora $f\pm g\to L\pm M$, $\ f\cdot g\to LM$, $\ \frac fg\to\frac LM$ (se $M\neq0$).
+
+Le stesse regole valgono con $\pm\infty$ usando l'**aritmetica estesa** ($L$ numero reale):
+
+- $L+(+\infty)=+\infty$, $\quad(+\infty)+(+\infty)=+\infty$;
+- $L\cdot(+\infty)=+\infty$ se $L>0$, $=-\infty$ se $L<0$; $\quad(+\infty)\cdot(-\infty)=-\infty$;
+- $\frac{L}{\pm\infty}=0$; $\quad\frac{L}{0^+}=\pm\infty$ secondo il segno di $L\neq0$;
+- $a^{+\infty}=+\infty$ se $a>1$, $a^{+\infty}=0$ se $0\le a<1$.
+
+>! **Forme indeterminate** (il risultato dipende dalle funzioni, non si può decidere a priori):
+$$+\infty-\infty,\quad 0\cdot\infty,\quad \frac{\infty}{\infty},\quad \frac00,\quad 1^\infty,\quad 0^0,\quad \infty^0.$$`,
+        },
+        {
+          id: 's05.calcolo.L1.e1', type: 'mcq', level: 1,
+          prompt: 'Quali sono forme **indeterminate**?',
+          options: [String.raw`$+\infty-\infty$`, String.raw`$(+\infty)+(+\infty)$`, String.raw`$0\cdot\infty$`, String.raw`$\frac{5}{0^+}$`, String.raw`$1^{\infty}$`, String.raw`$\frac{0}{\infty}$`, String.raw`$2^{+\infty}$`],
+          answer: [0, 2, 4],
+          explain: String.raw`$+\infty+\infty=+\infty$; $\frac5{0^+}=+\infty$; $\frac0\infty=0$ (numeratore piccolo, denominatore enorme); $2^{+\infty}=+\infty$. Invece $\infty-\infty$, $0\cdot\infty$ e $1^\infty$ sono indeterminate: per esempio $1^\infty$ **non** vale 1 (si veda $(1+\frac1x)^x\to e$).`,
+        },
+        {
+          id: 's05.calcolo.L1.e2', type: 'match', level: 1,
+          prompt: 'Abbina ogni espressione al suo risultato.',
+          pairs: [
+            [String.raw`$3+(+\infty)$`, String.raw`$+\infty$`],
+            [String.raw`$(-2)\cdot(+\infty)$`, String.raw`$-\infty$`],
+            [String.raw`$\dfrac{7}{+\infty}$`, '$0$'],
+            [String.raw`$(+\infty)-(+\infty)$`, 'forma indeterminata'],
+          ],
+          explain: String.raw`Un numero negativo per $+\infty$ cambia segno: $-\infty$. Un numero fisso diviso per una quantità enorme tende a 0.`,
+        },
+        {
+          id: 's05.calcolo.L1.e3', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}(x^2+3x)$. (Scrivi inf per $+\infty$.)`,
+          answer: 'inf',
+          explain: String.raw`Entrambi gli addendi tendono a $+\infty$: $+\infty+\infty=+\infty$. Nessuna indeterminazione.`,
+        },
+        {
+          id: 's05.calcolo.L1.e4', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(5-e^{x}\right)$. (Scrivi -inf per $-\infty$.)`,
+          answer: '-inf',
+          explain: String.raw`$e^x\to+\infty$, quindi $5-e^x\to5-\infty=-\infty$.`,
+        },
+        {
+          id: 's05.calcolo.L1.e5', type: 'tf', level: 1,
+          prompt: String.raw`Se $f\to0$ e $g\to+\infty$, allora $f\cdot g\to0$.`,
+          answer: false,
+          explain: String.raw`Falso: $0\cdot\infty$ è indeterminata. Con $f=\frac1x$, $g=x^2$ ($x\to+\infty$) il prodotto è $x\to+\infty$; con $g=x$ vale 1; con $g=\sqrt x$ tende a 0.`,
+        },
+        {
+          type: 'learn',
+          title: 'Perché «indeterminata»',
+          body: String.raw`Tutte e tre le funzioni qui sotto, per $x\to+\infty$, sono del tipo $+\infty-\infty$:
+
+- $(x+1)-x = 1\to1$;
+- $x^2-x = x(x-1)\to+\infty$;
+- $x-x^2\to-\infty$.
+
+Lo stesso «schema» dà risultati diversi: per questo bisogna **trasformare** l'espressione (raccogliere, semplificare, razionalizzare…) finché la forma non è più indeterminata.
+
+> Regola d'oro: prima di qualunque trucco, **sostituisci** e guarda che forma ottieni. Se non è indeterminata, hai finito.`,
+        },
+        {
+          id: 's05.calcolo.L1.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}\left(\frac1x-\log x\right)$. (Scrivi inf per $+\infty$.)`,
+          answer: 'inf',
+          explain: String.raw`Attenzione ai segni: $\log x\to-\infty$, quindi $-\log x\to+\infty$. La somma è $(+\infty)+(+\infty)=+\infty$: **non** è una forma indeterminata.`,
+        },
+        {
+          id: 's05.calcolo.L1.e7', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{2+\frac3x}{1-\frac1x}$.`,
+          answer: '2',
+          explain: String.raw`$\frac3x\to0$ e $\frac1x\to0$: il quoziente tende a $\frac{2+0}{1-0}=2$.`,
+        },
+        {
+          id: 's05.calcolo.L1.e8', type: 'mcq', level: 2,
+          prompt: String.raw`Che forma ha $\displaystyle\lim_{x\to0^+}x\cdot\frac{1}{x^2}$ e quanto vale?`,
+          options: [String.raw`Forma $0\cdot\infty$; vale $+\infty$`, String.raw`Forma $0\cdot\infty$; vale $0$`, String.raw`Forma $0\cdot\infty$; vale $1$`, String.raw`Non è indeterminata; vale $0$`],
+          answer: 0,
+          explain: String.raw`È $0\cdot\infty$, ma semplificando $x\cdot\frac1{x^2}=\frac1x\to+\infty$ (per $x\to0^+$). «Zero per qualcosa fa zero» vale solo se l'altro fattore è limitato.`,
+        },
+        {
+          id: 's05.calcolo.L1.e9', type: 'tf', level: 1,
+          prompt: String.raw`Se $f\to+\infty$ e $g\to+\infty$ allora $f-g\to0$.`,
+          answer: false,
+          explain: String.raw`$+\infty-\infty$ è indeterminata: con $f=x^2$, $g=x$ si ha $f-g\to+\infty$.`,
+        },
+        {
+          id: 's05.calcolo.L1.e10', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\frac{3}{e^{x}}$. (Scrivi inf per $+\infty$.)`,
+          answer: 'inf',
+          explain: String.raw`$e^x\to0^+$ per $x\to-\infty$: $\frac{3}{0^+}=+\infty$.`,
+        },
+      ],
+    },
+    {
+      id: 's05.calcolo.L2',
+      title: 'Polinomi e funzioni razionali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Raccogliere il termine dominante',
+          body: String.raw`Per $x\to\pm\infty$ in un polinomio comanda il termine di **grado massimo**: raccogliendolo,
+$$3x^2-5x+1 = x^2\left(3-\frac5x+\frac1{x^2}\right)\quad\text{e la parentesi}\to3.$$
+
+Per una funzione razionale $\dfrac{a_px^p+\dots}{b_qx^q+\dots}$ con $x\to\pm\infty$:
+
+- $p<q$: il limite è $0$;
+- $p=q$: il limite è $\dfrac{a_p}{b_q}$ (rapporto dei coefficienti direttivi);
+- $p>q$: il limite è $\pm\infty$, con il segno di $\dfrac{a_p}{b_q}x^{p-q}$.
+
+>! Vale solo per $x\to\pm\infty$! Per $x\to x_0$ finito si sostituisce.`,
+        },
+        {
+          type: 'example',
+          title: 'Stesso grado',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{3x^2-5x+1}{2x^2+7}$.`,
+          steps: [
+            String.raw`Sostituendo: $\frac{+\infty}{+\infty}$, indeterminata.`,
+            String.raw`Raccolgo $x^2$ sopra e sotto: $\dfrac{x^2\left(3-\frac5x+\frac1{x^2}\right)}{x^2\left(2+\frac7{x^2}\right)}=\dfrac{3-\frac5x+\frac1{x^2}}{2+\frac7{x^2}}$.`,
+            { text: String.raw`Le frazioni con $x$ al denominatore tendono a 0: il limite è $\frac32$.`,
+              ask: { type: 'num', prompt: 'Quanto vale il limite?', answer: '3/2', explain: String.raw`Rapporto dei coefficienti di $x^2$: $\frac32$.` } },
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to+\infty}\frac{3x^2-5x+1}{2x^2+7}=\frac32$`,
+        },
+        {
+          id: 's05.calcolo.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{4x^3-x}{2x^3+5x^2}$.`,
+          answer: '2',
+          explain: String.raw`Stesso grado (3): rapporto dei coefficienti direttivi $\frac42=2$.`,
+        },
+        {
+          id: 's05.calcolo.L2.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\frac{2x+1}{x^2+3}$?`,
+          options: ['$0$', '$2$', String.raw`$+\infty$`, String.raw`$\frac13$`],
+          answer: 0,
+          explain: String.raw`Il denominatore ha grado maggiore: $\frac{2x+1}{x^2+3}\sim\frac{2x}{x^2}=\frac2x\to0$. $2$ sarebbe il rapporto dei coefficienti direttivi, che conta solo a parità di grado; $\frac13$ è il valore in $x=0$.`,
+        },
+        {
+          id: 's05.calcolo.L2.e3', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\frac{x^2+1}{x-3}$. (Scrivi inf o -inf.)`,
+          answer: '-inf',
+          explain: String.raw`Grado 2 sopra, 1 sotto: $\frac{x^2+1}{x-3}\sim\frac{x^2}{x}=x\to-\infty$. Errore tipico: rispondere $+\infty$ dimenticando che $x$ è negativo.`,
+        },
+        {
+          id: 's05.calcolo.L2.e4', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}(x^3-4x^2+7)$. (Scrivi inf o -inf.)`,
+          answer: '-inf',
+          explain: String.raw`$x^3-4x^2+7=x^3\left(1-\frac4x+\frac7{x^3}\right)$: la parentesi tende a 1 e $x^3\to-\infty$.`,
+        },
+        {
+          type: 'learn',
+          title: 'La forma 0/0 in un punto: scomporre',
+          body: String.raw`Se numeratore e denominatore sono polinomi che si annullano entrambi in $x_0$, per il **teorema di Ruffini** contengono entrambi il fattore $(x-x_0)$. Lo si scompone e lo si semplifica (lecito: nel limite $x\neq x_0$).
+
+Esempio: $\displaystyle\lim_{x\to2}\frac{x^2-5x+6}{x^2-4}=\lim_{x\to2}\frac{(x-2)(x-3)}{(x-2)(x+2)}=\lim_{x\to2}\frac{x-3}{x+2}=-\frac14.$
+
+>! Se solo il denominatore si annulla (es. $\frac{x^2+1}{x-1}$ in 1) non è $\frac00$: è $\frac{L}{0}$ e il limite è $\pm\infty$ (guarda i segni da destra e da sinistra).`,
+        },
+        {
+          type: 'example',
+          title: 'Scomposizione con Ruffini',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to1}\frac{x^3-1}{x-1}$.`,
+          steps: [
+            String.raw`In $x=1$: $\frac{0}{0}$. Il numeratore è divisibile per $x-1$.`,
+            { text: String.raw`Differenza di cubi: $x^3-1=(x-1)(x^2+x+1)$.`,
+              ask: { type: 'expr', prompt: String.raw`Quanto vale il quoziente $\dfrac{x^3-1}{x-1}$ (per $x\neq1$)?`, answer: 'x^2+x+1', explain: String.raw`Ruffini con radice 1 sui coefficienti $1,0,0,-1$ dà $1,1,1$: cioè $x^2+x+1$.` } },
+            String.raw`Sostituisco $x=1$ nel quoziente: $1+1+1=3$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{x\to1}\frac{x^3-1}{x-1}=3$`,
+        },
+        {
+          id: 's05.calcolo.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to3}\frac{x^2-9}{x^2-x-6}$.`,
+          answer: '6/5',
+          explain: String.raw`$x^2-9=(x-3)(x+3)$, $x^2-x-6=(x-3)(x+2)$. Semplificando: $\frac{x+3}{x+2}\to\frac65$.`,
+        },
+        {
+          id: 's05.calcolo.L2.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-1}\frac{x^2+3x+2}{x^2-1}$.`,
+          answer: '-1/2',
+          explain: String.raw`$\frac{(x+1)(x+2)}{(x+1)(x-1)}=\frac{x+2}{x-1}\to\frac{1}{-2}=-\frac12$.`,
+        },
+        {
+          id: 's05.calcolo.L2.e7', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to1}\frac{x^2+1}{x-1}$?`,
+          options: [String.raw`Non esiste: $+\infty$ da destra, $-\infty$ da sinistra`, String.raw`$2$ (scompongo e semplifico)`, String.raw`$+\infty$`, '$0$'],
+          answer: 0,
+          explain: String.raw`Il numeratore tende a $2\neq0$: la forma è $\frac{2}{0}$, non $\frac00$, e non c'è nulla da semplificare ($x^2+1$ non ha il fattore $x-1$). Da destra $\frac2{0^+}=+\infty$, da sinistra $\frac2{0^-}=-\infty$.`,
+        },
+        {
+          id: 's05.calcolo.L2.e8', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to2}\frac{x^3-8}{x^2-4}$.`,
+          answer: '3',
+          explain: String.raw`$x^3-8=(x-2)(x^2+2x+4)$ e $x^2-4=(x-2)(x+2)$. Resta $\frac{x^2+2x+4}{x+2}\to\frac{12}{4}=3$.`,
+        },
+      ],
+    },
+    {
+      id: 's05.calcolo.L3',
+      title: 'Radici: razionalizzare',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il trucco del coniugato',
+          body: String.raw`Con le radici la forma $+\infty-\infty$ si scioglie moltiplicando e dividendo per il **coniugato**, usando $(a-b)(a+b)=a^2-b^2$:
+$$\sqrt A-\sqrt B=\frac{(\sqrt A-\sqrt B)(\sqrt A+\sqrt B)}{\sqrt A+\sqrt B}=\frac{A-B}{\sqrt A+\sqrt B}.$$
+
+Esempio, per $x\to+\infty$:
+$$\sqrt{x^2+4x}-x=\frac{x^2+4x-x^2}{\sqrt{x^2+4x}+x}=\frac{4x}{x\left(\sqrt{1+\frac4x}+1\right)}\to\frac{4}{2}=2.$$
+
+> Lo stesso trucco serve per $\frac00$ con radici in un punto finito, e (con $a^3-b^3=(a-b)(a^2+ab+b^2)$) per le radici cubiche.`,
+        },
+        {
+          type: 'example',
+          title: 'Razionalizzare passo per passo',
+          problem: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\sqrt{x^2+6x+1}-x\right)$.`,
+          steps: [
+            String.raw`Forma $+\infty-\infty$. Moltiplico e divido per $\sqrt{x^2+6x+1}+x$.`,
+            { text: String.raw`Il numeratore diventa $(x^2+6x+1)-x^2=6x+1$.`,
+              ask: { type: 'expr', prompt: String.raw`Quanto vale $(x^2+6x+1)-x^2$?`, answer: '6x+1', explain: 'I termini $x^2$ si cancellano.' } },
+            String.raw`Raccolgo $x$: $\dfrac{x\left(6+\frac1x\right)}{x\left(\sqrt{1+\frac6x+\frac1{x^2}}+1\right)}\to\dfrac{6}{1+1}=3$.`,
+          ],
+          result: String.raw`Il limite vale $3$. In generale $\sqrt{x^2+bx+c}-x\to\frac b2$ per $x\to+\infty$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e1', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\sqrt{x+3}-\sqrt{x}\right)$.`,
+          answer: '0',
+          explain: String.raw`$\sqrt{x+3}-\sqrt x=\frac{3}{\sqrt{x+3}+\sqrt x}=\frac{3}{+\infty}\to0$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\sqrt{x^2+1}-\sqrt{x^2-2x}\right)$.`,
+          answer: '1',
+          explain: String.raw`Coniugato: $\frac{(x^2+1)-(x^2-2x)}{\sqrt{x^2+1}+\sqrt{x^2-2x}}=\frac{2x+1}{\sqrt{x^2+1}+\sqrt{x^2-2x}}$. Il denominatore è $\sim x+x=2x$, quindi il limite è $\frac{2x}{2x}=1$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Attenzione a $-\infty$: $\sqrt{x^2}=|x|$',
+          body: String.raw`Raccogliendo $x^2$ sotto radice: $\sqrt{x^2(\dots)}=|x|\sqrt{\dots}$. Per $x\to-\infty$ è $|x|=-x$!
+
+- $\displaystyle\lim_{x\to-\infty}\frac{\sqrt{x^2+1}}{x}=\lim\frac{-x\sqrt{1+\frac1{x^2}}}{x}=-1$ (non $+1$).
+- $\displaystyle\lim_{x\to-\infty}\left(\sqrt{x^2+4x}-x\right)$: qui $-x\to+\infty$, quindi è $+\infty+\infty=+\infty$. **Non** è indeterminata.
+- $\displaystyle\lim_{x\to-\infty}\left(\sqrt{x^2+4x}+x\right)$ invece è $+\infty-\infty$: razionalizzando $\frac{4x}{\sqrt{x^2+4x}-x}=\frac{4x}{-x\sqrt{1+\frac4x}-x}\to\frac{4}{-2}=-2$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to-\infty}\left(\sqrt{x^2+4x}-x\right)$?`,
+          options: [String.raw`$+\infty$`, '$2$', '$-2$', '$0$'],
+          answer: 0,
+          explain: String.raw`Per $x\to-\infty$ sia $\sqrt{x^2+4x}$ sia $-x$ tendono a $+\infty$: la somma è $+\infty$, nessuna forma indeterminata. $2$ è il limite a $+\infty$ (dove invece c'è $\infty-\infty$); razionalizzare «a occhi chiusi» porta all'errore.`,
+        },
+        {
+          id: 's05.calcolo.L3.e4', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\left(\sqrt{x^2+4x}+x\right)$.`,
+          answer: '-2',
+          explain: String.raw`Coniugato: $\frac{4x}{\sqrt{x^2+4x}-x}$. Per $x<0$: $\sqrt{x^2+4x}=|x|\sqrt{1+\frac4x}=-x\sqrt{1+\frac4x}$. Il denominatore è $-x\left(\sqrt{1+\frac4x}+1\right)$ e il limite è $\frac{4}{-2}=-2$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e5', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sqrt{x+4}-2}{x}$.`,
+          answer: '1/4',
+          explain: String.raw`Forma $\frac00$. Moltiplico per $\sqrt{x+4}+2$: $\frac{x+4-4}{x(\sqrt{x+4}+2)}=\frac{1}{\sqrt{x+4}+2}\to\frac14$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to9}\frac{x-9}{\sqrt x-3}$.`,
+          answer: '6',
+          explain: String.raw`$x-9=(\sqrt x-3)(\sqrt x+3)$, quindi la frazione è $\sqrt x+3\to6$.`,
+        },
+        {
+          id: 's05.calcolo.L3.e7', type: 'num', level: 3, source: 'Itinere 11/11/2025 · Es. 3',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to\infty}n\left(\sqrt{1+\frac1n}-1\right)$.`,
+          answer: '1/2',
+          explain: String.raw`Forma $\infty\cdot0$. Razionalizzo: $n\cdot\dfrac{1+\frac1n-1}{\sqrt{1+\frac1n}+1}=\dfrac{1}{\sqrt{1+\frac1n}+1}\to\frac12$. (Con i limiti notevoli: $\sqrt{1+t}-1\sim\frac t2$.)`,
+        },
+        {
+          id: 's05.calcolo.L3.e8', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\sqrt[3]{x^3+3x^2}-x\right)$.`,
+          answer: '1',
+          explain: String.raw`Con $A=\sqrt[3]{x^3+3x^2}$ e $a^3-b^3=(a-b)(a^2+ab+b^2)$: $A-x=\frac{A^3-x^3}{A^2+Ax+x^2}=\frac{3x^2}{A^2+Ax+x^2}$. Poiché $A\sim x$, il denominatore è $\sim3x^2$: il limite è $1$.`,
+        },
+      ],
+    },
+    {
+      id: 's05.calcolo.L4',
+      title: 'Composte, confronto e forme esponenziali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Limite di una funzione composta',
+          body: String.raw`>* **Teorema (cambio di variabile).** Se $\displaystyle\lim_{x\to x_0}g(x)=y_0$ e $\displaystyle\lim_{y\to y_0}f(y)=L$, e $g(x)\neq y_0$ vicino a $x_0$ (oppure $f$ è continua in $y_0$), allora $\displaystyle\lim_{x\to x_0}f(g(x))=L$.
+
+In pratica si calcola prima il limite «interno» e poi quello «esterno»:
+
+- $\displaystyle\lim_{x\to+\infty}e^{-x^2}$: $t=-x^2\to-\infty$, $e^t\to0$: il limite è $0$;
+- $\displaystyle\lim_{x\to+\infty}\arctan(x^2-x)$: $t=x^2-x\to+\infty$, $\arctan t\to\frac\pi2$.`,
+        },
+        {
+          id: 's05.calcolo.L4.e1', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\arctan\left(x^3-x\right)$.`,
+          answer: '-pi/2',
+          explain: String.raw`$t=x^3-x\sim x^3\to-\infty$ e $\arctan t\to-\frac\pi2$ per $t\to-\infty$.`,
+        },
+        {
+          id: 's05.calcolo.L4.e2', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}e^{\frac{2x+1}{x-3}}$.`,
+          answer: 'e^2',
+          explain: String.raw`L'esponente è razionale di pari grado: $\frac{2x+1}{x-3}\to2$. Poiché $e^t$ è continua, il limite è $e^2$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Teorema del confronto',
+          body: String.raw`>* **Teorema del confronto (dei carabinieri).** Se $g(x)\le f(x)\le h(x)$ vicino a $x_0$ e $g,h\to L$, allora anche $f\to L$.
+
+**Corollario:** (funzione limitata)·(funzione infinitesima) $\to0$.
+
+- $\displaystyle\lim_{x\to0}x\sin\frac1x=0$, perché $\left|x\sin\frac1x\right|\le|x|\to0$;
+- $\displaystyle\lim_{x\to+\infty}\frac{\sin x}{x}=0$, perché $|\sin x|\le1$ e $\frac1x\to0$.
+
+>! $\frac{\sin x}{x}\to1$ vale per $x\to0$, non per $x\to+\infty$!`,
+        },
+        {
+          id: 's05.calcolo.L4.e3', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{\sin x}{x}$.`,
+          answer: '0',
+          explain: String.raw`$-\frac1x\le\frac{\sin x}x\le\frac1x$ per $x>0$, ed entrambi i «carabinieri» tendono a 0. (Rispondere 1 confonde con il limite notevole per $x\to0$.)`,
+        },
+        {
+          id: 's05.calcolo.L4.e4', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{3x+2\sin x}{x+1}$.`,
+          answer: '3',
+          explain: String.raw`Divido per $x$: $\frac{3+2\frac{\sin x}{x}}{1+\frac1x}$. Poiché $\frac{\sin x}{x}\to0$ (confronto), il limite è $\frac{3}{1}=3$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Forme esponenziali: $f^g=e^{g\log f}$',
+          body: String.raw`Per $f(x)^{g(x)}$ (con $f>0$) si scrive sempre
+$$f(x)^{g(x)}=e^{g(x)\log f(x)}$$
+e si calcola il limite dell'esponente $g\log f$. Le forme $1^\infty$, $0^0$, $\infty^0$ diventano tutte $0\cdot\infty$ nell'esponente.
+
+- Se base $\to a>1$ ed esponente $\to+\infty$: $a^{+\infty}=+\infty$ (non indeterminata).
+- Se base $\to a\in[0,1)$ ed esponente $\to+\infty$: $a^{+\infty}=0$.
+- $\displaystyle\lim_{x\to0^+}x^x=\lim e^{x\log x}=e^0=1$, perché $x\log x\to0$ (gerarchia, s06).`,
+        },
+        {
+          id: 's05.calcolo.L4.e5', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}\left(\frac{2x+1}{x+3}\right)^{x}$?`,
+          options: [String.raw`$+\infty$`, String.raw`$e^{2}$`, '$1$', String.raw`$e^{-5}$`],
+          answer: 0,
+          explain: String.raw`La base tende a $2$, non a $1$: la forma è $2^{+\infty}=+\infty$, **non** $1^\infty$. Gli altri valori nascono dall'applicare per errore il limite notevole $(1+\frac ax)^x\to e^a$, che vale solo quando la base tende a 1.`,
+        },
+        {
+          id: 's05.calcolo.L4.e6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\frac{x+1}{3x}\right)^{x}$.`,
+          answer: '0',
+          explain: String.raw`La base tende a $\frac13<1$ e l'esponente a $+\infty$: $\left(\frac13\right)^{+\infty}=0$.`,
+        },
+        {
+          id: 's05.calcolo.L4.e7', type: 'mcq', level: 1,
+          prompt: String.raw`Che forma ha $\displaystyle\lim_{x\to0^+}x^{x}$?`,
+          options: [String.raw`$0^0$`, String.raw`$1^\infty$`, String.raw`$\infty^0$`, 'nessuna: vale 0'],
+          answer: 0,
+          explain: String.raw`Base $\to0^+$ ed esponente $\to0$: è $0^0$, indeterminata. Si risolve con $x^x=e^{x\log x}$.`,
+        },
+        {
+          id: 's05.calcolo.L4.e8', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}x^{x}$ (sapendo che $x\log x\to0$ per $x\to0^+$).`,
+          answer: '1',
+          explain: String.raw`$x^x=e^{x\log x}\to e^0=1$.`,
+        },
+        {
+          id: 's05.calcolo.L4.e9', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}x^{1/x}$ (sapendo che $\frac{\log x}{x}\to0$ per $x\to+\infty$).`,
+          answer: '1',
+          explain: String.raw`Forma $\infty^0$. $x^{1/x}=e^{\frac{\log x}{x}}\to e^0=1$.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's05.calcolo.gen-razionale', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.int(1, 3), q = R.int(1, 3);
+        const a = R.nz(-5, 5), d = R.nz(-4, 4);
+        const num = randPoly(R, p, a), den = randPoly(R, q, d);
+        const to = R.pick(['+', '-']);
+        const sx = to === '+' ? 1 : -1;
+        let answer, res;
+        if (p < q) { answer = '0'; res = String.raw`il denominatore ha grado maggiore e il limite è $0$`; }
+        else if (p === q) { answer = H.fracStr(a, d); res = String.raw`stesso grado: rapporto dei coefficienti direttivi $${H.frac(a, d)}$`; }
+        else {
+          const s = Math.sign(a * d) * (sx ** (p - q));
+          answer = s > 0 ? 'inf' : '-inf';
+          res = String.raw`grado maggiore al numeratore: la funzione si comporta come $${H.frac(a, d)}${p - q === 1 ? 'x' : `x^{${p - q}}`}$, che tende a $${infTex(s)}$`;
+        }
+        const lead = (c, k) => String.raw`${H.coef(c)}x${k > 1 ? `^{${k}}` : ''}`;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to${to}\infty}\frac{${H.poly(num)}}{${H.poly(den)}}$. (Scrivi inf o -inf se serve.)`,
+          answer,
+          explain: String.raw`Raccolgo i termini di grado massimo: $\dfrac{${lead(a, p)}\,(1+\dots)}{${lead(d, q)}\,(1+\dots)}$, con le parentesi che tendono a 1. Quindi ${res}.`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.gen-ruffini', type: 'gen', level: 2,
+      gen: (R) => {
+        const r = R.int(-4, 4);
+        let s = R.int(-5, 5), t = R.int(-5, 5);
+        while (s === r) s = R.int(-5, 5);
+        while (t === r || t === s) t = R.int(-5, 5);
+        const k = R.pick([1, 1, 2, 3]);
+        const num = quadRoots(r, s).map((c) => c * k);
+        const den = quadRoots(r, t);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to ${r}}\frac{${H.poly(num)}}{${H.poly(den)}}$.`,
+          answer: H.fracStr(k * (r - s), r - t),
+          explain: String.raw`In $x=${r}$ numeratore e denominatore si annullano: forma $\frac00$. Scompongo: $\dfrac{${k === 1 ? '' : k}(${xm(r)})(${xm(s)})}{(${xm(r)})(${xm(t)})}$ e semplifico il fattore $(${xm(r)})$. Resta $\dfrac{${k === 1 ? '' : k}(${xm(s)})}{${xm(t)}}\to\dfrac{${k * (r - s)}}{${r - t}} = ${H.frac(k * (r - s), r - t)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.gen-coniugato', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.nz(-8, 8), c = R.int(-5, 5);
+        const atPlus = R.chance(0.6);
+        const inside = H.poly([1, b, c]);
+        if (atPlus) {
+          return {
+            type: 'num',
+            prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\left(\sqrt{${inside}}-x\right)$.`,
+            answer: H.fracStr(b, 2),
+            explain: String.raw`Forma $+\infty-\infty$. Moltiplico e divido per $\sqrt{${inside}}+x$: $\dfrac{${H.poly([b, c])}}{\sqrt{${inside}}+x}$. Raccogliendo $x$ (positivo) il denominatore è $x\left(\sqrt{1+\dots}+1\right)\sim2x$: il limite è $\frac{${b}}{2}=${H.frac(b, 2)}$.`,
+          };
+        }
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\left(\sqrt{${inside}}+x\right)$.`,
+          answer: H.fracStr(-b, 2),
+          explain: String.raw`Forma $+\infty-\infty$. Coniugato: $\dfrac{${H.poly([b, c])}}{\sqrt{${inside}}-x}$. Per $x<0$, $\sqrt{x^2(\dots)}=|x|\sqrt{\dots}=-x\sqrt{\dots}$, quindi il denominatore è $\sim-2x$ e il limite è $\frac{${b}}{-2}=${H.frac(-b, 2)}$. (Errore tipico: usare $\sqrt{x^2}=x$ e ottenere $${H.frac(b, 2)}$.)`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.gen-radice0', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(1, 5), k = R.nz(-4, 4);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{\sqrt{x+${a * a}}-${a}}{${ax(k)}}$.`,
+          answer: H.fracStr(1, 2 * a * k),
+          explain: String.raw`Forma $\frac00$. Moltiplico per $\sqrt{x+${a * a}}+${a}$: $\dfrac{x+${a * a}-${a * a}}{${k === 1 ? '' : k === -1 ? '-' : k}x\left(\sqrt{x+${a * a}}+${a}\right)}=\dfrac{1}{${k === 1 ? '' : k === -1 ? '-' : k}\left(\sqrt{x+${a * a}}+${a}\right)}\to\dfrac{1}{${k}\cdot${2 * a}}=${H.frac(1, 2 * a * k)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.gen-esponenziale', type: 'gen', level: 2,
+      gen: (R) => {
+        const p = R.nz(-6, 6), r = R.pick([1, 2, 3]), q = R.int(-5, 5), s = R.int(-5, 5);
+        const to = R.pick(['+', '-']);
+        const [pp, rr] = H.reduce(p, r);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to${to}\infty}e^{\frac{${H.poly([p, q])}}{${H.poly([r, s])}}}$.`,
+          answer: `e^(${pp}/${rr})`,
+          explain: String.raw`L'esponente è un rapporto di polinomi di grado 1: tende a $${H.frac(p, r)}$. Per la continuità dell'esponenziale (limite di funzione composta) il limite è $e^{${H.frac(p, r)}}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.gen-confronto', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.nz(-4, 4), c = R.pick([1, 2, 3, 4]), d = R.int(1, 6);
+        const f = R.pick(['sin', 'cos']);
+        const F = '\\' + f;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}\frac{${ax(a)}${sg(b, `\\${f} x`)}}{${H.poly([c, d])}}$.`,
+          answer: H.fracStr(a, c),
+          explain: String.raw`Divido numeratore e denominatore per $x$: $\dfrac{${a}${sg(b, `\\frac{\\${f} x}{x}`)}}{${c}+\frac{${d}}{x}}$. Per il confronto $\frac{${F} x}{x}\to0$ (limitata per infinitesima), quindi il limite è $${H.frac(a, c)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.calcolo.p1', type: 'mcq', level: 2,
+      prompt: String.raw`Quale procedimento è **sbagliato** per $\displaystyle\lim_{x\to+\infty}\left(\sqrt{x^2+x}-x\right)$?`,
+      options: [
+        String.raw`$\sqrt{x^2+x}\to+\infty$ e $x\to+\infty$, quindi la differenza tende a $0$`,
+        String.raw`Moltiplico e divido per $\sqrt{x^2+x}+x$ e ottengo $\frac{x}{\sqrt{x^2+x}+x}\to\frac12$`,
+        String.raw`Scrivo $\sqrt{x^2+x}=x\sqrt{1+\frac1x}$ e uso $\sqrt{1+t}-1\sim\frac t2$`,
+      ],
+      answer: 0,
+      explain: String.raw`$\infty-\infty$ non vale 0: è indeterminata. Gli altri due metodi sono corretti e danno $\frac12$.`,
+    },
+    {
+      id: 's05.calcolo.p2', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to4}\frac{\sqrt x-2}{x^2-16}$.`,
+      answer: '1/32',
+      explain: String.raw`$x^2-16=(x-4)(x+4)$ e $\sqrt x-2=\frac{x-4}{\sqrt x+2}$. Quindi la frazione è $\frac{1}{(\sqrt x+2)(x+4)}\to\frac{1}{4\cdot8}=\frac1{32}$.`,
+    },
+    {
+      id: 's05.calcolo.p3', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to-\infty}\frac{\sqrt{4x^2+1}}{x+5}$.`,
+      answer: '-2',
+      explain: String.raw`$\sqrt{4x^2+1}=|x|\sqrt{4+\frac1{x^2}}=-x\sqrt{4+\frac1{x^2}}$ per $x<0$. Il rapporto tende a $\frac{-2x}{x}=-2$ (errore tipico: $+2$).`,
+    },
+    {
+      id: 's05.calcolo.p4', type: 'tf', level: 1,
+      prompt: String.raw`$\displaystyle\lim_{x\to+\infty}\left(1+\frac1x\right)^{x}=1$, perché la base tende a 1 e $1$ elevato a qualunque cosa fa $1$.`,
+      answer: false,
+      explain: String.raw`$1^\infty$ è indeterminata: questo limite vale $e$ (limite notevole). «$1$ elevato a qualunque cosa» vale solo se la base è **esattamente** 1.`,
+    },
+    {
+      id: 's05.calcolo.p5', type: 'num', level: 3,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to1}\frac{x^3-3x+2}{x^2-2x+1}$.`,
+      answer: '3',
+      explain: String.raw`Ruffini: $x^3-3x+2=(x-1)(x^2+x-2)=(x-1)^2(x+2)$, e $x^2-2x+1=(x-1)^2$. Resta $x+2\to3$.`,
+    },
+    {
+      id: 's05.calcolo.p6', type: 'order', level: 2,
+      prompt: String.raw`Riordina il calcolo di $\displaystyle\lim_{x\to0}\frac{\sqrt{1+x}-\sqrt{1-x}}{x}$.`,
+      steps: [
+        String.raw`Sostituendo si ottiene $\frac00$: forma indeterminata.`,
+        String.raw`Moltiplico e divido per $\sqrt{1+x}+\sqrt{1-x}$.`,
+        String.raw`Il numeratore diventa $(1+x)-(1-x)=2x$.`,
+        String.raw`Semplifico $x$: $\dfrac{2}{\sqrt{1+x}+\sqrt{1-x}}$.`,
+        String.raw`Sostituisco $x=0$: il limite è $\frac22=1$.`,
+      ],
+      distractors: [String.raw`Il numeratore diventa $(1+x)+(1-x)=2$.`],
+      explain: String.raw`Il prodotto per il coniugato dà la **differenza** dei radicandi, $2x$, che si semplifica con il denominatore.`,
+    },
+  ],
+  flashcards: [
+    { id: 's05.calcolo.fc1', kind: 'thm', front: 'Algebra dei limiti', back: String.raw`Se $f\to L$, $g\to M$ finiti: $f\pm g\to L\pm M$, $fg\to LM$, $f/g\to L/M$ se $M\neq0$. Con $\pm\infty$ si usa l'aritmetica estesa, salvo le forme indeterminate.` },
+    { id: 's05.calcolo.fc2', kind: 'formula', front: 'Le 7 forme indeterminate', back: String.raw`$+\infty-\infty,\ 0\cdot\infty,\ \frac\infty\infty,\ \frac00,\ 1^\infty,\ 0^0,\ \infty^0$.` },
+    { id: 's05.calcolo.fc3', kind: 'formula', front: 'Aritmetica estesa (casi non indeterminati)', back: String.raw`$L\pm\infty=\pm\infty$; $L\cdot\infty=\pm\infty$ ($L\ne0$); $\frac{L}{\infty}=0$; $\frac{L}{0^\pm}=\pm\infty$ ($L\ne0$); $a^{+\infty}=+\infty$ se $a>1$, $=0$ se $0\le a<1$.` },
+    { id: 's05.calcolo.fc4', kind: 'metodo', front: String.raw`Limite di una razionale per $x\to\pm\infty$`, back: String.raw`Raccogli il termine di grado massimo. Grado num < den: $0$. Uguali: rapporto dei coefficienti direttivi. Num > den: $\pm\infty$ con il segno di $\frac{a_p}{b_q}x^{p-q}$.` },
+    { id: 's05.calcolo.fc5', kind: 'metodo', front: String.raw`Forma $\frac00$ con polinomi in $x_0$`, back: String.raw`Entrambi hanno il fattore $(x-x_0)$ (Ruffini): scomponi, semplifica, sostituisci.` },
+    { id: 's05.calcolo.fc6', kind: 'metodo', front: 'Razionalizzazione', back: String.raw`$\sqrt A-\sqrt B=\frac{A-B}{\sqrt A+\sqrt B}$; per le cubiche $a-b=\frac{a^3-b^3}{a^2+ab+b^2}$. Utile per $\infty-\infty$ e $\frac00$ con radici. Risultato utile: $\sqrt{x^2+bx+c}-x\to\frac b2$ ($x\to+\infty$).` },
+    { id: 's05.calcolo.fc7', kind: 'errore', front: String.raw`$\sqrt{x^2}$ per $x\to-\infty$`, back: String.raw`$\sqrt{x^2}=|x|=-x$ se $x<0$. Raccogliendo sotto radice a $-\infty$ compare un segno meno.` },
+    { id: 's05.calcolo.fc8', kind: 'thm', front: 'Limite di funzione composta', back: String.raw`Se $g(x)\to y_0$ per $x\to x_0$, $f(y)\to L$ per $y\to y_0$, e $g(x)\ne y_0$ vicino a $x_0$ (o $f$ continua in $y_0$), allora $f(g(x))\to L$.` },
+    { id: 's05.calcolo.fc9', kind: 'thm', front: 'Teorema del confronto (carabinieri)', back: String.raw`Se $g\le f\le h$ vicino a $x_0$ e $g,h\to L$, allora $f\to L$. Corollario: limitata × infinitesima $\to0$.` },
+    { id: 's05.calcolo.fc10', kind: 'metodo', front: String.raw`Forme $1^\infty$, $0^0$, $\infty^0$`, back: String.raw`Scrivi $f^g=e^{g\log f}$ e calcola il limite dell'esponente (diventa $0\cdot\infty$). Prima controlla la base: se tende a $a\ne1$ con esponente $\to\infty$ non è indeterminata.` },
+  ],
+});
