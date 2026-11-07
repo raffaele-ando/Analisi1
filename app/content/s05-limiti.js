@@ -1558,7 +1558,7 @@ Quindi $f'(x)=e^x+\cos x$.
           type: 'num',
           prompt: swap ? String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${L}}{${E}}$.` : String.raw`Calcola $\displaystyle\lim_{x\to0}\frac{${E}}{${L}}$.`,
           answer: swap ? H.fracStr(b, a) : H.fracStr(a, b),
-          explain: String.raw`$e^{${ax(a)}}-1\sim ${ax(a)}$ (perché $\frac{e^t-1}t\to1$) e $\log(1${sg(b, 'x')})\sim ${ax(b)}$. Moltiplicando e dividendo, il limite è ${swap ? `$\\frac{${b}x}{${ax(a)}}=${H.frac(b, a)}$` : `$\\frac{${ax(a)}}{${b}x}=${H.frac(a, b)}$`}.`,
+          explain: String.raw`$e^{${ax(a)}}-1\sim ${ax(a)}$ (perché $\frac{e^t-1}t\to1$) e $\log(1${sg(b, 'x')})\sim ${ax(b)}$. Moltiplicando e dividendo, il limite è ${swap ? `$\\frac{${ax(b)}}{${ax(a)}}=${H.frac(b, a)}$` : `$\\frac{${ax(a)}}{${ax(b)}}=${H.frac(a, b)}$`}.`,
         };
       },
     },
@@ -1652,5 +1652,457 @@ Quindi $f'(x)=e^x+\cos x$.
     { id: 's05.notevoli.fc7', kind: 'formula', front: String.raw`$\displaystyle\lim_{x\to0}\frac{(1+x)^\alpha-1}{x}$`, back: String.raw`$=\alpha$. Perché $(1+x)^\alpha-1=e^{\alpha\log(1+x)}-1$. Caso utile: $\sqrt{1+x}-1\sim\frac x2$.` },
     { id: 's05.notevoli.fc8', kind: 'metodo', front: String.raw`Forma $1^\infty$: $f\to1$, $g\to\infty$`, back: String.raw`$f^g=e^{g\log f}$ e $\log f=\log(1+(f-1))\sim f-1$, quindi $f^g\to e^{\lim g(f-1)}$.` },
     { id: 's05.notevoli.fc9', kind: 'errore', front: 'Errore tipico con i limiti notevoli', back: String.raw`L'argomento deve essere **lo stesso** e deve **tendere a 0**: $\frac{\sin x^2}{x}\to0$ (non 1), $\frac{\sin x}{x}\to0$ per $x\to+\infty$, $\frac{1-\cos 4x}{x^2}\to8$ (non 2).` },
+  ],
+});
+
+// ===========================================================================
+// s05.asintoti · Asintoti (verticali, orizzontali, obliqui)
+// ===========================================================================
+
+SKILLS.push({
+  id: 's05.asintoti',
+  title: 'Asintoti',
+  summary: String.raw`Trovare gli asintoti verticali, orizzontali e obliqui di una funzione, calcolando i limiti da ciascun lato e per $x\to\pm\infty$, e distinguere un asintoto da una discontinuità eliminabile.`,
+  prereq: ['s05.calcolo', 's05.notevoli'],
+  examRefs: ['Appello 15/01/2026 · Es. 1', 'Appello 11/06/2026 · Es. 1', 'Appello 03/09/2026 · Es. 1'],
+  lessons: [
+    {
+      id: 's05.asintoti.L1',
+      title: 'Asintoti verticali e orizzontali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Che cos\'è un asintoto',
+          body: String.raw`Un **asintoto** è una retta a cui il grafico di $f$ si avvicina sempre di più, senza necessariamente toccarla.
+
+>* **Asintoto verticale** $x=x_0$: $\displaystyle\lim_{x\to x_0^-}f(x)=\pm\infty$ oppure $\displaystyle\lim_{x\to x_0^+}f(x)=\pm\infty$. Basta **un** lato.
+
+>* **Asintoto orizzontale** $y=L$: $\displaystyle\lim_{x\to+\infty}f(x)=L$ oppure $\displaystyle\lim_{x\to-\infty}f(x)=L$, con $L$ numero reale.
+
+Nel grafico $f(x)=\dfrac{x+1}{x-2}$ ha asintoto verticale $x=2$ e asintoto orizzontale $y=1$.`,
+          plot: { fns: [{ f: '(x+1)/(x-2)', label: 'f' }], x: [-6, 8], y: [-6, 6], vlines: [2], hlines: [1] },
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Trova gli asintoti di $f(x)=\dfrac{3x-2}{x^2-x-2}$.`,
+          steps: [
+            String.raw`Scompongo il denominatore: $x^2-x-2=(x-2)(x+1)$. Si annulla in $x=2$ e in $x=-1$.`,
+            String.raw`Il numeratore non si annulla in questi punti: in $x=2$ vale $4$, in $x=-1$ vale $-5$. Con zeri semplici, $f\to\pm\infty$ da entrambi i lati: due asintoti verticali, $x=2$ e $x=-1$.`,
+            String.raw`Per $x\to\pm\infty$ il grado del numeratore (1) è minore di quello del denominatore (2): $f(x)\to0$.`,
+          ],
+          result: String.raw`Asintoti verticali $x=-1$ e $x=2$; asintoto orizzontale $y=0$ per $x\to\pm\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quali asintoti verticali ha $f(x)=\dfrac{x^2+1}{x^2-1}$?`,
+          options: [String.raw`$x=1$ e $x=-1$`, String.raw`$x=0$`, 'Nessuno', String.raw`$x=\pm i$`],
+          answer: 0,
+          explain: String.raw`Il denominatore $x^2-1$ si annulla in $\pm1$, e lì il numeratore vale $2\neq0$: quindi $x=\pm1$ sono asintoti verticali. Il distrattore $x=0$ scambia il denominatore con il numeratore. «Nessuno» dimentica che $x^2-1$ si annulla nei reali. $\pm i$ non sono numeri reali e non danno asintoti.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento',
+          problem: String.raw`Trova gli asintoti di $f(x)=\dfrac{x}{x^2-9}$.`,
+          steps: [
+            String.raw`Il denominatore $x^2-9=(x-3)(x+3)$ si annulla in $x=\pm3$, dove il numeratore vale $\pm3\neq0$: sono due asintoti verticali.`,
+            {
+              text: String.raw`Per $x\to3^+$: il denominatore $(x-3)(x+3)$ tende a $0^+$ e il numeratore a $3$, quindi $f\to+\infty$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to-3^+}f(x)$? (scrivi inf per $+\infty$, -inf per $-\infty$)`,
+                answer: 'inf',
+                explain: String.raw`Per $x\to-3^+$ il primo fattore $x-3$ è negativo e il secondo $x+3$ tende a $0^+$: il denominatore tende a $0^-$. Il numeratore vale $-3$, quindi $\frac{-3}{0^-}=+\infty$.`,
+              },
+            },
+            String.raw`Il grado del numeratore (1) è minore di quello del denominatore (2): per $x\to\pm\infty$, $f\to0$.`,
+          ],
+          result: String.raw`Asintoti verticali $x=-3$ e $x=3$; asintoto orizzontale $y=0$.`,
+        },
+        {
+          id: 's05.asintoti.L1.e2', type: 'num', level: 1,
+          prompt: String.raw`Qual è l'asintoto orizzontale $y=L$ di $f(x)=\dfrac{3x^2+1}{x^2-5}$ per $x\to+\infty$? Scrivi $L$.`,
+          answer: '3',
+          explain: String.raw`Numeratore e denominatore hanno lo stesso grado 2: il limite è il rapporto dei coefficienti di $x^2$, cioè $\frac31=3$. Errore tipico: rispondere $0$, come se il denominatore avesse grado maggiore.`,
+        },
+        {
+          id: 's05.asintoti.L1.e3', type: 'tf', level: 2,
+          prompt: String.raw`Se numeratore e denominatore di $f$ si annullano entrambi in $x_0$, allora $x=x_0$ è sempre un asintoto verticale.`,
+          answer: false,
+          explain: String.raw`Falso. Per $f(x)=\dfrac{x^2-4}{x-2}$, con $x\neq2$ si ha $f(x)=x+2$: il limite in $2$ esiste ed è $4$. Il punto è una **discontinuità eliminabile**, non un asintoto: un asintoto verticale richiede un limite infinito.`,
+        },
+        {
+          id: 's05.asintoti.L1.e4', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to0^+}e^{1/x}$ (scrivi inf per $+\infty$).`,
+          answer: 'inf',
+          explain: String.raw`Per $x\to0^+$ si ha $\frac1x\to+\infty$, quindi $e^{1/x}\to+\infty$: la retta $x=0$ è asintoto verticale da destra. Da sinistra, $\frac1x\to-\infty$ e $e^{1/x}\to0$.`,
+        },
+        {
+          id: 's05.asintoti.L1.e5', type: 'mcq', level: 1,
+          prompt: String.raw`Quale asintoto orizzontale ha $f(x)=\dfrac{2x}{x^2+1}$?`,
+          options: [String.raw`$y=0$`, String.raw`$y=2$`, String.raw`$x=0$`, 'Nessuno'],
+          answer: 0,
+          explain: String.raw`Il grado del numeratore (1) è minore di quello del denominatore (2): $f\to0$ per $x\to\pm\infty$. «$y=2$» prende il coefficiente del numeratore senza confrontare i gradi. «$x=0$» è un asintoto verticale, ma $x^2+1$ non si annulla mai. «Nessuno» dimentica il limite finito a $\pm\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L1.e6', type: 'match', level: 2,
+          prompt: 'Abbina ogni funzione al suo asintoto.',
+          pairs: [
+            [String.raw`$f(x)=\dfrac{1}{x-3}$`, String.raw`$x=3$`],
+            [String.raw`$f(x)=\dfrac{2x}{x^2+1}$`, String.raw`$y=0$`],
+            [String.raw`$f(x)=\dfrac{5x^2}{x^2+4}$`, String.raw`$y=5$`],
+            [String.raw`$f(x)=e^{1/x}$ per $x\to0^+$`, String.raw`$x=0$`],
+          ],
+          explain: String.raw`Verticali: il denominatore si annulla e il numeratore no. Orizzontali: per $x\to\pm\infty$ si confrontano i gradi, o il rapporto dei coefficienti di grado massimo. Per $e^{1/x}$ l'asintoto è verticale da destra, perché $\frac1x\to+\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L1.e7', type: 'problem', level: 2,
+          prompt: String.raw`Sia $f(x)=\dfrac{x+2}{x^2-1}$. Trova gli asintoti verticali e orizzontali.`,
+          parts: [
+            { type: 'set', prompt: 'Asintoti verticali (valori di $x$, separati da ;).', answer: ['1', '-1'], explain: String.raw`$x^2-1=0$ per $x=\pm1$. In quei punti il numeratore vale $3$ e $1$, diversi da zero.` },
+            { type: 'num', prompt: 'Valore $L$ dell\'asintoto orizzontale $y=L$.', answer: '0', explain: 'Il grado del numeratore (1) è minore di quello del denominatore (2): il limite è $0$.' },
+          ],
+          solution: String.raw`Il denominatore $x^2-1=(x-1)(x+1)$ si annulla in $\pm1$, dove il numeratore vale $3$ e $1$: asintoti verticali $x=1$ e $x=-1$. Per $x\to\pm\infty$, $f\to0$: asintoto orizzontale $y=0$.`,
+        },
+      ],
+    },
+    {
+      id: 's05.asintoti.L2',
+      title: 'Asintoti obliqui',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Asintoto obliquo: $y=mx+q$',
+          body: String.raw`Se il grafico si avvicina a una retta **inclinata** $y=mx+q$ per $x\to+\infty$ (o per $x\to-\infty$), la retta è un **asintoto obliquo**. Si calcolano così:
+
+>* $$m=\lim_{x\to\pm\infty}\frac{f(x)}{x},\qquad q=\lim_{x\to\pm\infty}\bigl(f(x)-mx\bigr).$$
+
+**Perché.** Se $f(x)-(mx+q)\to0$, dividendo per $x$ si ottiene $\frac{f(x)}{x}\to m$; poi $f(x)-mx\to q$. Viceversa, se questi due limiti sono finiti, la distanza verticale $f(x)-(mx+q)$ tende a $0$.
+
+Se $m=0$ la retta è orizzontale, $y=q$. Se $m=\pm\infty$ non c'è asintoto obliquo.`,
+          plot: { fns: [{ f: '(x^2+1)/(x+1)', label: 'f' }, { f: 'x-1', label: 'y=x-1' }], x: [-6, 6], y: [-8, 8], vlines: [-1] },
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Trova l'asintoto obliquo di $f(x)=\dfrac{x^2+1}{x+1}$ per $x\to\pm\infty$.`,
+          steps: [
+            String.raw`Calcolo $m=\displaystyle\lim_{x\to\pm\infty}\frac{f(x)}{x}=\lim\frac{x^2+1}{x^2+x}$. Numeratore e denominatore hanno lo stesso grado con coefficiente $1$: $m=1$.`,
+            String.raw`Calcolo $q=\displaystyle\lim\bigl(f(x)-x\bigr)$: $\dfrac{x^2+1}{x+1}-x=\dfrac{x^2+1-x^2-x}{x+1}=\dfrac{1-x}{x+1}$.`,
+            String.raw`Il rapporto $\dfrac{1-x}{x+1}$ tende a $\dfrac{-1}{1}=-1$: quindi $q=-1$.`,
+          ],
+          result: String.raw`Asintoto obliquo $y=x-1$ per $x\to\pm\infty$. Il grafico ha anche l'asintoto verticale $x=-1$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento',
+          problem: String.raw`Trova l'asintoto obliquo di $f(x)=x\,e^{1/x}$ per $x\to+\infty$.`,
+          steps: [
+            String.raw`$m=\displaystyle\lim_{x\to+\infty}\frac{x\,e^{1/x}}{x}=\lim_{x\to+\infty}e^{1/x}=e^0=1$.`,
+            {
+              text: String.raw`Per $q$ scrivo $x\,e^{1/x}-x=x\,(e^{1/x}-1)$. Con $t=\frac1x\to0^+$ si ha $x=\frac1t$, quindi $x\,(e^{1/x}-1)=\dfrac{e^t-1}{t}$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to+\infty}x\,(e^{1/x}-1)$?`,
+                answer: '1',
+                explain: String.raw`È il limite notevole $\frac{e^t-1}{t}\to1$ con $t=\frac1x$.`,
+              },
+            },
+          ],
+          result: String.raw`$q=1$, quindi l'asintoto obliquo per $x\to+\infty$ è $y=x+1$.`,
+        },
+        {
+          id: 's05.asintoti.L2.e1', type: 'num', level: 1,
+          prompt: String.raw`Calcola il coefficiente angolare $m=\displaystyle\lim_{x\to+\infty}\frac{f(x)}{x}$ di $f(x)=\dfrac{2x^2+x}{x+3}$.`,
+          answer: '2',
+          explain: String.raw`Dividendo per $x$: $\dfrac{2x^2+x}{x\,(x+3)}=\dfrac{2x+1}{x+3}\to2$. Errore tipico: calcolare il limite di $f$ invece del limite di $\frac{f}{x}$, che qui è $+\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L2.e2', type: 'tuple', level: 2,
+          prompt: String.raw`Trova l'asintoto obliquo di $f(x)=\dfrac{x^2+3x+1}{x+1}$ per $x\to\pm\infty$. Scrivi $(m,q)$ per $y=mx+q$.`,
+          answer: ['1', '2'],
+          labels: ['m', 'q'],
+          explain: String.raw`Divisione: $x^2+3x+1=(x+1)(x+2)-1$, quindi $f(x)=x+2-\dfrac{1}{x+1}$. Il termine $\frac{1}{x+1}$ tende a $0$: $m=1$ e $q=2$.`,
+        },
+        {
+          id: 's05.asintoti.L2.e3', type: 'tf', level: 2,
+          prompt: String.raw`Se per $x\to+\infty$ c'è un asintoto orizzontale $y=L$, non può esserci anche un asintoto obliquo per $x\to+\infty$.`,
+          answer: true,
+          explain: String.raw`Vero. Se $f\to L$ con $L$ finito, allora $\frac{f(x)}{x}\to0$, quindi $m=0$: l'asintoto è orizzontale. Per ogni infinito c'è al più un asintoto non verticale.`,
+        },
+        {
+          id: 's05.asintoti.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Per $f(x)=\sqrt{x^2+x}$, quanto vale $m=\displaystyle\lim_{x\to-\infty}\frac{f(x)}{x}$?`,
+          options: [String.raw`$m=1$`, String.raw`$m=-1$`, String.raw`$m=0$`, 'Il limite non esiste'],
+          answer: 1,
+          explain: String.raw`Per $x<0$ si ha $\sqrt{x^2}=|x|=-x$, quindi $\sqrt{x^2+x}=-x\sqrt{1+\frac1x}$ e $\frac{f(x)}{x}\to-1$. Il distrattore $m=1$ dimentica il segno di $|x|$ per $x<0$, che vale invece per $x\to+\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L2.e5', type: 'num', level: 2,
+          prompt: String.raw`Per $f(x)=\sqrt{x^2+x}$ calcola $q=\displaystyle\lim_{x\to+\infty}\left(f(x)-x\right)$.`,
+          answer: '1/2',
+          explain: String.raw`Moltiplico per il coniugato: $\sqrt{x^2+x}-x=\dfrac{x}{\sqrt{x^2+x}+x}=\dfrac{1}{\sqrt{1+\frac1x}+1}\to\dfrac12$.`,
+        },
+        {
+          id: 's05.asintoti.L2.e6', type: 'problem', level: 3,
+          prompt: String.raw`Sia $f(x)=\sqrt{x^2+x}$, con dominio $(-\infty,-1]\cup[0,+\infty)$. Trova gli asintoti obliqui per $x\to+\infty$ e per $x\to-\infty$.`,
+          parts: [
+            { type: 'tuple', prompt: 'Asintoto per $x\\to+\\infty$: scrivi $(m,q)$.', answer: ['1', '1/2'], labels: ['m', 'q'], explain: String.raw`$m=1$ e $q=\frac12$ (calcolo con il coniugato).` },
+            { type: 'tuple', prompt: 'Asintoto per $x\\to-\\infty$: scrivi $(m,q)$.', answer: ['-1', '-1/2'], labels: ['m', 'q'], explain: String.raw`Per $x<0$: $\sqrt{x^2+x}=-x\sqrt{1+\frac1x}\approx-x-\frac12$. Quindi $m=-1$ e $q=-\frac12$.` },
+          ],
+          solution: String.raw`Per $x\to+\infty$: $m=\lim\frac{\sqrt{x^2+x}}{x}=1$ e $q=\lim(\sqrt{x^2+x}-x)=\frac12$, quindi $y=x+\frac12$. Per $x\to-\infty$: $\sqrt{x^2+x}=|x|\sqrt{1+\frac1x}$ con $|x|=-x$: $m=\lim\frac{f(x)}{x}=-1$ e $q=\lim(f(x)+x)=-\frac12$, quindi $y=-x-\frac12$.
+
+>! Errore tipico: usare $|x|=x$ anche per $x\to-\infty$. Si ottiene l'asintoto sbagliato $y=x+\frac12$ sul lato sinistro.`,
+        },
+        {
+          id: 's05.asintoti.L2.e7', type: 'open', level: 2,
+          prompt: String.raw`Enuncia come si determinano $m$ e $q$ per l'asintoto obliquo $y=mx+q$ di $f$ per $x\to+\infty$, e spiega perché, se $m=0$, l'asintoto è orizzontale.`,
+          answer: String.raw`La retta $y=mx+q$ è asintoto per $x\to+\infty$ se $f(x)-mx-q\to0$. Dividendo per $x$ si ottiene $m=\lim\frac{f(x)}{x}$; poi $q=\lim(f(x)-mx)$. Se $m=0$ la retta è $y=q$, e $q=\lim f(x)$: l'asintoto è orizzontale.`,
+          rubric: ['Condizione $f(x)-(mx+q)\\to0$', 'Formula di $m$ con $\\frac{f(x)}{x}$', 'Formula di $q$ come limite di $f(x)-mx$', 'Caso $m=0$ come asintoto orizzontale'],
+        },
+      ],
+    },
+    {
+      id: 's05.asintoti.L3',
+      title: 'Asintoti negli esercizi d\'esame',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Metodo in quattro passi',
+          body: String.raw`Per trovare tutti gli asintoti di una funzione:
+
+1. **Dominio.** Gli asintoti stanno ai bordi del dominio: punti esclusi ed estremi di intervalli, anche *da un lato solo*.
+2. **Verticali.** Per ogni $x_0$ di frontiera (per esempio uno zero del denominatore) calcola i limiti **da ciascun lato** in cui $f$ è definita. Se uno dei due è $\pm\infty$, c'è un asintoto $x=x_0$.
+3. **Orizzontali.** Per $x\to\pm\infty$ calcola $L=\lim f(x)$. Se $L$ è finito, c'è l'asintoto $y=L$ su quel lato.
+4. **Obliqui.** Se $\lim\frac{f(x)}{x}=m$ è finito e non nullo, calcola $q=\lim(f(x)-mx)$. Se $q$ è finito, c'è $y=mx+q$. Ripeti separatamente per $x\to+\infty$ e $x\to-\infty$.
+
+>! Un limite finito a $\pm\infty$ dà un asintoto orizzontale e **esclude** l'obliquo su quel lato. Se la funzione non è definita da un lato, non si studia il limite da quel lato.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: dominio ristretto',
+          problem: String.raw`Studia gli asintoti di $f(x)=\dfrac{x-1}{2x-3}$, definita solo per $x\ge1$.`,
+          steps: [
+            String.raw`Dominio: $[1,\frac32)\cup(\frac32,+\infty)$. Il punto $x=\frac32$ è interno al dominio: è un candidato asintoto verticale.`,
+            String.raw`Per $x\to\frac32^-$: il numeratore vale $\frac12>0$ e il denominatore tende a $0^-$, quindi $f\to-\infty$. Per $x\to\frac32^+$: $f\to+\infty$. Quindi $x=\frac32$ è asintoto verticale.`,
+            String.raw`Non c'è alcun $x\to-\infty$, perché il dominio è limitato inferiormente da $x=1$. Solo a $+\infty$: $\dfrac{x-1}{2x-3}\to\dfrac12$.`,
+          ],
+          result: String.raw`Asintoto verticale $x=\frac32$ e asintoto orizzontale $y=\frac12$ per $x\to+\infty$. Non c'è asintoto a $-\infty$, perché la funzione non è definita lì.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento',
+          problem: String.raw`Studia gli asintoti di $f(x)=e^{\frac{1}{4-x^2}}$.`,
+          steps: [
+            String.raw`Dominio: $x\neq\pm2$. Ai bordi del dominio ci sono $x=2$ e $x=-2$.`,
+            String.raw`Per $x\to2^-$: $4-x^2\to0^+$, quindi $\frac{1}{4-x^2}\to+\infty$ e $f\to+\infty$. Per $x\to2^+$: $4-x^2\to0^-$, quindi $f\to0$. Basta un lato con $+\infty$: $x=2$ è asintoto verticale.`,
+            {
+              text: String.raw`Per $x\to-2^+$, cioè con $x$ appena maggiore di $-2$, si ha $4-x^2\to0^+$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\displaystyle\lim_{x\to-2^+}f(x)$? (scrivi inf per $+\infty$)`,
+                answer: 'inf',
+                explain: String.raw`Il denominatore $4-x^2\to0^+$, quindi $\frac{1}{4-x^2}\to+\infty$ e $f\to e^{+\infty}=+\infty$. Quindi $x=-2$ è asintoto verticale da destra.`,
+              },
+            },
+            String.raw`Per $x\to\pm\infty$: $\frac{1}{4-x^2}\to0$, quindi $f\to e^0=1$: asintoto orizzontale $y=1$.`,
+          ],
+          result: String.raw`Asintoti verticali $x=2$ (da sinistra) e $x=-2$ (da destra); asintoto orizzontale $y=1$ per $x\to\pm\infty$.`,
+        },
+        {
+          id: 's05.asintoti.L3.e1', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}x\left(e^{3/x}-1\right)$. Ricava poi $q$ per $f(x)=x\,e^{3/x}$.`,
+          answer: '3',
+          explain: String.raw`Con $t=\frac3x\to0^+$ si ha $x=\frac3t$, quindi $x(e^{3/x}-1)=3\cdot\frac{e^t-1}{t}\to3$. Quindi $q=3$ e l'asintoto obliquo è $y=x+3$.`,
+        },
+        {
+          id: 's05.asintoti.L3.e2', type: 'tf', level: 2,
+          prompt: String.raw`Se $\displaystyle\lim_{x\to x_0^+}f(x)=+\infty$ e $f$ non è definita a sinistra di $x_0$, allora $x=x_0$ è asintoto verticale.`,
+          answer: true,
+          explain: String.raw`Vero: per essere asintoto verticale basta un lato con limite infinito. Se a sinistra $f$ non è definita, non serve studiare il limite da quel lato.`,
+        },
+        {
+          id: 's05.asintoti.L3.e3', type: 'mcq', level: 2,
+          prompt: String.raw`Per $f(x)=x\,e^{1/x}$, quale asintoto obliquo ha per $x\to+\infty$?`,
+          options: [String.raw`$y=x+1$`, String.raw`$y=x$`, String.raw`$y=x-1$`, "Nessuno: c'è un esponenziale"],
+          answer: 0,
+          explain: String.raw`Si ha $m=1$ e $q=\lim x\,(e^{1/x}-1)=1$: asintoto $y=x+1$. «$y=x$» dimentica $q$; «$y=x-1$» sbaglia il segno; «Nessuno» non tiene conto che $\frac{f(x)}{x}$ ha limite finito e non nullo.`,
+        },
+        {
+          id: 's05.asintoti.L3.e4', type: 'problem', level: 3, source: 'Appello 11/06/2026 · Es. 1',
+          prompt: String.raw`Sia $f(x)=e^{\frac{1}{4-x^2}}$. Campo di esistenza e asintoti.`,
+          parts: [
+            { type: 'interval', prompt: 'Campo di esistenza.', answer: '(-inf,-2)U(-2,2)U(2,+inf)', explain: String.raw`Il denominatore non si annulla per $x\neq\pm2$.` },
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to\pm\infty}f(x)$: asintoto orizzontale $y=$`, answer: '1', explain: String.raw`$\frac{1}{4-x^2}\to0$, quindi $e^0=1$.` },
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to2^-}f(x)$`, answer: 'inf', explain: String.raw`Per $x\to2^-$, $4-x^2\to0^+$ e $f\to+\infty$.` },
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to-2^+}f(x)$`, answer: 'inf', explain: String.raw`Per $x\to-2^+$, $4-x^2\to0^+$ e $f\to+\infty$.` },
+            { type: 'set', prompt: 'Asintoti verticali (valori di $x$, separati da ;).', answer: ['2', '-2'], explain: String.raw`In entrambi i punti c'è un limite infinito da un lato.` },
+          ],
+          solution: String.raw`Dominio $x\neq\pm2$. Per $x\to\pm\infty$, $f\to1$: asintoto orizzontale $y=1$. In $2$: $\lim_{x\to2^-}f=+\infty$, quindi $x=2$ è asintoto verticale; $\lim_{x\to2^+}f=0$. In $-2$: $\lim_{x\to-2^+}f=+\infty$, quindi $x=-2$ è asintoto verticale; $\lim_{x\to-2^-}f=0$.`,
+        },
+        {
+          id: 's05.asintoti.L3.e5', type: 'problem', level: 3, source: 'Appello 03/09/2026 · Es. 1',
+          prompt: String.raw`Sia $f(x)=e^{\frac{x+1}{x-1}}$ per $x<1$. Studia gli asintoti del ramo.`,
+          parts: [
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to-\infty}f(x)$`, answer: 'e', explain: String.raw`Il rapporto $\frac{x+1}{x-1}\to1$, quindi $f\to e^1=e$: asintoto orizzontale $y=e$ a $-\infty$.` },
+            { type: 'num', prompt: String.raw`$\displaystyle\lim_{x\to1^-}f(x)$`, answer: '0', explain: String.raw`Per $x\to1^-$ il numeratore vale $2$ e il denominatore tende a $0^-$: il rapporto tende a $-\infty$, quindi $f\to0$.` },
+            { type: 'mcq', prompt: String.raw`$x=1$ è asintoto verticale di $f$?`, options: ['Sì', 'No'], answer: 1, explain: String.raw`Il limite da sinistra è $0$, cioè finito: non c'è un asintoto verticale in $x=1$.` },
+          ],
+          solution: String.raw`Ramo per $x<1$: $\lim_{x\to-\infty}f=e$, quindi asintoto orizzontale $y=e$ a $-\infty$. Per $x\to1^-$, $f\to0$: nessun asintoto verticale in $x=1$, perché il limite è finito.`,
+        },
+        {
+          id: 's05.asintoti.L3.e6', type: 'open', level: 3,
+          prompt: String.raw`Dimostra che la retta $y=mx+q$ è asintoto obliquo per $x\to+\infty$ se e solo se $m=\lim_{x\to+\infty}\frac{f(x)}{x}$ e $q=\lim_{x\to+\infty}\left(f(x)-mx\right)$ sono finiti.`,
+          answer: String.raw`($\Rightarrow$) Se $f(x)-(mx+q)\to0$, allora $\dfrac{f(x)}{x}=m+\dfrac{f(x)-mx-q}{x}+\dfrac{q}{x}\to m$, perché il secondo addendo ha numeratore infinitesimo e denominatore infinito, e $\frac qx\to0$. Poi $f(x)-mx=q+\bigl(f(x)-mx-q\bigr)\to q$.
+
+($\Leftarrow$) Se $m$ e $q$ esistono finiti, allora $f(x)-(mx+q)=\left(f(x)-mx\right)-q\to q-q=0$: la distanza verticale dalla retta tende a zero.`,
+          rubric: ['Condizione necessaria: dividere per $x$ e ottenere $m$', 'Calcolo di $q$ come limite di $f(x)-mx$', 'Condizione sufficiente: $f(x)-(mx+q)\\to0$', 'Uso corretto dei limiti (addendo infinitesimo diviso per infinito)'],
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's05.asintoti.gen-verticali', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.int(-4, 4);
+        let d = R.int(-4, 4);
+        while (d === c) d = R.int(-4, 4);
+        const a = R.nz(-3, 3);
+        let b = R.nz(-5, 5);
+        while (a * c + b === 0 || a * d + b === 0) b = R.nz(-5, 5);
+        return {
+          type: 'set',
+          prompt: String.raw`Quali sono gli asintoti verticali di $f(x)=\dfrac{${ax(a)}${sg(b)}}{(${xm(c)})(${xm(d)})}$? Scrivili separati da ;.`,
+          answer: [String(c), String(d)],
+          explain: String.raw`Il denominatore si annulla in $x=${c}$ e in $x=${d}$. Nel numeratore, in quei punti si trova $${a * c + b}$ e $${a * d + b}$, entrambi diversi da zero: quindi ci sono due asintoti verticali, $x=${c}$ e $x=${d}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.asintoti.gen-orizzontale', type: 'gen', level: 1,
+      gen: (R) => {
+        const p = R.nz(-6, 6), q = R.int(-4, 4), r = R.int(-5, 5);
+        const s = R.nz(-3, 3), k = R.int(1, 3);
+        const t = s * k;
+        return {
+          type: 'num',
+          prompt: String.raw`Scrivi l'asintoto orizzontale $y=L$ di $f(x)=\dfrac{${H.poly([p, q, r])}}{${H.poly([s, 0, t])}}$ per $x\to+\infty$: scrivi $L$.`,
+          answer: H.fracStr(p, s),
+          explain: String.raw`Numeratore e denominatore hanno lo stesso grado 2: il limite è il rapporto dei coefficienti di $x^2$, cioè $\dfrac{${p}}{${s}}=${H.frac(p, s)}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.asintoti.gen-obliquo', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.int(-4, 4), d = R.nz(-3, 3);
+        let c = R.int(-5, 5);
+        while (c - d * (b - d) === 0) c = R.int(-5, 5);
+        const rem = c - d * (b - d);
+        return {
+          type: 'tuple',
+          labels: ['m', 'q'],
+          prompt: String.raw`Trova l'asintoto obliquo per $x\to+\infty$ di $f(x)=\dfrac{${H.poly([1, b, c])}}{${H.lin(1, d)}}$, nella forma $y=mx+q$: scrivi $(m,q)$.`,
+          answer: ['1', String(b - d)],
+          explain: String.raw`Divisione: $${H.poly([1, b, c])}=(${H.lin(1, d)})(${H.lin(1, b - d)})${rem >= 0 ? '+' : ''}${rem}$. Quindi $f(x)=${H.lin(1, b - d)}+\dfrac{${rem}}{${H.lin(1, d)}}$, e il resto tende a $0$: $m=1$ e $q=${b - d}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.asintoti.gen-radice', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.nz(-3, 3);
+        return {
+          type: 'tuple',
+          labels: ['m', 'q'],
+          prompt: String.raw`Trova l'asintoto obliquo per $x\to+\infty$ di $f(x)=\sqrt{${H.poly([1, 2 * k, 0])}}$: scrivi $(m,q)$.`,
+          answer: ['1', String(k)],
+          explain: String.raw`$${H.poly([1, 2 * k, 0])}=(${H.lin(1, k)})^2-${k * k}$, quindi $\sqrt{${H.poly([1, 2 * k, 0])}}\sim ${H.lin(1, k)}$ per $x\to+\infty$ (la radice dà $|x+${k}|=x+${k}$). Quindi $m=1$ e $q=${k}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.asintoti.gen-esp', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-5, 5), b = R.nz(-5, 5), c = R.nz(1, 4), d = R.nz(-5, 5);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}e^{\frac{${ax(a)}${sg(b)}}{${ax(c)}${sg(d)}}}$ (il valore dell'asintoto orizzontale).`,
+          answer: `e^(${H.fracStr(a, c)})`,
+          explain: String.raw`$\dfrac{${ax(a)}${sg(b)}}{${ax(c)}${sg(d)}}\to\dfrac{${a}}{${c}}=${H.frac(a, c)}$, quindi il limite è $e^{${H.frac(a, c)}}$.`,
+        };
+      },
+    },
+    {
+      id: 's05.asintoti.p1', type: 'tf', level: 1,
+      prompt: String.raw`La funzione $f(x)=x^2+1$ non ha asintoti obliqui per $x\to+\infty$.`,
+      answer: true,
+      explain: String.raw`$\frac{f(x)}{x}=x+\frac1x\to+\infty$: il coefficiente $m$ non è finito, quindi non c'è asintoto obliquo. Anche l'orizzontale manca, perché $f\to+\infty$.`,
+    },
+    {
+      id: 's05.asintoti.p2', type: 'mcq', level: 2,
+      prompt: String.raw`Quale asintoto obliquo ha $f(x)=\dfrac{x^3+1}{x^2+1}$ per $x\to+\infty$?`,
+      options: [String.raw`$y=x$`, String.raw`$y=x+1$`, String.raw`$y=x^2$`, 'Nessuno'],
+      answer: 0,
+      explain: String.raw`Si ha $f(x)-x=\dfrac{x^3+1-x^3-x}{x^2+1}=\dfrac{1-x}{x^2+1}\to0$. Quindi $m=1$ e $q=0$, cioè $y=x$. «$y=x+1$» sbaglia $q$; «$y=x^2$» confonde l'asintoto con il termine di grado maggiore; «Nessuno» è falso, perché il grado differisce di 1.`,
+    },
+    {
+      id: 's05.asintoti.p3', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\lim_{x\to+\infty}x\left(e^{2/x}-1\right)$.`,
+      answer: '2',
+      explain: String.raw`Con $t=\frac2x\to0^+$: $x\left(e^{2/x}-1\right)=2\cdot\frac{e^t-1}{t}\to2$.`,
+    },
+    {
+      id: 's05.asintoti.p4', type: 'cloze', level: 2,
+      prompt: 'Completa il calcolo dell\'asintoto obliquo.',
+      text: String.raw`Per $f(x)=\dfrac{2x^2+1}{x}=2x+\dfrac1x$: $m=\displaystyle\lim_{x\to+\infty}\frac{f(x)}{x}=$ [[0]], $q=\displaystyle\lim_{x\to+\infty}\left(f(x)-mx\right)=$ [[1]]. Quindi l'asintoto obliquo è [[2]].`,
+      blanks: [
+        { options: [String.raw`$1$`, String.raw`$2$`, String.raw`$0$`], answer: 1 },
+        { options: [String.raw`$1$`, String.raw`$0$`, String.raw`$2$`], answer: 1 },
+        { options: [String.raw`$2x$`, String.raw`$2x+1$`, String.raw`$x$`], answer: 0 },
+      ],
+      explain: String.raw`$\dfrac{f(x)}{x}=2+\dfrac{1}{x^2}\to2$, e $f(x)-2x=\dfrac1x\to0$. Quindi $y=2x$.`,
+    },
+    {
+      id: 's05.asintoti.p5', type: 'order', level: 2,
+      prompt: String.raw`Riordina il calcolo di $q$ per $f(x)=\dfrac{x^2+1}{x+1}$ per $x\to+\infty$, sapendo che $m=1$.`,
+      steps: [
+        String.raw`Scrivo $f(x)-mx=\dfrac{x^2+1}{x+1}-x=\dfrac{x^2+1-x^2-x}{x+1}$.`,
+        String.raw`Semplifico il numeratore: $\dfrac{1-x}{x+1}$.`,
+        String.raw`Divido numeratore e denominatore per $x$: $\dfrac{\frac1x-1}{1+\frac1x}$.`,
+        String.raw`Per $x\to+\infty$ questo tende a $\dfrac{-1}{1}=-1$, quindi $q=-1$.`,
+      ],
+      distractors: [String.raw`Il limite è $+1$, perché il coefficiente di $x$ al denominatore è $+1$.`],
+      explain: String.raw`Il passo chiave è scrivere $f(x)-mx$ con un denominatore comune: il termine $x^2$ si cancella e resta un rapporto di primo grado su primo grado.`,
+    },
+    {
+      id: 's05.asintoti.p6', type: 'match', level: 2,
+      prompt: 'Abbina ogni funzione al suo asintoto.',
+      pairs: [
+        [String.raw`$f(x)=\dfrac{1}{x-3}$`, String.raw`$x=3$ (verticale)`],
+        [String.raw`$f(x)=\dfrac{2x}{x^2+1}$`, String.raw`$y=0$ (orizzontale)`],
+        [String.raw`$f(x)=\dfrac{x^2+1}{x}$ per $x\to+\infty$`, String.raw`$y=x$ (obliquo)`],
+        [String.raw`$f(x)=e^{1/x}$ per $x\to-\infty$`, String.raw`$y=1$ (orizzontale)`],
+      ],
+      explain: String.raw`Verticale: il denominatore si annulla e il numeratore no. Orizzontale: si confrontano i gradi o si calcola il limite a $\pm\infty$. Obliquo: $m=\lim\frac{f}{x}$ e $q=\lim(f-mx)$; per $\frac{x^2+1}{x}$ si ha $m=1$ e $q=0$.`,
+    },
+    {
+      id: 's05.asintoti.p7', type: 'open', level: 2,
+      prompt: String.raw`Dai la definizione di asintoto orizzontale e di asintoto verticale, con un esempio per ciascuno.`,
+      answer: String.raw`Asintoto orizzontale: la retta $y=L$, con $L\in\mathbb R$, è asintoto orizzontale per $x\to+\infty$ se $\lim_{x\to+\infty}f(x)=L$ (analogamente per $x\to-\infty$). Esempio: $f(x)=\frac1x$ ha $y=0$. Asintoto verticale: la retta $x=x_0$ è asintoto verticale se almeno uno dei limiti $\lim_{x\to x_0^-}f(x)$ e $\lim_{x\to x_0^+}f(x)$ vale $\pm\infty$. Esempio: $f(x)=\frac1x$ ha $x=0$.`,
+      rubric: [String.raw`Limite finito per $x\to\pm\infty$ nella definizione orizzontale`, String.raw`Limite infinito da almeno un lato nella definizione verticale`, String.raw`Esempio corretto per ciascun tipo`],
+    },
+  ],
+  flashcards: [
+    { id: 's05.asintoti.fc1', kind: 'def', front: 'Asintoto verticale', back: String.raw`La retta $x=x_0$ è asintoto verticale se $\lim_{x\to x_0^-}f(x)=\pm\infty$ oppure $\lim_{x\to x_0^+}f(x)=\pm\infty$. Basta un lato.` },
+    { id: 's05.asintoti.fc2', kind: 'def', front: 'Asintoto orizzontale', back: String.raw`La retta $y=L$, con $L\in\mathbb R$, è asintoto orizzontale per $x\to+\infty$ (o $-\infty$) se $\lim_{x\to\pm\infty}f(x)=L$.` },
+    { id: 's05.asintoti.fc3', kind: 'def', front: 'Asintoto obliquo', back: String.raw`La retta $y=mx+q$ con $m\neq0$ è asintoto obliquo se $m=\lim\frac{f(x)}{x}$ e $q=\lim(f(x)-mx)$ sono finiti.` },
+    { id: 's05.asintoti.fc4', kind: 'thm', front: 'Caratterizzazione dell\'asintoto obliquo', back: String.raw`$y=mx+q$ è asintoto per $x\to+\infty$ se e solo se $f(x)-(mx+q)\to0$. Dividendo per $x$ si ricava $m$; poi si ricava $q$ dal limite di $f(x)-mx$.` },
+    { id: 's05.asintoti.fc5', kind: 'metodo', front: 'Quanti asintoti per ciascun infinito', back: String.raw`Per $x\to+\infty$ (e separatamente per $x\to-\infty$) c'è al più un asintoto non verticale: orizzontale se $m=0$, obliquo se $m$ è finito e non nullo.` },
+    { id: 's05.asintoti.fc6', kind: 'errore', front: 'Discontinuità eliminabile non è un asintoto', back: String.raw`Se numeratore e denominatore si annullano insieme, il limite è spesso finito: per $\frac{x^2-4}{x-2}$ si ha $\lim_{x\to2}=4$. Non c'è asintoto.` },
+    { id: 's05.asintoti.fc7', kind: 'errore', front: 'Calcolare m correttamente', back: String.raw`$m=\lim\frac{f(x)}{x}$: bisogna dividere per $x$. Se $f\to L$ finito, allora $m=0$ e $q=L$: l'asintoto è orizzontale, non obliquo.` },
+    { id: 's05.asintoti.fc8', kind: 'metodo', front: String.raw`Asintoti a $-\infty$ con la radice`, back: String.raw`Per $x<0$ si ha $\sqrt{x^2}=|x|=-x$. Quindi $\sqrt{x^2+bx}\approx-x-\frac b2$: $m=-1$, non $+1$. Calcola sempre $m$ e $q$ separatamente per $-\infty$.` },
+    { id: 's05.asintoti.fc9', kind: 'metodo', front: 'Asintoti di una funzione razionale per $x\to\pm\infty$', back: String.raw`Grado numeratore minore del denominatore: $y=0$. Stesso grado: $y=\frac{a_n}{b_n}$. Grado del numeratore uguale a quello del denominatore più uno: asintoto obliquo, da trovare con la divisione con resto.` },
   ],
 });
