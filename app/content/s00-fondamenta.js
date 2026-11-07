@@ -2783,3 +2783,302 @@ Allora $P(n)$ vale per ogni $n \ge n_0$. Il passo base è necessario: senza di l
     { id: 's00.logica.fc9', kind: 'metodo', front: 'Controesempio', back: String.raw`Per confutare "$\forall x\,P(x)$" trovo un $x_0$ con $\neg P(x_0)$. Un solo caso basta; un esempio che verifica non dimostra un "per ogni".` },
   ],
 });
+
+// =====================================================================
+// s00.insiemi
+// =====================================================================
+S.push({
+  id: 's00.insiemi',
+  title: 'Insiemi',
+  summary: String.raw`Saprai usare appartenenza, inclusione, unione, intersezione, differenza e complementare, anche con gli intervalli reali. È il linguaggio in cui si scrivono domini, insiemi di soluzioni e definizioni dell'analisi.`,
+  prereq: ['s00.disequazioni', 's00.logica'],
+  examRefs: ['Itinere 11/11/2025 · Parte B (dominio di una funzione)', 'Appello 15/01/2026 · Parte A (definizioni con insiemi)', 'Appello 06/07/2026 · Parte B (insieme di definizione)'],
+  lessons: [
+    {
+      id: 's00.insiemi.L1',
+      title: 'Appartenenza e inclusione',
+      cards: [
+        { type: 'learn', title: 'Un insieme è una collezione di oggetti', body: String.raw`Un **insieme** è una collezione di oggetti distinti, detti **elementi**. $A = \{1, 2, 3\}$ ha tre elementi.
+
+- $a \in A$ significa "$a$ appartiene ad $A$"; $a \notin A$ significa il contrario;
+- l'**insieme vuoto** $\emptyset$ non ha elementi;
+- i numeri: $\N \subseteq \Z \subseteq \Q \subseteq \R$. Gli intervalli sono insiemi di reali: $[0,1]$ contiene $0$ e $1$ e tutto ciò che sta in mezzo.
+
+>! $\emptyset$ e $\{\emptyset\}$ sono **diversi**: il primo non ha elementi, il secondo ne ha uno (l'insieme vuoto).` },
+        { type: 'learn', title: 'Inclusione e uguaglianza', body: String.raw`$A \subseteq B$ ("$A$ è contenuto in $B$") significa: **ogni elemento di $A$ è anche in $B$**.
+
+- $A = B$ se e solo se $A \subseteq B$ e $B \subseteq A$;
+- $\emptyset \subseteq A$ per ogni insieme $A$;
+- $A \subseteq A$ sempre.
+
+Distinguere $\in$ da $\subseteq$ è importante: $1 \in \{1,2\}$ ma $\{1\} \subseteq \{1,2\}$. Non si scrive $1 \subseteq \{1,2\}$.` },
+        { id: 's00.insiemi.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Sia $A = \{1, 2\}$. Quale affermazione è vera?`,
+          options: [String.raw`$\{1\} \in A$`, String.raw`$\{1\} \subseteq A$`, String.raw`$1 \subseteq A$`, String.raw`$\{3\} \subseteq A$`],
+          answer: 1,
+          explain: String.raw`$\{1\} \subseteq A$ perché $1 \in A$. $\{1\} \in A$ è falsa: gli elementi di $A$ sono i numeri $1$ e $2$, non l'insieme $\{1\}$. $1 \subseteq A$ è mal scritta: $1$ non è un insieme. $\{3\} \subseteq A$ è falsa perché $3 \notin A$.` },
+        { id: 's00.insiemi.L1.e2', type: 'tf', level: 1,
+          prompt: String.raw`$\sqrt{2} \in \Q$.`,
+          answer: false,
+          explain: String.raw`Falso: $\sqrt2$ è irrazionale, cioè non si scrive come frazione $p/q$. Appartiene a $\R$ ma non a $\Q$.` },
+        { id: 's00.insiemi.L1.e3', type: 'tf', level: 1,
+          prompt: String.raw`Per ogni insieme $A$ vale $\emptyset \subseteq A$.`,
+          answer: true,
+          explain: String.raw`Vero: l'insieme vuoto non ha elementi che non stiano in $A$, quindi è contenuto in ogni insieme.` },
+        { id: 's00.insiemi.L1.e4', type: 'num', level: 1,
+          prompt: String.raw`Quanti elementi ha $\{x \in \Z : |x| \le 2\}$?`,
+          answer: '5',
+          explain: String.raw`Gli interi con $|x| \le 2$ sono $-2, -1, 0, 1, 2$: cinque elementi.` },
+        { id: 's00.insiemi.L1.e5', type: 'num', level: 2,
+          prompt: String.raw`Quanti elementi ha l'insieme $\{\emptyset\}$?`,
+          answer: '1',
+          explain: String.raw`L'insieme $\{\emptyset\}$ contiene un solo elemento, che è l'insieme vuoto. L'errore tipico è dire zero: $\emptyset$ ha zero elementi, $\{\emptyset\}$ ne ha uno.` },
+        { id: 's00.insiemi.L1.e6', type: 'match', level: 1,
+          prompt: String.raw`Abbina ogni simbolo al suo insieme numerico.`,
+          pairs: [
+            [String.raw`$\N$`, String.raw`naturali $1, 2, 3, \dots$`],
+            [String.raw`$\Z$`, String.raw`interi relativi $\dots, -1, 0, 1, \dots$`],
+            [String.raw`$\Q$`, String.raw`razionali $\frac{p}{q}$ con $q \ne 0$`],
+            [String.raw`$\R \setminus \Q$`, String.raw`irrazionali, come $\sqrt{2}$ e $\pi$`],
+          ],
+          explain: String.raw`$\N \subseteq \Z \subseteq \Q \subseteq \R$. I razionali sono le frazioni, gli irrazionali sono i reali che non lo sono.` },
+        { id: 's00.insiemi.L1.e7', type: 'cloze', level: 1,
+          prompt: String.raw`Completa con il simbolo giusto.`,
+          text: String.raw`$\{1, 2\}\ [[0]]\ \{1, 2, 3\}$`,
+          blanks: [{ options: [String.raw`$\subseteq$`, String.raw`$\in$`, String.raw`$\cap$`], answer: 0 }],
+          explain: String.raw`Due insiemi si confrontano con $\subseteq$: ogni elemento di $\{1,2\}$ sta in $\{1,2,3\}$. $\in$ si usa tra un elemento e un insieme.` },
+        { id: 's00.insiemi.L1.e8', type: 'mcq', level: 2,
+          prompt: String.raw`Quale insieme è uguale a $\{x \in \N : x^2 = 4\}$?`,
+          options: [String.raw`$\{2\}$`, String.raw`$\{-2, 2\}$`, String.raw`$\{4\}$`, String.raw`$\{x \in \N : x = 2 \text{ e } x = -2\}$`],
+          answer: 0,
+          explain: String.raw`In $\N$ i numeri positivi sono quelli considerati: $x^2 = 4$ ha soluzione $x = 2$ e non $x = -2$, che non è naturale. $\{-2, 2\}$ vale in $\Z$ o in $\R$. $\{4\}$ confonde l'insieme con il valore $x^2$. L'ultimo non ha elementi.` },
+        { id: 's00.insiemi.L1.e9', type: 'tf', level: 2,
+          prompt: String.raw`Se $A \subseteq B$ e $B \subseteq A$, allora $A = B$.`,
+          answer: true,
+          explain: String.raw`Vero: è la definizione di uguaglianza di insiemi (doppia inclusione).` },
+      ],
+    },
+    {
+      id: 's00.insiemi.L2',
+      title: 'Unione, intersezione, differenza, complementare',
+      cards: [
+        { type: 'learn', title: 'Unione e intersezione', body: String.raw`Dati due insiemi $A$ e $B$:
+
+- **unione** $A \cup B$: gli elementi che stanno in $A$ **oppure** in $B$ (o in entrambi);
+- **intersezione** $A \cap B$: gli elementi che stanno in $A$ **e** in $B$.
+
+Con i reali: se $A = [0,2]$ e $B = (1,5)$, allora $A\cap B = (1,2]$ e $A\cup B = [0,5)$. Per l'unione si prendono i punti di entrambi; per l'intersezione solo quelli comuni, con gli estremi inclusi solo se lo sono in **entrambi**.` },
+        { type: 'example', title: 'Esempio svolto', problem: String.raw`Sia $A = (-1,3]$ e $B = [2,5)$. Calcola $A \cap B$ e $A \cup B$.`,
+          steps: [
+            String.raw`Per l'intersezione: un punto deve soddisfare $x > -1$, $x \le 3$, $x \ge 2$ e $x < 5$. Le condizioni più strette sono $x \ge 2$ e $x \le 3$.`,
+            { text: String.raw`Quindi $A \cap B = [2,3]$. L'estremo $2$ è incluso perché $2 \in A$ e $2 \in B$.`,
+              ask: { type: 'num', prompt: String.raw`Qual è l'estremo sinistro di $A\cap B$?`, answer: '2', explain: String.raw`Il più stretto tra $-1$ (aperto) e $2$ (chiuso) è $2$, che è incluso.` } },
+            String.raw`Per l'unione: $A$ parte da $-1$ (escluso) e $B$ arriva fino a $5$ (escluso). I due si sovrappongono su $[2,3]$, quindi coprono tutto da $-1$ a $5$: $A \cup B = (-1,5)$.`,
+          ],
+          result: String.raw`$A\cap B = [2,3]$ e $A\cup B = (-1,5)$.` },
+        { id: 's00.insiemi.L2.e1', type: 'interval', level: 1,
+          prompt: String.raw`Sia $A = (-1,3]$ e $B = [2,5)$. Calcola $A \cap B$.`,
+          answer: '[2,3]',
+          explain: String.raw`$A\cap B$ contiene i punti comuni: da $2$ (incluso in entrambi) a $3$ (incluso in $A$, e $3 < 5$ in $B$).` },
+        { id: 's00.insiemi.L2.e2', type: 'interval', level: 1,
+          prompt: String.raw`Sia $A = (-1,3]$ e $B = [2,5)$. Calcola $A \cup B$.`,
+          answer: '(-1,5)',
+          explain: String.raw`I due intervalli si sovrappongono, quindi l'unione è un unico intervallo da $-1$ (escluso) a $5$ (escluso).` },
+        { type: 'learn', title: 'Differenza e complementare', body: String.raw`- **differenza** $A \setminus B$: gli elementi di $A$ che **non** stanno in $B$;
+- **complementare** $A^c$ (o $\complement A$): gli elementi dell'**insieme universo** che non stanno in $A$. Nei reali, l'universo è $\R$: $[0,1]^c = (-\infty,0)\cup(1,+\infty)$.
+
+>! $A \setminus B$ non è uguale a $B \setminus A$: la differenza non è commutativa.` },
+        { id: 's00.insiemi.L2.e3', type: 'interval', level: 2,
+          prompt: String.raw`Sia $A = (-1,3]$ e $B = [2,5)$. Calcola $A \setminus B$.`,
+          answer: '(-1,2)',
+          explain: String.raw`Tolgo da $A$ i punti di $B$, cioè da $2$ in poi: resta $(-1,2)$. Il punto $2$ è in $B$, quindi è escluso.` },
+        { id: 's00.insiemi.L2.e4', type: 'interval', level: 2,
+          prompt: String.raw`Sia $A = (-1,3]$ e $B = [2,5)$. Calcola $B \setminus A$.`,
+          answer: '(3,5)',
+          explain: String.raw`Tolgo da $B$ i punti di $A$, cioè fino a $3$ compreso: resta $(3,5)$, con $3$ escluso perché è in $A$.` },
+        { id: 's00.insiemi.L2.e5', type: 'interval', level: 2,
+          prompt: String.raw`Calcola il complementare di $[0,1]$ in $\R$.`,
+          answer: '(-inf,0)U(1,inf)',
+          explain: String.raw`Il complementare è l'insieme dei reali fuori da $[0,1]$: $x < 0$ oppure $x > 1$. Gli estremi $0$ e $1$ appartengono a $[0,1]$, quindi non vi appartengono.` },
+        { id: 's00.insiemi.L2.e6', type: 'mcq', level: 2,
+          prompt: String.raw`Vale sempre $A \setminus B = B \setminus A$?`,
+          options: [String.raw`Sì, sempre`, String.raw`No: la differenza non è commutativa`, String.raw`Sì, se $A \subseteq B$`, String.raw`Sì, se $A$ e $B$ sono disgiunti`],
+          answer: 1,
+          explain: String.raw`Controesempio: $A = \{1\}$, $B = \{2\}$. Allora $A\setminus B = \{1\}$ e $B\setminus A = \{2\}$, diversi. Anche se $A$ e $B$ sono disgiunti, $A \setminus B = A$ e $B\setminus A = B$, che sono diversi in generale.` },
+        { id: 's00.insiemi.L2.e7', type: 'set', level: 1,
+          prompt: String.raw`Sia $A = \{1,2,3,4\}$ e $B = \{3,4,5\}$. Quali sono gli elementi di $A\cap B$? Separali con ;`,
+          answer: ['3', '4'],
+          explain: String.raw`Gli elementi comuni ad $A$ e $B$ sono $3$ e $4$.` },
+        { id: 's00.insiemi.L2.e8', type: 'set', level: 1,
+          prompt: String.raw`Sia $A = \{1,2,3,4\}$ e $B = \{3,4,5\}$. Quali sono gli elementi di $A\cup B$? Separali con ;`,
+          answer: ['1', '2', '3', '4', '5'],
+          explain: String.raw`L'unione contiene gli elementi di entrambi, senza ripetizioni: $1, 2, 3, 4, 5$.` },
+        { id: 's00.insiemi.L2.e9', type: 'tf', level: 2,
+          prompt: String.raw`Per ogni $A$ e $B$ vale $A\cap B \subseteq A$.`,
+          answer: true,
+          explain: String.raw`Vero: un elemento di $A\cap B$ sta in $A$ per definizione.` },
+        { id: 's00.insiemi.L2.e10', type: 'cloze', level: 2,
+          prompt: String.raw`Completa la proprietà.`,
+          text: String.raw`$A \cup \emptyset = [[0]]$`,
+          blanks: [{ options: [String.raw`$A$`, String.raw`$\emptyset$`, String.raw`$\R$`], answer: 0 }],
+          explain: String.raw`L'insieme vuoto non aggiunge elementi all'unione: $A\cup\emptyset = A$. Analogamente $A\cap\emptyset = \emptyset$.` },
+      ],
+    },
+    {
+      id: 's00.insiemi.L3',
+      title: 'Prodotto cartesiano e insiemi di soluzioni',
+      cards: [
+        { type: 'learn', title: 'Il prodotto cartesiano', body: String.raw`Il **prodotto cartesiano** $A \times B$ è l'insieme delle **coppie ordinate** $(a,b)$ con $a \in A$ e $b \in B$. L'ordine conta: $(1,2) \ne (2,1)$.
+
+Se $|A| = m$ e $|B| = n$, allora $|A\times B| = m\cdot n$: ogni elemento di $A$ si abbina con ogni elemento di $B$.
+
+Esempio: $\{0,1\}\times\{2,3\} = \{(0,2), (0,3), (1,2), (1,3)\}$, quattro coppie. Il piano $\R^2 = \R\times\R$ è l'insieme delle coppie di reali, cioè dei punti $(x,y)$.` },
+        { id: 's00.insiemi.L3.e1', type: 'num', level: 1,
+          prompt: String.raw`Quanti elementi ha $A\times B$ se $|A| = 3$ e $|B| = 2$?`,
+          answer: '6',
+          explain: String.raw`$|A\times B| = |A|\cdot|B| = 3\cdot 2 = 6$.` },
+        { id: 's00.insiemi.L3.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Quale coppia appartiene a $\{1,2\}\times\{3\}$?`,
+          options: [String.raw`$(3,1)$`, String.raw`$(1,3)$`, String.raw`$(1,2)$`, String.raw`$(3,3)$`],
+          answer: 1,
+          explain: String.raw`La prima componente deve stare in $\{1,2\}$ e la seconda in $\{3\}$: solo $(1,3)$. $(3,1)$ inverte l'ordine, $(1,2)$ ha seconda componente $2 \notin \{3\}$, $(3,3)$ ha prima componente $3 \notin \{1,2\}$.` },
+        { type: 'learn', title: 'Insiemi di soluzioni', body: String.raw`L'insieme delle soluzioni di un'equazione o di una disequazione è un insieme:
+
+- $\{x \in \R : x^2 = 4\} = \{-2, 2\}$;
+- $\{x \in \R : x > 1\} = (1,+\infty)$;
+- per un sistema, l'insieme delle soluzioni è l'**intersezione** degli insiemi delle singole disuguaglianze.
+
+Anche il **dominio** di una funzione è un sottoinsieme di $\R$: il dominio di $\sqrt{x}/(x-2)$ è l'intersezione dei domini della radice e del denominatore.` },
+        { id: 's00.insiemi.L3.e3', type: 'set', level: 2,
+          prompt: String.raw`Scrivi l'insieme $\{x \in \R : x^2 = 9\}$ con i suoi elementi separati da ;`,
+          answer: ['3', '-3'],
+          explain: String.raw`$x^2 = 9$ ha due soluzioni reali: $x = 3$ e $x = -3$.` },
+        { id: 's00.insiemi.L3.e4', type: 'interval', level: 2,
+          prompt: String.raw`Calcola $\{x \in \R : |x| < 2\} \cap \{x \in \R : x > 0\}$.`,
+          answer: '(0,2)',
+          explain: String.raw`Il primo insieme è $(-2,2)$, il secondo $(0,+\infty)$. L'intersezione è $(0,2)$.` },
+        { id: 's00.insiemi.L3.e5', type: 'interval', level: 2,
+          prompt: String.raw`Scrivi come unione di intervalli $\{x \in \R : x^2 > 4\}$.`,
+          answer: '(-inf,-2)U(2,inf)',
+          explain: String.raw`$x^2 > 4$ significa $|x| > 2$: $x < -2$ oppure $x > 2$. L'insieme è l'unione di due intervalli, non un intervallo solo.` },
+        { id: 's00.insiemi.L3.e6', type: 'mcq', level: 2, source: 'Appello 06/07/2026 · Parte B (insieme di definizione)',
+          prompt: String.raw`Qual è il dominio di $f(x) = \sqrt{x-1} + \log(x-3)$?`,
+          options: [String.raw`$[1,+\infty)$`, String.raw`$(3,+\infty)$`, String.raw`$[1,3)$`, String.raw`$(1,+\infty)$`],
+          answer: 1,
+          explain: String.raw`Serve $x \ge 1$ per la radice e $x > 3$ per il logaritmo. Il dominio è l'intersezione $[1,+\infty)\cap(3,+\infty) = (3,+\infty)$.` },
+        { id: 's00.insiemi.L3.e7', type: 'interval', level: 2,
+          prompt: String.raw`Determina il dominio di $f(x) = \dfrac{\sqrt{x}}{x-2}$.`,
+          answer: '[0,2)U(2,inf)',
+          explain: String.raw`Serve $x \ge 0$ per la radice e $x \ne 2$ per il denominatore. L'intersezione è $[0,2)\cup(2,+\infty)$.` },
+        { id: 's00.insiemi.L3.e8', type: 'tf', level: 2,
+          prompt: String.raw`Il punto $2$ appartiene all'intervallo $(2,3)$.`,
+          answer: false,
+          explain: String.raw`Falso: la parentesi tonda esclude l'estremo $2$. Appartengono all'intervallo i punti $x$ con $2 < x < 3$.` },
+        { id: 's00.insiemi.L3.e9', type: 'mcq', level: 2,
+          prompt: String.raw`Quale affermazione è falsa?`,
+          options: [String.raw`$\N \subseteq \Z$`, String.raw`$\Z \subseteq \Q$`, String.raw`$\Q \subseteq \R$`, String.raw`$\R \subseteq \Q$`],
+          answer: 3,
+          explain: String.raw`$\R \subseteq \Q$ è falsa: $\sqrt2 \in \R$ ma $\sqrt2 \notin \Q$. Le altre tre inclusioni sono vere.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's00.insiemi.gen-operazioni', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(-4, 3), b = a + R.int(1, 5);
+        let c = R.int(-4, 3);
+        while (c === a) c = R.int(-4, 3);
+        const d = c + R.int(1, 5);
+        const la = R.pick(['(', '[']), ra = R.pick([')', ']']);
+        const lc = R.pick(['(', '[']), rc = R.pick([')', ']']);
+        const A = `${la}${a},${b}${ra}`, B = `${lc}${c},${d}${rc}`;
+        const inA = (v) => (la === '(' ? v > a : v >= a) && (ra === ')' ? v < b : v <= b);
+        const inB = (v) => (lc === '(' ? v > c : v >= c) && (rc === ')' ? v < d : v <= d);
+        const op = R.pick(['cap', 'cup', 'minus']);
+        const pred = op === 'cap' ? (v) => inA(v) && inB(v) : op === 'cup' ? (v) => inA(v) || inB(v) : (v) => inA(v) && !inB(v);
+        const sol = solveSet(pred, [pt(a), pt(b), pt(c), pt(d)]);
+        const sym = { cap: String.raw`\cap`, cup: String.raw`\cup`, minus: String.raw`\setminus` }[op];
+        const rule = {
+          cap: String.raw`Un punto sta in $A\cap B$ se sta **sia** in $A$ sia in $B$: un estremo resta incluso solo se lo è in entrambi.`,
+          cup: String.raw`Un punto sta in $A\cup B$ se sta in $A$ **oppure** in $B$: un estremo è incluso se lo è in almeno uno dei due.`,
+          minus: String.raw`Un punto sta in $A\setminus B$ se sta in $A$ **e non** sta in $B$: gli estremi di $B$ che appartengono a $B$ vengono tolti.`,
+        }[op];
+        return {
+          type: 'interval',
+          prompt: String.raw`Sia $A = ${A}$ e $B = ${B}$. Calcola $A ${sym} B$.`,
+          answer: sol.s,
+          explain: `${rule} Risultato: $${sol.t}$.`,
+        };
+      } },
+    { id: 's00.insiemi.gen-cardinalita', type: 'gen', level: 1,
+      gen: (R) => {
+        const m = R.int(2, 6), n = R.int(2, 5);
+        return {
+          type: 'num',
+          prompt: String.raw`Quanti elementi ha $A\times B$ se $|A| = ${m}$ e $|B| = ${n}$?`,
+          answer: String(m * n),
+          explain: String.raw`Ogni elemento di $A$ si abbina con ogni elemento di $B$: $|A\times B| = ${m}\cdot ${n} = ${m * n}$ coppie.`,
+        };
+      } },
+    { id: 's00.insiemi.gen-quadrato', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.int(1, 6);
+        return {
+          type: 'set',
+          prompt: String.raw`Scrivi l'insieme $\{x \in \R : x^2 = ${c * c}\}$ con i suoi elementi separati da ;`,
+          answer: [String(c), String(-c)],
+          explain: String.raw`$x^2 = ${c * c}$ si scrive $x^2 = ${c}^2$, quindi $x = \pm ${c}$: due soluzioni reali distinte.`,
+        };
+      } },
+    { id: 's00.insiemi.p1', type: 'problem', level: 2, points: 2,
+      prompt: String.raw`Siano $A = \{x \in \R : x^2 \le 4\}$ e $B = \{x \in \R : x > 1\}$. Determina $A\cap B$, $A\cup B$ e $A\setminus B$.`,
+      parts: [
+        { type: 'interval', prompt: String.raw`$A\cap B$.`, answer: '(1,2]', explain: String.raw`$A = [-2,2]$, $B = (1,+\infty)$: l'intersezione è $(1,2]$, con $2$ incluso perché è in $A$ e $2 > 1$.` },
+        { type: 'interval', prompt: String.raw`$A\cup B$.`, answer: '[-2,inf)', explain: String.raw`Le due parti si sovrappongono: l'unione parte da $-2$ incluso e va a $+\infty$.` },
+        { type: 'interval', prompt: String.raw`$A\setminus B$.`, answer: '[-2,1]', explain: String.raw`Tolgo da $[-2,2]$ i punti con $x > 1$: resta $[-2,1]$, con $1$ incluso perché non appartiene a $B$.` },
+      ],
+      solution: String.raw`$A = [-2,2]$ e $B = (1,+\infty)$. Intersezione: $(1,2]$. Unione: $[-2,+\infty)$. Differenza $A\setminus B = [-2,1]$.` },
+    { id: 's00.insiemi.p2', type: 'tf', level: 1,
+      prompt: String.raw`Per ogni $A$ e $B$ vale $A\setminus B \subseteq A$.`, answer: true,
+      explain: String.raw`Vero: ogni elemento di $A\setminus B$ sta in $A$ per definizione.` },
+    { id: 's00.insiemi.p3', type: 'mcq', level: 2,
+      prompt: String.raw`Se $A \subseteq B$, quanto vale $A\cap B$?`,
+      options: [String.raw`$A$`, String.raw`$B$`, String.raw`$\emptyset$`, String.raw`$A\cup B$`],
+      answer: 0,
+      explain: String.raw`Ogni elemento di $A$ sta anche in $B$, quindi sta in $A\cap B$. Dunque $A\cap B = A$. $B$ sarebbe troppo grande; $\emptyset$ vale solo se $A$ è vuoto.` },
+    { id: 's00.insiemi.p4', type: 'match', level: 2,
+      prompt: String.raw`Abbina ogni operazione alla sua descrizione.`,
+      pairs: [
+        [String.raw`$A\cup B$`, String.raw`elementi in $A$ oppure in $B$`],
+        [String.raw`$A\cap B$`, String.raw`elementi in $A$ e in $B$`],
+        [String.raw`$A\setminus B$`, String.raw`in $A$ ma non in $B$`],
+        [String.raw`$A^c$`, String.raw`nell'universo ma non in $A$`],
+      ],
+      explain: String.raw`Le quattro operazioni descrivono le combinazioni di appartenenza: "oppure" per l'unione, "e" per l'intersezione, "ma non" per la differenza e il complementare.` },
+    { id: 's00.insiemi.p5', type: 'cloze', level: 1,
+      prompt: String.raw`Completa la proprietà dell'intersezione.`,
+      text: String.raw`$A\cap A = [[0]]$`,
+      blanks: [{ options: [String.raw`$A$`, String.raw`$\emptyset$`, String.raw`$\R$`], answer: 0 }],
+      explain: String.raw`Un elemento sta in $A\cap A$ se e solo se sta in $A$: quindi $A\cap A = A$.` },
+    { id: 's00.insiemi.p6', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Definisci il prodotto cartesiano $A\times B$ e calcola $\{0,1\}\times\{2,3\}$.`,
+      answer: String.raw`$A\times B = \{(a,b) : a\in A,\ b\in B\}$ è l'insieme delle coppie ordinate con prima componente in $A$ e seconda in $B$. Per $\{0,1\}\times\{2,3\}$ si ottiene $\{(0,2),(0,3),(1,2),(1,3)\}$.`,
+      rubric: [String.raw`Definizione con coppie ordinate $(a,b)$, $a\in A$ e $b\in B$`, 'Ordine delle componenti rispettato', 'Elenco completo delle quattro coppie'],
+      explain: String.raw`Il prodotto cartesiano è un insieme di coppie, non di singoli elementi: l'ordine delle componenti conta.` },
+    { id: 's00.insiemi.p7', type: 'mcq', level: 2,
+      prompt: String.raw`Quale affermazione è vera?`,
+      options: [String.raw`$\emptyset \in \{\emptyset\}$`, String.raw`$\emptyset = \{\emptyset\}$`, String.raw`$\{\emptyset\} \subseteq \emptyset$`, String.raw`$\emptyset \in \emptyset$`],
+      answer: 0,
+      explain: String.raw`$\emptyset$ è l'unico elemento di $\{\emptyset\}$. $\emptyset \ne \{\emptyset\}$ perché hanno elementi diversi. $\{\emptyset\} \subseteq \emptyset$ è falsa: $\emptyset$ non ha elementi, quindi non contiene l'elemento $\emptyset$. $\emptyset \in \emptyset$ è falsa perché l'insieme vuoto non ha elementi.` },
+  ],
+  flashcards: [
+    { id: 's00.insiemi.fc1', kind: 'def', front: 'Appartenenza', back: String.raw`$a\in A$ significa che $a$ è un elemento di $A$. $\emptyset$ è l'insieme senza elementi.` },
+    { id: 's00.insiemi.fc2', kind: 'def', front: 'Sottoinsieme', back: String.raw`$A\subseteq B$ se ogni elemento di $A$ sta in $B$. $A=B$ se $A\subseteq B$ e $B\subseteq A$.` },
+    { id: 's00.insiemi.fc3', kind: 'formula', front: 'Unione e intersezione', back: String.raw`$A\cup B = \{x : x\in A \text{ oppure } x\in B\}$; $A\cap B = \{x : x\in A \text{ e } x\in B\}$.` },
+    { id: 's00.insiemi.fc4', kind: 'def', front: 'Differenza e complementare', back: String.raw`$A\setminus B = \{x\in A : x\notin B\}$; $A^c = \{x\in U : x\notin A\}$ con $U$ l'insieme universo (in analisi, $\R$).` },
+    { id: 's00.insiemi.fc5', kind: 'def', front: 'Prodotto cartesiano', back: String.raw`$A\times B = \{(a,b) : a\in A,\ b\in B\}$: coppie ordinate. $|A\times B| = |A|\cdot|B|$.` },
+    { id: 's00.insiemi.fc6', kind: 'errore', front: String.raw`$\emptyset$ e $\{\emptyset\}$`, back: String.raw`$\emptyset$ ha zero elementi; $\{\emptyset\}$ ha un elemento, cioè $\emptyset$. $\emptyset\subseteq A$ per ogni $A$, ma $\emptyset\in A$ non è sempre vero.` },
+    { id: 's00.insiemi.fc7', kind: 'errore', front: 'Estremi degli intervalli nelle operazioni', back: String.raw`Nell'intersezione l'estremo è incluso solo se lo è in **tutti** gli insiemi. Nell'unione è incluso se lo è in **almeno uno**.` },
+    { id: 's00.insiemi.fc8', kind: 'def', front: 'Insiemi numerici', back: String.raw`$\N\subseteq\Z\subseteq\Q\subseteq\R$. $\Q$ sono le frazioni $p/q$ con $q\ne0$; $\R\setminus\Q$ gli irrazionali, come $\sqrt2$ e $\pi$.` },
+  ],
+});
