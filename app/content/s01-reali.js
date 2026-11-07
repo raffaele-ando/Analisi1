@@ -1457,3 +1457,319 @@ Con $c<0$: $|t|<c$ non ha soluzioni, mentre $|t|>c$ è vera per ogni $t$.
     { id: 's01.reali.fc10', kind: 'errore', front: 'Errori tipici con le disuguaglianze', back: String.raw`Il verso cambia solo per moltiplicazione o divisione per un negativo, non per somme. Il valore assoluto non è mai negativo: $|x|\le 0$ dà solo $x=0$. Per $|t|<c$ non basta $t<c$: serve anche $t>-c$.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s01.supinf
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's01.supinf',
+  title: 'Maggioranti, massimo, estremo superiore e inferiore',
+  summary: String.raw`Saprai distinguere massimo, minimo, sup e inf, calcolarli per insiemi definiti da successioni e usare la caratterizzazione con $\varepsilon$.`,
+  prereq: ['s01.reali', 's01.naturali', 's01.irrazionali'],
+  examRefs: ['Itinere 11/11/2025 · successioni'],
+  lessons: [
+    {
+      id: 's01.supinf.L1',
+      title: 'Maggioranti, minoranti, massimo e minimo',
+      cards: [
+        { type: 'learn', title: 'Maggiorante e massimo',
+          body: String.raw`Sia $A\subseteq\R$ non vuoto.
+
+- $M$ è un **maggiorante** di $A$ se $a\le M$ per ogni $a\in A$. Se $A$ ha un maggiorante, è **limitato superiormente**.
+- $m$ è un **minorante** di $A$ se $a\ge m$ per ogni $a\in A$. Se $A$ ha un minorante, è **limitato inferiormente**.
+- $A$ è **limitato** se lo è sia superiormente sia inferiormente.
+- Il **massimo** $\max A$ è un maggiorante che **appartiene** ad $A$. Il **minimo** $\min A$ è un minorante che appartiene ad $A$.
+
+>! Un maggiorante non è per forza il massimo: $3$ è un maggiorante di $[0,1]$, ma non ne è il massimo.` },
+        { id: 's01.supinf.L1.e1', type: 'mcq', level: 1,
+          prompt: String.raw`Quale numero è un maggiorante di $A=\{-1,\,0,\,\tfrac23\}$?`,
+          options: [String.raw`$\frac12$`, String.raw`$\frac23$`, String.raw`$0$`, String.raw`$-1$`],
+          answer: 1,
+          explain: String.raw`Un maggiorante è maggiore o uguale a tutti gli elementi. $\frac23$ lo è (ed è anche il massimo di $A$). $\frac12$ è minore di $\frac23$, quindi non basta. $0$ e $-1$ sono elementi di $A$ ma minori di $\frac23$.` },
+        { id: 's01.supinf.L1.e2', type: 'mcq', level: 1,
+          prompt: String.raw`Sia $A=(0,1)$. Quale affermazione è vera?`,
+          options: [String.raw`$\max A=1$`, String.raw`$\sup A=1$, ma $A$ non ha massimo`, String.raw`$\sup A=0$`, String.raw`$A$ non è limitato`],
+          answer: 1,
+          explain: String.raw`$1$ è il più piccolo dei maggioranti, quindi $\sup A=1$. Però $1\notin(0,1)$, quindi non è un massimo. $0$ è l'estremo inferiore, non superiore. $A$ è limitato, per esempio da $0$ e da $1$.` },
+        { type: 'example', title: 'Massimo e inf di una successione',
+          problem: String.raw`Determina $\max A$ e $\inf A$ per $A=\{\frac1n:\ n\ge1\}$.`,
+          steps: [
+            String.raw`Il primo termine è $\frac11=1$. Ogni altro termine è più piccolo: $\frac1n\le1$ per ogni $n\ge1$.`,
+            { text: String.raw`Quindi $1$ è un maggiorante che appartiene ad $A$: è il massimo.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\max A$?`, answer: '1',
+                explain: String.raw`È il termine con $n=1$, e appartiene ad $A$.` } },
+            String.raw`I termini sono positivi e $\frac1n$ si avvicina a $0$ senza mai raggiungerlo.`,
+            String.raw`Quindi $0$ è il più grande dei minoranti: $\inf A=0$. Non è il minimo, perché $0\notin A$.`,
+          ],
+          result: String.raw`$\max A=1$, $\inf A=0$, e $A$ non ha minimo.` },
+        { id: 's01.supinf.L1.e3', type: 'tf', level: 1,
+          prompt: String.raw`Se un insieme ha massimo $M$, allora $\sup A=M$.`,
+          answer: true,
+          explain: String.raw`$M$ è un maggiorante. Ogni altro maggiorante $M'$ è $\ge M$, perché $M\in A$. Quindi $M$ è il minimo dei maggioranti, cioè $\sup A$.` },
+        { id: 's01.supinf.L1.e4', type: 'tf', level: 1,
+          prompt: String.raw`Ogni insieme limitato superiormente ha un massimo.`,
+          answer: false,
+          explain: String.raw`Controesempio: $(0,1)$ è limitato superiormente, ma non ha massimo. Il sup $1$ esiste, ma non appartiene all'insieme.` },
+        { id: 's01.supinf.L1.e5', type: 'mcq', level: 1,
+          prompt: String.raw`Quale insieme NON è limitato inferiormente?`,
+          options: [String.raw`$\{\frac1n: n\ge1\}$`, String.raw`$[0,1]$`, String.raw`$(-\infty,3]$`, String.raw`$\N$`],
+          answer: 2,
+          explain: String.raw`$(-\infty,3]$ contiene numeri piccoli quanto si vuole: nessun minorante. Gli altri tre hanno un minorante: $0$ per $\{\frac1n\}$ e per $[0,1]$, $0$ anche per $\N$.` },
+        { id: 's01.supinf.L1.e6', type: 'num', level: 2,
+          prompt: String.raw`Sia $A=\left\{2-\frac1n:\ n\ge1\right\}$. Quanto vale $\sup A$?`,
+          answer: '2',
+          explain: String.raw`I termini sono $1,\frac32,\frac53,\dots$: crescono verso $2$ senza raggiungerlo. Quindi $\sup A=2$ e $A$ non ha massimo.` },
+        { id: 's01.supinf.L1.e7', type: 'match', level: 2,
+          prompt: 'Abbina ogni insieme alla sua descrizione.',
+          pairs: [
+            [String.raw`$(0,1)$`, String.raw`$\sup=1$, nessun massimo`],
+            [String.raw`$[0,1]$`, String.raw`$\max=1$, $\min=0$`],
+            [String.raw`$\{\frac1n: n\ge1\}$`, String.raw`$\max=1$, $\inf=0$ senza minimo`],
+            [String.raw`$(-\infty,2)$`, String.raw`$\sup=2$, nessun massimo`],
+          ],
+          explain: String.raw`In $(0,1)$ e in $(-\infty,2)$ gli estremi non sono raggiunti. In $[0,1]$ gli estremi sono estremi di intervallo chiuso, quindi sono raggiunti. In $\{\frac1n\}$ il massimo $1$ è raggiunto per $n=1$, ma $0$ non è un termine.` },
+      ],
+    },
+    {
+      id: 's01.supinf.L2',
+      title: 'Estremo superiore e inferiore',
+      cards: [
+        { type: 'learn', title: 'Sup e inf: il minimo dei maggioranti',
+          body: String.raw`>* Se $A\neq\emptyset$ è limitato superiormente, il suo **estremo superiore** $\sup A$ è il **minimo dei maggioranti** di $A$.
+
+>* Se $A\neq\emptyset$ è limitato inferiormente, il suo **estremo inferiore** $\inf A$ è il **massimo dei minoranti** di $A$.
+
+Per convenzione $\sup A=+\infty$ se $A$ non è limitato superiormente, e $\inf A=-\infty$ se non è limitato inferiormente.
+
+Il sup **esiste sempre** in $\R$ per un insieme non vuoto e limitato superiormente: è l'**assioma di completezza** (Dedekind). In $\Q$ questo non vale, come vedrai nell'esercizio seguente. Il sup non è necessariamente un elemento di $A$: se lo è, è il massimo.` },
+        { id: 's01.supinf.L2.e1', type: 'mcq', level: 2,
+          prompt: String.raw`Sia $A=\{x\in\Q: x^2<2\}$. Quale affermazione è vera?`,
+          options: [
+            String.raw`$\sup A=2$ anche in $\Q$, perché $2^2=4>2$`,
+            String.raw`In $\Q$ $A$ non ha estremo superiore: il candidato $\sqrt2$ non è razionale. In $\R$ invece $\sup A=\sqrt2$.`,
+            String.raw`$A$ è vuoto, perché nessun razionale ha quadrato minore di $2$`,
+            String.raw`$\max A=\sqrt2$`,
+          ],
+          answer: 1,
+          explain: String.raw`$\sup A=2$ è falso: $\frac32$ è un razionale maggiore di ogni elemento di $A$ (da $|x|<\sqrt2<\frac32$) e minore di $2$. $A$ non è vuoto, perché $0\in A$. $\sqrt2\notin A$, perché è irrazionale: non può essere un massimo.` },
+        { id: 's01.supinf.L2.e2', type: 'tf', level: 2,
+          prompt: String.raw`Se $\sup A\in A$, allora $\sup A=\max A$.`,
+          answer: true,
+          explain: String.raw`$s=\sup A$ è un maggiorante, e appartiene ad $A$ per ipotesi. Un maggiorante che appartiene all'insieme è il massimo, per definizione.` },
+        { type: 'example', title: 'Sup di (0,1) con la definizione',
+          problem: String.raw`Dimostra che $\sup(0,1)=1$.`,
+          steps: [
+            String.raw`$1$ è un maggiorante: ogni $a\in(0,1)$ soddisfa $a<1$.`,
+            { text: String.raw`Sia $\varepsilon>0$. Se $\varepsilon\ge1$ scelgo $a=\frac12$: è $a>1-\varepsilon$. Se $0<\varepsilon<1$ scelgo $a=1-\frac{\varepsilon}{2}\in(0,1)$.`,
+              ask: { type: 'mcq', prompt: String.raw`Con $a=1-\frac{\varepsilon}{2}$, quanto vale $a-(1-\varepsilon)$?`,
+                options: [String.raw`$\frac{\varepsilon}{2}$`, String.raw`$-\frac{\varepsilon}{2}$`, String.raw`$\varepsilon$`, String.raw`$0$`], answer: 0,
+                explain: String.raw`$1-\frac{\varepsilon}{2}-1+\varepsilon=\frac{\varepsilon}{2}>0$: quindi $a>1-\varepsilon$.` } },
+            String.raw`Quindi per ogni $\varepsilon>0$ esiste $a\in(0,1)$ con $a>1-\varepsilon$.`,
+            String.raw`Con la caratterizzazione con $\varepsilon$ (ultima lezione) $1=\sup(0,1)$. Non è massimo, perché $1\notin(0,1)$.`,
+          ],
+          result: String.raw`$\sup(0,1)=1$, senza massimo.` },
+        { id: 's01.supinf.L2.e3', type: 'num', level: 1,
+          prompt: String.raw`Sia $A=\left\{1-\frac1n:\ n\ge1\right\}$. Quanto vale $\sup A$?`,
+          answer: '1',
+          explain: String.raw`I termini sono $0,\frac12,\frac23,\dots$ e crescono verso $1$ senza raggiungerlo. Quindi $\sup A=1$. Il minimo invece c'è: $\min A=0$, per $n=1$.` },
+        { id: 's01.supinf.L2.e4', type: 'mcq', level: 2,
+          prompt: String.raw`Quale affermazione è equivalente a «$s=\sup A$»?`,
+          options: [
+            String.raw`$s$ è un maggiorante di $A$ e per ogni $\varepsilon>0$ esiste $a\in A$ con $a>s-\varepsilon$`,
+            String.raw`$s$ è un maggiorante di $A$ e $s\in A$`,
+            String.raw`Per ogni $a\in A$ vale $a<s$`,
+            String.raw`Per ogni $\varepsilon>0$ esiste $a\in A$ con $a<s+\varepsilon$`,
+          ],
+          answer: 0,
+          explain: String.raw`La prima è la caratterizzazione con $\varepsilon$. La seconda definisce il massimo, che può non esistere. La terza è troppo forte: il sup può essere raggiunto. La quarta vale anche per maggioranti qualsiasi, come $s=100$ quando $A\subseteq(-\infty,50]$: non garantisce la minimalità.` },
+        { id: 's01.supinf.L2.e5', type: 'tf', level: 2,
+          prompt: String.raw`Ogni insieme non vuoto e limitato inferiormente ha un estremo inferiore in $\R$.`,
+          answer: true,
+          explain: String.raw`Si applica la completezza all'insieme $-A=\{-a: a\in A\}$, che è limitato superiormente. Poi $\inf A=-\sup(-A)$.` },
+        { id: 's01.supinf.L2.e6', type: 'cloze', level: 1,
+          prompt: 'Completa la frase.',
+          text: String.raw`Se $A\subseteq\R$ è non vuoto e limitato superiormente, $\sup A$ esiste in $\R$ ed è il [[0]] dei maggioranti. Se $\sup A\in A$, allora $\sup A$ è [[1]] $A$.`,
+          blanks: [
+            { options: ['minimo', 'massimo', 'medio'], answer: 0 },
+            { options: ['il massimo di', 'il minimo di', 'un minorante di'], answer: 0 },
+          ],
+          explain: String.raw`Il sup è il più piccolo dei maggioranti. Se appartiene ad $A$, è anche il più grande elemento di $A$, cioè il suo massimo.` },
+        { id: 's01.supinf.L2.e7', type: 'open', level: 2,
+          prompt: String.raw`Definisci l'estremo superiore di $A\subseteq\R$ e spiega la differenza con il massimo, con un esempio.`,
+          answer: String.raw`$\sup A$ è il minimo dei maggioranti di $A$: un numero $s$ tale che $a\le s$ per ogni $a\in A$ e $s\le M$ per ogni altro maggiorante $M$. Il massimo, se esiste, è un elemento di $A$; il sup può non appartenere ad $A$. Esempio: $A=(0,1)$ ha $\sup A=1$ ma non ha massimo.`,
+          rubric: ['Sup come minimo dei maggioranti, con le due proprietà', 'Massimo come maggiorante che appartiene ad $A$', 'Esempio corretto che separa sup e massimo'] },
+      ],
+    },
+    {
+      id: 's01.supinf.L3',
+      title: 'Caratterizzazione con ε e successioni (livello d\'esame)',
+      cards: [
+        { type: 'learn', title: 'Caratterizzazione con ε',
+          body: String.raw`>* $s=\sup A$ se e solo se:
+1. $a\le s$ per ogni $a\in A$ (cioè $s$ è un maggiorante);
+2. per ogni $\varepsilon>0$ esiste $a\in A$ con $a>s-\varepsilon$.
+
+La condizione 2 dice che $A$ si avvicina a $s$ quanto si vuole. Se esistesse un maggiorante più piccolo di $s$, basterebbe scegliere $\varepsilon$ abbastanza piccolo per "scavalcarlo" con un elemento di $A$.
+
+Analogamente, $m=\inf A$ se e solo se $a\ge m$ per ogni $a\in A$ e per ogni $\varepsilon>0$ esiste $a\in A$ con $a<m+\varepsilon$.
+
+>! La condizione 2 non dice che $s\in A$: l'$\varepsilon$ serve proprio nei casi in cui il sup non è raggiunto.` },
+        { type: 'example', title: 'Sup e inf di una successione a segni alterni',
+          problem: String.raw`Determina $\sup$ e $\inf$ di $A=\left\{(-1)^n\frac{n}{n+1}:\ n\ge1\right\}$.`,
+          steps: [
+            String.raw`Primi termini: $-\frac12,\ \frac23,\ -\frac34,\ \frac45,\dots$. I termini di indice pari sono positivi, quelli di indice dispari negativi.`,
+            { text: String.raw`Per $n$ pari il termine è $\frac{n}{n+1}$: cresce verso $1$, senza raggiungerlo.`,
+              ask: { type: 'mcq', prompt: String.raw`Quale affermazione sui termini di indice pari è vera?`,
+                options: ['Hanno un massimo, uguale al primo termine pari', 'Crescono verso $1$ senza raggiungerlo', 'Sono tutti negativi'], answer: 1,
+                explain: String.raw`$\frac{n}{n+1}<1$ per ogni $n$, ma $\frac{n}{n+1}\to1$. Quindi il sup dei termini pari è $1$, non raggiunto: non c'è un massimo tra loro.` } },
+            { text: String.raw`Per $n$ dispari il termine è $-\frac{n}{n+1}$: decresce verso $-1$ senza raggiungerlo.`,
+              ask: { type: 'num', prompt: String.raw`Quale numero è il limite di $-\frac{n}{n+1}$ per $n\to+\infty$?`, answer: '-1',
+                explain: String.raw`$\frac{n}{n+1}\to1$, quindi $-\frac{n}{n+1}\to-1$.` } },
+            String.raw`Quindi $\sup A=1$ e $\inf A=-1$: entrambi non sono raggiunti.`,
+          ],
+          result: String.raw`$\sup A=1$ e $\inf A=-1$, ma $A$ non ha né massimo né minimo.` },
+        { id: 's01.supinf.L3.e1', type: 'mcq', level: 3,
+          prompt: String.raw`Sia $A=\left\{(-1)^n\left(1+\frac1n\right):\ n\ge1\right\}$. Quale affermazione è vera?`,
+          options: [
+            String.raw`$\max A=\sup A=\frac32$ (per $n=2$) e $\min A=\inf A=-2$ (per $n=1$)`,
+            String.raw`$\max A=\sup A=2$`,
+            String.raw`$\min A=\inf A=-1$`,
+            String.raw`$A$ non è limitato`,
+          ],
+          answer: 0,
+          explain: String.raw`I termini pari sono $1+\frac1n$: il più grande è $n=2$, cioè $\frac32$. I termini dispari sono $-(1+\frac1n)$: il più piccolo è $n=1$, cioè $-2$. Entrambi sono raggiunti, quindi sono anche massimo e minimo. Le altre risposte confondono i valori o dicono che $A$ non è limitato, ma i suoi termini stanno tra $-2$ e $\frac32$.`,
+          source: 'Itinere 11/11/2025 · successioni' },
+        { id: 's01.supinf.L3.e2', type: 'num', level: 2,
+          prompt: String.raw`Sia $A=\left\{\frac{n+1}{n}:\ n\ge1\right\}$. Quanto vale $\inf A$?`,
+          answer: '1',
+          explain: String.raw`I termini sono $2,\frac32,\frac43,\dots$ e decrescono verso $1$ senza raggiungerlo. Quindi $\inf A=1$, non minimo. Il massimo è $2$, per $n=1$.` },
+        { id: 's01.supinf.L3.e3', type: 'open', level: 3,
+          prompt: String.raw`Enuncia la caratterizzazione con $\varepsilon$ dell'estremo superiore.`,
+          answer: String.raw`$s=\sup A$ se e solo se $a\le s$ per ogni $a\in A$ e, per ogni $\varepsilon>0$, esiste $a\in A$ con $a>s-\varepsilon$.`,
+          rubric: ['Condizione: $s$ è un maggiorante di $A$', 'Condizione: per ogni $\\varepsilon>0$ esiste $a\\in A$ con $a>s-\\varepsilon$', 'Nota che la seconda condizione serve anche quando il sup non è raggiunto'] },
+        { id: 's01.supinf.L3.e4', type: 'order', level: 3,
+          prompt: String.raw`Riordina i passi che dimostrano la seconda condizione: se $s=\sup A$ e $\varepsilon>0$, esiste $a\in A$ con $a>s-\varepsilon$.`,
+          steps: [
+            String.raw`Sia $\varepsilon>0$. Il numero $s-\varepsilon$ è minore di $s$.`,
+            String.raw`Se $s-\varepsilon$ fosse un maggiorante di $A$, sarebbe un maggiorante più piccolo di $s$: contro il fatto che $s$ è il minimo dei maggioranti.`,
+            String.raw`Quindi $s-\varepsilon$ non è un maggiorante: esiste $a\in A$ con $a>s-\varepsilon$.`,
+          ],
+          distractors: [
+            String.raw`Poiché $s$ è un maggiorante, $s\in A$: basta scegliere $a=s$.`,
+            String.raw`Il numero $s+\varepsilon$ è un maggiorante, quindi $a>s-\varepsilon$ per ogni $a\in A$.`,
+          ],
+          explain: String.raw`È una dimostrazione per assurdo sul numero $s-\varepsilon$. Un maggiorante non deve appartenere ad $A$ (primo distrattore). Il fatto che $s+\varepsilon$ sia un maggiorante non dice nulla su $s-\varepsilon$ (secondo distrattore).` },
+        { id: 's01.supinf.L3.e5', type: 'tf', level: 2,
+          prompt: String.raw`Se $\sup A\notin A$, allora $A$ non ha massimo.`,
+          answer: true,
+          explain: String.raw`Se $A$ avesse massimo $M$, allora $M=\sup A$ (vedi la lezione precedente), quindi $\sup A\in A$: contraddizione con l'ipotesi.` },
+        { id: 's01.supinf.L3.e6', type: 'mcq', level: 3,
+          prompt: String.raw`Sia $A=\{x\in\R: x^2<2\}$. Quale affermazione è vera?`,
+          options: [
+            String.raw`$\sup A=\sqrt2$, $\inf A=-\sqrt2$, e $A$ non ha massimo né minimo`,
+            String.raw`$\max A=\sqrt2$`,
+            String.raw`$\sup A=2$`,
+            String.raw`$A=\varnothing$`,
+          ],
+          answer: 0,
+          explain: String.raw`$x^2<2\iff|x|<\sqrt2$: $A=(-\sqrt2,\sqrt2)$. Gli estremi sono $\pm\sqrt2$, non raggiunti. $\sup A=2$ è falso, perché $\sqrt2$ è già un maggiorante più piccolo.` },
+        { id: 's01.supinf.L3.e7', type: 'problem', level: 3,
+          prompt: String.raw`Sia $A=\left\{1+\frac{(-1)^n}{n}:\ n\ge1\right\}$.`,
+          parts: [
+            { type: 'num', prompt: String.raw`Calcola $\sup A$.`, answer: '3/2',
+              explain: String.raw`Termini pari: $1+\frac1n$, il più grande è $n=2$, cioè $\frac32$. Termini dispari: $1-\frac1n<1$. Quindi $\sup A=\max A=\frac32$.` },
+            { type: 'num', prompt: String.raw`Calcola $\inf A$.`, answer: '0',
+              explain: String.raw`Termini dispari: $1-\frac1n$, il più piccolo è $n=1$, cioè $0$. Termini pari: $1+\frac1n\ge1$. Quindi $\inf A=\min A=0$.` },
+            { type: 'tf', prompt: String.raw`$A$ ha minimo.`, answer: true,
+              explain: String.raw`Il minimo è $0$, raggiunto per $n=1$: $1+\frac{-1}{1}=0$.` },
+          ],
+          solution: String.raw`Termini pari $1+\frac1n$, con massimo $\frac32$ per $n=2$. Termini dispari $1-\frac1n\in[0,1)$, con minimo $0$ per $n=1$. Quindi $\sup A=\max A=\frac32$ e $\inf A=\min A=0$.` },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's01.supinf.p.gen-shift', type: 'gen', level: 1,
+      gen: (R) => {
+        const c = R.nz(-6, 6), d = R.nz(-5, 5);
+        const up = d > 0;
+        const ad = Math.abs(d);
+        return { type: 'num',
+          prompt: String.raw`Sia $A=\left\{${c}${up ? '+' : '-'}\frac{${ad}}{n}:\ n\in\N,\ n\ge1\right\}$. Calcola $\sup A$.`,
+          answer: String(up ? c + d : c),
+          explain: up
+            ? String.raw`Al crescere di $n$ la frazione $\frac{${ad}}{n}$ diminuisce: il termine più grande è quello con $n=1$, cioè $${c + d}$. Quindi $\sup A=\max A=${c + d}$. Il valore $${c}$ è l'$\inf A$, non raggiunto.`
+            : String.raw`Con $d<0$ i termini $${c}-\frac{${ad}}{n}$ crescono verso $${c}$ senza raggiungerlo. Quindi $\sup A=${c}$, senza massimo. Il termine con $n=1$ dà il minimo $${c + d}$.` };
+      } },
+    { id: 's01.supinf.p.gen-ball', type: 'gen', level: 2,
+      gen: (R) => {
+        const c = R.int(-5, 5), r = R.int(1, 6);
+        const sh = c === 0 ? '' : c > 0 ? `-${c}` : `+${-c}`;
+        return { type: 'num',
+          prompt: String.raw`Sia $A=\{x\in\R:\ |x${sh}|<${r}\}$. Calcola $\inf A$.`,
+          answer: String(c - r),
+          explain: String.raw`$|x${sh}|<${r}\iff ${c - r}<x<${c + r}$: $A$ è un intervallo aperto, senza massimo né minimo. Quindi $\inf A=${c - r}$ e $\sup A=${c + r}$.` };
+      } },
+    { id: 's01.supinf.p.gen-alt', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.int(1, 4);
+        return { type: 'num',
+          prompt: String.raw`Sia $A=\left\{(-1)^n\left(1+\frac{${k}}{n}\right):\ n\ge1\right\}$. Calcola $\sup A$.`,
+          answer: fracS(2 + k, 2),
+          explain: String.raw`Per $n$ pari il termine è $1+\frac{${k}}{n}$, positivo e decrescente: il più grande è $n=2$, cioè $1+\frac{${k}}{2}=${fracTex(2 + k, 2)}$. I termini dispari sono negativi, quindi non possono essere il sup. Il sup è anche massimo.` };
+      } },
+    { id: 's01.supinf.p.1', type: 'mcq', level: 1,
+      prompt: String.raw`Quale numero è un minorante di $A=\{2,\,5,\,\pi\}$?`,
+      options: ['3', '2', String.raw`$\pi$`, '5'],
+      answer: 1,
+      explain: String.raw`Un minorante deve essere minore o uguale a tutti gli elementi. $2$ è il minimo di $A$: è un minorante, e appartiene ad $A$. $3$ è maggiore di $2$, quindi non va bene.` },
+    { id: 's01.supinf.p.2', type: 'tf', level: 1,
+      prompt: 'Ogni insieme finito di numeri reali è limitato.',
+      answer: true,
+      explain: String.raw`Il più grande e il più piccolo elemento di un insieme finito sono un maggiorante e un minorante.` },
+    { id: 's01.supinf.p.3', type: 'cloze', level: 1,
+      prompt: 'Completa la definizione.',
+      text: String.raw`Il $\sup$ di $A$ è il [[0]] dei maggioranti di $A$; l'$\inf$ di $A$ è il [[1]] dei minoranti.`,
+      blanks: [
+        { options: ['minimo', 'massimo', 'medio'], answer: 0 },
+        { options: ['massimo', 'minimo', 'punto medio'], answer: 0 },
+      ],
+      explain: String.raw`Il sup è il più piccolo dei maggioranti; l'inf è il più grande dei minoranti.` },
+    { id: 's01.supinf.p.4', type: 'num', level: 1,
+      prompt: String.raw`Sia $A=\{x\in\R: 0<x\le5\}$. Quanto vale $\max A$?`,
+      answer: '5',
+      explain: String.raw`$5$ appartiene ad $A$ ($0<5\le5$) ed è un maggiorante: è il massimo.` },
+    { id: 's01.supinf.p.5', type: 'open', level: 2,
+      prompt: String.raw`Spiega perché $A=\{x\in\Q: x^2<2\}$ non ha estremo superiore in $\Q$, mentre in $\R$ ce l'ha.`,
+      answer: String.raw`Un razionale $M>0$ è un maggiorante di $A$ se $M^2\ge2$. Dato un razionale $M$ con $M^2>2$, il razionale $M'=\frac{M^2+2}{2M}$ è un maggiorante più piccolo: $M'<M$ (perché $M^2>2$) e $M'^2>2$ (perché $(M^2-2)^2>0$). Quindi i maggioranti razionali non hanno minimo. In $\R$, per la completezza, esiste $\sup A=\sqrt2$.`,
+      rubric: ['Maggioranti razionali: $M>0$ con $M^2\\ge2$', 'Costruzione di un maggiorante razionale più piccolo, quindi nessun minimo', 'In $\\R$ il sup è $\\sqrt2$ per l\'assioma di completezza'] },
+    { id: 's01.supinf.p.6', type: 'order', level: 2,
+      prompt: String.raw`Riordina i passi per dimostrare che $1$ è il minimo dei maggioranti di $(0,1)$.`,
+      steps: [
+        String.raw`$1$ è un maggiorante di $(0,1)$: ogni $a\in(0,1)$ soddisfa $a<1$.`,
+        String.raw`Sia $M$ un altro maggiorante e supponiamo per assurdo $M<1$.`,
+        String.raw`Il numero $a=\frac{\max(M,0)+1}{2}$ sta in $(0,1)$ e supera $M$: contraddice il fatto che $M$ è maggiorante.`,
+        String.raw`Quindi ogni maggiorante è $\ge1$, e $1$ è il minimo dei maggioranti: $\sup(0,1)=1$.`,
+      ],
+      distractors: [
+        String.raw`$1\notin(0,1)$, quindi $1$ non può essere il sup.`,
+        String.raw`Poiché $(0,1)$ non ha massimo, il sup non esiste.`,
+      ],
+      explain: String.raw`La prima parte mostra che $1$ è un maggiorante; la seconda che nessun maggiorante minore di $1$ esiste. Il fatto che $1\notin(0,1)$ non impedisce che $1$ sia il sup (primo distrattore). L'assenza di massimo non significa assenza di sup (secondo distrattore).` },
+    { id: 's01.supinf.p.7', type: 'tf', level: 2,
+      prompt: String.raw`Se $\inf A\in A$, allora $\inf A=\min A$.`,
+      answer: true,
+      explain: String.raw`$m=\inf A$ è un minorante e appartiene ad $A$: per definizione è il minimo.` },
+  ],
+  flashcards: [
+    { id: 's01.supinf.fc1', kind: 'def', front: String.raw`Maggiorante, minorante, insieme limitato`, back: String.raw`$M$ maggiorante di $A$: $a\le M$ per ogni $a\in A$. $m$ minorante: $a\ge m$. $A$ limitato se ha maggioranti e minoranti.` },
+    { id: 's01.supinf.fc2', kind: 'def', front: String.raw`Massimo e minimo`, back: String.raw`$\max A$ è un maggiorante che appartiene ad $A$; $\min A$ è un minorante che appartiene ad $A$. Possono non esistere.` },
+    { id: 's01.supinf.fc3', kind: 'def', front: String.raw`Estremo superiore`, back: String.raw`$\sup A$ è il minimo dei maggioranti di $A$: maggiorante, e $\le M$ per ogni altro maggiorante $M$. Non deve appartenere ad $A$.` },
+    { id: 's01.supinf.fc4', kind: 'def', front: String.raw`Estremo inferiore`, back: String.raw`$\inf A$ è il massimo dei minoranti di $A$: minorante, e $\ge m$ per ogni altro minorante $m$.` },
+    { id: 's01.supinf.fc5', kind: 'thm', front: String.raw`Assioma di completezza (enunciato)`, back: String.raw`Ogni $A\subseteq\R$ non vuoto e limitato superiormente ha $\sup A$ in $\R$. Con $\Q$ questo non vale: $\{x\in\Q: x^2<2\}$ non ha sup in $\Q$.` },
+    { id: 's01.supinf.fc6', kind: 'thm', front: String.raw`Caratterizzazione con $\varepsilon$ del sup (enunciato)`, back: String.raw`$s=\sup A$ se e solo se: (1) $a\le s$ per ogni $a\in A$; (2) per ogni $\varepsilon>0$ esiste $a\in A$ con $a>s-\varepsilon$.` },
+    { id: 's01.supinf.fc7', kind: 'dim', front: String.raw`Dimostrazione della caratterizzazione con $\varepsilon$ (idea)`, back: String.raw`(1) è la definizione di maggiorante. (2): $s-\varepsilon$ non è un maggiorante, altrimenti sarebbe un maggiorante minore di $s$; quindi esiste $a\in A$ con $a>s-\varepsilon$. Viceversa: se $M<s$ fosse un maggiorante, con $\varepsilon=s-M>0$ la condizione (2) darebbe $a\in A$ con $a>M$: assurdo.` },
+    { id: 's01.supinf.fc8', kind: 'errore', front: String.raw`Massimo e sup: la differenza`, back: String.raw`Se il massimo esiste, coincide con il sup. Ma il sup può non appartenere all'insieme: $(0,1)$ ha $\sup=1$ e nessun massimo.` },
+    { id: 's01.supinf.fc9', kind: 'metodo', front: String.raw`Sup e inf di una successione con segni alterni`, back: String.raw`Separa i termini pari e dispari, studia la monotonia di ciascuna parte e confronta i valori estremi. Poi verifica se il valore estremo è raggiunto (max/min) o solo limite (sup/inf).` },
+    { id: 's01.supinf.fc10', kind: 'thm', front: String.raw`Unicità dell'estremo superiore`, back: String.raw`Se $s$ e $s'$ sono entrambi sup di $A$: $s$ è maggiorante e $s'$ è il minimo dei maggioranti, quindi $s\le s'$; simmetricamente $s'\le s$. Quindi $s=s'$.` },
+  ],
+});
