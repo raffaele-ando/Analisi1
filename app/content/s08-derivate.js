@@ -1329,6 +1329,13 @@ Derivate: $D(\sinh x)=\cosh x$, $D(\cosh x)=\sinh x$, $D(\tanh x)=\dfrac{1}{\cos
           answer: '1',
           explain: String.raw`$D(\sinh x)=\cosh x$, e $\cosh0=\frac{e^0+e^0}{2}=1$.`,
         },
+        {
+          id: 's08.inversa.L3.q6',
+          type: 'num',
+          prompt: String.raw`Calcola la derivata di $\cosh x$ nel punto $x=0$.`,
+          answer: '0',
+          explain: String.raw`$D(\cosh x)=\sinh x$, e $\sinh0=\frac{e^0-e^0}{2}=0$.`,
+        },
       ],
     },
   ],
@@ -2887,6 +2894,21 @@ Se il quoziente è $\frac{0}{1}$ o $\frac{\infty}{1}$, non serve De l'Hôpital: 
           ],
         },
         {
+          id: 's08.hopital.L3.q5',
+          type: 'mcq',
+          prompt: String.raw`Quale è il valore di $\lim_{x\to0}(1+x)^{1/x}$? (forma $1^\infty$)`,
+          options: [String.raw`$e$`, String.raw`$1$`, String.raw`$0$`, String.raw`$+\infty$`],
+          answer: 0,
+          explain: String.raw`Passo al logaritmo: $\frac1x\log(1+x)\to1$ (limite notevole), quindi il limite è $e^1=e$. Il distrattore $1$ confonde la forma $1^\infty$ con il valore $1$; $0$ e $+\infty$ non derivano dal calcolo.`,
+        },
+        {
+          id: 's08.hopital.L3.q6',
+          type: 'num',
+          prompt: String.raw`Calcola $\lim_{x\to0^+}x^x$ (forma $0^0$).`,
+          answer: '1',
+          explain: String.raw`Passo al logaritmo: $x^x=e^{x\log x}$ e $x\log x\to0$ (vedi l'esempio svolto). Quindi $x^x\to e^0=1$.`,
+        },
+        {
           id: 's08.hopital.L3.q4',
           type: 'problem',
           level: 3,
@@ -3101,6 +3123,597 @@ Se il quoziente è $\frac{0}{1}$ o $\frac{\infty}{1}$, non serve De l'Hôpital: 
       kind: 'metodo',
       front: String.raw`Ripetere De l'Hôpital`,
       back: String.raw`Se dopo una derivazione la forma è ancora $\frac00$ o $\frac\infty\infty$, si può applicare di nuovo, purché le ipotesi siano verificate ad ogni passo.`,
+    },
+  ],
+});
+
+// ===========================================================================
+// s08.convessita · Differenziale, derivate successive, concavità, flessi
+// ===========================================================================
+SKILLS.push({
+  id: 's08.convessita',
+  title: 'Differenziale, convessità e flessi',
+  summary: String.raw`Approssimi una funzione con la sua tangente, calcoli le derivate successive e usi f'' per stabilire concavità, convessità e flessi.`,
+  prereq: ['s08.teoremi', 's08.punti', 's08.regole'],
+  examRefs: ['Itinere 11/11/2025 · Parte A', 'Appello 03/09/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's08.convessita.L1',
+      title: 'Differenziale e approssimazione lineare',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Approssimare con la tangente',
+          body: String.raw`Vicino a $x_0$ il grafico di $f$ è quasi la sua tangente. Per questo, per $x$ vicino a $x_0$:
+$$f(x)\approx f(x_0)+f'(x_0)\,(x-x_0).$$
+Con $dx=x-x_0$ si definisce il **differenziale**: $df=f'(x_0)\,dx$. È la variazione della tangente, cioè una stima della variazione di $f$.
+
+>* L'errore $f(x)-\big(f(x_0)+f'(x_0)(x-x_0)\big)$ è un infinitesimo di ordine superiore a $x-x_0$: l'approssimazione è buona per $x$ vicino a $x_0$.
+
+All'esame serve per stimare valori senza calcolatrice, scegliendo un $x_0$ vicino e facile.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $\\sqrt{4.04}$',
+          problem: String.raw`Stima $\sqrt{4.04}$ usando il differenziale di $f(x)=\sqrt x$ in $x_0=4$.`,
+          steps: [
+            String.raw`Scelgo $x_0=4$, vicino a $4.04$ e con radice esatta: $f(4)=2$.`,
+            String.raw`Derivata: $f'(x)=\frac{1}{2\sqrt x}$, quindi $f'(4)=\frac{1}{4}$.`,
+            String.raw`Incremento $dx=4.04-4=0.04$. Approssimazione: $\sqrt{4.04}\approx2+\frac14\cdot0.04=2+0.01$.`,
+          ],
+          result: String.raw`$\sqrt{4.04}\approx2.01$ (il valore esatto è circa $2.00998$).`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $e^{0.02}$',
+          problem: String.raw`Stima $e^{0.02}$ con il differenziale di $f(x)=e^x$ in $x_0=0$.`,
+          steps: [
+            String.raw`Scelgo $x_0=0$: $f(0)=e^0=1$. Derivata $f'(x)=e^x$.`,
+            {
+              text: String.raw`Calcola $f'(0)$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $f'(0)$ per $f(x)=e^x$?`,
+                answer: '1',
+                explain: String.raw`$f'(x)=e^x$, in $0$ vale $e^0=1$.`,
+              },
+            },
+            {
+              text: String.raw`Con $dx=0.02$: $e^{0.02}\approx f(0)+f'(0)\cdot0.02$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $1+1\cdot0.02$?`,
+                answer: '1.02',
+                explain: String.raw`$1+0.02=1.02$.`,
+              },
+            },
+          ],
+          result: String.raw`$e^{0.02}\approx1.02$.`,
+        },
+        {
+          id: 's08.convessita.L1.q1',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=x^2$ in $x_0=3$ con $dx=0.1$, quanto vale il differenziale $df$?`,
+          options: [
+            String.raw`$0.6$`,
+            String.raw`$0.9$`,
+            String.raw`$0.3$`,
+            String.raw`$0.06$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f'(x)=2x$, quindi $f'(3)=6$ e $df=6\cdot0.1=0.6$. Il distrattore $0.9$ calcola $f(3)\cdot0.1$; $0.3$ usa $f'(3)=3$; $0.06$ sposta la virgola.`,
+        },
+        {
+          id: 's08.convessita.L1.q2',
+          type: 'num',
+          prompt: String.raw`Usa il differenziale di $\sqrt{x}$ in $x_0=4$ per stimare $\sqrt{4.2}$.`,
+          answer: '2.05',
+          explain: String.raw`$f(4)=2$, $f'(4)=\frac14$, $dx=0.2$: $\sqrt{4.2}\approx2+\frac{0.2}{4}=2.05$.`,
+        },
+        {
+          id: 's08.convessita.L1.q3',
+          type: 'expr',
+          prompt: String.raw`Scrivi il differenziale $df$ di $f(x)=x^3$ in funzione di $x$ e di $dx$.`,
+          answer: '3*x^2*dx',
+          vars: ['x', 'dx'],
+          explain: String.raw`$df=f'(x)\,dx=3x^2\,dx$.`,
+        },
+        {
+          id: 's08.convessita.L1.q4',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=\log x$ in $x_0=1$ con $dx=0.05$, quanto vale $df$?`,
+          options: [
+            String.raw`$0.05$`,
+            String.raw`$0.1$`,
+            String.raw`$1.05$`,
+            String.raw`$0.005$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f'(x)=\frac1x$, quindi $f'(1)=1$ e $df=1\cdot0.05=0.05$. Il secondo distrattore raddoppia la derivata; il terzo somma $x_0$ e $dx$; il quarto sposta la virgola.`,
+        },
+        {
+          id: 's08.convessita.L1.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Più $x$ è vicino a $x_0$, più la tangente approssima bene il grafico di $f$.`,
+          answer: true,
+          explain: String.raw`Vero: l'errore dell'approssimazione lineare è trascurabile rispetto a $x-x_0$, quindi diventa piccolo quando $x\to x_0$.`,
+        },
+      ],
+    },
+    {
+      id: 's08.convessita.L2',
+      title: 'Derivate successive e concavità',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Derivate successive e convessità',
+          body: String.raw`La derivata della derivata è la **derivata seconda**: $f''=(f')'$. Si scrive anche $\frac{d^2f}{dx^2}$. Poi ci sono $f'''$, $f^{(4)}$, e così via.
+
+>* **Convessa.** $f$ è convessa su $I$ se, per ogni $x_1,x_2\in I$ e $\lambda\in[0,1]$:
+$$f\big(\lambda x_1+(1-\lambda)x_2\big)\le\lambda f(x_1)+(1-\lambda)f(x_2).$$
+Geometricamente: il grafico sta **sotto** ogni corda. Una funzione **concava** ha il grafico sopra ogni corda.
+
+Il test pratico: se $f''\ge0$ su $I$ la funzione è convessa; se $f''\le0$, concava.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: $x^3$ per $x>0$',
+          problem: String.raw`Studia la convessità di $f(x)=x^3$ su $(0,+\infty)$.`,
+          steps: [
+            String.raw`Derivate: $f'(x)=3x^2$ e $f''(x)=6x$.`,
+            String.raw`Su $(0,+\infty)$ si ha $6x>0$, quindi $f''>0$.`,
+            String.raw`Per il test, $f$ è strettamente convessa su $(0,+\infty)$.`,
+          ],
+          result: String.raw`$f$ è convessa su $(0,+\infty)$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $\\log x$',
+          problem: String.raw`Studia la concavità di $f(x)=\log x$ su $(0,+\infty)$.`,
+          steps: [
+            String.raw`$f'(x)=\frac1x$. Derivo ancora: $f''(x)=D\big(x^{-1}\big)$.`,
+            {
+              text: String.raw`Calcola $f''(x)$.`,
+              ask: {
+                type: 'expr',
+                prompt: String.raw`Quanto vale $f''(x)$ per $f(x)=\log x$?`,
+                answer: '-1/x^2',
+                vars: ['x'],
+                explain: String.raw`$D(x^{-1})=-x^{-2}=-\frac{1}{x^2}$.`,
+              },
+            },
+            String.raw`Il segno di $-\frac{1}{x^2}$ è sempre negativo su $(0,+\infty)$: $f''<0$.`,
+          ],
+          result: String.raw`$\log$ è concava su $(0,+\infty)$.`,
+        },
+        {
+          id: 's08.convessita.L2.q1',
+          type: 'mcq',
+          prompt: String.raw`Quale è la concavità di $f(x)=e^x$ su $\R$?`,
+          options: [
+            String.raw`convessa su $\R$, perché $f''(x)=e^x>0$`,
+            String.raw`concava su $\R$`,
+            String.raw`né convessa né concava`,
+            String.raw`convessa solo per $x>0$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f''(x)=e^x>0$ per ogni $x$: convessa su tutto $\R$. Il secondo distrattore inverte il segno. Il terzo è impossibile: ogni funzione con $f''$ di segno costante è convessa o concava. Il quarto confonde con $\log$.`,
+        },
+        {
+          id: 's08.convessita.L2.q2',
+          type: 'mcq',
+          prompt: String.raw`Quale è la concavità di $f(x)=x^3$ su $(-\infty,0)$?`,
+          options: [
+            String.raw`concava`,
+            String.raw`convessa`,
+            String.raw`è un flesso`,
+            String.raw`né concava né convessa`,
+          ],
+          answer: 0,
+          explain: String.raw`$f''(x)=6x<0$ per $x<0$: concava. Il distrattore "convessa" applica il risultato per $x>0$. Un flesso è un punto, non un intervallo. Ogni funzione con $f''$ di segno costante ha una concavità definita.`,
+        },
+        {
+          id: 's08.convessita.L2.q3',
+          type: 'num',
+          prompt: String.raw`Calcola $f''(1)$ se $f(x)=x^4$.`,
+          answer: '12',
+          explain: String.raw`$f'(x)=4x^3$, $f''(x)=12x^2$, quindi $f''(1)=12$.`,
+        },
+        {
+          id: 's08.convessita.L2.q4',
+          type: 'expr',
+          level: 2,
+          prompt: String.raw`Calcola $f''(x)$ se $f(x)=x\,e^{-x}$.`,
+          answer: '(x-2)*e^(-x)',
+          vars: ['x'],
+          explain: String.raw`$f'(x)=(1-x)e^{-x}$. Derivo di nuovo: $f''(x)=-e^{-x}+(x-1)e^{-x}=(x-2)e^{-x}$.`,
+        },
+        {
+          id: 's08.convessita.L2.q5',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Se $f''(x)>0$ su un intervallo $I$, allora $f$ è strettamente convessa su $I$.`,
+          answer: true,
+          explain: String.raw`Vero: il test di convessità con $f''$ dà convessità stretta quando $f''>0$. Il grafico sta strettamente sotto le corde.`,
+        },
+        {
+          type: 'learn',
+          title: 'L\'epigrafico',
+          body: String.raw`L'**epigrafico** di $f$ è l'insieme dei punti sopra il grafico:
+$$\operatorname{epi}(f)=\{(x,y)\in\R^2:\ x\in I,\ y\ge f(x)\}.$$
+Una funzione è convessa se e solo se il suo epigrafico è un insieme convesso: presi due punti dell'epigrafico, il segmento che li unisce resta nell'epigrafico. È la definizione geometrica dell'esame, equivalente a quella con le corde.`,
+        },
+        {
+          id: 's08.convessita.L2.q6',
+          type: 'mcq',
+          prompt: String.raw`La funzione $f(x)=x^2$ è convessa su $\R$. Quale affermazione sull'epigrafico è corretta?`,
+          options: [
+            String.raw`l'epigrafico di $f$ è convesso, perché $f$ è convessa`,
+            String.raw`l'epigrafico non è convesso, perché il grafico è una parabola`,
+            String.raw`l'epigrafico è convesso perché $f$ è pari`,
+            String.raw`l'epigrafico è l'insieme dei punti sotto il grafico`,
+          ],
+          answer: 0,
+          explain: String.raw`Vale l'equivalenza: $f$ convessa $\Leftrightarrow$ epigrafico convesso. Il secondo confonde la forma del grafico con la convessità. Il terzo usa una proprietà non rilevante (la parità). Il quarto descrive il sottografico, non l'epigrafico.`,
+        },
+        {
+          id: 's08.convessita.L2.q7',
+          type: 'open',
+          points: 2,
+          prompt: String.raw`Definisci una funzione convessa su un intervallo $I$ (con le corde) e spiega come si verifica la convessità con la derivata seconda.`,
+          answer: String.raw`$f$ è convessa su $I$ se per ogni $x_1,x_2\in I$ e $\lambda\in[0,1]$ vale $f(\lambda x_1+(1-\lambda)x_2)\le\lambda f(x_1)+(1-\lambda)f(x_2)$: il grafico sta sotto le corde. Con la derivata seconda: se $f''\ge0$ su $I$, $f$ è convessa; se $f''>0$, strettamente convessa.`,
+          rubric: [
+            String.raw`Definizione con le corde: disuguaglianza con $\lambda\in[0,1]$`,
+            String.raw`Interpretazione: il grafico sta sotto le corde`,
+            String.raw`Criterio con la derivata seconda: $f''\ge0$ implica convessità`,
+          ],
+        },
+      ],
+    },
+    {
+      id: 's08.convessita.L3',
+      title: 'Flessi e studio della concavità',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Flessi',
+          body: String.raw`Un **flesso** è un punto $x_0$ in cui il grafico cambia concavità: da convesso a concavo, o viceversa. Se $f$ è derivabile due volte, il criterio è semplice:
+>* **Flesso.** $x_0$ è un flesso se $f''$ **cambia segno** in $x_0$. In quel punto la tangente attraversa il grafico.
+
+Attenzione: un punto in cui $f''(x_0)=0$ **non** è automaticamente un flesso. Serve il cambio di segno.`,
+        },
+        {
+          type: 'example',
+          title: "Esempio svolto: $x^4-4x^3$",
+          problem: String.raw`Studia la concavità e i flessi di $f(x)=x^4-4x^3$.`,
+          steps: [
+            String.raw`$f'(x)=4x^3-12x^2$, $f''(x)=12x^2-24x=12x(x-2)$.`,
+            String.raw`$f''=0$ per $x=0$ e $x=2$. Segno di $12x(x-2)$: $+$ per $x<0$, $-$ per $0<x<2$, $+$ per $x>2$.`,
+            String.raw`Convessa su $(-\infty,0)$ e $(2,+\infty)$; concava su $(0,2)$. $f''$ cambia segno in $0$ e in $2$: due flessi.`,
+          ],
+          result: String.raw`Flessi in $x=0$ (con $f(0)=0$, tangente orizzontale) e $x=2$ (con $f(2)=-16$, $f'(2)=-16$).`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio a completamento: $x\\,e^{-x}$',
+          problem: String.raw`Trova il flesso di $f(x)=x\,e^{-x}$, sapendo che $f''(x)=(x-2)e^{-x}$.`,
+          steps: [
+            String.raw`$f''=0$ quando $(x-2)e^{-x}=0$, cioè quando $x-2=0$ (l'esponenziale non si annulla mai).`,
+            {
+              text: String.raw`Calcola il valore di $x$ dove $f''$ si annulla.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Per quale $x$ si annulla $(x-2)e^{-x}$?`,
+                answer: '2',
+                explain: String.raw`Basta $x-2=0$, cioè $x=2$.`,
+              },
+            },
+            {
+              text: String.raw`Controlla il segno di $f''$ per $x<2$.`,
+              ask: {
+                type: 'mcq',
+                prompt: String.raw`Per $x<2$ il segno di $f''(x)=(x-2)e^{-x}$ è:`,
+                options: [String.raw`negativo (concava)`, String.raw`positivo (convessa)`, String.raw`nullo`],
+                answer: 0,
+                explain: String.raw`Per $x<2$ il fattore $x-2$ è negativo e $e^{-x}>0$: $f''<0$, quindi concava. Per $x>2$ diventa positiva: f cambia concavità in $2$.`,
+              },
+            },
+          ],
+          result: String.raw`$x=2$ è un flesso, con $f(2)=2e^{-2}$ e $f'(2)=-e^{-2}$.`,
+        },
+        {
+          id: 's08.convessita.L3.q1',
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=x^4$, il punto $x=0$ è un flesso?`,
+          options: [
+            String.raw`No: $f''(x)=12x^2\ge0$ non cambia segno in $0$`,
+            String.raw`Sì, perché $f''(0)=0$`,
+            String.raw`Sì, perché $f'(0)=0$`,
+            String.raw`No, perché $f$ non è derivabile in $0$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f''(0)=0$ ma $f''\ge0$ ovunque: nessun cambio di segno, nessun cambio di concavità. Il secondo distrattore confonde lo zero della derivata seconda con il flesso. Il terzo riguarda il punto stazionario. Il quarto è falso: $x^4$ è derivabile.`,
+        },
+        {
+          id: 's08.convessita.L3.q2',
+          type: 'tf',
+          prompt: String.raw`Vero o falso? Ogni punto in cui $f''(x_0)=0$ è un flesso.`,
+          answer: false,
+          explain: String.raw`Falso. Controesempio: $f(x)=x^4$ in $x_0=0$ (vedi la domanda precedente).`,
+        },
+        {
+          id: 's08.convessita.L3.q3',
+          type: 'num',
+          prompt: String.raw`Qual è l'ascissa del flesso di $f(x)=x^3-3x$?`,
+          answer: '0',
+          explain: String.raw`$f''(x)=6x$ cambia segno in $x=0$: flesso in $0$.`,
+        },
+        {
+          id: 's08.convessita.L3.q4',
+          type: 'mcq',
+          prompt: String.raw`Quale è la concavità di $f(x)=\log x$ su $(0,+\infty)$?`,
+          options: [
+            String.raw`concava`,
+            String.raw`convessa`,
+            String.raw`lineare`,
+            String.raw`né concava né convessa`,
+          ],
+          answer: 0,
+          explain: String.raw`$f''(x)=-\frac{1}{x^2}<0$: concava su tutto $(0,+\infty)$, senza flessi.`,
+        },
+        {
+          id: 's08.convessita.L3.q5',
+          type: 'expr',
+          level: 3,
+          source: 'Appello 03/09/2026 · Parte B',
+          prompt: String.raw`Calcola $f''(x)$ se $f(x)=e^{\frac{x+1}{x-1}}$, per $x<1$.`,
+          answer: '4*x*e^((x+1)/(x-1))/(x-1)^4',
+          vars: ['x'],
+          domain: [-2, 0.5],
+          explain: String.raw`Sia $g=\frac{x+1}{x-1}$, con $g'=\frac{-2}{(x-1)^2}$ e $g''=\frac{4}{(x-1)^3}$. Allora $f''=e^g\big[(g')^2+g''\big]=e^g\Big[\frac{4}{(x-1)^4}+\frac{4}{(x-1)^3}\Big]=\frac{4x\,e^g}{(x-1)^4}$.`,
+        },
+        {
+          id: 's08.convessita.L3.q6',
+          type: 'problem',
+          level: 3,
+          source: 'Appello 03/09/2026 · Parte B',
+          points: 4,
+          prompt: String.raw`Sia $f(x)=e^{\frac{x+1}{x-1}}$ per $x<1$, con $f''(x)=\dfrac{4x\,e^{(x+1)/(x-1)}}{(x-1)^4}$. (a) Trova l'ascissa del flesso. (b) Studia la concavità su $(-\infty,0)$.`,
+          parts: [
+            {
+              type: 'num',
+              prompt: String.raw`(a) Ascissa del flesso (per $x<1$)`,
+              answer: '0',
+              explain: String.raw`Il segno di $f''$ è quello di $x$ (il resto è sempre positivo): cambia segno solo in $x=0$.`,
+            },
+            {
+              type: 'mcq',
+              prompt: String.raw`(b) Su $(-\infty,0)$ la funzione è:`,
+              options: [
+                String.raw`concava: $f''<0$`,
+                String.raw`convessa: $f''>0$`,
+                String.raw`lineare`,
+                String.raw`né concava né convessa`,
+              ],
+              answer: 0,
+              explain: String.raw`Per $x<0$, $4x<0$ e il resto è positivo: $f''<0$, concava.`,
+            },
+          ],
+          solution: String.raw`$f''(x)=\frac{4x\,e^{(x+1)/(x-1)}}{(x-1)^4}$. Per $x<0$ è negativa: $f$ è concava su $(-\infty,0)$. Per $0<x<1$ è positiva: convessa su $(0,1)$. In $x=0$ cambia segno: flesso.`,
+        },
+        {
+          id: 's08.convessita.L3.q7',
+          type: 'learn',
+          title: 'Metodo: studio della concavità',
+          body: String.raw`1. Calcola $f''$.
+2. Trova gli zeri di $f''$ e i punti in cui $f''$ non esiste.
+3. Studia il segno di $f''$ sugli intervalli tra questi punti.
+4. $f''>0$: convessa. $f''<0$: concava. Un cambio di segno in un punto (dove $f$ è definita) è un flesso.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's08.convessita.p1',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const a = R.nz(-2, 2), b = R.int(-3, 3), c = R.int(-3, 3), x0 = R.int(-2, 2);
+        const ans = 12 * a * x0 * x0 + 6 * b * x0 + 2 * c;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $f''(${x0})$ se $f(x)=${H.poly([a, b, c, 0, 0])}$.`,
+          answer: String(ans),
+          explain: String.raw`$f'(x)=${H.poly(H.polyDeriv([a, b, c, 0, 0]))}$ e $f''(x)=${H.poly(H.polyDeriv(H.polyDeriv([a, b, c, 0, 0])))}$. Quindi $f''(${x0})=${ans}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.convessita.p2',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const h = R.pick([4, 8, 12, 20]) / 100;
+        const approx = (2 + h / 4).toFixed(2);
+        return {
+          type: 'num',
+          prompt: String.raw`Usa il differenziale di $\sqrt{x}$ in $x_0=4$ per stimare $\sqrt{${(4 + h).toFixed(2)}}$.`,
+          answer: approx,
+          explain: String.raw`$f(4)=2$, $f'(4)=\frac14$, $dx=${h.toFixed(2)}$: $\sqrt{4+${h.toFixed(2)}}\approx2+\frac{${h.toFixed(2)}}{4}=${approx}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.convessita.p3',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const x0 = R.pick([-2, -1, 1, 2]);
+        return {
+          type: 'mcq',
+          prompt: String.raw`Per $f(x)=x^3-3x$, nel punto $x=${x0}$ il grafico è:`,
+          options: [
+            String.raw`convesso (f''>0)`,
+            String.raw`concavo (f''<0)`,
+            String.raw`un flesso`,
+          ],
+          answer: x0 > 0 ? 0 : 1,
+          explain: String.raw`$f''(x)=6x$, quindi $f''(${x0})=${6 * x0}$, che è ${x0 > 0 ? 'positivo' : 'negativo'}: il grafico è ${x0 > 0 ? 'convesso' : 'concavo'} in quel punto. Un flesso è un punto in cui $f''$ cambia segno, cioè $x=0$.`,
+        };
+      },
+    },
+    {
+      id: 's08.convessita.p4',
+      type: 'gen',
+      level: 2,
+      gen: (R) => {
+        const k = R.nz(-3, 3);
+        return {
+          type: 'num',
+          prompt: String.raw`Trova l'ascissa del flesso di $f(x)=(x-(${k}))^3$.`,
+          answer: String(k),
+          explain: String.raw`$f''(x)=6(x-(${k}))$ cambia segno in $x=${k}$: è lì il flesso.`,
+        };
+      },
+    },
+    {
+      id: 's08.convessita.p5',
+      type: 'gen',
+      level: 3,
+      gen: (R) => {
+        const k = R.pick([2, 8]);
+        const root = k === 2 ? '1/2' : '1/4';
+        return {
+          type: 'set',
+          prompt: String.raw`Trova le ascisse dei flessi di $f(x)=e^{-${k}x^2}$, separate da punto e virgola.`,
+          answer: [root, `-${root}`],
+          explain: String.raw`$f''(x)=(${4 * k * k}x^2-${2 * k})e^{-${k}x^2}$ si annulla per $x^2=\frac{1}{${2 * k}}$ e cambia segno: flessi in $x=\pm${root}$.`,
+        };
+      },
+    },
+    {
+      id: 's08.convessita.p6',
+      type: 'mcq',
+      prompt: String.raw`Per $f(x)=x^4$, $x=0$ è un flesso?`,
+      options: [
+        String.raw`No: $f''\ge0$ ovunque e non cambia segno in $0$`,
+        String.raw`Sì, perché $f''(0)=0$`,
+        String.raw`Sì, perché $f'(0)=0$`,
+        String.raw`No, perché $f$ non è derivabile`,
+      ],
+      answer: 0,
+      explain: String.raw`È il controesempio classico: lo zero di $f''$ non è un flesso se $f''$ non cambia segno.`,
+    },
+    {
+      id: 's08.convessita.p7',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f''(x_0)=0$, allora $x_0$ è un flesso di $f$.`,
+      answer: false,
+      explain: String.raw`Falso: serve il cambio di segno di $f''$ in $x_0$. Per $x^4$ in $0$ non c'è.`,
+    },
+    {
+      id: 's08.convessita.p8',
+      type: 'num',
+      prompt: String.raw`Calcola $f''(1)$ se $f(x)=x^4-x^2$.`,
+      answer: '10',
+      explain: String.raw`$f'(x)=4x^3-2x$, $f''(x)=12x^2-2$, quindi $f''(1)=10$.`,
+    },
+    {
+      id: 's08.convessita.p9',
+      type: 'expr',
+      prompt: String.raw`Calcola $f''(x)$ se $f(x)=x^3-3x$.`,
+      answer: '6*x',
+      vars: ['x'],
+      explain: String.raw`$f'(x)=3x^2-3$, $f''(x)=6x$.`,
+    },
+    {
+      id: 's08.convessita.p10',
+      type: 'mcq',
+      prompt: String.raw`Quale è la concavità di $f(x)=\log x$ su $(0,+\infty)$?`,
+      options: [
+        String.raw`concava`,
+        String.raw`convessa`,
+        String.raw`lineare`,
+        String.raw`né concava né convessa`,
+      ],
+      answer: 0,
+      explain: String.raw`$f''(x)=-\frac{1}{x^2}<0$: concava.`,
+    },
+    {
+      id: 's08.convessita.p11',
+      type: 'tf',
+      prompt: String.raw`Vero o falso? Se $f$ è convessa su un intervallo, il suo grafico sta sotto ogni sua corda.`,
+      answer: true,
+      explain: String.raw`Vero: è la definizione geometrica di convessità con le corde.`,
+    },
+    {
+      id: 's08.convessita.p12',
+      type: 'mcq',
+      prompt: String.raw`Quale è la concavità di $f(x)=e^x$ su $\R$?`,
+      options: [
+        String.raw`convessa su $\R$`,
+        String.raw`concava su $\R$`,
+        String.raw`né concava né convessa`,
+        String.raw`convessa solo per $x>0$`,
+      ],
+      answer: 0,
+      explain: String.raw`$f''(x)=e^x>0$ per ogni $x$: convessa su $\R$.`,
+    },
+  ],
+  flashcards: [
+    {
+      id: 's08.convessita.fc1',
+      kind: 'def',
+      front: String.raw`Funzione convessa`,
+      back: String.raw`Per ogni $x_1,x_2\in I$ e $\lambda\in[0,1]$: $f(\lambda x_1+(1-\lambda)x_2)\le\lambda f(x_1)+(1-\lambda)f(x_2)$. Il grafico sta sotto le corde.`,
+    },
+    {
+      id: 's08.convessita.fc2',
+      kind: 'def',
+      front: String.raw`Funzione concava`,
+      back: String.raw`Il contrario della convessità: $f(\lambda x_1+(1-\lambda)x_2)\ge\lambda f(x_1)+(1-\lambda)f(x_2)$. Il grafico sta sopra le corde.`,
+    },
+    {
+      id: 's08.convessita.fc3',
+      kind: 'thm',
+      front: String.raw`Test di convessità con la derivata seconda`,
+      back: String.raw`Se $f''\ge0$ su $I$, $f$ è convessa su $I$; se $f''\le0$, concava; se $f''>0$, strettamente convessa.`,
+    },
+    {
+      id: 's08.convessita.fc4',
+      kind: 'def',
+      front: String.raw`Epigrafico`,
+      back: String.raw`$\operatorname{epi}(f)=\{(x,y): x\in I,\ y\ge f(x)\}$. $f$ è convessa se e solo se $\operatorname{epi}(f)$ è un insieme convesso.`,
+    },
+    {
+      id: 's08.convessita.fc5',
+      kind: 'def',
+      front: String.raw`Flesso`,
+      back: String.raw`Punto in cui il grafico cambia concavità. Con $f''$: $f''$ cambia segno in $x_0$. Non basta $f''(x_0)=0$.`,
+    },
+    {
+      id: 's08.convessita.fc6',
+      kind: 'metodo',
+      front: String.raw`Studio della concavità: come si fa`,
+      back: String.raw`Calcola $f''$; trova gli zeri e i punti dove non esiste; studia il segno sugli intervalli: $+$ convessa, $-$ concava; i cambi di segno sono flessi.`,
+    },
+    {
+      id: 's08.convessita.fc7',
+      kind: 'formula',
+      front: String.raw`Approssimazione lineare e differenziale`,
+      back: String.raw`$f(x)\approx f(x_0)+f'(x_0)(x-x_0)$ per $x$ vicino a $x_0$. Differenziale: $df=f'(x_0)\,dx$.`,
+    },
+    {
+      id: 's08.convessita.fc8',
+      kind: 'errore',
+      front: String.raw`Errore tipico: "$f''(x_0)=0$ quindi $x_0$ è un flesso"`,
+      back: String.raw`Falso: serve il cambio di segno di $f''$. Per $f=x^4$ si ha $f''(0)=0$ ma nessun flesso in $0$.`,
+    },
+    {
+      id: 's08.convessita.fc9',
+      kind: 'def',
+      front: String.raw`Derivate successive`,
+      back: String.raw`$f''=(f')'$, $f'''=(f'')'$, $f^{(n)}=(f^{(n-1)})'$. Si scrivono anche $\frac{d^2f}{dx^2}$ e $D^2f$.`,
     },
   ],
 });
