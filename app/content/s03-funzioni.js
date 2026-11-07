@@ -1491,5 +1491,599 @@ Poiché $x^2 + 1 \in [1, +\infty)$, il termine $\frac{2}{x^2 + 1}$ assume tutti 
         { id: 's03.simmetrie.fc8', kind: 'formula', front: 'Monotonia di somme e composte', back: String.raw`Crescente + crescente = crescente. Composta: due crescenti o due decrescenti $\Rightarrow$ crescente; una crescente e una decrescente $\Rightarrow$ decrescente. Il prodotto di crescenti non è in generale crescente ($x\cdot x$).` },
       ],
     },
+    // =====================================================================
+    {
+      id: 's03.elementari',
+      title: 'Grafici elementari e trasformazioni',
+      summary: String.raw`Saprai disegnare a mano i grafici delle funzioni elementari e ottenere quelli di $f(x+a)$, $f(x)+b$, $-f(x)$, $f(-x)$, $kf(x)$, $f(kx)$, $|f(x)|$ e $f(|x|)$ a partire da un grafico noto.`,
+      prereq: ['s03.base', 's03.simmetrie', 's00.esplog', 's00.trig'],
+      examRefs: ['Appello 10/02/2026 · Parte B', 'Appello 11/06/2026 · Parte B', 'Appello 03/09/2026 · Parte B'],
+      lessons: [
+        {
+          id: 's03.elementari.L1',
+          title: 'I grafici da ricordare',
+          cards: [
+            {
+              type: 'learn',
+              title: 'Perché disegnare a mano',
+              body: String.raw`All'esame non si usano calcolatrice né grafici al computer. Per studiare una funzione bisogna **disegnare il grafico a mano**, partendo da pochi grafici di base che si ricordano a memoria.
+
+Per ogni grafico di base conta sapere: **dominio**, **punti di passaggio**, **segno**, **asintoti**.`,
+            },
+            {
+              type: 'learn',
+              title: 'Esponenziale e logaritmo',
+              body: String.raw`- $e^x$ è sempre **positiva**, passa per $(0,1)$ e ha $y = 0$ come asintoto orizzontale per $x \to -\infty$.
+- $\log x$ è la sua inversa: dominio $(0,+\infty)$, passa per $(1,0)$ e ha $x = 0$ come asintoto verticale.
+
+Il punto chiave del logaritmo è $(1,0)$, perché $e^0 = 1$.`,
+              plot: { fns: [{ f: 'exp(x)', label: 'e^x' }, { f: 'log(x)', label: 'log x' }], x: [-2.5, 3], y: [-2, 4], points: [[0, 1, '(0,1)'], [1, 0, '(1,0)']], vlines: [0] },
+            },
+            {
+              type: 'learn',
+              title: 'Potenze, radici, valore assoluto',
+              body: String.raw`- $x^2$ è **pari**: simmetrica rispetto all'asse $y$, vale $0$ solo in $x = 0$.
+- $x^3$ è **dispari**: simmetrica rispetto all'origine, crescente su tutto $\R$.
+- $\sqrt{x}$ ha dominio e immagine $[0,+\infty)$ ed è sempre crescente.
+- $|x|$ è una **V** con vertice in $(0,0)$: vale $x$ se $x \ge 0$, $-x$ se $x < 0$.`,
+              plot: { fns: [{ f: 'x^2', label: 'x^2' }, { f: 'x^3', label: 'x^3' }, { f: 'sqrt(x)', label: 'sqrt x' }], x: [-2, 3], y: [-3, 4], points: [[0, 0, '(0,0)'], [1, 1, '(1,1)']] },
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto',
+              problem: String.raw`Trova l'immagine di $f(x) = 2 + e^x$ e il suo asintoto orizzontale per $x \to -\infty$.`,
+              steps: [
+                String.raw`$e^x > 0$ per ogni $x \in \R$.`,
+                String.raw`Quindi $2 + e^x > 2$: la funzione assume solo valori maggiori di $2$.`,
+                String.raw`Per $x \to -\infty$ si ha $e^x \to 0$, quindi $f(x) \to 2$: la retta $y = 2$ è asintoto orizzontale.`,
+              ],
+              result: String.raw`Immagine $(2,+\infty)$; asintoto orizzontale $y = 2$ per $x \to -\infty$.`,
+            },
+            {
+              type: 'example',
+              title: 'Ora completa tu',
+              problem: String.raw`Dove taglia l'asse $x$ il grafico di $f(x) = \log x - 1$?`,
+              steps: [
+                String.raw`Il punto cercato ha $y = 0$: risolvo $\log x - 1 = 0$, cioè $\log x = 1$.`,
+                {
+                  text: String.raw`Con l'esponenziale: $\log x = 1$ vuol dire $x = e^1$.`,
+                  ask: {
+                    type: 'num',
+                    prompt: String.raw`Quanto vale $x$ se $\log x = 1$? Scrivi $e$ per il numero di Nepero.`,
+                    answer: 'e',
+                    explain: String.raw`$\log x = 1 \iff x = e^1 = e$, circa $2{,}72$.`,
+                  },
+                },
+                String.raw`Il grafico taglia l'asse $x$ nel punto $(e,0)$.`,
+              ],
+              result: String.raw`$f$ taglia l'asse $x$ in $(e,0)$.`,
+            },
+            {
+              id: 's03.elementari.L1.e1', type: 'mcq', level: 1,
+              prompt: String.raw`Qual è il dominio di $\sqrt{x}$? Attenzione a non confonderlo con quello di $\log x$.`,
+              options: [String.raw`$(0,+\infty)$`, String.raw`$[0,+\infty)$`, String.raw`$\R$`, String.raw`$(-\infty,0]$`],
+              answer: 1,
+              explain: String.raw`$\sqrt{x}$ richiede $x \ge 0$, quindi $[0,+\infty)$: lo zero è incluso perché $\sqrt{0} = 0$. $(0,+\infty)$ è il dominio di $\log x$, dove lo zero è escluso. $\R$ è sbagliato: la radice non esiste per $x < 0$. $(-\infty,0]$ inverte il segno.`,
+            },
+            {
+              id: 's03.elementari.L1.e2', type: 'num', level: 1,
+              prompt: String.raw`Il grafico di $e^x$ passa per il punto $(0, y_0)$. Quanto vale $y_0$?`,
+              answer: '1',
+              explain: String.raw`Ogni potenza con esponente $0$ vale $1$: $e^0 = 1$. Il grafico di $e^x$ passa quindi per $(0,1)$.`,
+            },
+            {
+              id: 's03.elementari.L1.e3', type: 'tf', level: 1,
+              prompt: String.raw`Il logaritmo $\log x$ è definito anche per $x < 0$.`,
+              answer: false,
+              explain: String.raw`Il logaritmo vuole un argomento strettamente positivo: dominio $(0,+\infty)$. Per $x < 0$ non esiste nei reali.`,
+            },
+            {
+              id: 's03.elementari.L1.e4', type: 'match', level: 1,
+              prompt: String.raw`Abbina ogni funzione alla sua immagine.`,
+              pairs: [
+                [String.raw`$\sin x$`, String.raw`$[-1,1]$`],
+                [String.raw`$e^x$`, String.raw`$(0,+\infty)$`],
+                [String.raw`$\sqrt{x}$`, String.raw`$[0,+\infty)$`],
+                [String.raw`$\arctan x$`, String.raw`$\left(-\frac{\pi}{2},\frac{\pi}{2}\right)$`],
+              ],
+              explain: String.raw`$\sin x$ oscilla tra $-1$ e $1$. $e^x$ è sempre positiva e assume tutti i valori positivi. $\sqrt{x}$ non è mai negativa e cresce senza limiti. $\arctan x$ si avvicina a $\pm\frac{\pi}{2}$ senza mai raggiungerli.`,
+            },
+            {
+              id: 's03.elementari.L1.e5', type: 'interval', level: 1,
+              prompt: String.raw`Dominio di $f(x) = \log(x - 2)$.`,
+              answer: '(2,inf)',
+              explain: String.raw`Serve $x - 2 > 0$, cioè $x > 2$. Il punto $x = 2$ è escluso, perché lì l'argomento vale $0$.`,
+            },
+            {
+              id: 's03.elementari.L1.e6', type: 'mcq', level: 2,
+              prompt: String.raw`Quale affermazione su $\tan x$ è **vera**?`,
+              options: [
+                String.raw`È definita per ogni $x \in \R$`,
+                String.raw`Ha periodo $2\pi$`,
+                String.raw`Ha asintoti verticali in $x = \frac{\pi}{2} + k\pi$`,
+                String.raw`È limitata tra $-1$ e $1$`,
+              ],
+              answer: 2,
+              explain: String.raw`$\tan x = \frac{\sin x}{\cos x}$ non esiste dove $\cos x = 0$, cioè in $\frac{\pi}{2} + k\pi$, e lì ha asintoti verticali. Il periodo è $\pi$, non $2\pi$. Non è limitata: vicino agli asintoti tende a $\pm\infty$.`,
+            },
+            {
+              id: 's03.elementari.L1.e7', type: 'num', level: 2,
+              prompt: String.raw`Qual è il periodo di $\sin(2x)$? Scrivi la risposta in funzione di $\pi$.`,
+              answer: 'pi',
+              explain: String.raw`Il periodo di $\sin x$ è $2\pi$. Con $2x$ il grafico si comprime: $\sin(2x)$ si ripete quando $2x$ cresce di $2\pi$, cioè quando $x$ cresce di $\pi$.`,
+            },
+            {
+              id: 's03.elementari.L1.e8', type: 'open', level: 2,
+              prompt: String.raw`Descrivi il grafico di $f(x) = \dfrac{1}{x}$: dominio, segno e asintoti.`,
+              answer: String.raw`Dominio $\R \setminus \{0\}$. Segno: $f(x) > 0$ per $x > 0$, $f(x) < 0$ per $x < 0$. Asintoto verticale $x = 0$, perché $f(x) \to \pm\infty$ per $x \to 0^{\pm}$. Asintoto orizzontale $y = 0$, perché $f(x) \to 0$ per $x \to \pm\infty$. Il grafico ha due rami, nel primo e nel terzo quadrante.`,
+              rubric: [
+                String.raw`Dominio $\R \setminus \{0\}$`,
+                String.raw`Segno: positiva per $x > 0$, negativa per $x < 0$`,
+                String.raw`Asintoto verticale $x = 0$, motivato con i limiti laterali`,
+                String.raw`Asintoto orizzontale $y = 0$ per $x \to \pm\infty$`,
+              ],
+            },
+          ],
+        },
+        {
+          id: 's03.elementari.L2',
+          title: 'Traslazioni e riflessioni',
+          cards: [
+            {
+              type: 'learn',
+              title: 'Traslazioni: spostare il grafico',
+              body: String.raw`Una costante **fuori** dalla funzione sposta il grafico **in verticale**:
+- $f(x) + b$: il grafico si sposta di $b$ **verso l'alto** (verso il basso se $b < 0$).
+
+Una costante **dentro** la parentesi sposta il grafico **in orizzontale**, e il verso è **contrario** a quello che sembra:
+- $f(x + a)$: il grafico si sposta di $a$ **verso sinistra**.
+- $f(x - a)$: il grafico si sposta di $a$ **verso destra**.
+
+Esempio: il vertice di $(x - 2)^2 + 1$ è in $(2,1)$, non in $(-2,1)$.`,
+              plot: { fns: [{ f: 'x^2', label: 'x^2' }, { f: '(x-2)^2+1', label: '(x-2)^2+1' }], x: [-2, 4], y: [-1, 6], points: [[0, 0, '(0,0)'], [2, 1, '(2,1)']] },
+            },
+            {
+              type: 'learn',
+              title: 'Riflessioni',
+              body: String.raw`- $-f(x)$: riflessione rispetto all'**asse $x$**. Cambia il segno di ogni $y$: i punti sopra l'asse vanno sotto, e viceversa.
+- $f(-x)$: riflessione rispetto all'**asse $y$**. Cambia il segno di ogni $x$.
+
+Se $f$ è pari, $f(-x) = f(x)$ e il grafico non cambia. Se $f$ è dispari, $f(-x) = -f(x)$ e le due riflessioni coincidono.`,
+              plot: { fns: [{ f: 'log(x)', label: 'log x' }, { f: 'log(-x)', label: 'log(-x)' }], x: [-3, 3], y: [-2, 2], points: [[1, 0, '(1,0)'], [-1, 0, '(-1,0)']] },
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto',
+              problem: String.raw`Disegna il grafico di $f(x) = |x - 2| + 1$ partendo da $y = |x|$.`,
+              steps: [
+                String.raw`Parto da $y = |x|$: una V con vertice in $(0,0)$.`,
+                String.raw`Il $-2$ **dentro** il modulo sposta la V di $2$ **verso destra**: $y = |x - 2|$, vertice in $(2,0)$.`,
+                String.raw`Il $+1$ **fuori** alza la V di $1$: $y = |x - 2| + 1$, vertice in $(2,1)$.`,
+                String.raw`Per $x \ge 2$ la formula è $y = x - 1$; per $x < 2$ è $y = 3 - x$.`,
+              ],
+              result: String.raw`Vertice $(2,1)$: minimo $1$ in $x = 2$, nessun massimo.`,
+            },
+            {
+              type: 'example',
+              title: 'Ora completa tu',
+              problem: String.raw`Dominio e intersezione con l'asse $x$ di $f(x) = \log(-x)$.`,
+              steps: [
+                String.raw`È $\log x$ riflesso rispetto all'asse $y$: la $x$ diventa $-x$ dentro il logaritmo.`,
+                {
+                  text: String.raw`Il logaritmo vuole argomento positivo: $-x > 0$.`,
+                  ask: {
+                    type: 'interval',
+                    prompt: String.raw`Dominio di $\log(-x)$?`,
+                    answer: '(-inf,0)',
+                    explain: String.raw`$-x > 0 \iff x < 0$. Il dominio è tutto ciò che sta a sinistra dell'asse $y$.`,
+                  },
+                },
+                {
+                  text: String.raw`Il punto $(1,0)$ di $\log x$ si riflette in $(-1,0)$: infatti $\log(-(-1)) = \log 1 = 0$.`,
+                  ask: {
+                    type: 'num',
+                    prompt: String.raw`In quale $x$ il grafico di $\log(-x)$ taglia l'asse $x$?`,
+                    answer: '-1',
+                    explain: String.raw`$\log(-x) = 0 \iff -x = 1 \iff x = -1$.`,
+                  },
+                },
+              ],
+              result: String.raw`$\text{dom} f = (-\infty,0)$; il grafico taglia l'asse $x$ in $(-1,0)$.`,
+            },
+            {
+              id: 's03.elementari.L2.e1', type: 'mcq', level: 1,
+              prompt: String.raw`Il grafico di $(x + 3)^2$ è quello di $x^2$ spostato. Come?`,
+              options: [
+                String.raw`$3$ unità a destra`,
+                String.raw`$3$ unità a sinistra`,
+                String.raw`$3$ unità in alto`,
+                String.raw`$3$ unità in basso`,
+              ],
+              answer: 1,
+              explain: String.raw`Il vertice di $x^2$ è in $(0,0)$; quello di $(x + 3)^2$ è dove $x + 3 = 0$, cioè $x = -3$. Il grafico va a sinistra. Errore tipico: scegliere la destra perché il segno è $+$.`,
+            },
+            {
+              id: 's03.elementari.L2.e2', type: 'expr', level: 1, vars: ['x'],
+              prompt: String.raw`Scrivi la formula del grafico di $e^x$ spostato di $2$ unità verso il basso.`,
+              answer: 'e^x-2',
+              explain: String.raw`Spostare verso il basso di $2$ vuol dire sottrarre $2$ **fuori** dalla funzione: $e^x - 2$. Errore tipico: scrivere $e^{x-2}$, che sposta a destra.`,
+            },
+            {
+              id: 's03.elementari.L2.e3', type: 'num', level: 2,
+              prompt: String.raw`Il grafico di $f(x) = \sqrt{x - 4} + 1$ inizia in un punto. Qual è la sua ascissa?`,
+              answer: '4',
+              explain: String.raw`La radice richiede $x - 4 \ge 0$, quindi $x \ge 4$: il grafico parte da $x = 4$, dove vale $f(4) = 1$. Il $+1$ cambia l'altezza, non l'ascissa.`,
+            },
+            {
+              id: 's03.elementari.L2.e4', type: 'tf', level: 2,
+              prompt: String.raw`Il grafico di $-f(x)$ si ottiene da quello di $f$ riflettendolo rispetto all'asse $y$.`,
+              answer: false,
+              explain: String.raw`È il contrario: $-f(x)$ cambia il segno delle $y$, quindi la riflessione è rispetto all'**asse $x$**. La riflessione rispetto all'asse $y$ si ottiene con $f(-x)$.`,
+            },
+            {
+              id: 's03.elementari.L2.e5', type: 'mcq', level: 2,
+              prompt: String.raw`Quale formula descrive $\log x$ riflesso rispetto all'asse $y$?`,
+              options: [String.raw`$-\log x$`, String.raw`$\log(-x)$`, String.raw`$\log x + 1$`, String.raw`$-\log(-x)$`],
+              answer: 1,
+              explain: String.raw`Riflettere rispetto all'asse $y$ vuol dire $x \to -x$ **dentro** la funzione: $\log(-x)$. $-\log x$ è la riflessione rispetto all'asse $x$. $-\log(-x)$ applica entrambe le riflessioni, cioè una riflessione rispetto all'origine.`,
+            },
+            {
+              id: 's03.elementari.L2.e6', type: 'interval', level: 2,
+              prompt: String.raw`Dominio di $f(x) = \log(3 - x)$.`,
+              answer: '(-inf,3)',
+              explain: String.raw`Serve $3 - x > 0$, cioè $x < 3$. Errore tipico: scrivere $x > 3$ come se il segno della $x$ non contasse.`,
+            },
+            {
+              id: 's03.elementari.L2.e7', type: 'order', level: 2,
+              prompt: String.raw`Metti in ordine i passi per disegnare $y = |x + 1| - 3$ partendo da $y = |x|$.`,
+              steps: [
+                String.raw`Parto da $y = |x|$: una V con vertice in $(0,0)$.`,
+                String.raw`Sposto di $1$ verso **sinistra**: $y = |x + 1|$, vertice in $(-1,0)$.`,
+                String.raw`Abbasso di $3$: $y = |x + 1| - 3$, vertice in $(-1,-3)$.`,
+              ],
+              distractors: [
+                String.raw`Sposto di $1$ verso **destra**: $y = |x - 1|$, vertice in $(1,0)$.`,
+                String.raw`Alzo di $3$: $y = |x + 1| + 3$, vertice in $(-1,3)$.`,
+              ],
+              explain: String.raw`Prima si traslano le $x$ (dentro il modulo), poi si traslano le $y$ (fuori). Il passo "alzo di $3$" cambia il segno del $-3$ e il passo "verso destra" cambia il segno dell'$1$.`,
+            },
+            {
+              id: 's03.elementari.L2.e8', type: 'match', level: 2,
+              prompt: String.raw`Abbina ogni trasformazione al suo effetto sul grafico di $f$.`,
+              pairs: [
+                [String.raw`$f(x - 1)$`, 'traslazione di $1$ a destra'],
+                [String.raw`$f(x) + 1$`, 'traslazione di $1$ in alto'],
+                [String.raw`$-f(x)$`, 'riflessione rispetto all\'asse $x$'],
+                [String.raw`$f(-x)$`, 'riflessione rispetto all\'asse $y$'],
+              ],
+              explain: String.raw`Le trasformazioni dentro la parentesi (che agiscono su $x$) sono orizzontali; quelle fuori (su $y$) sono verticali. Il segno meno fuori riflette rispetto all'asse $x$, dentro rispetto all'asse $y$.`,
+            },
+            {
+              id: 's03.elementari.L2.e9', type: 'cloze', level: 2,
+              prompt: 'Completa.',
+              text: String.raw`Il grafico di $f(x - 3)$ è quello di $f$ spostato di [[0]] unità verso [[1]].`,
+              blanks: [
+                { options: [String.raw`$3$`, String.raw`$-3$`, String.raw`$1$`], answer: 0 },
+                { options: ['destra', 'sinistra', 'alto'], answer: 0 },
+              ],
+              explain: String.raw`Dentro la parentesi, $x - 3$ vale $0$ per $x = 3$: il punto che stava in $x = 0$ ora sta in $x = 3$. Lo spostamento è di $3$ verso destra.`,
+            },
+          ],
+        },
+        {
+          id: 's03.elementari.L3',
+          title: 'Dilatazioni, valore assoluto, livello d\'esame',
+          cards: [
+            {
+              type: 'learn',
+              title: 'Dilatazioni e compressioni',
+              body: String.raw`Un fattore **davanti** alla funzione agisce sulle $y$. Un fattore **dentro** la parentesi agisce sulle $x$, ed è di nuovo contro-intuitivo.
+
+- $k\,f(x)$ con $k > 1$: il grafico si **allunga** in verticale, tutte le $y$ diventano $k$ volte più grandi. Con $0 < k < 1$ si **schiaccia**. Con $k < 0$ si ribalta anche rispetto all'asse $x$.
+- $f(kx)$ con $k > 1$: il grafico si **schiaccia** in orizzontale, tutte le $x$ diventano $k$ volte più piccole. Per $\sin(kx)$ il periodo diventa $\frac{2\pi}{k}$.`,
+              plot: { fns: [{ f: 'sin(x)', label: 'sin x' }, { f: 'sin(2*x)', label: 'sin 2x' }], x: [-4, 4], y: [-1.5, 1.5] },
+            },
+            {
+              type: 'learn',
+              title: 'Valore assoluto nel grafico',
+              body: String.raw`- $|f(x)|$: la parte di grafico **sopra** l'asse $x$ resta uguale; la parte **sotto** si ribalta verso l'alto. Il risultato non assume mai valori negativi.
+- $f(|x|)$: per $x \ge 0$ il grafico è quello di $f$. Per $x < 0$ si copia quel tratto con una riflessione rispetto all'asse $y$. Il risultato è sempre **pari**.
+
+>! Attenzione: $|f(x)|$ ha lo stesso dominio di $f$, mentre $f(|x|)$ richiede che $|x|$ stia nel dominio di $f$.`,
+              plot: { fns: [{ f: 'x^2-1', label: 'x^2-1' }, { f: 'abs(x^2-1)', label: '|x^2-1|' }], x: [-2, 2], y: [-1.5, 3], points: [[1, 0, '(1,0)'], [-1, 0, '(-1,0)']] },
+            },
+            {
+              type: 'example',
+              title: 'Esempio svolto',
+              problem: String.raw`Disegna il grafico di $f(x) = |x^2 - 4|$ partendo da $y = x^2 - 4$.`,
+              steps: [
+                String.raw`Parto da $y = x^2 - 4$: parabola con vertice $(0,-4)$ che taglia l'asse $x$ in $x = \pm 2$.`,
+                String.raw`La parte **sotto** l'asse $x$ (cioè per $-2 < x < 2$) si ribalta sopra: lì $|x^2 - 4| = 4 - x^2$.`,
+                String.raw`In $x = \pm 2$ il grafico tocca $0$ con una punta: sono **punti angolosi** di minimo. Decrescente su $(-\infty,-2)$, crescente su $(-2,0)$, decrescente su $(0,2)$, crescente su $(2,+\infty)$.`,
+              ],
+              result: String.raw`Massimo relativo $4$ in $x = 0$; minimi assoluti $0$ in $x = \pm 2$; nessun massimo assoluto, perché la funzione tende a $+\infty$.`,
+            },
+            {
+              type: 'example',
+              title: 'Ora completa tu',
+              problem: String.raw`Dominio e simmetria di $f(x) = \log|x|$.`,
+              steps: [
+                String.raw`Il logaritmo vuole argomento strettamente positivo: $|x| > 0$.`,
+                {
+                  text: String.raw`$|x| = 0$ solo per $x = 0$: quindi il dominio è tutto $\R$ tranne lo zero.`,
+                  ask: {
+                    type: 'interval',
+                    prompt: String.raw`Dominio di $\log|x|$?`,
+                    answer: '(-inf,0)U(0,inf)',
+                    explain: String.raw`Si esclude solo lo zero: $\R \setminus \{0\}$.`,
+                  },
+                },
+                {
+                  text: String.raw`Poiché $|-x| = |x|$, si ha $f(-x) = f(x)$: $f$ è **pari**, e il grafico è simmetrico rispetto all'asse $y$.`,
+                  ask: {
+                    type: 'num',
+                    prompt: String.raw`Quanto vale $f(-e)$?`,
+                    answer: '1',
+                    explain: String.raw`$f(-e) = \log|-e| = \log e = 1$.`,
+                  },
+                },
+              ],
+              result: String.raw`$\text{dom} f = \R \setminus \{0\}$; $f$ è pari; per $x > 0$ coincide con $\log x$.`,
+            },
+            {
+              type: 'example',
+              title: 'Ora completa tu',
+              problem: String.raw`Disegna $g(x) = 2\sqrt{x + 1} - 3$ partendo da $y = \sqrt{x}$, solo con i punti chiave.`,
+              steps: [
+                String.raw`Parto da $y = \sqrt{x}$: inizia in $(0,0)$, passa per $(1,1)$ e $(4,2)$.`,
+                String.raw`Dentro la radice, $x + 1$ sposta il grafico **a sinistra di $1$**: ora inizia in $(-1,0)$ e passa per $(0,1)$ e $(3,2)$.`,
+                {
+                  text: String.raw`Il $2$ davanti moltiplica le $y$: il punto $(3,2)$ diventa $(3,4)$.`,
+                  ask: {
+                    type: 'num',
+                    prompt: String.raw`Quanto vale $2\sqrt{3 + 1}$?`,
+                    answer: '4',
+                    explain: String.raw`$\sqrt{4} = 2$, e $2 \cdot 2 = 4$.`,
+                  },
+                },
+                String.raw`Il $-3$ abbassa tutto di $3$: il punto iniziale va in $(-1,-3)$, il grafico passa per $(0,-1)$ e per $\left(\frac54, 0\right)$.`,
+              ],
+              result: String.raw`Punto iniziale $(-1,-3)$; crescente; zero in $x = \frac54$.`,
+            },
+            {
+              id: 's03.elementari.L3.e1', type: 'tuple', level: 2, labels: ['c', 'd'],
+              prompt: String.raw`Scrivi $\dfrac{x + 1}{x - 1}$ nella forma $c + \dfrac{d}{x - 1}$. Quanto valgono $c$ e $d$?`,
+              answer: ['1', '2'],
+              explain: String.raw`$x + 1 = (x - 1) + 2$, quindi $\dfrac{x + 1}{x - 1} = 1 + \dfrac{2}{x - 1}$. Il grafico è quello di $\frac1x$ spostato di $1$ a destra, dilatato di $2$ e alzato di $1$.`,
+            },
+            {
+              id: 's03.elementari.L3.e2', type: 'mcq', level: 3, source: 'Appello 03/09/2026 · Parte B',
+              prompt: String.raw`Quanto vale $\displaystyle\lim_{x \to -\infty} e^{\frac{x+1}{x-1}}$?`,
+              options: [String.raw`$0$`, String.raw`$1$`, String.raw`$e$`, String.raw`$+\infty$`],
+              answer: 2,
+              explain: String.raw`$\dfrac{x+1}{x-1} = 1 + \dfrac{2}{x-1} \to 1$ per $x \to -\infty$, quindi $f(x) \to e^1 = e$. Errore tipico: pensare che l'esponente tenda a $0$ o a $+\infty$. Il suo limite è $1$.`,
+            },
+            {
+              id: 's03.elementari.L3.e3', type: 'num', level: 3, source: 'Appello 03/09/2026 · Parte B',
+              prompt: String.raw`La funzione $f(x) = e^{\frac{x+1}{x-1}}$ non è continua in un punto $x_0$. Quale?`,
+              answer: '1',
+              explain: String.raw`Il denominatore $x - 1$ si annulla in $x_0 = 1$. Per $x \to 1^+$ l'esponente tende a $+\infty$ e $f \to +\infty$; per $x \to 1^-$ l'esponente tende a $-\infty$ e $f \to 0$. Il limite destro è infinito: in $x_0 = 1$ c'è una discontinuità.`,
+            },
+            {
+              id: 's03.elementari.L3.e4', type: 'mcq', level: 3, source: 'Appello 10/02/2026 · Parte B',
+              prompt: String.raw`Quanti punti angolosi ha $f(x) = (x^2 - 3)\,e^{-|2-x|}$?`,
+              options: [
+                'Nessuno: la funzione è derivabile ovunque',
+                String.raw`Uno, in $x = 2$`,
+                String.raw`Uno, in $x = 0$`,
+                String.raw`Due, in $x = \pm\sqrt{3}$`,
+              ],
+              answer: 1,
+              explain: String.raw`$|2 - x|$ cambia comportamento solo in $x = 2$. Per $x < 2$: $f = (x^2 - 3)e^{x-2}$, con $f'(2^-) = 5$. Per $x > 2$: $f = (x^2 - 3)e^{2-x}$, con $f'(2^+) = 3$. Derivate laterali diverse: punto angoloso. In $\pm\sqrt{3}$ la funzione si annulla ma è liscia.`,
+            },
+            {
+              id: 's03.elementari.L3.p1', type: 'problem', level: 3, source: 'Appello 11/06/2026 · Parte B',
+              prompt: String.raw`Sia $f(x) = e^{\frac{1}{4-x^2}}$. Rispondi alle domande.`,
+              parts: [
+                { type: 'interval', prompt: String.raw`Dominio di $f$.`, answer: '(-inf,-2)U(-2,2)U(2,inf)', explain: String.raw`Serve $4 - x^2 \ne 0$, cioè $x \ne \pm 2$. L'esponenziale è sempre definito.` },
+                { type: 'num', prompt: String.raw`Limite di $f$ per $x \to 2^-$. Scrivi inf per $+\infty$.`, answer: 'inf', explain: String.raw`Per $x \to 2^-$, $4 - x^2 \to 0^+$, quindi $\frac{1}{4-x^2} \to +\infty$ e $f \to e^{+\infty} = +\infty$.` },
+                { type: 'num', prompt: String.raw`Limite di $f$ per $x \to 2^+$.`, answer: '0', explain: String.raw`Per $x \to 2^+$, $4 - x^2 \to 0^-$, quindi $\frac{1}{4-x^2} \to -\infty$ e $f \to 0$.` },
+                { type: 'num', prompt: String.raw`Asintoto orizzontale $y = c$ per $x \to \pm\infty$: quanto vale $c$?`, answer: '1', explain: String.raw`$\frac{1}{4-x^2} \to 0$, quindi $f \to e^0 = 1$: la retta $y = 1$ è asintoto orizzontale.` },
+              ],
+              solution: String.raw`Dominio $\R \setminus \{\pm 2\}$. Per $x \to 2^-$: $4 - x^2 \to 0^+$ e $f \to +\infty$. Per $x \to 2^+$: $4 - x^2 \to 0^-$ e $f \to 0$. Per $x \to \pm\infty$: $f \to 1$, quindi $y = 1$ è asintoto orizzontale. Lo schema è la composizione di $\frac{1}{t}$ con la parabola $4 - x^2$ e con $e^t$.`,
+            },
+            {
+              id: 's03.elementari.L3.e5', type: 'open', level: 3, source: 'Appello 11/06/2026 · Parte B',
+              prompt: String.raw`Spiega come si ottiene il grafico di $f(|x|)$ a partire da quello di $f$, e perché $f(|x|)$ è sempre pari.`,
+              answer: String.raw`Per $x \ge 0$ si ha $|x| = x$: il grafico di $f(|x|)$ coincide con quello di $f$ sul semiasse positivo. Per $x < 0$ si ha $|x| = -x$, quindi $f(|x|) = f(-x)$: il grafico è il riflesso di quello di $f$ rispetto all'asse $y$. Infine $f(|-x|) = f(|x|)$ per ogni $x$: la funzione è pari.`,
+              rubric: [
+                String.raw`Sul semiasse $x \ge 0$ il grafico coincide con quello di $f$`,
+                String.raw`Per $x < 0$ si usa $|x| = -x$ e si ottiene il riflesso rispetto all'asse $y$`,
+                String.raw`Si verifica $f(|-x|) = f(|x|)$, quindi la funzione è pari`,
+              ],
+            },
+            {
+              id: 's03.elementari.L3.e6', type: 'tf', level: 2,
+              prompt: String.raw`Il grafico di $|f(x)|$ sta sempre sopra o sull'asse $x$.`,
+              answer: true,
+              explain: String.raw`Per definizione $|f(x)| \ge 0$ per ogni $x$: il grafico non scende mai sotto l'asse $x$.`,
+            },
+            {
+              id: 's03.elementari.L3.e7', type: 'num', level: 2,
+              prompt: String.raw`Qual è il periodo di $\sin(3x)$? Scrivi la risposta in funzione di $\pi$.`,
+              answer: '2*pi/3',
+              explain: String.raw`Il periodo di $\sin x$ è $2\pi$. Con $3x$ la funzione compie un giro completo quando $3x$ cresce di $2\pi$, cioè quando $x$ cresce di $\frac{2\pi}{3}$.`,
+            },
+          ],
+        },
+      ],
+      practice: [
+        { id: 's03.elementari.P1', type: 'mcq', level: 1,
+          prompt: String.raw`Partendo da $y = \log x$, quale trasformazione dà $y = \log x - 1$?`,
+          options: [String.raw`Traslazione di $1$ verso destra`, String.raw`Traslazione di $1$ verso il basso`, String.raw`Traslazione di $1$ verso sinistra`, String.raw`Riflessione rispetto all'asse $y$`],
+          answer: 1,
+          explain: String.raw`Sottrarre $1$ **fuori** dalla funzione sposta il grafico in basso di $1$. Verso destra servirebbe $\log(x - 1)$, verso sinistra $\log(x + 1)$, la riflessione $\log(-x)$.`,
+        },
+        { id: 's03.elementari.P2', type: 'num', level: 1,
+          prompt: String.raw`Qual è il minimo di $f(x) = |x| - 2$?`,
+          answer: '-2',
+          explain: String.raw`$|x| \ge 0$, con uguaglianza in $x = 0$. Quindi $f(x) \ge -2$ e il minimo è $-2$, assunto in $x = 0$.`,
+        },
+        { id: 's03.elementari.P3', type: 'tf', level: 1,
+          prompt: String.raw`Il grafico di $f(-x)$ coincide sempre con quello di $f$.`,
+          answer: false,
+          explain: String.raw`Coincide solo se $f$ è pari. Per $f(x) = e^x$, $f(-x) = e^{-x}$ è un'altra curva.`,
+        },
+        { id: 's03.elementari.P4', type: 'order', level: 2,
+          prompt: String.raw`Metti in ordine i passi per disegnare $y = 1 - \sqrt{x + 2}$ partendo da $y = \sqrt{x}$.`,
+          steps: [
+            String.raw`Parto da $y = \sqrt{x}$.`,
+            String.raw`Traslo di $2$ a sinistra: $y = \sqrt{x + 2}$.`,
+            String.raw`Rifletto rispetto all'asse $x$: $y = -\sqrt{x + 2}$.`,
+            String.raw`Alzo di $1$: $y = 1 - \sqrt{x + 2}$.`,
+          ],
+          distractors: [
+            String.raw`Traslo di $2$ a destra: $y = \sqrt{x - 2}$.`,
+            String.raw`Rifletto rispetto all'asse $y$: $y = \sqrt{-x}$.`,
+          ],
+          explain: String.raw`Prima la traslazione dentro la radice (orizzontale), poi la riflessione e la traslazione verticale. Il segno meno fuori la radice riflette rispetto all'asse $x$ prima di alzare di $1$.`,
+        },
+        { id: 's03.elementari.P5', type: 'match', level: 2,
+          prompt: String.raw`Abbina ogni espressione al suo effetto sul grafico di $f$.`,
+          pairs: [
+            [String.raw`$f(x + 2)$`, 'traslazione di $2$ verso sinistra'],
+            [String.raw`$f(x) - 2$`, 'traslazione di $2$ verso il basso'],
+            [String.raw`$|f(x)|$`, 'parte sotto l\'asse $x$ ribaltata sopra'],
+            [String.raw`$f(|x|)$`, 'parte destra copiata a sinistra'],
+          ],
+          explain: String.raw`$f(x+2)$ sposta a sinistra perché il segno è contrario a quello che sembra. $|f(x)|$ tiene sopra l'asse $x$ e ribalta sotto. $f(|x|)$ usa solo $x \ge 0$ e lo copia a sinistra.`,
+        },
+        { id: 's03.elementari.P6', type: 'interval', level: 2,
+          prompt: String.raw`Dominio di $f(x) = \sqrt{\log x}$.`,
+          answer: '[1,inf)',
+          explain: String.raw`Serve $\log x \ge 0$. Il logaritmo è crescente e vale $0$ in $x = 1$, quindi $x \ge 1$. Il dominio è $[1,+\infty)$.`,
+        },
+        { id: 's03.elementari.P7', type: 'cloze', level: 2,
+          prompt: 'Completa.',
+          text: String.raw`Il grafico di $-f(x)$ si ottiene da quello di $f$ con un riflesso rispetto all'asse [[0]], quello di $f(-x)$ con un riflesso rispetto all'asse [[1]].`,
+          blanks: [
+            { options: [String.raw`$x$`, String.raw`$y$`], answer: 0 },
+            { options: [String.raw`$x$`, String.raw`$y$`], answer: 1 },
+          ],
+          explain: String.raw`$-f(x)$ cambia il segno delle $y$: riflessione rispetto all'asse $x$. $f(-x)$ cambia il segno delle $x$: riflessione rispetto all'asse $y$.`,
+        },
+        { id: 's03.elementari.P8', type: 'tuple', level: 2, labels: ['c', 'd'],
+          prompt: String.raw`Scrivi $\dfrac{2x + 3}{x + 1}$ nella forma $c + \dfrac{d}{x + 1}$. Quanto valgono $c$ e $d$?`,
+          answer: ['2', '1'],
+          explain: String.raw`$2x + 3 = 2(x + 1) + 1$, quindi $\dfrac{2x+3}{x+1} = 2 + \dfrac{1}{x+1}$.`,
+        },
+        { id: 's03.elementari.P9', type: 'num', level: 2,
+          prompt: String.raw`Qual è il periodo di $\tan(2x)$? Scrivi la risposta in funzione di $\pi$.`,
+          answer: 'pi/2',
+          explain: String.raw`Il periodo di $\tan x$ è $\pi$. Con $2x$ il periodo si divide per $2$: $\frac{\pi}{2}$.`,
+        },
+        { id: 's03.elementari.P10', type: 'mcq', level: 2,
+          prompt: String.raw`Il grafico di $f(x) = e^{-|x|}$ ha punti angolosi?`,
+          options: ['No: è derivabile in ogni punto', String.raw`Sì, in $x = 0$`, String.raw`Sì, in $x = 1$`, String.raw`Sì, in $x = -1$`],
+          answer: 1,
+          explain: String.raw`$|x|$ cambia comportamento in $x = 0$. A sinistra $f = e^{x}$, con derivata $1$; a destra $f = e^{-x}$, con derivata $-1$. Le derivate laterali sono diverse: c'è un punto angoloso, ed è un massimo ($f(0) = 1$). Negli altri punti la funzione è liscia.`,
+        },
+        {
+          id: 's03.elementari.gen-vertice', type: 'gen', level: 1,
+          gen: (R) => {
+            const a = R.nz(-4, 4), b = R.nz(-4, 4);
+            const inside = a > 0 ? `x - ${a}` : `x + ${-a}`;
+            const out = b > 0 ? `+ ${b}` : `- ${-b}`;
+            return {
+              type: 'tuple', labels: ['x', 'y'],
+              prompt: String.raw`Vertice del grafico di $f(x) = |${inside}| ${out}$.`,
+              answer: [String(a), String(b)],
+              explain: String.raw`Il vertice della V è dove l'argomento del modulo si annulla: $${inside} = 0$, cioè $x = ${a}$. Lì $f(${a}) = |0| ${out} = ${b}$. Vertice $(${a},${b})$.`,
+            };
+          },
+        },
+        {
+          id: 's03.elementari.gen-dom-log', type: 'gen', level: 2,
+          gen: (R) => {
+            const a = R.nz(-5, 5);
+            if (R.chance(0.5)) {
+              const inside = a > 0 ? `x - ${a}` : `x + ${-a}`;
+              return {
+                type: 'interval',
+                prompt: String.raw`Dominio di $f(x) = \log(${inside})$.`,
+                answer: `(${a},inf)`,
+                explain: String.raw`L'argomento deve essere positivo: $${inside} > 0$, cioè $x > ${a}$. Il punto $x = ${a}$ è escluso, perché lì l'argomento vale $0$.`,
+              };
+            }
+            return {
+              type: 'interval',
+              prompt: String.raw`Dominio di $f(x) = \log(${a} - x)$.`,
+              answer: `(-inf,${a})`,
+              explain: String.raw`L'argomento deve essere positivo: $${a} - x > 0$, cioè $x < ${a}$. Errore tipico: scrivere $x > ${a}$ dimenticando che la $x$ ha il segno negativo.`,
+            };
+          },
+        },
+        {
+          id: 's03.elementari.gen-periodo', type: 'gen', level: 2,
+          gen: (R) => {
+            const k = R.pick([2, 3, 4, 5]);
+            if (R.chance(0.3)) {
+              return {
+                type: 'num',
+                prompt: String.raw`Periodo di $f(x) = \tan(${k}x)$. Scrivi la risposta in funzione di $\pi$.`,
+                answer: `pi/${k}`,
+                explain: String.raw`Il periodo di $\tan x$ è $\pi$. Con $${k}x$ il periodo si divide per $${k}$: $T = \frac{\pi}{${k}}$.`,
+              };
+            }
+            const fn = R.pick(['\\sin', '\\cos']);
+            return {
+              type: 'num',
+              prompt: String.raw`Periodo di $f(x) = ${fn}(${k}x)$. Scrivi la risposta in funzione di $\pi$.`,
+              answer: `2*pi/${k}`,
+              explain: String.raw`Il periodo di $\sin x$ e di $\cos x$ è $2\pi$. Con $${k}x$ il periodo si divide per $${k}$: $T = \frac{2\pi}{${k}}$.`,
+            };
+          },
+        },
+        {
+          id: 's03.elementari.gen-radice-punto', type: 'gen', level: 2,
+          gen: (R) => {
+            const a = R.nz(-4, 4), m = R.int(1, 4), b = R.nz(-3, 3);
+            const x0 = a + m * m;
+            const inside = a > 0 ? `x - ${a}` : `x + ${-a}`;
+            const out = b > 0 ? `+ ${b}` : `- ${-b}`;
+            return {
+              type: 'num',
+              prompt: String.raw`Sia $g(x) = \sqrt{${inside}} ${out}$. Quanto vale $g(${x0})$?`,
+              answer: `${m + b}`,
+              explain: String.raw`Il radicando diventa $${x0} - (${a}) = ${m * m}$, quindi $\sqrt{${m * m}} = ${m}$ e $g(${x0}) = ${m} ${out} = ${m + b}$.`,
+            };
+          },
+        },
+        {
+          id: 's03.elementari.gen-riflesso-dom', type: 'gen', level: 2,
+          gen: (R) => {
+            const a = R.nz(-4, 4);
+            const inside = a > 0 ? `-x - ${a}` : `-x + ${-a}`;
+            return {
+              type: 'interval',
+              prompt: String.raw`Dominio di $g(x) = \log(${inside})$.`,
+              answer: `(-inf,${-a})`,
+              explain: String.raw`L'argomento deve essere positivo: $${inside} > 0$, cioè $x < ${-a}$. Il grafico è quello di $\log$ riflesso rispetto all'asse $y$ e spostato: il dominio è una semiretta a sinistra.`,
+            };
+          },
+        },
+      ],
+      flashcards: [
+        { id: 's03.elementari.fc1', kind: 'formula', front: String.raw`Traslazioni: $f(x) + b$ e $f(x + a)$`, back: String.raw`$f(x) + b$: su di $b$ (giù se $b < 0$). $f(x + a)$: a **sinistra** di $a$ (se $a > 0$). $f(x - a)$: a **destra** di $a$. Il segno dentro la parentesi è contro-intuitivo.` },
+        { id: 's03.elementari.fc2', kind: 'formula', front: String.raw`Riflessioni: $-f(x)$ e $f(-x)$`, back: String.raw`$-f(x)$: riflessione rispetto all'asse $x$ (cambia il segno delle $y$). $f(-x)$: riflessione rispetto all'asse $y$ (cambia il segno delle $x$). $-f(-x)$: riflessione rispetto all'origine.` },
+        { id: 's03.elementari.fc3', kind: 'formula', front: String.raw`Dilatazioni: $k\,f(x)$ e $f(kx)$`, back: String.raw`$k\,f(x)$: le $y$ si moltiplicano per $k$ (allunga se $k > 1$, schiaccia se $0 < k < 1$). $f(kx)$: le $x$ si dividono per $k$ (schiaccia in orizzontale se $k > 1$). Periodi: $\sin(kx)$ e $\cos(kx)$ hanno periodo $\frac{2\pi}{k}$; $\tan(kx)$ ha periodo $\frac{\pi}{k}$.` },
+        { id: 's03.elementari.fc4', kind: 'metodo', front: String.raw`Grafico di $|f(x)|$`, back: String.raw`Tieni la parte di grafico sopra l'asse $x$ e ribalta verso l'alto quella sotto. Il risultato è sempre $\ge 0$.` },
+        { id: 's03.elementari.fc5', kind: 'metodo', front: String.raw`Grafico di $f(|x|)$`, back: String.raw`Per $x \ge 0$ disegna $f$. Per $x < 0$ copia quel tratto con una riflessione rispetto all'asse $y$. Il risultato è **pari**.` },
+        { id: 's03.elementari.fc6', kind: 'errore', front: String.raw`Dove va il grafico di $f(x - 2)$?`, back: String.raw`A **destra** di $2$. Errore frequente: spostarlo a sinistra per il segno meno. Il punto che stava in $x_0$ ora sta in $x_0 + 2$.` },
+        { id: 's03.elementari.fc7', kind: 'errore', front: String.raw`Vale $-f(x) = f(-x)$?`, back: String.raw`In generale **no**. Sono uguali solo se $f$ è dispari. Esempio: $f(x) = x^2$ ha $f(-x) = x^2 \ne -x^2 = -f(x)$.` },
+        { id: 's03.elementari.fc8', kind: 'formula', front: String.raw`Punti chiave di $e^x$ e $\log x$`, back: String.raw`$e^x > 0$, passa per $(0,1)$, asintoto $y = 0$ per $x \to -\infty$. $\log x$: dominio $(0,+\infty)$, passa per $(1,0)$, asintoto $x = 0$.` },
+        { id: 's03.elementari.fc9', kind: 'formula', front: String.raw`Punti chiave di $\sqrt{x}$ e $|x|$`, back: String.raw`$\sqrt{x}$: dominio e immagine $[0,+\infty)$, passa per $(0,0)$ e $(1,1)$, crescente. $|x|$: V con vertice in $(0,0)$; dominio $\R$, immagine $[0,+\infty)$.` },
+      ],
+    },
   ],
 };
