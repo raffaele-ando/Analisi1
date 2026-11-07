@@ -472,10 +472,445 @@ Calcolare integrali diventa: **trovare una primitiva**.`,
   ],
 };
 
+// ---------------------------------------------------------------------------
+// s11.immediati · Primitive, integrali immediati, decomposizione lineare
+// ---------------------------------------------------------------------------
+const immediati = {
+  id: 's11.immediati',
+  title: 'Primitive e integrali immediati',
+  summary: String.raw`Riconoscere le primitive della tabella (anche composte) e spezzare l'integranda in pezzi immediati.`,
+  prereq: ['s11.riemann', 's08.regole', 's00.algebra', 's00.trig'],
+  examRefs: ['Itinere 15/01/2026 · Parte B', 'Appello 03/09/2026 · Es. 4'],
+  lessons: [
+    {
+      id: 's11.immediati.L1',
+      title: 'La tabella delle primitive',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Primitive e integrale indefinito',
+          body: String.raw`$G$ è una **primitiva** di $f$ su un intervallo $I$ se $G'(x)=f(x)$ per ogni $x\in I$.
+
+Se $G$ è una primitiva, **tutte** le primitive sono $G+c$, $c\in\R$ (due funzioni con la stessa derivata su un intervallo differiscono per una costante: Lagrange). L'insieme si scrive
+$$\int f(x)\,dx=G(x)+c\qquad\text{(integrale indefinito)}.$$
+
+>* Controllo sempre possibile: **derivo il risultato** e devo ritrovare l'integranda.
+
+Integrare è "derivare al contrario": ogni regola di derivazione dà una regola di integrazione.`,
+        },
+        {
+          type: 'learn',
+          title: 'Tabella (da sapere a memoria)',
+          body: String.raw`- $x^\alpha$ ($\alpha\neq-1$) → $\dfrac{x^{\alpha+1}}{\alpha+1}$
+- $\dfrac1x$ → $\log|x|$
+- $e^x$ → $e^x$;  $a^x$ → $\dfrac{a^x}{\log a}$
+- $\sin x$ → $-\cos x$;  $\cos x$ → $\sin x$
+- $\dfrac1{\cos^2x}=1+\tan^2x$ → $\tan x$
+- $\dfrac1{1+x^2}$ → $\arctan x$
+- $\dfrac1{\sqrt{1-x^2}}$ → $\arcsin x$
+
+**Linearità**: $\int(\lambda f+\mu g)=\lambda\int f+\mu\int g$: integro termine a termine e porto fuori le costanti.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\int\left(3x^2-\frac4x+e^x\right)dx$.`,
+          steps: [
+            String.raw`Linearità: $3\int x^2\,dx-4\int\frac{dx}{x}+\int e^x\,dx$.`,
+            String.raw`$\int x^2=\frac{x^3}3$, quindi $3\int x^2=x^3$.`,
+            {
+              text: String.raw`$-4\int\frac{dx}x=-4\log|x|$.`,
+              ask: { type: 'expr', prompt: String.raw`Una primitiva di $-\frac4x$ (per $x>0$)?`, answer: '-4*log(x)', upToConstant: true, domain: [0.5, 3], _f: '-4/x', explain: String.raw`$\int\frac1x=\log|x|$, per $x>0$ è $\log x$; moltiplico per $-4$.` },
+            },
+            String.raw`Totale: $x^3-4\log|x|+e^x+c$. Verifica: derivando ottengo $3x^2-\frac4x+e^x$. ✓`,
+          ],
+          result: String.raw`$x^3-4\log|x|+e^x+c$`,
+        },
+        {
+          id: 's11.immediati.L1.e1', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`Calcola $\int(4x^3-2x+5)\,dx$ (la costante non serve).`,
+          answer: 'x^4-x^2+5x', _f: '4x^3-2x+5',
+          explain: String.raw`Termine a termine: $4\cdot\frac{x^4}4-2\cdot\frac{x^2}2+5x=x^4-x^2+5x$. Errore tipico: derivare invece di integrare ($12x^2-2$).`,
+        },
+        {
+          id: 's11.immediati.L1.e2', type: 'expr', level: 1, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`Calcola $\int\sqrt x\,dx$.`,
+          answer: '2/3*x^(3/2)', _f: 'sqrt(x)',
+          explain: String.raw`$\sqrt x=x^{1/2}$: $\frac{x^{3/2}}{3/2}=\frac23x\sqrt x$. Scrivi sempre le radici come potenze prima di integrare.`,
+        },
+        {
+          id: 's11.immediati.L1.e3', type: 'expr', level: 1, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`Calcola $\int\frac{dx}{x^3}$.`,
+          answer: '-1/(2x^2)', _f: '1/x^3',
+          explain: String.raw`$x^{-3}$ → $\frac{x^{-2}}{-2}=-\frac1{2x^2}$. Errore tipico: scrivere $\log|x^3|$ (vale solo per $\frac1x$).`,
+        },
+        {
+          id: 's11.immediati.L1.e4', type: 'mcq', level: 1,
+          prompt: String.raw`$\int\frac{dx}{x}=\;?$`,
+          options: [String.raw`$\log|x|+c$`, String.raw`$\frac{x^0}{0}+c$`, String.raw`$-\frac1{x^2}+c$`, String.raw`$\frac{x^2}{2}+c$`],
+          answer: 0,
+          explain: String.raw`È il caso $\alpha=-1$ escluso dalla formula delle potenze (darebbe $\frac{x^0}0$, senza senso). $-\frac1{x^2}$ è la **derivata** di $\frac1x$, non una primitiva. Il modulo serve per $x<0$: $(\log(-x))'=\frac{-1}{-x}=\frac1x$.`,
+        },
+        {
+          id: 's11.immediati.L1.e5', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`Calcola $\int(2\sin x+3\cos x)\,dx$.`,
+          answer: '-2cos(x)+3sin(x)', _f: '2sin(x)+3cos(x)',
+          explain: String.raw`$\int\sin=-\cos$, $\int\cos=\sin$: $-2\cos x+3\sin x$. Errore tipico di segno: $(\cos x)'=-\sin x$, quindi la primitiva di $\sin x$ è $-\cos x$.`,
+        },
+        {
+          id: 's11.immediati.L1.e6', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`Calcola $\int 2^x\,dx$.`,
+          answer: '2^x/log(2)', _f: '2^x',
+          explain: String.raw`$(a^x)'=a^x\log a$, quindi $\int a^x=\frac{a^x}{\log a}$. Non è $\frac{2^{x+1}}{x+1}$: la formula delle potenze vale per $x^\alpha$ (base variabile), non per $a^x$ (esponente variabile).`,
+        },
+        {
+          id: 's11.immediati.L1.e7', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`Calcola $\int\frac{5}{1+x^2}\,dx$.`,
+          answer: '5*atan(x)', _f: '5/(1+x^2)',
+          explain: String.raw`Tabella: $\int\frac{dx}{1+x^2}=\arctan x$. Per linearità: $5\arctan x$ (si digita arctan(x)).`,
+        },
+        {
+          id: 's11.immediati.L1.e8', type: 'tf', level: 1,
+          prompt: String.raw`$\int f(x)g(x)\,dx=\int f(x)\,dx\cdot\int g(x)\,dx$.`,
+          answer: false,
+          explain: String.raw`Falso. Esempio: $\int x\cdot x\,dx=\frac{x^3}3$, mentre $\int x\cdot\int x=\frac{x^4}{4}$. Per i prodotti servono tecniche apposite (per parti, sostituzione).`,
+        },
+        {
+          id: 's11.immediati.L1.e9', type: 'match', level: 1,
+          prompt: 'Abbina ogni funzione a una sua primitiva.',
+          pairs: [
+            [String.raw`$\frac1{\cos^2x}$`, String.raw`$\tan x$`],
+            [String.raw`$\frac1{\sqrt{1-x^2}}$`, String.raw`$\arcsin x$`],
+            [String.raw`$\frac1{1+x^2}$`, String.raw`$\arctan x$`],
+            [String.raw`$\sin x$`, String.raw`$-\cos x$`],
+          ],
+          explain: 'Ogni riga si verifica derivando la colonna di destra.',
+        },
+      ],
+    },
+    {
+      id: 's11.immediati.L2',
+      title: 'Integrali quasi immediati',
+      cards: [
+        {
+          type: 'learn',
+          title: 'La regola della catena al contrario',
+          body: String.raw`Se nell'integranda vedo una funzione $f(x)$ **e la sua derivata** $f'(x)$:
+
+- $\int f'(x)\,f(x)^\alpha\,dx=\dfrac{f(x)^{\alpha+1}}{\alpha+1}$ ($\alpha\neq-1$)
+- $\int \dfrac{f'(x)}{f(x)}\,dx=\log|f(x)|$
+- $\int f'(x)\,e^{f(x)}\,dx=e^{f(x)}$
+- $\int f'(x)\cos f(x)\,dx=\sin f(x)$, $\int f'(x)\sin f(x)\,dx=-\cos f(x)$
+- $\int \dfrac{f'(x)}{1+f(x)^2}\,dx=\arctan f(x)$
+
+**Caso lineare** $f(x)=ax+b$: $\int g(ax+b)\,dx=\dfrac1a\,G(ax+b)$. Esempi: $\int e^{3x}=\frac{e^{3x}}3$, $\int\cos 2x=\frac{\sin2x}2$.
+
+>! Se manca una **costante** la aggiusto ($\int x e^{x^2}=\frac12\int 2xe^{x^2}$). Se manca una **funzione di $x$** non posso farlo.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\int\frac{x}{1+x^2}\,dx$.`,
+          steps: [
+            String.raw`La derivata del denominatore è $2x$; al numeratore c'è $x=\frac12\cdot 2x$.`,
+            String.raw`$\int\frac{x}{1+x^2}dx=\frac12\int\frac{2x}{1+x^2}dx$: è del tipo $\frac{f'}{f}$.`,
+            {
+              text: String.raw`$=\frac12\log(1+x^2)+c$ (il modulo non serve: $1+x^2>0$).`,
+              ask: { type: 'expr', prompt: 'Scrivi una primitiva.', answer: '1/2*log(1+x^2)', upToConstant: true, _f: 'x/(1+x^2)', explain: String.raw`$\frac12\log(1+x^2)$. Non è $\arctan x$: quella ha numeratore $1$, non $x$.` },
+            },
+          ],
+          result: String.raw`$\frac12\log(1+x^2)+c$`,
+        },
+        {
+          id: 's11.immediati.L2.e1', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\int e^{3x}\,dx$`,
+          answer: 'e^(3x)/3', _f: 'e^(3x)',
+          explain: String.raw`Caso lineare: $\frac13e^{3x}$. Verifica: $(\frac13e^{3x})'=e^{3x}$. Errore tipico: $3e^{3x}$ (quella è la derivata).`,
+        },
+        {
+          id: 's11.immediati.L2.e2', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\int\cos(2x)\,dx$`,
+          answer: 'sin(2x)/2', _f: 'cos(2x)',
+          explain: String.raw`$\frac12\sin(2x)$: divido per il coefficiente di $x$.`,
+        },
+        {
+          id: 's11.immediati.L2.e3', type: 'expr', level: 1, upToConstant: true,
+          prompt: String.raw`$\int\frac{dx}{2x+1}$ (per $x>-\frac12$)`,
+          answer: 'log(2x+1)/2', _f: '1/(2x+1)',
+          explain: String.raw`$\frac12\log|2x+1|$. Errore tipico: dimenticare il fattore $\frac12$.`,
+        },
+        {
+          id: 's11.immediati.L2.e4', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int(3x-1)^4\,dx$`,
+          answer: '(3x-1)^5/15', _f: '(3x-1)^4',
+          explain: String.raw`$\frac13\cdot\frac{(3x-1)^5}{5}=\frac{(3x-1)^5}{15}$. Sviluppare la potenza funziona ma è lento.`,
+        },
+        {
+          id: 's11.immediati.L2.e5', type: 'expr', level: 2, upToConstant: true, domain: [0.1, 1.4],
+          prompt: String.raw`$\int\tan x\,dx$ (per $0<x<\frac\pi2$)`,
+          answer: '-log(cos(x))', _f: 'tan(x)',
+          explain: String.raw`$\tan x=\frac{\sin x}{\cos x}=-\frac{(\cos x)'}{\cos x}$: primitiva $-\log|\cos x|$. Errore tipico: $\frac1{\cos^2x}$, che è la **derivata** di $\tan x$.`,
+        },
+        {
+          id: 's11.immediati.L2.e6', type: 'expr', level: 1, upToConstant: true, domain: [-1.5, 1.5],
+          prompt: String.raw`$\int 2x\,e^{x^2}\,dx$`,
+          answer: 'e^(x^2)', _f: '2x*e^(x^2)',
+          explain: String.raw`$2x$ è la derivata di $x^2$: tipo $f'e^f$, primitiva $e^{x^2}$.`,
+        },
+        {
+          id: 's11.immediati.L2.e7', type: 'expr', level: 2, upToConstant: true, domain: [-1.5, 1.5],
+          prompt: String.raw`$\int\frac{\cos x}{1+\sin^2x}\,dx$`,
+          answer: 'atan(sin(x))', _f: 'cos(x)/(1+sin(x)^2)',
+          explain: String.raw`Con $f=\sin x$, $f'=\cos x$: tipo $\frac{f'}{1+f^2}$, primitiva $\arctan(\sin x)$.`,
+        },
+        {
+          id: 's11.immediati.L2.e8', type: 'expr', level: 2, upToConstant: true, domain: [0.5, 3],
+          prompt: String.raw`$\int\frac{\log x}{x}\,dx$`,
+          answer: 'log(x)^2/2', _f: 'log(x)/x',
+          explain: String.raw`$\frac1x$ è la derivata di $\log x$: tipo $f'f$, primitiva $\frac{\log^2x}2$.`,
+        },
+        {
+          id: 's11.immediati.L2.e9', type: 'mcq', level: 2,
+          prompt: String.raw`$\int\frac{dx}{4+x^2}=\;?$`,
+          options: [String.raw`$\frac12\arctan\frac x2+c$`, String.raw`$\arctan\frac x2+c$`, String.raw`$\frac14\arctan\frac x2+c$`, String.raw`$\frac{\log(4+x^2)}{2x}+c$`],
+          answer: 0,
+          explain: String.raw`$\frac1{4+x^2}=\frac14\cdot\frac1{1+(x/2)^2}$. Con $f=\frac x2$, $f'=\frac12$: $\frac14\cdot 2\arctan\frac x2=\frac12\arctan\frac x2$. In generale $\int\frac{dx}{a^2+x^2}=\frac1a\arctan\frac xa$. L'ultima opzione "divide per la derivata dell'interno", che non è lecito.`,
+        },
+        {
+          id: 's11.immediati.L2.e10', type: 'mcq', level: 2,
+          prompt: String.raw`$\int\frac{dx}{x\log x}$ (per $x>1$) $=\;?$`,
+          options: [String.raw`$\log(\log x)+c$`, String.raw`$\frac{\log^2x}2+c$`, String.raw`$\log x\cdot\log|x|+c$`, String.raw`$-\frac1{\log x}+c$`],
+          answer: 0,
+          explain: String.raw`$\frac{1/x}{\log x}=\frac{f'}{f}$ con $f=\log x$: primitiva $\log|\log x|$. $\frac{\log^2x}2$ è la primitiva di $\frac{\log x}x$; $-\frac1{\log x}$ quella di $\frac1{x\log^2x}$.`,
+        },
+      ],
+    },
+    {
+      id: 's11.immediati.L3',
+      title: 'Decomposizione e integrali definiti',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Decomposizione lineare',
+          body: String.raw`Molti integrali diventano immediati dopo un passaggio algebrico che li **spezza in somma**:
+
+- dividere termine a termine: $\frac{(x+1)^2}{x}=x+2+\frac1x$;
+- aggiungere e togliere: $\frac{x^2}{1+x^2}=\frac{1+x^2-1}{1+x^2}=1-\frac1{1+x^2}$;
+- formule trigonometriche: $\sin^2x=\frac{1-\cos2x}2$, $\cos^2x=\frac{1+\cos2x}2$, $\sin x\cos x=\frac{\sin 2x}2$;
+- separare un numeratore: $\frac{x+1}{x^2+1}=\frac{x}{x^2+1}+\frac1{x^2+1}$.
+
+Poi si usa la **formula fondamentale** $\int_a^bf=G(b)-G(a)$ per gli integrali definiti.
+
+>! La formula fondamentale richiede $f$ **continua su tutto** $[a,b]$.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto',
+          problem: String.raw`Calcola $\int_1^2\frac{(x+1)^2}{x}\,dx$.`,
+          steps: [
+            String.raw`Sviluppo: $\frac{x^2+2x+1}{x}=x+2+\frac1x$.`,
+            String.raw`Primitiva: $\frac{x^2}2+2x+\log x$ (su $[1,2]$ è $x>0$).`,
+            {
+              text: String.raw`$\left(2+4+\log2\right)-\left(\frac12+2+0\right)=\frac72+\log2$.`,
+              ask: { type: 'num', prompt: 'Valore dell\'integrale?', answer: '7/2+log(2)', _int: ['(x+1)^2/x', 1, 2], explain: String.raw`$G(2)-G(1)=(6+\log 2)-\frac52=\frac72+\log2$.` },
+            },
+          ],
+          result: String.raw`$\frac72+\log 2$`,
+        },
+        {
+          id: 's11.immediati.L3.e1', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int\frac{x^2}{1+x^2}\,dx$`,
+          answer: 'x-atan(x)', _f: 'x^2/(1+x^2)',
+          explain: String.raw`Aggiungo e tolgo $1$: $\frac{x^2}{1+x^2}=1-\frac1{1+x^2}$. Primitiva $x-\arctan x$.`,
+        },
+        {
+          id: 's11.immediati.L3.e2', type: 'expr', level: 2, upToConstant: true,
+          prompt: String.raw`$\int\sin^2x\,dx$`,
+          answer: 'x/2-sin(2x)/4', _f: 'sin(x)^2',
+          explain: String.raw`$\sin^2x=\frac{1-\cos 2x}{2}$: primitiva $\frac x2-\frac{\sin2x}4$. Errore tipico: $\frac{\sin^3x}{3}$ (manca il fattore $\cos x$ per usare $f'f^2$).`,
+        },
+        {
+          id: 's11.immediati.L3.e3', type: 'num', level: 1,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{x}{1+x^2}\,dx$`,
+          answer: 'log(2)/2', _int: ['x/(1+x^2)', 0, 1],
+          explain: String.raw`$\left[\frac12\log(1+x^2)\right]_0^1=\frac12\log2-0$.`,
+        },
+        {
+          id: 's11.immediati.L3.e4', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\pi/2}\cos^2x\,dx$`,
+          answer: 'pi/4', _int: ['cos(x)^2', 0, 'pi/2'],
+          explain: String.raw`$\cos^2x=\frac{1+\cos2x}2$: $\left[\frac x2+\frac{\sin2x}4\right]_0^{\pi/2}=\frac\pi4$.`,
+        },
+        {
+          id: 's11.immediati.L3.e5', type: 'num', level: 2,
+          prompt: String.raw`$\displaystyle\int_0^{\pi/4}\tan x\,dx$`,
+          answer: 'log(2)/2', _int: ['tan(x)', 0, 'pi/4'],
+          explain: String.raw`$\left[-\log\cos x\right]_0^{\pi/4}=-\log\frac{\sqrt2}2=\log\sqrt2=\frac12\log2$.`,
+        },
+        {
+          id: 's11.immediati.L3.e6', type: 'num', level: 3,
+          prompt: String.raw`$\displaystyle\int_0^1\frac{x+1}{x^2+1}\,dx$`,
+          answer: 'log(2)/2+pi/4', _int: ['(x+1)/(x^2+1)', 0, 1],
+          explain: String.raw`Separo: $\frac{x}{x^2+1}+\frac1{x^2+1}$. Primitiva $\frac12\log(x^2+1)+\arctan x$. Tra $0$ e $1$: $\frac12\log2+\frac\pi4$.`,
+        },
+        {
+          id: 's11.immediati.L3.e7', type: 'tf', level: 3,
+          prompt: String.raw`$\displaystyle\int_{-1}^{1}\frac{dx}{x^2}=\left[-\frac1x\right]_{-1}^{1}=-2$.`,
+          answer: false,
+          explain: String.raw`Falso, e il risultato negativo per un'integranda positiva lo tradisce. $\frac1{x^2}$ non è continua (né limitata) in $0\in[-1,1]$: la formula fondamentale non si applica. È un integrale improprio, e diverge a $+\infty$.`,
+        },
+        {
+          id: 's11.immediati.L3.e8', type: 'mcq', level: 2,
+          prompt: String.raw`$\displaystyle\int_{-2}^{2}x^3\cos x\,dx=\;?$`,
+          options: ['$0$', String.raw`$2\int_0^2x^3\cos x\,dx$`, '$16$', 'non si può calcolare senza primitiva'],
+          answer: 0,
+          explain: String.raw`$x^3\cos x$ è **dispari** e l'intervallo è simmetrico: le aree con segno si annullano, l'integrale è $0$. Il doppio di metà intervallo vale per le funzioni **pari**.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's11.immediati.gen-poly', type: 'gen', level: 1,
+      gen: (R) => {
+        const n = R.int(2, 5), m = R.int(1, n - 1);
+        const a = R.nz(-4, 4) * (n + 1), b = R.nz(-3, 3) * (m + 1), c = R.int(-6, 6);
+        const coeffs = new Array(n + 1).fill(0);
+        coeffs[0] = a; coeffs[n - m] = b; coeffs[n] += c;
+        return {
+          type: 'expr', upToConstant: true,
+          prompt: String.raw`Calcola $\int\left(${H.poly(coeffs)}\right)dx$.`,
+          answer: `${a / (n + 1)}*x^${n + 1}+(${b / (m + 1)})*x^${m + 1}+(${c})*x`, _f: H.polyStr(coeffs),
+          explain: String.raw`Termine a termine con $\int x^k=\frac{x^{k+1}}{k+1}$: $${sumTex([[a, n + 1, `x^{${n + 1}}`], [b, m + 1, m + 1 === 1 ? 'x' : `x^{${m + 1}}`], [c, 1, 'x']])}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.immediati.gen-lin', type: 'gen', level: 1,
+      gen: (R) => {
+        const a = R.pick([2, 3, 4, 5, -2, -3]), b = R.int(-3, 3);
+        const u = H.lin(a, b), us = `(${a}*x+(${b}))`;
+        const kinds = [
+          { f: String.raw`e^{${u}}`, fs: `e^${us}`, F: `e^${us}/(${a})`, Ft: String.raw`${H.frac(1, a)}e^{${u}}` },
+          { f: String.raw`\sin(${u})`, fs: `sin${us}`, F: `-cos${us}/(${a})`, Ft: String.raw`${H.frac(-1, a)}\cos(${u})` },
+          { f: String.raw`\cos(${u})`, fs: `cos${us}`, F: `sin${us}/(${a})`, Ft: String.raw`${H.frac(1, a)}\sin(${u})` },
+          { f: String.raw`(${u})^{3}`, fs: `${us}^3`, F: `${us}^4/(${4 * a})`, Ft: String.raw`${a < 0 ? '-' : ''}\frac{(${u})^{4}}{${4 * Math.abs(a)}}` },
+        ];
+        const k = R.pick(kinds);
+        return {
+          type: 'expr', upToConstant: true, domain: [0.1, 1.2],
+          prompt: String.raw`Calcola $\int ${k.f}\,dx$.`,
+          answer: k.F, _f: k.fs,
+          explain: String.raw`Argomento lineare $${u}$: integro come se fosse $x$ e divido per il coefficiente $${a}$. Risultato: $${k.Ft}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.immediati.gen-flog', type: 'gen', level: 2,
+      gen: (R) => {
+        // k*(2x+p)/(x^2+p x+q) con discriminante negativo -> k log(x^2+px+q)
+        const p = R.int(-3, 3), q = R.int(Math.floor((p * p) / 4) + 1, 6), k = R.nz(-3, 3);
+        const den = H.poly([1, p, q]);
+        const num = H.poly([2 * k, k * p]);
+        return {
+          type: 'expr', upToConstant: true, domain: [-1.5, 1.5],
+          prompt: String.raw`Calcola $\displaystyle\int\frac{${num}}{${den}}\,dx$.`,
+          answer: `${k}*log(x^2+(${p})*x+(${q}))`, _f: `(${2 * k}*x+(${k * p}))/(x^2+(${p})*x+(${q}))`,
+          explain: String.raw`La derivata del denominatore è $${H.poly([2, p])}$ e il numeratore è $${k === 1 ? '' : k === -1 ? '-' : `${k}\\cdot`}(${H.poly([2, p])})$: tipo $\frac{f'}{f}$. Primitiva $${H.coef(k)}\log(${den})+c$ (il denominatore è sempre positivo, $\Delta<0$).`,
+        };
+      },
+    },
+    {
+      id: 's11.immediati.gen-arctan', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.int(2, 5), k = R.nz(-3, 4);
+        return {
+          type: 'expr', upToConstant: true,
+          prompt: String.raw`Calcola $\displaystyle\int\frac{${k}}{${a * a}+x^2}\,dx$.`,
+          answer: `${k}/${a}*atan(x/${a})`, _f: `${k}/(${a * a}+x^2)`,
+          explain: String.raw`$\frac{1}{${a * a}+x^2}=\frac1{${a * a}}\cdot\frac{1}{1+(x/${a})^2}$; con $f=\frac x{${a}}$, $f'=\frac1{${a}}$. Formula $\int\frac{dx}{a^2+x^2}=\frac1a\arctan\frac xa$: risultato $${H.frac(k, a)}\arctan\frac x{${a}}+c$.`,
+        };
+      },
+    },
+    {
+      id: 's11.immediati.gen-def', type: 'gen', level: 2,
+      gen: (R) => {
+        const t = R.int(0, 2);
+        if (t === 0) {
+          const n = R.int(1, 4), k = R.int(1, 5);
+          return { type: 'num', prompt: String.raw`$\displaystyle\int_1^{e^{${n}}}\frac{${k}}{x}\,dx$`, answer: String(k * n), _int: [`${k}/x`, 1, `e^${n}`], explain: String.raw`$\left[${H.coef(k)}\log x\right]_1^{e^{${n}}}=${k}\cdot${n}-0=${k * n}$.` };
+        }
+        if (t === 1) {
+          const k = R.int(2, 4), kx = `${k}x`;
+          return { type: 'num', prompt: String.raw`$\displaystyle\int_0^{\pi/${2 * k}}\sin(${kx})\,dx$`, answer: `1/${k}`, _int: [`sin(${k}x)`, 0, `pi/${2 * k}`], explain: String.raw`$\left[-\frac{\cos(${kx})}{${k}}\right]_0^{\pi/${2 * k}}=-\frac{\cos(\pi/2)}{${k}}+\frac{\cos 0}{${k}}=\frac{1}{${k}}$.` };
+        }
+        const a = R.int(2, 4), b = R.int(1, 4);
+        // ∫_0^a b/(a^2+x^2) = b·π/(4a)
+        const [pn, pd] = H.reduce(b, 4 * a);
+        return { type: 'num', prompt: String.raw`$\displaystyle\int_0^{${a}}\frac{${b}}{${a * a}+x^2}\,dx$`, answer: `${b}*pi/(4*${a})`, _int: [`${b}/(${a * a}+x^2)`, 0, a], explain: String.raw`Primitiva $${H.frac(b, a)}\arctan\frac x{${a}}$. Tra $0$ e $${a}$: $${H.frac(b, a)}\left(\arctan 1-\arctan 0\right)=${H.frac(b, a)}\cdot\frac\pi4=${pn === 1 ? '' : pn}${pd === 1 ? '\\pi' : `\\frac{\\pi}{${pd}}`}$.` };
+      },
+    },
+    {
+      id: 's11.immediati.p1', type: 'expr', level: 2, upToConstant: true,
+      prompt: String.raw`$\int\sin x\cos^3x\,dx$`,
+      answer: '-cos(x)^4/4', _f: 'sin(x)*cos(x)^3',
+      explain: String.raw`$\sin x=-(\cos x)'$: tipo $-f'f^3$, primitiva $-\frac{\cos^4x}4$.`,
+    },
+    {
+      id: 's11.immediati.p2', type: 'expr', level: 2, upToConstant: true, domain: [0.5, 3],
+      prompt: String.raw`$\int\frac{(\sqrt x+1)^2}{x}\,dx$`,
+      answer: 'x+4*sqrt(x)+log(x)', _f: '(sqrt(x)+1)^2/x',
+      explain: String.raw`$\frac{x+2\sqrt x+1}{x}=1+2x^{-1/2}+\frac1x$. Primitiva $x+4\sqrt x+\log x$.`,
+    },
+    {
+      id: 's11.immediati.p3', type: 'expr', level: 2, upToConstant: true,
+      prompt: String.raw`$\int\frac{e^x}{1+e^{2x}}\,dx$`,
+      answer: 'atan(e^x)', _f: 'e^x/(1+e^(2x))',
+      explain: String.raw`$e^{2x}=(e^x)^2$ e $(e^x)'=e^x$: tipo $\frac{f'}{1+f^2}$, primitiva $\arctan e^x$.`,
+    },
+    {
+      id: 's11.immediati.p4', type: 'cloze', level: 1,
+      prompt: 'Completa la tabella.',
+      text: String.raw`$\int x^\alpha dx=$ [[0]] per $\alpha\neq-1$; $\int\frac{f'(x)}{f(x)}dx=$ [[1]]; $\int\frac{dx}{a^2+x^2}=$ [[2]].`,
+      blanks: [
+        { options: [String.raw`$\frac{x^{\alpha+1}}{\alpha+1}$`, String.raw`$\alpha x^{\alpha-1}$`, String.raw`$\frac{x^{\alpha}}{\alpha}$`], answer: 0 },
+        { options: [String.raw`$\log|f(x)|$`, String.raw`$\frac{\log f(x)}{f'(x)}$`, String.raw`$f(x)\log f'(x)$`], answer: 0 },
+        { options: [String.raw`$\frac1a\arctan\frac xa$`, String.raw`$\arctan\frac xa$`, String.raw`$a\arctan(ax)$`], answer: 0 },
+      ],
+      explain: String.raw`Verifica ciascuna derivando. $\alpha x^{\alpha-1}$ è la derivata di $x^\alpha$, non la primitiva.`,
+    },
+    {
+      id: 's11.immediati.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Quale **non** è una primitiva di $\sin x\cos x$?`,
+      options: [String.raw`$\sin x\cos x+c$`, String.raw`$\frac{\sin^2x}2$`, String.raw`$-\frac{\cos^2x}{2}$`, String.raw`$-\frac{\cos 2x}{4}$`],
+      answer: 0,
+      explain: String.raw`Le altre tre differiscono per costanti ($\sin^2x=1-\cos^2x$, $\cos2x=1-2\sin^2x$) e derivando danno $\sin x\cos x$. Primitive "diverse a vista" possono essere giuste: si controlla derivando.`,
+    },
+    {
+      id: 's11.immediati.p6', type: 'num', level: 2,
+      prompt: String.raw`$\displaystyle\int_0^1\frac{e^x}{1+e^x}\,dx$`,
+      answer: 'log((1+e)/2)', _int: ['e^x/(1+e^x)', 0, 1],
+      explain: String.raw`Tipo $\frac{f'}{f}$: $\left[\log(1+e^x)\right]_0^1=\log(1+e)-\log2=\log\frac{1+e}2$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's11.immediati.fc1', kind: 'def', front: 'Primitiva di $f$ su un intervallo', back: String.raw`$G$ con $G'=f$ su $I$. Tutte le primitive sono $G+c$ (su un intervallo).` },
+    { id: 's11.immediati.fc2', kind: 'formula', front: 'Primitive di $x^\\alpha$ e $\\frac1x$', back: String.raw`$\frac{x^{\alpha+1}}{\alpha+1}$ ($\alpha\neq-1$); $\log|x|$.` },
+    { id: 's11.immediati.fc3', kind: 'formula', front: 'Primitive di $e^x$, $a^x$, $\\sin x$, $\\cos x$', back: String.raw`$e^x$; $\frac{a^x}{\log a}$; $-\cos x$; $\sin x$.` },
+    { id: 's11.immediati.fc4', kind: 'formula', front: 'Primitive di $\\frac1{1+x^2}$, $\\frac1{\\sqrt{1-x^2}}$, $\\frac1{\\cos^2x}$', back: String.raw`$\arctan x$; $\arcsin x$; $\tan x$.` },
+    { id: 's11.immediati.fc5', kind: 'formula', front: 'Integrali "quasi immediati"', back: String.raw`$\int f'f^\alpha=\frac{f^{\alpha+1}}{\alpha+1}$, $\int\frac{f'}f=\log|f|$, $\int f'e^f=e^f$, $\int\frac{f'}{1+f^2}=\arctan f$.` },
+    { id: 's11.immediati.fc6', kind: 'formula', front: 'Argomento lineare', back: String.raw`$\int g(ax+b)\,dx=\frac1aG(ax+b)+c$.` },
+    { id: 's11.immediati.fc7', kind: 'formula', front: '$\\int\\frac{dx}{a^2+x^2}$', back: String.raw`$\frac1a\arctan\frac xa+c$.` },
+    { id: 's11.immediati.fc8', kind: 'formula', front: 'Primitive di $\\sin^2x$, $\\cos^2x$, $\\tan x$', back: String.raw`$\frac x2-\frac{\sin2x}4$; $\frac x2+\frac{\sin2x}4$; $-\log|\cos x|$.` },
+    { id: 's11.immediati.fc9', kind: 'metodo', front: 'Funzioni pari e dispari su $[-a,a]$', back: String.raw`$f$ dispari ⇒ $\int_{-a}^af=0$; $f$ pari ⇒ $\int_{-a}^af=2\int_0^af$.` },
+    { id: 's11.immediati.fc10', kind: 'errore', front: 'Errori tipici con le primitive', back: String.raw`$\int fg\ne\int f\int g$; $\int\sin=-\cos$ (segno); $\int e^{3x}=\frac{e^{3x}}3$, non $3e^{3x}$; formula fondamentale solo con $f$ continua su $[a,b]$.` },
+  ],
+};
+
 export default {
   id: 's11',
   title: 'Integrali',
   subtitle: 'Riemann, primitive, tecniche di integrazione, aree',
   intro: String.raw`All'esame c'è quasi sempre un integrale: una primitiva per parti o di una razionale, un'area, o un integrale improprio. Qui costruisci tutto: dal significato di area fino alle tecniche di calcolo.`,
-  skills: [riemann],
+  skills: [riemann, immediati],
 };
