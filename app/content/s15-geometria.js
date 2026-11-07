@@ -1707,6 +1707,415 @@ Il piano per $O$ e $A$ parallelo a $r$ contiene $A-O=(1,1,-1)$ e $(-1,1,0)$: la 
           back: String.raw`Paralleli: normali proporzionali. Coincidenti: paralleli con le stesse equazioni a meno di un fattore (in particolare hanno un punto in comune).` },
       ],
     },
+    // -----------------------------------------------------------------------
+    // s15.distanze
+    // -----------------------------------------------------------------------
+    {
+      id: 's15.distanze',
+      title: 'Distanze nello spazio',
+      summary: String.raw`Saprai calcolare distanza punto-punto, punto-piano, punto-retta, retta-piano, retta-retta, e il raggio di una sfera tangente a un piano.`,
+      prereq: ['s15.piani', 's15.rette', 's15.vettoriale'],
+      examRefs: ['Appello 10/02/2026 · Parte B', 'Appello 06/07/2026 · Parte B', 'Appello 03/09/2026 · Parte B'],
+      lessons: [
+        {
+          id: 's15.distanze.L1',
+          title: 'Punto-punto e punto-piano',
+          cards: [
+            { type: 'learn', title: 'Distanza tra due punti',
+              body: String.raw`La **distanza** tra due punti $A$ e $B$ è la lunghezza del segmento $AB$, cioè il modulo del vettore $B-A$:
+$$d(A,B)=|B-A|=\sqrt{(b_1-a_1)^2+(b_2-a_2)^2+(b_3-a_3)^2}.$$
+È sempre un numero $\geq 0$, ed è $0$ solo se $A=B$.` },
+            { id: 's15.distanze.L1.q1', type: 'num', level: 1,
+              prompt: String.raw`Calcola $d(A,B)$ con $A=(1,2,3)$ e $B=(4,6,3)$.`,
+              answer: '5',
+              explain: String.raw`$B-A=(3,4,0)$, quindi $|B-A|=\sqrt{9+16+0}=\sqrt{25}=5$.` },
+            { type: 'learn', title: 'Distanza punto-piano',
+              body: String.raw`Per un punto $P=(x_0,y_0,z_0)$ e un piano $\pi:\ ax+by+cz+d=0$:
+$$d(P,\pi)=\frac{|a x_0+b y_0+c z_0+d|}{\sqrt{a^2+b^2+c^2}}.$$
+Il numeratore è il valore dell'equazione del piano in $P$ (in valore assoluto), il denominatore è il modulo della normale. Il denominatore **non** va elevato al quadrato.` },
+            { id: 's15.distanze.L1.q2', type: 'num', level: 1,
+              prompt: String.raw`Calcola la distanza del punto $P=(1,2,3)$ dal piano $2x-y+2z=4$.`,
+              answer: '2/3',
+              explain: String.raw`$|2\cdot1-2+2\cdot3-4|=|2|=2$, e $|n|=\sqrt{4+1+4}=3$. Quindi $d=\frac23$.` },
+            { type: 'example', title: 'Esempio svolto: la distanza con il piede',
+              problem: String.raw`Calcola la distanza di $P=(1,0,2)$ dal piano $\pi:\ x+2y-2z=3$ e trova il piede $H$ della perpendicolare.`,
+              steps: [
+                String.raw`Valore della funzione del piano in $P$: $1+0-4-3=-6$. Modulo della normale: $|(1,2,-2)|=\sqrt{9}=3$.`,
+                { text: String.raw`Distanza: $d=\dfrac{|-6|}{3}=2$.`,
+                  ask: { type: 'num', prompt: String.raw`Quanto vale $\dfrac{|-6|}{3}$?`, answer: '2', explain: String.raw`$\dfrac{6}{3}=2$.` } },
+                String.raw`Il piede $H$ si ottiene partendo da $P$ e andando lungo la normale: $H=P-\dfrac{-6}{9}\,(1,2,-2)=P+\dfrac23(1,2,-2)$.`,
+                String.raw`$H=\left(\frac53,\ \frac43,\ \frac23\right)$. Verifica: $\frac53+\frac83-\frac43=3$ ✓.`,
+              ],
+              result: String.raw`$d(P,\pi)=2$, piede $H=\left(\frac53,\frac43,\frac23\right)$.` },
+            { id: 's15.distanze.L1.q3', type: 'tuple', level: 2,
+              prompt: String.raw`Trova il piede della perpendicolare dal punto $P=(1,0,2)$ al piano $x+2y-2z=3$.`,
+              answer: ['5/3', '4/3', '2/3'], labels: ['x', 'y', 'z'],
+              explain: String.raw`Il piede è $H=P+s\,n$ con $s$ tale che $H$ stia sul piano. Con $n=(1,2,-2)$ e $s=\frac{3-(x_P+2y_P-2z_P)}{|n|^2}=\frac{3+3}{9}=\frac23$ si ottiene $H=(1+\frac23,\ \frac43,\ 2-\frac43)=(\frac53,\frac43,\frac23)$.` },
+            { id: 's15.distanze.L1.q4', type: 'mcq', level: 2,
+              prompt: String.raw`Quale formula dà la distanza del punto $P$ dal piano $ax+by+cz+d=0$?`,
+              options: [
+                String.raw`$\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}$`,
+                String.raw`$\dfrac{|ax_0+by_0+cz_0+d|}{a^2+b^2+c^2}$`,
+                String.raw`$|ax_0+by_0+cz_0+d|$`,
+                String.raw`$\dfrac{ax_0+by_0+cz_0+d}{\sqrt{a^2+b^2+c^2}}$`,
+              ],
+              answer: 0,
+              explain: String.raw`La formula giusta divide per il modulo della normale, $\sqrt{a^2+b^2+c^2}$, e prende il valore assoluto. Senza la radice il risultato è troppo piccolo; senza il valore assoluto può essere negativo; senza $|\cdot|$ al denominatore si ottiene un'altra quantità.` },
+            { id: 's15.distanze.L1.q5', type: 'tf', level: 1,
+              prompt: String.raw`Vero o falso: $d(P,\pi)=0$ se e solo se $P$ appartiene al piano $\pi$.`,
+              answer: true,
+              explain: String.raw`Vero: la distanza è zero solo quando il numeratore $|ax_0+by_0+cz_0+d|$ è zero, cioè quando $P$ soddisfa l'equazione del piano.` },
+            { type: 'learn', title: 'Distanza e piede della perpendicolare',
+              body: String.raw`La distanza di un punto da un piano (o da una retta) è la lunghezza del segmento di **perpendicolare** che va dal punto al suo **piede**. Il piede si trova: nel piano, come intersezione tra il piano e la retta per $P$ con direzione normale; nella retta, come intersezione tra la retta e il piano per $P$ ortogonale alla retta.
+
+>! Il piede $H$ è il punto del piano più vicino a $P$: ogni altro punto $Q$ del piano dà $d(P,Q)>d(P,H)$.` },
+          ],
+        },
+        {
+          id: 's15.distanze.L2',
+          title: 'Punto-retta e retta-piano',
+          cards: [
+            { type: 'learn', title: 'Distanza punto-retta',
+              body: String.raw`Per un punto $P$ e una retta $r:\ P_0+tv$:
+$$d(P,r)=\frac{|(P-P_0)\wedge v|}{|v|}.$$
+Motivo: il modulo del prodotto vettoriale $|(P-P_0)\wedge v|$ è l'area del parallelogramma di lati $P-P_0$ e $v$. Dividendo per la base $|v|$ si ottiene l'altezza, cioè la distanza.` },
+            { type: 'example', title: 'Esempio svolto (Appello 10/02/2026)',
+              problem: String.raw`Sia $A=(1,1,-1)$ e $r:\ (x,y,z)=(2-t,\ 1+t,\ -1)$. Calcola $d(A,r)$.`,
+              steps: [
+                String.raw`Punto $P_0=(2,1,-1)$ (per $t=0$) e direzione $v=(-1,1,0)$.`,
+                { text: String.raw`Vettore $A-P_0=(-1,0,0)$. Prodotto vettoriale: $(-1,0,0)\wedge(-1,1,0)=(0,0,-1)$.`,
+                  ask: { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Calcola $(-1,0,0)\wedge(-1,1,0)$.`, answer: ['0', '0', '-1'], explain: String.raw`$(0\cdot0-0\cdot1,\ 0\cdot(-1)-(-1)\cdot0,\ (-1)\cdot1-0\cdot(-1))=(0,0,-1)$.` } },
+                String.raw`Modulo: $|(0,0,-1)|=1$; modulo della direzione: $|v|=\sqrt2$.`,
+                String.raw`Quindi $d(A,r)=\dfrac{1}{\sqrt2}$.`,
+              ],
+              result: String.raw`$d(A,r)=\dfrac{1}{\sqrt2}$.` },
+            { id: 's15.distanze.L2.q1', type: 'num', level: 2,
+              prompt: String.raw`Calcola la distanza del punto $O=(0,0,0)$ dalla retta $r:\ (x,y,z)=(1,2,2)+t\,(2,1,2)$ (in forma esatta).`,
+              answer: 'sqrt(17)/3',
+              explain: String.raw`$P-P_0=(-1,-2,-2)$, $(-1,-2,-2)\wedge(2,1,2)=(-2,-2,3)$, di modulo $\sqrt{17}$. Con $|v|=3$: $d=\dfrac{\sqrt{17}}{3}$.` },
+            { type: 'learn', title: 'Retta parallela a un piano',
+              body: String.raw`Se una retta $r$ è **parallela** a un piano $\pi$ (cioè la sua direzione $v$ è ortogonale alla normale $n$, e $r\not\subset\pi$), ogni punto di $r$ ha la stessa distanza da $\pi$. Quindi
+$$d(r,\pi)=d(P_0,\pi)\qquad (P_0\in r).$$
+Se invece $r\subset\pi$ oppure $r$ incide $\pi$, la distanza è $0$.` },
+            { id: 's15.distanze.L2.q2', type: 'num', level: 2,
+              prompt: String.raw`La retta $r:\ (x,y,z)=(2-t,\ 1+t,\ -1)$ è parallela al piano $x+y+2z=0$. Calcola $d(r,\pi)$ in forma esatta.`,
+              answer: '1/sqrt(6)',
+              explain: String.raw`Il punto $P_0=(2,1,-1)$ sta su $r$: $n\cdot P_0=2+1-2=1$. Quindi $d=\dfrac{|1|}{\sqrt{1+1+4}}=\dfrac1{\sqrt6}$.` },
+            { id: 's15.distanze.L2.q3', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: se una retta è parallela a un piano, la distanza dal piano è la stessa per tutti i suoi punti.`,
+              answer: true,
+              explain: String.raw`Vero: la retta non cambia distanza dal piano, perché il piano "non si inclina" rispetto alla direzione della retta.` },
+            { id: 's15.distanze.L2.q4', type: 'tuple', level: 2,
+              prompt: String.raw`Trova il piede $H$ della perpendicolare dal punto $A=(1,1,-1)$ alla retta $r:\ (x,y,z)=(2-t,\ 1+t,\ -1)$.`,
+              answer: ['3/2', '3/2', '-1'], labels: ['x', 'y', 'z'],
+              explain: String.raw`Il piano per $A$ ortogonale a $r$ è $x-y=0$. Sostituendo le equazioni di $r$: $(2-t)-(1+t)=0$, quindi $t=\frac12$ e $H=(\frac32,\frac32,-1)$.` },
+            { id: 's15.distanze.L2.q5', type: 'mcq', level: 2,
+              prompt: String.raw`Per calcolare la distanza di un punto $A$ da una retta $r$ con il metodo del piano, si usa:`,
+              options: [
+                String.raw`il piano per $A$ ortogonale a $r$, poi il punto in cui incontra $r$`,
+                String.raw`il piano per $A$ parallelo a $r$, poi la sua distanza da $O$`,
+                String.raw`la normale di $r$ come normale del piano per $A$`,
+                String.raw`il prodotto scalare $\langle A-P_0,\,v\rangle$`,
+              ],
+              answer: 0,
+              explain: String.raw`Il piede $H$ è l'intersezione di $r$ con il piano per $A$ ortogonale a $r$. Poi $d(A,r)=|AH|$. Il prodotto scalare $\langle A-P_0,v\rangle$ non dà una distanza, ma è zero quando $A-P_0$ è ortogonale a $v$.` },
+          ],
+        },
+        {
+          id: 's15.distanze.L3',
+          title: 'Rette sghembe e parallele',
+          cards: [
+            { type: 'learn', title: 'Rette parallele e incidenti',
+              body: String.raw`Due rette nello spazio:
+
+- **incidenti**: si toccano, quindi $d=0$;
+- **parallele**: la distanza è quella di un punto di una dalla retta dell'altra, $d(r,s)=d(P_2,r)$;
+- **sghembe**: non si toccano e non sono parallele. Qui la distanza è la lunghezza della **perpendicolare comune**, cioè del segmento più corto tra le due rette.` },
+            { type: 'learn', title: 'Formula per le rette sghembe',
+              body: String.raw`Per $r:\ P_1+t\,v_1$ e $s:\ P_2+u\,v_2$ sghembe:
+$$d(r,s)=\frac{|\langle P_2-P_1,\ v_1\wedge v_2\rangle|}{|v_1\wedge v_2|}.$$
+Il numeratore è il **prodotto misto** (il volume del parallelepipedo costruito sui tre vettori), il denominatore è l'area del parallelogramma delle direzioni. La perpendicolare comune ha direzione $v_1\wedge v_2$.
+
+>! Non confondere con la distanza tra due punti qualsiasi delle rette: la distanza tra rette sghembe è la **minima**, e si calcola con la formula, non prendendo due punti a caso.` },
+            { type: 'example', title: 'Esempio svolto (Appello 06/07/2026)',
+              problem: String.raw`Siano $r_1:\ (2+t,\ 1-t,\ 3+2t)$ e $s:\ (1-k,\ 2+5k,\ -1+3k)$. Calcola $d(r_1,s)$.`,
+              steps: [
+                String.raw`$P_1=(2,1,3)$, $v_1=(1,-1,2)$; $P_2=(1,2,-1)$, $v_2=(-1,5,3)$.`,
+                { text: String.raw`Prodotto vettoriale: $v_1\wedge v_2=((-1)\cdot3-2\cdot5,\ 2\cdot(-1)-1\cdot3,\ 1\cdot5-(-1)(-1))=(-13,-5,4)$.`,
+                  ask: { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Calcola $(1,-1,2)\wedge(-1,5,3)$.`, answer: ['-13', '-5', '4'], explain: String.raw`$((-1)\cdot3-2\cdot5,\ 2\cdot(-1)-1\cdot3,\ 1\cdot5-(-1)(-1))=(-13,-5,4)$.` } },
+                String.raw`$P_2-P_1=(-1,1,-4)$. Prodotto misto: $\langle(-1,1,-4),(-13,-5,4)\rangle=13-5-16=-8$.`,
+                String.raw`Modulo: $|(-13,-5,4)|=\sqrt{169+25+16}=\sqrt{210}$. Quindi $d(r_1,s)=\dfrac{|-8|}{\sqrt{210}}=\dfrac{8}{\sqrt{210}}$.`,
+              ],
+              result: String.raw`$d(r_1,s)=\dfrac{8}{\sqrt{210}}$.` },
+            { id: 's15.distanze.L3.q1', type: 'num', level: 2,
+              prompt: String.raw`Calcola la distanza tra le rette parallele $r:\ (t,0,0)$ e $s:\ (0,1,1)+u\,(1,0,0)$ (in forma esatta).`,
+              answer: 'sqrt(2)',
+              explain: String.raw`Le rette hanno la stessa direzione $(1,0,0)$. Uso $d(P_2,r)$ con $P_2=(0,1,1)$: $(P_2-P_1)\wedge v=(0,1,1)\wedge(1,0,0)=(0,1,-1)$, di modulo $\sqrt2$, diviso $|v|=1$.` },
+            { id: 's15.distanze.L3.q2', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: due rette incidenti hanno distanza $0$.`,
+              answer: true,
+              explain: String.raw`Vero: si toccano in un punto, quindi il segmento più corto tra loro ha lunghezza zero.` },
+            { id: 's15.distanze.L3.q3', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: la distanza tra due rette sghembe è la distanza tra un punto qualsiasi di $r$ e un punto qualsiasi di $s$.`,
+              answer: false,
+              explain: String.raw`Falso: due punti scelti a caso danno distanze diverse e in generale più grandi. La distanza tra rette sghembe è la minima, quella lungo la perpendicolare comune.` },
+            { id: 's15.distanze.L3.q4', type: 'mcq', level: 2,
+              prompt: String.raw`Quale formula dà la distanza tra due rette sghembe $r:\ P_1+tv_1$ e $s:\ P_2+uv_2$?`,
+              options: [
+                String.raw`$\dfrac{|\langle P_2-P_1,\ v_1\wedge v_2\rangle|}{|v_1\wedge v_2|}$`,
+                String.raw`$\dfrac{|v_1\wedge v_2|}{|P_2-P_1|}$`,
+                String.raw`$\dfrac{|\langle P_2-P_1,\ v_1\rangle|}{|v_1|}$`,
+                String.raw`$|P_2-P_1|$`,
+              ],
+              answer: 0,
+              explain: String.raw`È la formula del prodotto misto diviso l'area delle direzioni. La seconda divide nel modo sbagliato; la terza è la proiezione di $P_2-P_1$ su $v_1$, che non è una distanza; la quarta è la distanza tra due punti qualunque, non la minima.` },
+            { id: 's15.distanze.L3.q5', type: 'cloze', level: 2,
+              prompt: 'Completa.',
+              text: String.raw`La distanza tra due rette sghembe è il rapporto tra il valore assoluto del [[0]] e il [[1]] delle direzioni.`,
+              blanks: [
+                { options: ['prodotto misto', 'prodotto scalare', 'modulo di $P_2-P_1$'], answer: 0 },
+                { options: ['modulo del prodotto vettoriale', 'modulo della somma', 'prodotto scalare'], answer: 0 },
+              ],
+              explain: String.raw`Numeratore: $|\langle P_2-P_1,\ v_1\wedge v_2\rangle|$ (prodotto misto). Denominatore: $|v_1\wedge v_2|$, area del parallelogramma delle direzioni.` },
+            { id: 's15.distanze.L3.q6', type: 'num', level: 3,
+              prompt: String.raw`Due rette $r$ e $s$ hanno $d(r,s)=0$ e direzioni non parallele. Quanto vale il prodotto misto $\langle P_2-P_1,\ v_1\wedge v_2\rangle$?`,
+              answer: '0',
+              explain: String.raw`Se la distanza è zero le rette si toccano (sono incidenti): sono complanari e il prodotto misto è nullo. Il numeratore della formula è zero.` },
+          ],
+        },
+        {
+          id: 's15.distanze.L4',
+          title: "Livello d'esame",
+          cards: [
+            { type: 'learn', title: "Come riconoscere la distanza richiesta",
+              body: String.raw`Nei temi d'esame le distanze compaiono quasi sempre in una di queste forme:
+
+1. **punto–piano**: formula diretta; se serve anche il piede, passo dalla normale;
+2. **punto–retta**: formula con il prodotto vettoriale, oppure piano ortogonale e piede;
+3. **retta–piano** (retta parallela): distanza di un punto della retta dal piano;
+4. **retta–retta** sghembe: formula del prodotto misto, con la perpendicolare comune di direzione $v_1\wedge v_2$;
+5. **sfera tangente a un piano**: il raggio è la distanza del centro dal piano.
+
+Prima di calcolare, verifico la posizione reciproca (parallele, incidenti, sghembe): questo evita formule sbagliate.` },
+            { id: 's15.distanze.L4.q1', type: 'problem', level: 3, points: 4,
+              source: 'Appello 06/07/2026 · Parte B',
+              prompt: String.raw`Siano $r_1:\ (x,y,z)=(2+t,\ 1-t,\ 3+2t)$ e $r_2:\ (x,y,z)=(1+2s,\ -1+s,\ 4-s)$. Sia $s$ la retta per $P=(1,2,-1)$ perpendicolare a entrambe. Calcolare la direzione di $s$ e la distanza tra $r_1$ e $s$.`,
+              parts: [
+                { type: 'tuple', labels: ['l', 'm', 'n'], proportional: true, prompt: String.raw`Direzione di $s$`,
+                  answer: ['-1', '5', '3'],
+                  explain: String.raw`$v_s$ è ortogonale a $v_1=(1,-1,2)$ e $v_2=(2,1,-1)$: quindi $v_s=v_1\wedge v_2=(-1,5,3)$.` },
+                { type: 'num', prompt: String.raw`Distanza $d(r_1,s)$ (forma esatta)`,
+                  answer: '8/sqrt(210)',
+                  explain: String.raw`$P_2=(1,2,-1)$, $P_1=(2,1,3)$: $P_2-P_1=(-1,1,-4)$, $v_1\wedge v_s=(-13,-5,4)$. Prodotto misto $=13-5-16=-8$; modulo $\sqrt{210}$. Le rette sono sghembe.` },
+              ],
+              solution: String.raw`La direzione di $s$ è ortogonale a entrambe le direzioni delle rette date: $v_s=v_1\wedge v_2=(1,-1,2)\wedge(2,1,-1)=(-1,5,3)$. Quindi $s:\ (x,y,z)=(1-k,\ 2+5k,\ -1+3k)$.
+
+Le rette $r_1$ e $s$ non sono parallele e non si incontrano (non ho bisogno di verificarlo se calcolo il prodotto misto, che è non nullo). Con la formula delle rette sghembe, usando $P_1=(2,1,3)$ su $r_1$ e $P=(1,2,-1)$ su $s$:
+$$d(r_1,s)=\frac{|\langle(-1,1,-4),\ (-13,-5,4)\rangle|}{|(-13,-5,4)|}=\frac{|-8|}{\sqrt{210}}=\frac{8}{\sqrt{210}}.$$` },
+            { id: 's15.distanze.L4.q2', type: 'problem', level: 3, points: 3,
+              source: 'Appello 10/02/2026 · Parte B',
+              prompt: String.raw`Sia $A=(1,1,-1)$ e $r:\ (x,y,z)=(2-t,\ 1+t,\ -1)$. Sia $\gamma$ il piano per $O$ e $A$ parallelo a $r$. Calcolare $d(A,r)$ e $d(r,\gamma)$.`,
+              parts: [
+                { type: 'num', prompt: String.raw`Distanza $d(A,r)$ (forma esatta)`,
+                  answer: '1/sqrt(2)',
+                  explain: String.raw`Il piede è $H=(\frac32,\frac32,-1)$ (vedi punto-retta), con $|AH|=|(\frac12,\frac12,0)|=\frac{1}{\sqrt2}$.` },
+                { type: 'num', prompt: String.raw`Distanza $d(r,\gamma)$ (forma esatta)`,
+                  answer: '1/sqrt(6)',
+                  explain: String.raw`$\gamma:\ x+y+2z=0$ (normale $(1,1,2)$). Un punto di $r$ è $(2,1,-1)$: $d=\dfrac{|2+1-2|}{\sqrt6}=\dfrac1{\sqrt6}$.` },
+              ],
+              solution: String.raw`Il piano per $A$ ortogonale a $r$ è $x-y=0$; intersecandolo con $r$ si trova $H=(\frac32,\frac32,-1)$, quindi $d(A,r)=|AH|=\frac{1}{\sqrt2}$.
+
+Il piano per $O$ e $A$ parallelo a $r$ ha normale $(1,1,-1)\wedge(-1,1,0)=(1,1,2)$, quindi è $\gamma:\ x+y+2z=0$. La retta $r$ è parallela a $\gamma$ e un suo punto $(2,1,-1)$ dà $d(r,\gamma)=\frac{|2+1-2|}{\sqrt{6}}=\frac{1}{\sqrt6}$.` },
+            { id: 's15.distanze.L4.q3', type: 'problem', level: 3, points: 4,
+              source: 'Appello 03/09/2026 · Parte B',
+              prompt: String.raw`Sia $C=(2,-1,-3)$ il centro di una sfera tangente al piano $\pi:\ x-y+2z-1=0$. Calcolare il raggio della sfera e il punto di tangenza.`,
+              parts: [
+                { type: 'num', prompt: String.raw`Raggio $R$ (forma esatta)`,
+                  answer: '4/sqrt(6)',
+                  explain: String.raw`$R=d(C,\pi)=\dfrac{|2+1-6-1|}{\sqrt{1+1+4}}=\dfrac{4}{\sqrt6}$.` },
+                { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Punto di tangenza $T$`,
+                  answer: ['8/3', '-5/3', '-5/3'],
+                  explain: String.raw`Il punto di tangenza è il piede della perpendicolare da $C$ al piano: $T=C+t\,(1,-1,2)$ con $t=\dfrac{4}{6}=\dfrac23$. Quindi $T=\left(\frac83,-\frac53,-\frac53\right)$; verifica: $\frac83+\frac53-\frac{10}3-1=0$.` },
+              ],
+              solution: String.raw`Il raggio è la distanza del centro dal piano: $R=\dfrac{|2-(-1)\cdot1+2\cdot(-3)-1|}{\sqrt6}$. Attenzione ai segni: $x_C-y_C+2z_C-1=2+1-6-1=-4$, quindi $R=\dfrac{4}{\sqrt6}$.
+
+Il punto di tangenza è la proiezione del centro sul piano. La normale è $(1,-1,2)$; sostituendo $C+t(1,-1,2)$ nel piano: $(2+t)-(-1-t)+2(-3+2t)-1=0$, cioè $6t-4=0$ e $t=\frac23$. Quindi $T=(\frac83,-\frac53,-\frac53)$.` },
+            { id: 's15.distanze.L4.q4', type: 'mcq', level: 3,
+              prompt: String.raw`Quale affermazione sulla distanza tra due rette sghembe è corretta?`,
+              options: [
+                String.raw`È la lunghezza della perpendicolare comune, e si calcola con il prodotto misto`,
+                String.raw`È la distanza tra i punti $P_1$ e $P_2$ scelti come base delle rette`,
+                String.raw`È sempre zero`,
+                String.raw`È la distanza di $P_2$ dalla retta $r$`,
+              ],
+              answer: 0,
+              explain: String.raw`La perpendicolare comune è il segmento più corto tra le due rette e la sua lunghezza è la formula del prodotto misto. Scegliere $P_1,P_2$ a caso dà una distanza qualsiasi, non quella minima. Due rette sghembe non si toccano, quindi la distanza non è zero.` },
+            { id: 's15.distanze.L4.q5', type: 'tf', level: 3,
+              prompt: String.raw`Vero o falso: la distanza tra due rette sghembe è la distanza tra un punto qualunque di $r$ e un punto qualunque di $s$.`,
+              answer: false,
+              explain: String.raw`Falso. È la distanza minima tra i punti delle due rette, quindi la formula del prodotto misto va usata invece di scegliere punti a caso.` },
+            { id: 's15.distanze.L4.q6', type: 'open', level: 3, points: 2,
+              prompt: String.raw`Enunciare la formula della distanza di un punto $P$ da un piano $\pi:\ ax+by+cz+d=0$ e spiegarne l'origine.`,
+              answer: String.raw`$d(P,\pi)=\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}$. Il numeratore misura quanto $P$ si discosta dall'equazione del piano (ed è zero se $P\in\pi$). Dividendo per $|n|$ si ottiene la distanza euclidea: la distanza minima è lungo la normale, e il piede $H=P-\frac{ax_0+by_0+cz_0+d}{|n|^2}\,n$ è il punto del piano più vicino a $P$.`,
+              rubric: ['Formula corretta con valore assoluto e $\\sqrt{a^2+b^2+c^2}$', 'Motivazione: distanza minima lungo la normale (piede della perpendicolare)', 'Caso particolare: $d=0$ se e solo se $P\\in\\pi$'] },
+            { type: 'learn', title: 'Errori tipici all\'esame',
+              body: String.raw`>! Errori frequenti nelle distanze:
+
+- dimenticare il **valore assoluto** nella formula punto–piano (la distanza non è negativa);
+- elevare **$|n|$** al quadrato: nel denominatore della formula punto–piano c'è $|n|=\sqrt{a^2+b^2+c^2}$;
+- usare il **prodotto scalare** al posto del prodotto vettoriale nelle formule punto–retta e retta–retta;
+- nelle rette sghembe, dividere per $|v_1\wedge v_2|$ senza aver prima verificato che il prodotto misto sia non nullo.` },
+          ],
+        },
+      ],
+      practice: [
+        { id: 's15.distanze.p1', type: 'num', level: 1,
+          prompt: String.raw`Calcola la distanza tra $A=(0,0,0)$ e $B=(2,3,6)$.`,
+          answer: '7', explain: String.raw`$|(2,3,6)|=\sqrt{4+9+36}=\sqrt{49}=7$.` },
+        { id: 's15.distanze.p2', type: 'num', level: 1,
+          prompt: String.raw`Calcola la distanza del punto $P=(1,0,2)$ dal piano $x+2y-2z=3$ (forma esatta).`,
+          answer: '2', explain: String.raw`$|1+0-4-3|/|(1,2,-2)|=6/3=2$.` },
+        { id: 's15.distanze.p3', type: 'tuple', level: 2,
+          prompt: String.raw`Trova il piede della perpendicolare dal punto $P=(1,0,2)$ al piano $x+2y-2z=3$.`,
+          answer: ['5/3', '4/3', '2/3'], labels: ['x', 'y', 'z'],
+          explain: String.raw`$H=P+\frac23(1,2,-2)=(\frac53,\frac43,\frac23)$.` },
+        { id: 's15.distanze.p4', type: 'tf', level: 1,
+          prompt: String.raw`Vero o falso: la distanza di un punto da un piano non può essere negativa.`,
+          answer: true,
+          explain: String.raw`Vero: la formula contiene $|\cdot|$ e una radice, quindi il risultato è $\geq0$.` },
+        { id: 's15.distanze.p5', type: 'num', level: 2,
+          prompt: String.raw`Calcola la distanza tra il punto $(2,0,0)$ e il piano $x=0$.`,
+          answer: '2', explain: String.raw`Il piano ha normale $(1,0,0)$ e $d=0$: $|2|/1=2$.` },
+        { id: 's15.distanze.p6', type: 'num', level: 2,
+          prompt: String.raw`Calcola la distanza del punto $P=(1,0,1)$ dal piano $2y-z+4=0$ (forma esatta).`,
+          answer: '3/sqrt(5)', explain: String.raw`$|0-1+4|/\sqrt{4+1}=3/\sqrt5$.` },
+        { id: 's15.distanze.p7', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: due rette incidenti hanno distanza zero.`,
+          answer: true,
+          explain: String.raw`Vero: hanno un punto in comune.` },
+        { id: 's15.distanze.p8', type: 'cloze', level: 2,
+          prompt: 'Completa.',
+          text: String.raw`Per calcolare la distanza tra due rette sghembe si usa il [[0]], e si divide per il modulo del [[1]].`,
+          blanks: [
+            { options: ['prodotto misto', 'prodotto scalare', 'modulo della somma'], answer: 0 },
+            { options: ['prodotto vettoriale delle direzioni', 'prodotto scalare delle direzioni', 'vettore somma'], answer: 0 },
+          ],
+          explain: String.raw`Formula: $d=\dfrac{|\langle P_2-P_1,\ v_1\wedge v_2\rangle|}{|v_1\wedge v_2|}$.` },
+        { id: 's15.distanze.p9', type: 'open', level: 2, points: 1,
+          prompt: String.raw`Come si calcola la distanza di un punto $A$ da una retta $r$ con il metodo del piano ortogonale?`,
+          answer: String.raw`Si scrive il piano per $A$ ortogonale a $r$ (normale = direzione di $r$). Si interseca questo piano con $r$ e si trova il piede $H$. Poi $d(A,r)=|AH|$.`,
+          rubric: ['Piano per $A$ ortogonale a $r$ (normale = direzione)', 'Piede $H$ come intersezione con $r$', 'Distanza $|AH|$'] },
+        { id: 's15.distanze.p10', type: 'num', level: 2,
+          prompt: String.raw`Calcola la distanza tra le rette $r:\ (0,0,0)+t(1,0,0)$ e $s:\ (0,1,0)+u(0,0,1)$ (forma esatta).`,
+          answer: '1',
+          explain: String.raw`$v_1\wedge v_2=(1,0,0)\wedge(0,0,1)=(0,-1,0)$; $P_2-P_1=(0,1,0)$; prodotto misto $=-1$; $|v_1\wedge v_2|=1$; $d=1$. Le rette sono sghembe.` },
+        { id: 's15.distanze.g1', type: 'gen', level: 1,
+          gen: (R) => {
+            const n = [R.nz(-3, 3), R.nz(-3, 3), R.nz(-3, 3)];
+            const P = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            let d, val;
+            do { d = R.int(-5, 5); val = H.dot(n, P) + d; } while (val === 0);
+            const nn = H.dot(n, n);
+            return {
+              type: 'num',
+              prompt: String.raw`Calcola la distanza del punto $P=(${P.join(', ')})$ dal piano $${H.planeTex(n[0], n[1], n[2], d)}$ (in forma esatta).`,
+              answer: `${Math.abs(val)}/sqrt(${nn})`,
+              explain: String.raw`$d(P,\pi)=\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}=\dfrac{|${H.dot(n, P)}${d < 0 ? '' : '+'}${d}|}{\sqrt{${nn}}}=\dfrac{${Math.abs(val)}}{\sqrt{${nn}}}$.`,
+            };
+          } },
+        { id: 's15.distanze.g2', type: 'gen', level: 2,
+          gen: (R) => {
+            let P, P0, v, c;
+            do {
+              P = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              P0 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              v = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              c = H.cross(P.map((x, i) => x - P0[i]), v);
+            } while (c.every((x) => x === 0));
+            const c2 = H.dot(c, c), v2 = H.dot(v, v);
+            return {
+              type: 'num',
+              prompt: String.raw`Calcola la distanza del punto $P=(${P.join(', ')})$ dalla retta $r:\ (x,y,z)=(${P0.join(', ')})+t\,(${v.join(', ')})$ (in forma esatta).`,
+              answer: `sqrt(${c2}/${v2})`,
+              explain: String.raw`$d(P,r)=\dfrac{|(P-P_0)\wedge v|}{|v|}$, con $(P-P_0)\wedge v=(${c.join(', ')})$ di modulo $\sqrt{${c2}}$ e $|v|=\sqrt{${v2}}$. Quindi $d=\sqrt{\dfrac{${c2}}{${v2}}}$.`,
+            };
+          } },
+        { id: 's15.distanze.g3', type: 'gen', level: 2,
+          gen: (R) => {
+            let P1, P2, v1, v2, c, m;
+            do {
+              P1 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              P2 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              v1 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              v2 = [R.int(-2, 2), R.nz(-2, 2), R.int(-2, 2)];
+              c = H.cross(v1, v2);
+              m = H.dot(P2.map((x, i) => x - P1[i]), c);
+            } while (c.every((x) => x === 0) || m === 0);
+            const c2 = H.dot(c, c);
+            return {
+              type: 'num',
+              prompt: String.raw`Calcola la distanza tra le rette $r:\ (${P1.join(', ')})+t\,(${v1.join(', ')})$ e $s:\ (${P2.join(', ')})+u\,(${v2.join(', ')})$ (in forma esatta).`,
+              answer: `${Math.abs(m)}/sqrt(${c2})`,
+              explain: String.raw`Il prodotto misto $\langle P_2-P_1,\ v_1\wedge v_2\rangle=${m}$ non è nullo: le rette sono sghembe. Con $v_1\wedge v_2=(${c.join(', ')})$ si ha $d=\dfrac{|${m}|}{\sqrt{${c2}}}$.`,
+            };
+          } },
+        { id: 's15.distanze.g4', type: 'gen', level: 2,
+          gen: (R) => {
+            const n = [R.nz(-2, 2), R.int(-2, 2), R.nz(-2, 2)];
+            const C = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            let d, val;
+            do { d = R.int(-4, 4); val = H.dot(n, C) + d; } while (val === 0);
+            const nn = H.dot(n, n);
+            return {
+              type: 'num',
+              prompt: String.raw`Una sfera ha centro $C=(${C.join(', ')})$ ed è tangente al piano $${H.planeTex(n[0], n[1], n[2], d)}$. Quanto vale il raggio (in forma esatta)?`,
+              answer: `${Math.abs(val)}/sqrt(${nn})`,
+              explain: String.raw`Il raggio è la distanza del centro dal piano: $R=\dfrac{|n\cdot C+d|}{|n|}=\dfrac{|${H.dot(n, C)}${d < 0 ? '' : '+'}${d}|}{\sqrt{${nn}}}=\dfrac{${Math.abs(val)}}{\sqrt{${nn}}}$.`,
+            };
+          } },
+        { id: 's15.distanze.g5', type: 'gen', level: 3,
+          gen: (R) => {
+            let n, w, v, P0, d, val;
+            do {
+              n = [R.nz(-2, 2), R.int(-2, 2), R.nz(-2, 2)];
+              w = [R.int(-2, 2), R.nz(-2, 2), R.int(-2, 2)];
+              v = H.cross(n, w);
+            } while (v.every((x) => x === 0));
+            do {
+              P0 = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              d = R.int(-5, 5);
+              val = H.dot(n, P0) + d;
+            } while (val === 0);
+            const nn = H.dot(n, n);
+            return {
+              type: 'num',
+              prompt: String.raw`La retta $r:\ (x,y,z)=(${P0.join(', ')})+t\,(${v.join(', ')})$ è parallela al piano $${H.planeTex(n[0], n[1], n[2], d)}$. Calcola la distanza tra $r$ e il piano (in forma esatta).`,
+              answer: `${Math.abs(val)}/sqrt(${nn})`,
+              explain: String.raw`La direzione $v$ è ortogonale alla normale, quindi $r$ è parallela al piano. Ogni punto di $r$ ha la stessa distanza dal piano: uso $P_0$. Si ha $d=\dfrac{|n\cdot P_0+d|}{|n|}=\dfrac{${Math.abs(val)}}{\sqrt{${nn}}}$.`,
+            };
+          } },
+      ],
+      flashcards: [
+        { id: 's15.distanze.fc1', kind: 'formula', front: String.raw`Distanza tra due punti $A$ e $B$`,
+          back: String.raw`$d(A,B)=|B-A|=\sqrt{(b_1-a_1)^2+(b_2-a_2)^2+(b_3-a_3)^2}$.` },
+        { id: 's15.distanze.fc2', kind: 'formula', front: String.raw`Distanza punto–piano`,
+          back: String.raw`$d(P,\pi)=\dfrac{|ax_0+by_0+cz_0+d|}{\sqrt{a^2+b^2+c^2}}$. Il denominatore è $|n|$, non $|n|^2$.` },
+        { id: 's15.distanze.fc3', kind: 'metodo', front: String.raw`Piede della perpendicolare da $P$ a un piano`,
+          back: String.raw`$H=P-\dfrac{ax_0+by_0+cz_0+d}{a^2+b^2+c^2}\,(a,b,c)$. È il punto del piano più vicino a $P$.` },
+        { id: 's15.distanze.fc4', kind: 'formula', front: String.raw`Distanza punto–retta`,
+          back: String.raw`$d(P,r)=\dfrac{|(P-P_0)\wedge v|}{|v|}$, con $r:\ P_0+tv$.` },
+        { id: 's15.distanze.fc5', kind: 'thm', front: String.raw`Retta parallela a un piano`,
+          back: String.raw`Ogni punto della retta ha la stessa distanza dal piano: $d(r,\pi)=d(P_0,\pi)$ per un qualunque $P_0\in r$.` },
+        { id: 's15.distanze.fc6', kind: 'formula', front: String.raw`Distanza tra due rette sghembe`,
+          back: String.raw`$d(r,s)=\dfrac{|\langle P_2-P_1,\ v_1\wedge v_2\rangle|}{|v_1\wedge v_2|}$. È la lunghezza della perpendicolare comune.` },
+        { id: 's15.distanze.fc7', kind: 'def', front: String.raw`Distanza tra rette incidenti e parallele`,
+          back: String.raw`Incidenti: $0$. Parallele: distanza di un punto di una retta dall'altra, $d(r,s)=d(P_2,r)$.` },
+        { id: 's15.distanze.fc8', kind: 'metodo', front: String.raw`Sfera tangente a un piano`,
+          back: String.raw`Il raggio è la distanza del centro dal piano. Il punto di tangenza è il piede della perpendicolare dal centro al piano.` },
+        { id: 's15.distanze.fc9', kind: 'errore', front: String.raw`Errori tipici sulle distanze`,
+          back: String.raw`Dimenticare il valore assoluto. Usare $|n|^2$ al posto di $|n|$. Usare il prodotto scalare al posto del vettoriale nelle formule con rette. Prendere due punti a caso per la distanza tra rette sghembe (si ottiene una distanza non minima).` },
+      ],
+    },
     // __NEXT_SKILL__
   ],
 };
