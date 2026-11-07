@@ -682,3 +682,398 @@ Caso utile: se $|c_n|\le b_n$ e $b_n\to0$, allora $c_n\to0$. Ad esempio $\left|\
     { id: 's04.limiti.fc10', kind: 'errore', front: String.raw`Forme indeterminate`, back: String.raw`$\infty-\infty$, $0\cdot\infty$, $\dfrac00$, $\dfrac\infty\infty$, $1^\infty$, $0^0$, $\infty^0$. Non si può concludere subito: bisogna trasformare l'espressione.` },
   ],
 });
+
+// ---------------------------------------------------------------------------
+// s04.monotone
+// ---------------------------------------------------------------------------
+S.push({
+  id: 's04.monotone',
+  title: 'Successioni monotone e limitate, numero e, gerarchia degli infiniti',
+  summary: String.raw`Saprai applicare il teorema di convergenza monotona, calcolare limiti con il numero di Nepero e confrontare la velocità di crescita di potenze, esponenziali e fattoriali.`,
+  prereq: ['s04.limiti', 's01.supinf'],
+  examRefs: ['Itinere 11/11/2025 · B4'],
+  lessons: [
+    {
+      id: 's04.monotone.L1',
+      title: 'Monotone e limitate convergono',
+      cards: [
+        {
+          type: 'learn',
+          title: 'L\'idea',
+          body: String.raw`Una successione **crescente** e **limitata superiormente** non può crescere all'infinito: i termini salgono ma restano sotto un maggiorante. Allora si fermano vicino a un valore fisso, che è il loro limite. Per esempio $a_n=1-\dfrac1n$ dà $0,\ \dfrac12,\ \dfrac23,\ \dfrac34,\dots$: i termini si avvicinano a $1$, che è il suo sup.
+
+Per le successioni **decrescenti** e limitate inferiormente il ragionamento è identico: il limite è l'inf.`,
+          plot: { fns: [{ f: '1', label: 'sup = 1' }], x: [0.5, 7], y: [-0.2, 1.3], hlines: [1], points: [[1, 0], [2, 0.5], [3, 0.6667], [4, 0.75], [5, 0.8], [6, 0.8333]] },
+        },
+        {
+          type: 'learn',
+          title: 'Teorema di convergenza monotona',
+          body: String.raw`Il teorema garantisce che il limite esiste, anche senza calcolarlo.
+
+>* **Teorema (convergenza monotona).** Ogni successione monotona e limitata è convergente. Se $a_n$ è crescente e limitata superiormente, allora $\lim a_n=\sup a_n$. Se è decrescente e limitata inferiormente, allora $\lim a_n=\inf a_n$.
+
+Entrambe le ipotesi servono. $a_n=n$ è monotona ma non limitata. $a_n=(-1)^n$ è limitata ma non monotona: in entrambi i casi il teorema non si applica.`,
+        },
+        {
+          type: 'order', level: 2,
+          prompt: String.raw`Riordina i passi della dimostrazione: se $a_n$ è crescente e limitata superiormente, allora $a_n\to\sup a_n$.`,
+          steps: [
+            String.raw`Sia $S=\sup a_n$, che esiste per la limitatezza superiore e la completezza di $\R$.`,
+            String.raw`Fisso $\varepsilon>0$. Poiché $S-\varepsilon$ non è un maggiorante, esiste $N$ con $a_N>S-\varepsilon$.`,
+            String.raw`Per $n\ge N$, la monotonia dà $a_n\ge a_N>S-\varepsilon$; inoltre $a_n\le S$ perché $S$ è un maggiorante.`,
+            String.raw`Quindi $|a_n-S|<\varepsilon$ per ogni $n\ge N$: cioè $a_n\to S$.`,
+          ],
+          distractors: [
+            String.raw`Per $n\ge N$ vale $a_n\ge S+\varepsilon$, quindi $a_n$ supera il sup.`,
+            String.raw`Poiché $a_n$ è crescente, il suo limite è $\inf a_n$ per ogni $\varepsilon$.`,
+          ],
+          explain: String.raw`Il punto chiave è il passo 2: il sup può non essere raggiunto, ma per ogni $\varepsilon$ c'è un termine oltre $S-\varepsilon$. Il primo distrattore contraddice il fatto che $S$ è un maggiorante. Il secondo confonde sup e inf: per una successione crescente l'inf è il primo termine.`,
+          id: 's04.monotone.L1.e1',
+        },
+        {
+          type: 'example',
+          title: 'Successione ricorsiva',
+          problem: String.raw`Sia $a_1=1$ e $a_{n+1}=\sqrt{2+a_n}$. Dimostra che $a_n$ converge e calcolane il limite.`,
+          steps: [
+            String.raw`**Limitatezza.** Vale $0<a_n<2$ per ogni $n$. Infatti $a_1=1$; se $0<a_n<2$, allora $a_{n+1}=\sqrt{2+a_n}>0$ e $a_{n+1}<\sqrt4=2$.`,
+            { text: String.raw`**Monotonia.** $a_{n+1}>a_n$ equivale a $\sqrt{2+a_n}>a_n$, cioè a $2+a_n>a_n^2$, cioè a $(a_n-2)(a_n+1)<0$.`,
+              ask: { type: 'mcq', prompt: String.raw`Per $0<a_n<2$, il segno di $(a_n-2)(a_n+1)$ è:`, options: ['positivo', 'negativo', 'nullo', 'dipende da $n$'], answer: 1, explain: String.raw`$a_n-2<0$ e $a_n+1>0$, quindi il prodotto è negativo: la successione è crescente.` } },
+            String.raw`La successione è crescente e limitata: per il teorema di convergenza monotona converge a un limite $L$.`,
+            { text: String.raw`Passando al limite in $a_{n+1}=\sqrt{2+a_n}$ si ottiene $L=\sqrt{2+L}$, cioè $L^2-L-2=0$.`,
+              ask: { type: 'num', prompt: String.raw`Quale valore **positivo** di $L$ verifica $L^2-L-2=0$?`, answer: '2', explain: String.raw`$L^2-L-2=(L-2)(L+1)=0$ dà $L=2$ oppure $L=-1$. Poiché $a_n>0$, si ha $L\ge0$: quindi $L=2$.` } },
+          ],
+          result: String.raw`$a_n$ converge e $\displaystyle\lim_{n\to+\infty}a_n=2$.`,
+        },
+        {
+          type: 'mcq', level: 2,
+          prompt: String.raw`La successione $a_n=n^2$ è monotona. Cosa si può dire del suo limite?`,
+          options: [String.raw`Converge a $0$.`, String.raw`Diverge a $+\infty$.`, String.raw`Converge a $1$.`, String.raw`Il teorema dice che converge a $\sup a_n$.`],
+          answer: 1,
+          explain: String.raw`$a_n=n^2$ è crescente ma non limitata superiormente: il teorema non si applica, e la successione diverge a $+\infty$. L'ultima opzione è sbagliata: il teorema richiede la limitatezza.`,
+          id: 's04.monotone.L1.e2',
+        },
+        {
+          type: 'tf', level: 1,
+          prompt: String.raw`Ogni successione monotona è convergente.`,
+          answer: false,
+          explain: String.raw`Falso. $a_n=n$ è crescente ma diverge a $+\infty$. Il teorema richiede anche la limitatezza.`,
+          id: 's04.monotone.L1.e3',
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Sia $a_n=\dfrac{n}{n+1}$, crescente e limitata. Quanto vale $\displaystyle\lim_{n\to+\infty}a_n$?`,
+          answer: '1',
+          explain: String.raw`Per il teorema il limite è $\sup a_n=1$, che non viene raggiunto da nessun termine.`,
+          id: 's04.monotone.L1.e4',
+        },
+        {
+          type: 'tf', level: 2,
+          prompt: String.raw`Se $a_n$ è decrescente e limitata inferiormente, allora $a_n$ converge a $\inf a_n$.`,
+          answer: true,
+          explain: String.raw`È la versione del teorema per le successioni decrescenti: il limite è l'estremo inferiore.`,
+          id: 's04.monotone.L1.e5',
+        },
+        {
+          type: 'open', level: 3,
+          prompt: String.raw`Enuncia e dimostra il teorema di convergenza monotona nel caso delle successioni crescenti e limitate superiormente.`,
+          answer: String.raw`Sia $a_n$ crescente e limitata superiormente, e $S=\sup a_n$. Fissato $\varepsilon>0$, $S-\varepsilon$ non è un maggiorante, quindi esiste $N$ con $a_N>S-\varepsilon$. Per $n\ge N$ si ha $S-\varepsilon<a_N\le a_n\le S$, dunque $|a_n-S|<\varepsilon$: quindi $a_n\to S$.`,
+          rubric: ['Ipotesi: crescente e limitata superiormente', String.raw`Uso di $S=\sup a_n$ e della caratterizzazione del sup con $\varepsilon$`, String.raw`Monotonia per $n\ge N$ e conclusione $|a_n-S|<\varepsilon$`],
+          id: 's04.monotone.L1.e6',
+        },
+      ],
+    },
+    {
+      id: 's04.monotone.L2',
+      title: 'Il numero di Nepero',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il numero e',
+          body: String.raw`La successione $a_n=\left(1+\dfrac1n\right)^n$ è crescente e limitata (per esempio da $3$ sopra): converge per il teorema di convergenza monotona. Il suo limite si indica con $e$:
+
+$$e=\lim_{n\to+\infty}\left(1+\frac1n\right)^n\approx2{,}718\ldots$$
+
+Il numero $e$ è irrazionale. Qualche valore: $a_1=2$, $a_2=\dfrac94=2{,}25$, $a_{10}\approx2{,}594$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Limiti notevoli di successioni',
+          body: String.raw`Con $k$ e $m$ reali fissati:
+
+$$\left(1+\frac{k}{n}\right)^{n}\to e^{k},\qquad \left(1+\frac{k}{n}\right)^{mn}\to e^{km},\qquad n\log\left(1+\frac1n\right)\to1.$$
+
+Metodo per le forme $1^\infty$: si scrive $f_n^{\,g_n}=e^{\,g_n\log f_n}$ e si calcola il limite dell'esponente $g_n\log f_n$. Se l'esponente tende a $L$, il limite è $e^L$.
+
+>! Errore tipico: $\left(1+\dfrac kn\right)^{n^2}$ **non** tende a $e^k$. Qui l'esponente cresce troppo: il limite è $+\infty$ se $k>0$.`,
+        },
+        {
+          type: 'example',
+          title: 'Limite con esponente',
+          problem: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(1-\dfrac2n\right)^{3n}$.`,
+          steps: [
+            String.raw`La base tende a $1$ e l'esponente a $+\infty$: è la forma $1^\infty$. Riscrivo l'esponente come $n\cdot3$.`,
+            { text: String.raw`$\left(1-\dfrac2n\right)^{3n}=\left[\left(1-\dfrac2n\right)^{n}\right]^{3}$, e la parentesi tende, per il limite notevole, a $e^{-2}$.`,
+              ask: { type: 'num', prompt: String.raw`Quanto vale $\displaystyle\lim_{n\to+\infty}\left(1-\dfrac2n\right)^n$?`, answer: 'e^(-2)', explain: String.raw`È il limite notevole $\left(1+\dfrac kn\right)^n\to e^k$ con $k=-2$.` } },
+            String.raw`Elevando a $3$: $\left(e^{-2}\right)^3=e^{-6}$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{n\to+\infty}\left(1-\dfrac2n\right)^{3n}=e^{-6}$.`,
+        },
+        {
+          type: 'mcq', level: 1,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{n\to+\infty}\left(1+\dfrac1n\right)^{2n}$?`,
+          options: [String.raw`$e$`, String.raw`$e^2$`, String.raw`$2e$`, String.raw`$1$`],
+          answer: 1,
+          explain: String.raw`$\left(1+\dfrac1n\right)^{2n}=\left[\left(1+\dfrac1n\right)^n\right]^2\to e^2$. Errore: $e$ dimentica l'esponente $2$; $2e$ moltiplica invece di elevare; $1$ pensa che la base tenda a $1$ e basti.`,
+          id: 's04.monotone.L2.e1',
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(1-\dfrac1n\right)^{n}$.`,
+          answer: 'e^(-1)',
+          explain: String.raw`Limite notevole con $k=-1$: il risultato è $e^{-1}=\dfrac1e$.`,
+          id: 's04.monotone.L2.e2',
+        },
+        {
+          type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}n\log\left(1+\dfrac1n\right)$.`,
+          answer: '1',
+          explain: String.raw`$n\log\left(1+\dfrac1n\right)=\log\left[\left(1+\dfrac1n\right)^n\right]\to\log e=1$, per la continuità del logaritmo.`,
+          id: 's04.monotone.L2.e3',
+        },
+        {
+          type: 'tf', level: 1,
+          prompt: String.raw`La successione $\left(1+\dfrac1n\right)^n$ è decrescente.`,
+          answer: false,
+          explain: String.raw`È crescente: parte da $2$ e converge a $e\approx2{,}718$ senza superarlo.`,
+          id: 's04.monotone.L2.e4',
+        },
+        {
+          type: 'mcq', level: 2,
+          prompt: String.raw`Quale successione converge a $e^2$?`,
+          options: [String.raw`$\left(1+\dfrac1n\right)^{n}$`, String.raw`$\left(1+\dfrac2n\right)^{n}$`, String.raw`$\left(1+\dfrac1n\right)^{n^2}$`, String.raw`$\left(1-\dfrac1n\right)^{n}$`],
+          answer: 1,
+          explain: String.raw`$\left(1+\dfrac2n\right)^{n}\to e^2$ con $k=2$. Il primo tende a $e$; il terzo a $+\infty$, perché l'esponente $n^2$ è troppo grande; il quarto a $e^{-1}$.`,
+          id: 's04.monotone.L2.e5',
+        },
+        {
+          type: 'problem', level: 3,
+          prompt: String.raw`Calcola i limiti delle successioni $a_n=\left(1+\dfrac3n\right)^{2n}$, $b_n=n\log\left(1+\dfrac1n\right)$, $c_n=\left(1-\dfrac2n\right)^{n}$ e $d_n=\left(\dfrac{n+2}{n}\right)^{n}$.`,
+          parts: [
+            { type: 'num', prompt: 'Limite di $a_n$.', answer: 'e^6', explain: String.raw`Con $k=3$ e esponente $2n$: $a_n\to e^{3\cdot2}=e^6$.` },
+            { type: 'num', prompt: 'Limite di $b_n$.', answer: '1', explain: String.raw`$b_n=\log\left[\left(1+\dfrac1n\right)^n\right]\to\log e=1$.` },
+            { type: 'num', prompt: 'Limite di $c_n$.', answer: 'e^(-2)', explain: String.raw`Limite notevole con $k=-2$: $c_n\to e^{-2}$.` },
+            { type: 'num', prompt: 'Limite di $d_n$.', answer: 'e^2', explain: String.raw`$d_n=\left(1+\dfrac2n\right)^n\to e^2$, con $k=2$.` },
+          ],
+          solution: String.raw`$a_n\to e^6$; $b_n\to1$; $c_n\to e^{-2}$; $d_n\to e^2$. Nei casi con base $1+\frac kn$ si riconosce il limite notevole, con esponente $n$ o un multiplo di $n$.`,
+          id: 's04.monotone.L2.e6',
+        },
+        {
+          type: 'open', level: 2,
+          prompt: String.raw`Spiega perché la successione $\left(1+\dfrac1n\right)^n$ converge, enunciando i teoremi usati.`,
+          answer: String.raw`La successione è crescente (lo si verifica con il binomio di Newton) e limitata superiormente, per esempio da $3$. Per il teorema di convergenza monotona converge; il suo limite si chiama $e$.`,
+          rubric: ['Monotonia crescente', 'Limitatezza superiore, per esempio da 3', 'Applicazione del teorema di convergenza monotona'],
+          id: 's04.monotone.L2.e7',
+        },
+      ],
+    },
+    {
+      id: 's04.monotone.L3',
+      title: 'Gerarchia degli infiniti e b^n/n!',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Chi cresce più in fretta',
+          body: String.raw`Per $n\to+\infty$ alcune successioni crescono più in fretta di altre. Ecco la gerarchia, in cui ogni termine è trascurabile rispetto a quello successivo:
+
+$$\log n\ \ll\ n^{\alpha}\ \ll\ b^{n}\ \ll\ n!\ \ll\ n^{n}\qquad(\alpha>0,\ b>1).$$
+
+Quindi un logaritmo è trascurabile rispetto a una potenza di $n$; una potenza è trascurabile rispetto a un'esponenziale; un'esponenziale è trascurabile rispetto al fattoriale. Il simbolo $\ll$ significa: il rapporto tende a $0$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Regola pratica',
+          body: String.raw`Nel limite di un rapporto domina il termine più "veloce" della gerarchia:
+- se il numeratore è trascurabile, il limite è $0$;
+- se il denominatore è trascurabile, il limite è $\pm\infty$, secondo il segno.
+
+Esempio: $\dfrac{n^{10}}{1.1^n}\to0$, perché l'esponenziale vince su ogni potenza.
+
+>! Attenzione: "vince" vale **definitivamente**. Per $n$ piccolo una potenza grande può sembrare più grande: $n^{100}$ supera $2^n$ per molti valori di $n$, ma da un certo punto in poi $2^n$ lo supera per sempre.`,
+        },
+        {
+          type: 'example',
+          title: 'Confronto tra esponenziali',
+          problem: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{3^n+n^4}{2^n+n^3}$.`,
+          steps: [
+            String.raw`Al numeratore domina $3^n$: un'esponenziale vince su ogni potenza. Al denominatore domina $2^n$.`,
+            { text: String.raw`Divido per $2^n$: $\dfrac{3^n+n^4}{2^n+n^3}=\dfrac{\left(\frac32\right)^n+\frac{n^4}{2^n}}{1+\frac{n^3}{2^n}}$.`,
+              ask: { type: 'mcq', prompt: String.raw`Per $n\to+\infty$, $\dfrac{n^4}{2^n}$ tende a:`, options: [String.raw`$0$`, String.raw`$+\infty$`, String.raw`$1$`, String.raw`$\frac12$`], answer: 0, explain: String.raw`La potenza è trascurabile rispetto all'esponenziale $2^n$: il rapporto tende a $0$.` } },
+            String.raw`Il numeratore tende a $+\infty$ perché $\left(\frac32\right)^n\to+\infty$; il denominatore tende a $1$.`,
+          ],
+          result: String.raw`$\displaystyle\lim_{n\to+\infty}\dfrac{3^n+n^4}{2^n+n^3}=+\infty$.`,
+        },
+        {
+          type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{n^{10}}{1.1^{n}}$.`,
+          answer: '0',
+          explain: String.raw`L'esponenziale $1.1^n$ vince su ogni potenza di $n$, anche su $n^{10}$. Il rapporto tende a $0$.`,
+          id: 's04.monotone.L3.e1',
+        },
+        {
+          type: 'mcq', level: 1,
+          prompt: String.raw`Quale successione cresce più in fretta per $n\to+\infty$?`,
+          options: [String.raw`$n^{100}$`, String.raw`$2^n$`, String.raw`$n!$`, String.raw`$\log n$`],
+          answer: 2,
+          explain: String.raw`$n!$ supera $2^n$ definitivamente, che a sua volta supera ogni potenza di $n$. Il logaritmo cresce più lentamente di tutte. Errore tipico: scegliere $n^{100}$ perché l'esponente è grande; questo vale solo per $n$ piccoli.`,
+          id: 's04.monotone.L3.e2',
+        },
+        {
+          type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{n^2+\log n}{n^2+2^n}$.`,
+          answer: '0',
+          explain: String.raw`Il denominatore è dominato da $2^n$, mentre il numeratore cresce come $n^2$: il rapporto tende a $0$.`,
+          id: 's04.monotone.L3.e3',
+        },
+        {
+          type: 'learn',
+          title: 'Il limite di b^n/n!',
+          body: String.raw`Per ogni $b>0$ vale
+$$\frac{b^n}{n!}\to0.$$
+
+Idea: il rapporto tra due termini consecutivi è
+$$\frac{b^{n+1}/(n+1)!}{b^n/n!}=\frac{b}{n+1}.$$
+Questo è $<\dfrac12$ definitivamente (basta $n+1>2b$). Quindi da un certo $N$ in poi ogni termine è meno della metà del precedente, e la successione è al più $C\,2^{-n}$, che tende a $0$.`,
+        },
+        {
+          type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\lim_{n\to+\infty}\dfrac{5^n}{n!}$?`,
+          options: [String.raw`$0$`, String.raw`$+\infty$`, String.raw`$5$`, String.raw`$1$`],
+          answer: 0,
+          explain: String.raw`Il fattoriale vince su ogni esponenziale: $\dfrac{5^n}{n!}\to0$. Errore tipico: $+\infty$, perché $5^n$ sembra grande; ma $n!$ cresce più in fretta.`,
+          id: 's04.monotone.L3.e4',
+        },
+        {
+          type: 'tf', level: 2,
+          prompt: String.raw`La successione $\dfrac{n!}{n^n}$ tende a $0$.`,
+          answer: true,
+          explain: String.raw`Vero: $\dfrac{n!}{n^n}=\dfrac1n\cdot\dfrac2n\cdots\dfrac nn$. Ogni fattore è al più $1$ e il primo è $\dfrac1n$: quindi $0<\dfrac{n!}{n^n}\le\dfrac1n\to0$.`,
+          id: 's04.monotone.L3.e5',
+        },
+        {
+          type: 'open', level: 2,
+          prompt: String.raw`Dimostra che $\dfrac{2^n}{n!}\to0$, scrivendo $\dfrac{2^n}{n!}$ come prodotto di fattori.`,
+          answer: String.raw`$\dfrac{2^n}{n!}=\dfrac21\cdot\dfrac22\cdot\dfrac23\cdots\dfrac2n$. Il primo fattore è $2$, il secondo è $1$, il terzo è $\dfrac23<1$, e tutti i fattori $\dfrac2k$ con $k\ge4$ sono al più $\dfrac12$. Quindi per $n\ge3$ si ha $0<\dfrac{2^n}{n!}\le2\left(\dfrac12\right)^{n-3}\to0$.`,
+          rubric: ['Scrittura come prodotto di fattori 2/k', 'Fattori con k ≥ 4 al più 1/2', 'Maggiorazione con una successione geometrica che tende a 0'],
+          id: 's04.monotone.L3.e6',
+        },
+        {
+          type: 'problem', level: 3,
+          prompt: String.raw`Calcola i limiti delle successioni $a_n=\dfrac{n!+3^n}{n^2+2^n}$, $b_n=\dfrac{n!}{n^n}$ e $c_n=\dfrac{\log n}{\sqrt n}$.`,
+          parts: [
+            { type: 'num', prompt: 'Limite di $a_n$.', answer: 'inf', explain: String.raw`Il fattoriale $n!$ supera ogni esponenziale: il numeratore cresce più di $2^n$, quindi $a_n\to+\infty$.` },
+            { type: 'num', prompt: 'Limite di $b_n$.', answer: '0', explain: String.raw`$\dfrac{n!}{n^n}\le\dfrac1n\to0$, perché il primo fattore è $\dfrac1n$ e gli altri sono al più $1$.` },
+            { type: 'num', prompt: 'Limite di $c_n$.', answer: '0', explain: String.raw`Il logaritmo è trascurabile rispetto a $\sqrt n$: il rapporto tende a $0$.` },
+          ],
+          solution: String.raw`$a_n\to+\infty$ perché $n!$ domina su $3^n$ e su $2^n$. $b_n\to0$ perché $\dfrac{n!}{n^n}=\dfrac1n\cdot\dfrac2n\cdots\dfrac nn\le\dfrac1n$. $c_n\to0$ perché il logaritmo è trascurabile rispetto alla radice di $n$.`,
+          id: 's04.monotone.L3.e7',
+        },
+      ],
+    },
+  ],
+  practice: [
+    { id: 's04.monotone.p-nepero', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.nz(-4, 4), b = R.int(1, 3);
+        const sg = a < 0 ? '-' : '+';
+        const ab = Math.abs(a);
+        const bn = b === 1 ? 'n' : `${b}n`;
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\left(1${sg}\dfrac{${ab}}{n}\right)^{${bn}}$.`,
+          answer: `e^(${a * b})`,
+          explain: String.raw`Con $k=${a}$ e esponente $${bn}$: $\left(1+\dfrac{k}{n}\right)^{mn}\to e^{km}=e^{${a * b}}$.`,
+        };
+      } },
+    { id: 's04.monotone.p-esp', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.int(2, 4);
+        let c = R.int(2, 4);
+        if (c === b) c = b + 1;
+        const k = R.int(2, 5);
+        const ans = b > c ? 'inf' : '0';
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${b}^n+n^{${k}}}{${c}^n+n}$ (scrivi inf se diverge).`,
+          answer: ans,
+          explain: b > c
+            ? String.raw`La base $${b}$ è maggiore di $${c}$: il rapporto $\left(\dfrac{${b}}{${c}}\right)^n$ cresce senza limite, e le potenze di $n$ sono trascurabili.`
+            : String.raw`La base $${c}$ domina al denominatore: il rapporto $\left(\dfrac{${b}}{${c}}\right)^n$ tende a $0$.`,
+        };
+      } },
+    { id: 's04.monotone.p-fatt', type: 'gen', level: 2,
+      gen: (R) => {
+        const b = R.int(2, 6);
+        const up = R.chance(0.5);
+        return {
+          type: 'num',
+          prompt: up
+            ? String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{n!}{${b}^n}$ (scrivi inf se diverge).`
+            : String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{${b}^n}{n!}$.`,
+          answer: up ? 'inf' : '0',
+          explain: up
+            ? String.raw`Il fattoriale supera ogni esponenziale: $\dfrac{n!}{${b}^n}\to+\infty$.`
+            : String.raw`L'esponenziale è trascurabile rispetto al fattoriale: $\dfrac{${b}^n}{n!}\to0$.`,
+        };
+      } },
+    { id: 's04.monotone.p1', type: 'mcq', level: 2,
+      prompt: String.raw`Quale successione converge a $e$?`,
+      options: [String.raw`$\left(1+\dfrac1n\right)^{n}$`, String.raw`$\left(1+\dfrac2n\right)^{n}$`, String.raw`$\left(1+\dfrac1n\right)^{n^2}$`, String.raw`$\left(1-\dfrac1n\right)^{n}$`],
+      answer: 0,
+      explain: String.raw`$\left(1+\dfrac2n\right)^n\to e^2$; $\left(1+\dfrac1n\right)^{n^2}\to+\infty$; $\left(1-\dfrac1n\right)^n\to e^{-1}$.` },
+    { id: 's04.monotone.p2', type: 'tf', level: 1,
+      prompt: String.raw`Per ogni $b>0$ si ha $\dfrac{b^n}{n!}\to0$.`,
+      answer: true,
+      explain: String.raw`È il risultato della lezione: il fattoriale supera ogni esponenziale.` },
+    { id: 's04.monotone.p3', type: 'tf', level: 1,
+      prompt: String.raw`$\dfrac{n^3}{e^n}\to0$.`,
+      answer: true,
+      explain: String.raw`L'esponenziale $e^n$ vince su ogni potenza di $n$.` },
+    { id: 's04.monotone.p4', type: 'cloze', level: 2,
+      text: String.raw`Per $n\to+\infty$: $\dfrac{n^{3}}{e^{n}}\to[[0]]$ e $\dfrac{n^{3}}{\log n}\to[[1]]$.`,
+      blanks: [
+        { options: [String.raw`$0$`, String.raw`$+\infty$`, String.raw`$1$`], answer: 0 },
+        { options: [String.raw`$0$`, String.raw`$+\infty$`, String.raw`$1$`], answer: 1 },
+      ],
+      explain: String.raw`L'esponenziale domina la potenza, quindi il primo limite è $0$. Il logaritmo è trascurabile rispetto a ogni potenza di $n$, quindi il secondo rapporto cresce senza limite.` },
+    { id: 's04.monotone.p5', type: 'match', level: 1,
+      prompt: 'Abbina ogni successione alla relazione di ordine che la descrive.',
+      pairs: [
+        [String.raw`$\log n$`, String.raw`trascurabile rispetto a $\sqrt n$`],
+        [String.raw`$n^{5}$`, String.raw`trascurabile rispetto a $2^n$`],
+        [String.raw`$n!$`, String.raw`trascurabile rispetto a $n^n$`],
+      ],
+      explain: String.raw`Un logaritmo è trascurabile rispetto a ogni potenza positiva. Una potenza è trascurabile rispetto a un'esponenziale. Il fattoriale è trascurabile rispetto a $n^n$.` },
+    { id: 's04.monotone.p6', type: 'open', level: 2,
+      prompt: String.raw`Dimostra che $\dfrac{n}{2^n}\to0$, usando il binomio di Newton.`,
+      answer: String.raw`Per il binomio di Newton $2^n=(1+1)^n\ge\binom n2=\dfrac{n(n-1)}{2}$ per $n\ge2$. Quindi $0<\dfrac{n}{2^n}\le\dfrac{n}{n(n-1)/2}=\dfrac{2}{n-1}\to0$.`,
+      rubric: ['Uso del binomio di Newton o di una stima equivalente', String.raw`Maggiorazione di $\dfrac{n}{2^n}$`, 'Conclusione per confronto'] },
+    { id: 's04.monotone.p7', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{n^2+3}{2^n}$.`,
+      answer: '0',
+      explain: String.raw`L'esponenziale $2^n$ domina il numeratore $n^2+3$: il rapporto tende a $0$.` },
+    { id: 's04.monotone.p8', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\lim_{n\to+\infty}\dfrac{\log(n^3)}{\sqrt n}$.`,
+      answer: '0',
+      explain: String.raw`$\log(n^3)=3\log n$, e il logaritmo è trascurabile rispetto a $\sqrt n$: il limite è $0$.` },
+  ],
+  flashcards: [
+    { id: 's04.monotone.fc1', kind: 'thm', front: String.raw`Teorema di convergenza monotona`, back: String.raw`Ogni successione monotona e limitata converge. Se è crescente, il limite è $\sup a_n$; se è decrescente, è $\inf a_n$.` },
+    { id: 's04.monotone.fc2', kind: 'dim', front: String.raw`Idea della dimostrazione della convergenza monotona`, back: String.raw`Sia $S=\sup a_n$ per $a_n$ crescente e limitata. Fissato $\varepsilon>0$, $S-\varepsilon$ non è un maggiorante: esiste $a_N>S-\varepsilon$. Per monotonia $a_n\ge a_N$ per $n\ge N$, e $a_n\le S$. Quindi $|a_n-S|<\varepsilon$ da $N$ in poi.` },
+    { id: 's04.monotone.fc3', kind: 'def', front: String.raw`Il numero di Nepero $e$`, back: String.raw`$e=\lim_{n\to+\infty}\left(1+\dfrac1n\right)^n\approx2{,}718$. La successione è crescente e limitata, quindi converge.` },
+    { id: 's04.monotone.fc4', kind: 'formula', front: String.raw`Limiti notevoli con il numero e`, back: String.raw`$\left(1+\dfrac kn\right)^n\to e^k$ e $\left(1+\dfrac kn\right)^{mn}\to e^{km}$. Inoltre $n\log\left(1+\dfrac1n\right)\to1$.` },
+    { id: 's04.monotone.fc5', kind: 'metodo', front: String.raw`Forma $1^\infty$`, back: String.raw`Si scrive $f_n^{g_n}=e^{g_n\log f_n}$ e si calcola il limite dell'esponente $g_n\log f_n$. Se tende a $L$, il limite è $e^L$.` },
+    { id: 's04.monotone.fc6', kind: 'formula', front: String.raw`Gerarchia degli infiniti`, back: String.raw`$\log n\ll n^{\alpha}\ll b^n\ll n!\ll n^n$ per $\alpha>0$ e $b>1$. Il simbolo $\ll$ significa che il rapporto tende a $0$.` },
+    { id: 's04.monotone.fc7', kind: 'thm', front: String.raw`Limite di $b^n/n!$`, back: String.raw`Per ogni $b>0$, $\dfrac{b^n}{n!}\to0$. Il rapporto tra termini consecutivi è $\dfrac{b}{n+1}$, che da un certo punto in poi è minore di $\dfrac12$.` },
+    { id: 's04.monotone.fc8', kind: 'errore', front: String.raw`Errore con il numero e`, back: String.raw`$\left(1+\dfrac kn\right)^{n^2}$ non tende a $e^k$: l'esponente $n^2$ è troppo grande. Per $k>0$ il limite è $+\infty$.` },
+  ],
+});
