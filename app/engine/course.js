@@ -51,11 +51,12 @@ export function isUnlocked(course, state, skillId) {
   if (state.profile?.freeMode) return true;
   const idx = course.path.indexOf(skillId);
   if (idx <= 0) return true;
-  const sec = course.sectionOf.get(skillId);
-  if (state.tested?.[sec.id]) return true;
+  // un test superato sulla sezione S dichiara noto tutto fino a S (e apre S+1)
+  const secIdx = course.sections.findIndex((s) => s.id === course.sectionOf.get(skillId).id);
+  const maxTested = Math.max(-1, ...Object.keys(state.tested || {}).map((id) => course.sections.findIndex((s) => s.id === id)));
+  if (secIdx <= maxTested + 1) return true;
   if (lessonsDone(state, skillId) > 0) return true;
-  const prev = course.path[idx - 1];
-  return skillComplete(course, state, prev) || !!state.tested?.[course.sectionOf.get(prev).id];
+  return skillComplete(course, state, course.path[idx - 1]);
 }
 
 /** Prima skill sbloccata e non completata: il "INIZIA" del percorso */

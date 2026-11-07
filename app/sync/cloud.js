@@ -207,7 +207,8 @@ export class CloudSync {
       await this.maybeAutoSnapshot(st);
     } catch (e) {
       console.warn('[sync] scrittura fallita', e);
-      if (e?.code === 'revoked' || e?.code === 'not_granted') this.goLocal('Salvato su questo dispositivo');
+      // senza permesso di scrittura (es. Viewer) o revocato: si resta in locale, senza ripetere all'infinito
+      if (['revoked', 'not_granted', 'invalid_argument', 'capability_disabled', 'capability_removed'].includes(e?.code)) this.goLocal(e?.code === 'invalid_argument' ? 'Sola lettura: salvato su questo dispositivo' : 'Salvato su questo dispositivo');
       else {
         this.setStatus('err', 'Offline: salvato sul dispositivo, riprovo…');
         clearTimeout(this.timer);

@@ -178,8 +178,17 @@ export function clone(x) {
 
 /** Uguaglianza sostanziale (ignora meta) per capire se c'è qualcosa da salvare */
 export function sameContent(a, b) {
-  const strip = (s) => JSON.stringify({ ...s, meta: undefined });
+  const strip = (s) => stableStringify({ ...s, meta: undefined });
   return strip(a) === strip(b);
+}
+
+/** JSON con chiavi ordinate: due oggetti uguali danno sempre la stessa stringa */
+export function stableStringify(v) {
+  if (Array.isArray(v)) return '[' + v.map((x) => (x === undefined ? 'null' : stableStringify(x))).join(',') + ']';
+  if (v && typeof v === 'object') {
+    return '{' + Object.keys(v).filter((k) => v[k] !== undefined).sort().map((k) => JSON.stringify(k) + ':' + stableStringify(v[k])).join(',') + '}';
+  }
+  return JSON.stringify(v);
 }
 
 export function summary(st) {
