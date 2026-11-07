@@ -688,10 +688,484 @@ Le due somme sono gli sviluppi di $\cos\theta$ e di $\sin\theta$:
   ],
 };
 
+// =====================================================================
+// s14.somme — somme con le serie note, somme di razionali irrazionali
+// =====================================================================
+const SOMME = {
+  id: 's14.somme',
+  title: 'Somme con le serie note',
+  summary: String.raw`Riconosci una serie notevole e ne calcoli la somma, anche dopo aver spostato l'indice o derivato la geometrica. Capisci perché una somma infinita di razionali può dare un irrazionale.`,
+  prereq: ['s14.serie', 's10.sviluppi', 's13.def', 's13.alterni'],
+  examRefs: ['Itinere 15/01/2026 · B', 'Appello 06/07/2026 · A'],
+  lessons: [
+    {
+      id: 's14.somme.L1',
+      title: 'Riconoscere la serie notevole',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Sommare una serie con una formula',
+          body: String.raw`Quasi mai la somma di una serie si fa a mano. Si riconosce una **serie notevole** e si legge la somma dalla formula. Le più importanti sono:
+$$\sum_{n\ge0}x^n=\frac{1}{1-x}\qquad\qquad \sum_{n\ge1}\frac{x^n}{n}=-\log(1-x)$$
+$$\sum_{n\ge0}\frac{x^n}{n!}=e^x\qquad\qquad \sum_{n\ge0}\frac{(-1)^nx^{2n+1}}{(2n+1)!}=\sin x\qquad\qquad \sum_{n\ge0}\frac{(-1)^nx^{2n}}{(2n)!}=\cos x$$
+La geometrica e il logaritmo valgono per $|x|<1$; esponenziale, seno e coseno valgono per ogni $x\in\R$.
+
+>* Per sommare una serie che non ha ancora questa forma si cerca di ricondursi a una di queste: si sposta l'indice, si moltiplica per una costante, oppure si sceglie il valore di $x$ guardando la base della potenza o il fattoriale.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: una serie che parte da n = 2',
+          problem: String.raw`Calcola $\displaystyle\sum_{n\ge2}\frac{1}{2^n}$.`,
+          steps: [
+            String.raw`Il termine $n=0$ vale $1$ e quello $n=1$ vale $\frac12$. Quindi $\displaystyle\sum_{n\ge2}\frac{1}{2^n}=\sum_{n\ge0}\frac{1}{2^n}-1-\frac12$.`,
+            {
+              text: String.raw`La serie $\sum_{n\ge0}\left(\frac12\right)^n$ è geometrica di ragione $\frac12$: vale $\dfrac{1}{1-\frac12}=2$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\displaystyle\sum_{n\ge0}\frac{1}{2^n}$?`,
+                answer: '2',
+                explain: String.raw`Geometrica di ragione $\frac12$: $\dfrac{1}{1-\frac12}=2$.`,
+              },
+            },
+            String.raw`Quindi la somma cercata è $2-1-\frac12$.`,
+          ],
+          result: String.raw`$\displaystyle\sum_{n\ge2}\frac{1}{2^n}=\frac12$.`,
+        },
+        {
+          id: 's14.somme.L1.c1', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\left(\frac25\right)^n$.`,
+          answer: '5/3',
+          explain: String.raw`Geometrica di ragione $\frac25$: $\dfrac{1}{1-\frac25}=\dfrac53$.`,
+        },
+        {
+          id: 's14.somme.L1.c2', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{1}{2^n}$.`,
+          answer: '1',
+          explain: String.raw`Parte da $n=1$: basta togliere il termine $n=0$ alla geometrica, $2-1=1$.`,
+        },
+        {
+          id: 's14.somme.L1.c3', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{(-1)^n}{3^n}$.`,
+          answer: '3/4',
+          explain: String.raw`Geometrica di ragione $-\frac13$: $\dfrac{1}{1+\frac13}=\dfrac34$.`,
+        },
+        {
+          id: 's14.somme.L1.c4', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{1}{n\,2^n}$.`,
+          answer: 'log(2)',
+          explain: String.raw`Con $x=\frac12$ nella formula $\sum_{n\ge1}\frac{x^n}{n}=-\log(1-x)$: $-\log\frac12=\log2$.`,
+        },
+        {
+          id: 's14.somme.L1.c5', type: 'num', level: 1,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{1}{n!}$.`,
+          answer: 'e',
+          explain: String.raw`È la serie esponenziale con $x=1$: la somma è $e^1=e$.`,
+        },
+        {
+          id: 's14.somme.L1.c6', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{2^n}{n!}$.`,
+          answer: 'e^2',
+          explain: String.raw`È la serie esponenziale con $x=2$: la somma è $e^2$.`,
+        },
+        {
+          id: 's14.somme.L1.c7', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\sum_{n\ge0}\frac{(-1)^n\pi^{2n}}{(2n)!}$?`,
+          options: [String.raw`$-1$`, String.raw`$0$`, String.raw`$1$`, String.raw`$\pi$`],
+          answer: 0,
+          explain: String.raw`È la serie di $\cos x$ con $x=\pi$: $\cos\pi=-1$. Il distrattore $0$ nasce dal confondere con $\sin\pi$; il distrattore $1$ dimentica il segno alterno.`,
+        },
+        {
+          id: 's14.somme.L1.c8', type: 'tf', level: 2, source: 'Appello 06/07/2026 · A',
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge2}\frac{1}{2^n}=\frac12$.`,
+          answer: true,
+          explain: String.raw`Vero: $\displaystyle\sum_{n\ge0}\frac{1}{2^n}-1-\frac12=2-1-\frac12=\frac12$.`,
+        },
+      ],
+    },
+    {
+      id: 's14.somme.L2',
+      title: 'Derivare la geometrica: serie con n e n²',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Il trucco della derivata',
+          body: String.raw`Dentro il raggio di convergenza una serie di potenze si può **derivare termine a termine**. Partiamo da
+$$\sum_{n\ge0}x^n=\frac{1}{1-x}\qquad (|x|<1).$$
+Derivando entrambi i membri si ottiene $\displaystyle\sum_{n\ge1}n\,x^{n-1}=\frac{1}{(1-x)^2}$. Moltiplicando per $x$:
+$$\sum_{n\ge1}n\,x^n=\frac{x}{(1-x)^2}\qquad (|x|<1).$$
+Derivando di nuovo e moltiplicando ancora per $x$ si ottiene
+$$\sum_{n\ge1}n^2x^n=\frac{x(1+x)}{(1-x)^3}\qquad (|x|<1).$$
+
+>* Un fattore $n$ (o $n^2$) al numeratore della serie corrisponde a una derivata della geometrica. Se lo vedi, pensa a questo trucco.`,
+        },
+        {
+          type: 'example',
+          title: 'Esempio svolto: una serie con n al numeratore',
+          problem: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n}{3^n}$.`,
+          steps: [
+            String.raw`Scrivo il termine come $\dfrac{n}{3^n}=n\left(\dfrac13\right)^n$: è della forma $\sum n\,x^n$ con $x=\frac13$, e $|x|<1$.`,
+            {
+              text: String.raw`Uso la formula $\sum_{n\ge1}n\,x^n=\dfrac{x}{(1-x)^2}$ con $x=\frac13$. Il denominatore vale $\left(1-\frac13\right)^2=\frac49$.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $\dfrac{x}{(1-x)^2}$ con $x=\dfrac13$?`,
+                answer: '3/4',
+                explain: String.raw`$\dfrac{1/3}{4/9}=\dfrac13\cdot\dfrac94=\dfrac34$.`,
+              },
+            },
+            String.raw`Quindi la somma è $\dfrac34$.`,
+          ],
+          result: String.raw`$\displaystyle\sum_{n\ge1}\frac{n}{3^n}=\frac34$.`,
+        },
+        {
+          id: 's14.somme.L2.c1', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n}{4^n}$.`,
+          answer: '4/9',
+          explain: String.raw`Con $x=\frac14$: $\dfrac{x}{(1-x)^2}=\dfrac{1/4}{9/16}=\dfrac49$.`,
+        },
+        {
+          id: 's14.somme.L2.c2', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n^2}{2^n}$.`,
+          answer: '6',
+          explain: String.raw`Con $x=\frac12$: $\dfrac{x(1+x)}{(1-x)^3}=\dfrac{\frac12\cdot\frac32}{\frac18}=6$.`,
+        },
+        {
+          id: 's14.somme.L2.c3', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{n+1}{2^n}$.`,
+          answer: '4',
+          explain: String.raw`È $\sum_{n\ge0}(n+1)x^n=\dfrac{1}{(1-x)^2}$ con $x=\frac12$: $\dfrac{1}{1/4}=4$. Spezzando in $\sum\frac{n}{2^n}+\sum\frac{1}{2^n}=2+2$ si ottiene lo stesso risultato.`,
+        },
+        {
+          id: 's14.somme.L2.c4', type: 'mcq', level: 2,
+          prompt: String.raw`Quanto vale $\displaystyle\sum_{n\ge1}n\,x^n$ per $|x|<1$?`,
+          options: [
+            String.raw`$\dfrac{1}{1-x}$`,
+            String.raw`$\dfrac{x}{(1-x)^2}$`,
+            String.raw`$\dfrac{1}{(1-x)^2}$`,
+            String.raw`$\dfrac{x}{1-x}$`,
+          ],
+          answer: 1,
+          explain: String.raw`Corretta: è la derivata della geometrica moltiplicata per $x$. $\frac{1}{1-x}$ è la geometrica senza il fattore $n$; $\frac{1}{(1-x)^2}$ è la somma di $(n+1)x^n$ e dimentica la $x$; $\frac{x}{1-x}$ è la geometrica senza la derivata.`,
+        },
+        {
+          id: 's14.somme.L2.c5', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge0}\frac{x^n}{n+1}=-\frac{\log(1-x)}{x}$ per $0<|x|<1$.`,
+          answer: true,
+          explain: String.raw`Vero: $\displaystyle\sum_{n\ge0}\frac{x^n}{n+1}=\frac1x\sum_{n\ge0}\frac{x^{n+1}}{n+1}=\frac1x\sum_{m\ge1}\frac{x^m}{m}=-\frac{\log(1-x)}{x}$.`,
+        },
+        {
+          id: 's14.somme.L2.c6', type: 'cloze', level: 2,
+          text: String.raw`Per calcolare $\displaystyle\sum_{n\ge2}\frac{x^n}{n}$ si scrive $\displaystyle\sum_{n\ge2}\frac{x^n}{n}=\sum_{n\ge1}\frac{x^n}{n}-$ [[0]], poi si usa la formula $\displaystyle\sum_{n\ge1}\frac{x^n}{n}=$ [[1]].`,
+          blanks: [
+            { options: [String.raw`$x$`, String.raw`$\dfrac{x^2}{2}$`, String.raw`$1$`], answer: 0 },
+            { options: [String.raw`$-\log(1-x)$ per $|x|<1$`, String.raw`$\dfrac{1}{1-x}$`, String.raw`$e^x$`], answer: 0 },
+          ],
+          explain: String.raw`Il termine $n=1$ di $\sum_{n\ge1}\frac{x^n}{n}$ è $x$: togliendolo si parte da $n=2$. La formula del logaritmo vale per $|x|<1$.`,
+        },
+        {
+          id: 's14.somme.L2.c7', type: 'order', level: 2,
+          prompt: String.raw`Riordina i passi per calcolare $\displaystyle\sum_{n\ge1}\frac{n}{2^n}$.`,
+          steps: [
+            String.raw`Riconosco la forma $\sum_{n\ge1}n\,x^n$ con $x=\frac12$, che è nel raggio di convergenza ($|x|<1$).`,
+            String.raw`Uso la formula $\sum_{n\ge1}n\,x^n=\dfrac{x}{(1-x)^2}$.`,
+            String.raw`Calcolo $(1-x)^2=\left(\frac12\right)^2=\frac14$.`,
+            String.raw`Quindi la somma è $\dfrac{1/2}{1/4}=2$.`,
+          ],
+          distractors: [
+            String.raw`La serie diverge per $x=\frac12$, quindi la somma non esiste.`,
+            String.raw`Uso la formula $\sum_{n\ge1}n\,x^n=\dfrac{x}{1-x}$ e ottengo $\dfrac{1/2}{1/2}=1$.`,
+          ],
+          explain: String.raw`Con $|x|=\frac12<1$ la serie converge, e la formula corretta ha il denominatore al quadrato.`,
+        },
+        {
+          id: 's14.somme.L2.c8', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n}{2^{n+1}}$.`,
+          answer: '1',
+          explain: String.raw`$\displaystyle\sum_{n\ge1}\frac{n}{2^{n+1}}=\frac12\sum_{n\ge1}\frac{n}{2^n}=\frac12\cdot2=1$.`,
+        },
+      ],
+    },
+    {
+      id: 's14.somme.L3',
+      title: 'Somme di razionali che danno irrazionali',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Una somma infinita di numeri razionali',
+          body: String.raw`Ogni termine di $\displaystyle\sum_{n\ge0}\frac{1}{n!}=1+1+\frac12+\frac16+\frac1{24}+\cdots$ è un numero razionale. Una somma **finita** di razionali è sempre razionale. Una somma **infinita** no: è il limite di una successione di razionali, e un limite di razionali può essere irrazionale.
+
+Il caso più noto è il numero di Nepero:
+$$e=\sum_{n\ge0}\frac{1}{n!}=2{,}71828\ldots$$
+che è irrazionale. Anche $\log 2=\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$ è irrazionale: nessuna somma parziale dà il valore esatto, ma le somme parziali si avvicinano sempre di più.`,
+        },
+        {
+          type: 'example',
+          title: String.raw`Esempio svolto: quanti termini servono per $e$`,
+          problem: String.raw`Sia $s_n=\displaystyle\sum_{k=0}^{n}\frac{1}{k!}$. Trova il più piccolo $n$ per cui la stima $0<e-s_n<\dfrac{1}{n!\,n}$ garantisce errore minore di $10^{-3}$.`,
+          steps: [
+            String.raw`Uso la stima $0<e-s_n<\dfrac{1}{n!\,n}$: basta che il secondo membro sia minore di $10^{-3}$.`,
+            {
+              text: String.raw`Per $n=5$ il bound vale $\dfrac{1}{5!\cdot5}=\dfrac{1}{600}\approx0{,}00167$: è maggiore di $10^{-3}$, quindi non basta.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $5!\cdot5$?`,
+                answer: '600',
+                explain: String.raw`$5!=120$ e $120\cdot5=600$.`,
+              },
+            },
+            {
+              text: String.raw`Per $n=6$ il bound vale $\dfrac{1}{4320}\approx0{,}00023<10^{-3}$. Quindi $n=6$ basta.`,
+              ask: {
+                type: 'num',
+                prompt: String.raw`Quanto vale $6!\cdot6$?`,
+                answer: '4320',
+                explain: String.raw`$6!=720$ e $720\cdot6=4320$.`,
+              },
+            },
+          ],
+          result: String.raw`Il più piccolo $n$ è $6$: $s_6=\dfrac{1957}{720}\approx 2{,}71806$ approssima $e$ con errore minore di $10^{-3}$.`,
+        },
+        {
+          type: 'learn',
+          title: 'Stima dell\'errore con Leibniz',
+          body: String.raw`Per una serie a segni alterni con $a_n$ decrescente e infinitesima, la somma parziale $s_N$ approssima la somma $S$ con errore
+$$|S-s_N|\le a_{N+1}.$$
+>* Questa è la stima di Leibniz. Per $\log 2=\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$ si ha $a_{N+1}=\dfrac{1}{N+1}$: l'errore è al più $\dfrac{1}{N+1}$.`,
+        },
+        {
+          id: 's14.somme.L3.c1', type: 'num', level: 2,
+          prompt: String.raw`Per approssimare $\log 2=\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$ con la somma parziale $s_N$, qual è il più piccolo $N$ per cui la stima di Leibniz garantisce errore $\le 10^{-2}$?`,
+          answer: '99',
+          explain: String.raw`Serve $\dfrac{1}{N+1}\le10^{-2}$, cioè $N+1\ge100$: quindi $N=99$.`,
+        },
+        {
+          id: 's14.somme.L3.c2', type: 'num', level: 2,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n}{(n+1)!}$.`,
+          answer: '1',
+          explain: String.raw`$\dfrac{n}{(n+1)!}=\dfrac{(n+1)-1}{(n+1)!}=\dfrac{1}{n!}-\dfrac{1}{(n+1)!}$: serie telescopica con somma parziale $1-\dfrac{1}{(N+1)!}\to1$.`,
+        },
+        {
+          id: 's14.somme.L3.c3', type: 'num', level: 3,
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{n+1}{n!}$.`,
+          answer: '2*e',
+          explain: String.raw`Scrivo $\dfrac{n+1}{n!}=\dfrac{n}{n!}+\dfrac{1}{n!}$. La prima serie vale $\displaystyle\sum_{n\ge1}\frac{1}{(n-1)!}=e$ e la seconda vale $e$: il totale è $2e$.`,
+        },
+        {
+          id: 's14.somme.L3.c4', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: poiché $e$ è somma di una serie di numeri razionali, $e$ è razionale.`,
+          answer: false,
+          explain: String.raw`Falso: una somma infinita di razionali può essere irrazionale. Il numero $e$ è irrazionale: il limite di razionali non è necessariamente razionale.`,
+        },
+        {
+          id: 's14.somme.L3.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Quale affermazione è vera?`,
+          options: [
+            String.raw`Una somma infinita di numeri razionali è sempre razionale`,
+            String.raw`Una somma finita di numeri razionali è razionale, ma una somma infinita può non esserlo`,
+            String.raw`Una serie convergente ha sempre somma intera`,
+            String.raw`Se $a_n\to0$ la somma della serie è razionale`,
+          ],
+          answer: 1,
+          explain: String.raw`Corretta: la somma finita è razionale, la somma infinita è un limite. $\sum\frac{1}{n!}$ è irrazionale; la somma di una serie convergente può essere qualunque numero reale; $a_n\to0$ non dice nulla sul valore della somma.`,
+        },
+        {
+          id: 's14.somme.L3.c6', type: 'problem', level: 3, source: 'Itinere 15/01/2026 · B',
+          prompt: String.raw`Sfruttando lo sviluppo di $\sin x$, calcola la somma di $\displaystyle\sum_{k\ge0}\frac{(-1)^k\pi^{2k+1}}{4^{2k+1}(2k+1)!}$ e dici se la convergenza è assoluta.`,
+          parts: [
+            {
+              type: 'num', prompt: 'Somma della serie.', answer: 'sqrt(2)/2',
+              explain: String.raw`Posto $x=\frac{\pi}{4}$ nello sviluppo $\sin x=\displaystyle\sum_{k\ge0}\frac{(-1)^kx^{2k+1}}{(2k+1)!}$ si ottiene $\sin\frac{\pi}{4}=\frac{\sqrt2}{2}$.`,
+            },
+            {
+              type: 'mcq', prompt: 'La convergenza è assoluta?', options: ['Sì', 'No'], answer: 0,
+              explain: String.raw`Sui moduli il rapporto è $\dfrac{\pi^2}{16(2k+2)(2k+3)}\to0<1$: la convergenza è assoluta.`,
+            },
+          ],
+          solution: String.raw`Con $x=\frac{\pi}{4}$ lo sviluppo di $\sin x$ dà la somma $\frac{\sqrt2}{2}$. Il rapporto dei moduli dei termini tende a $0$: la convergenza è assoluta.`,
+        },
+        {
+          id: 's14.somme.L3.c7', type: 'open', level: 2, points: 2,
+          prompt: String.raw`Spiega perché una somma infinita di numeri razionali può essere un numero irrazionale. Fai un esempio.`,
+          answer: String.raw`Una somma finita di razionali è razionale. Una serie è il limite delle sue somme parziali, che sono razionali, e un limite di razionali può essere irrazionale. Esempio: $e=\displaystyle\sum_{n\ge0}\frac{1}{n!}$, somma di razionali, con $e$ irrazionale.`,
+          rubric: [
+            String.raw`Distingue la somma finita (razionale) dal limite delle somme parziali`,
+            String.raw`Esempio corretto, per esempio $e=\sum\frac{1}{n!}$ o $\log 2=\sum\frac{(-1)^{n+1}}{n}$`,
+          ],
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's14.somme.gen-geom', type: 'gen', level: 1,
+      gen: (R) => {
+        const r = R.pick([3, 4, 5, 7]);
+        const p = R.pick([-2, -1, 1, 2]);
+        const a = R.nz(-5, 5);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}${a}\left(${H.frac(p, r)}\right)^n$.`,
+          answer: H.fracStr(a * r, r - p),
+          explain: String.raw`È una geometrica di ragione $${H.frac(p, r)}$: $\dfrac{${a}}{1-\left(${H.frac(p, r)}\right)}=${H.frac(a * r, r - p)}$.`,
+        };
+      },
+    },
+    {
+      id: 's14.somme.gen-derivata', type: 'gen', level: 2,
+      gen: (R) => {
+        const r = R.pick([2, 3, 4, 5]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n}{${r}^n}$.`,
+          answer: H.fracStr(r, (r - 1) ** 2),
+          explain: String.raw`Con $x=\frac{1}{${r}}$ nella formula $\sum_{n\ge1}nx^n=\dfrac{x}{(1-x)^2}$: $\dfrac{1/${r}}{((${r}-1)/${r})^2}=${H.frac(r, (r - 1) ** 2)}$.`,
+        };
+      },
+    },
+    {
+      id: 's14.somme.gen-exp', type: 'gen', level: 2,
+      gen: (R) => {
+        const a = R.pick([-2, -1, 1, 2, 3]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{\left(${a}\right)^n}{n!}$.`,
+          answer: `e^(${a})`,
+          explain: String.raw`È la serie esponenziale con $x=${a}$: la somma è $e^{${a}}$.`,
+        };
+      },
+    },
+    {
+      id: 's14.somme.gen-log', type: 'gen', level: 2,
+      gen: (R) => {
+        const r = R.pick([3, 4, 5, 7]);
+        const p = R.pick([-2, -1, 1, 2]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{1}{n}\left(${H.frac(p, r)}\right)^n$.`,
+          answer: `log(${r}/${r - p})`,
+          explain: String.raw`Con $x=${H.frac(p, r)}$ nella formula $\sum_{n\ge1}\frac{x^n}{n}=-\log(1-x)$: $-\log\left(1-\left(${H.frac(p, r)}\right)\right)=\log\dfrac{${r}}{${r - p}}$.`,
+        };
+      },
+    },
+    {
+      id: 's14.somme.gen-cos', type: 'gen', level: 2,
+      gen: (R) => {
+        const k = R.pick([2, 3, 4, 6]);
+        return {
+          type: 'num',
+          prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{(-1)^n}{(2n)!}\left(\frac{\pi}{${k}}\right)^{2n}$.`,
+          answer: `cos(pi/${k})`,
+          explain: String.raw`È lo sviluppo di $\cos x$ calcolato in $x=\dfrac{\pi}{${k}}$.`,
+        };
+      },
+    },
+    {
+      id: 's14.somme.p1', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\left(\frac34\right)^n$.`,
+      answer: '4',
+      explain: String.raw`Geometrica di ragione $\frac34$: $\dfrac{1}{1-\frac34}=4$.`,
+    },
+    {
+      id: 's14.somme.p2', type: 'num', level: 1,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge2}\frac{1}{3^n}$.`,
+      answer: '1/6',
+      explain: String.raw`$\displaystyle\sum_{n\ge0}\frac{1}{3^n}=\frac32$; tolgo i termini $n=0$ (che vale $1$) e $n=1$ (che vale $\frac13$): $\frac32-1-\frac13=\frac16$.`,
+    },
+    {
+      id: 's14.somme.p3', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{1}{n(n+1)}$.`,
+      answer: '1',
+      explain: String.raw`Scomposizione $\dfrac{1}{n(n+1)}=\dfrac1n-\dfrac{1}{n+1}$: serie telescopica con somma $1$.`,
+    },
+    {
+      id: 's14.somme.p4', type: 'mcq', level: 1,
+      prompt: String.raw`Quale serie vale $e$?`,
+      options: [
+        String.raw`$\displaystyle\sum_{n\ge0}\frac{1}{n!}$`,
+        String.raw`$\displaystyle\sum_{n\ge1}\frac{1}{n}$`,
+        String.raw`$\displaystyle\sum_{n\ge0}\frac{1}{2^n}$`,
+        String.raw`$\displaystyle\sum_{n\ge0}\frac{(-1)^n}{n!}$`,
+      ],
+      answer: 0,
+      explain: String.raw`La prima è l'esponenziale con $x=1$. La seconda diverge; la terza vale $2$; la quarta vale $e^{-1}$.`,
+    },
+    {
+      id: 's14.somme.p5', type: 'tf', level: 1,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge0}\frac{(-1)^n}{(2n+1)!}=\sin 1$.`,
+      answer: true,
+      explain: String.raw`Vero: è lo sviluppo di $\sin x$ con $x=1$.`,
+    },
+    {
+      id: 's14.somme.p6', type: 'cloze', level: 2,
+      text: String.raw`Il valore di $\displaystyle\sum_{n\ge1}\frac{1}{n\,2^n}$ è [[0]], perché $\displaystyle\sum_{n\ge1}\frac{x^n}{n}=-\log(1-x)$ con $x=$ [[1]].`,
+      blanks: [
+        { options: [String.raw`$\log 2$`, String.raw`$-\log 2$`, String.raw`$\dfrac{1}{2}$`], answer: 0 },
+        { options: [String.raw`$\dfrac12$`, String.raw`$2$`, String.raw`$-\dfrac12$`], answer: 0 },
+      ],
+      explain: String.raw`$-\log\left(1-\frac12\right)=\log 2$.`,
+    },
+    {
+      id: 's14.somme.p7', type: 'problem', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{n^2}{3^n}$ e poi $\displaystyle\sum_{n\ge1}\frac{n}{3^n}$.`,
+      parts: [
+        {
+          type: 'num', prompt: String.raw`(a) $\displaystyle\sum_{n\ge1}\frac{n^2}{3^n}$.`, answer: '3/2',
+          explain: String.raw`Con $x=\frac13$: $\dfrac{x(1+x)}{(1-x)^3}=\dfrac{\frac13\cdot\frac43}{\frac{8}{27}}=\dfrac32$.`,
+        },
+        {
+          type: 'num', prompt: String.raw`(b) $\displaystyle\sum_{n\ge1}\frac{n}{3^n}$.`, answer: '3/4',
+          explain: String.raw`Con $x=\frac13$: $\dfrac{x}{(1-x)^2}=\dfrac34$.`,
+        },
+      ],
+      solution: String.raw`(a) $\dfrac32$. (b) $\dfrac34$. Entrambe usano le formule per $\sum n\,x^n$ e $\sum n^2x^n$ con $x=\frac13$.`,
+    },
+    {
+      id: 's14.somme.p8', type: 'order', level: 2,
+      prompt: String.raw`Riordina i passi per calcolare $\displaystyle\sum_{n\ge1}\frac{1}{n(n+1)}$.`,
+      steps: [
+        String.raw`Scompongo in fratti semplici: $\dfrac{1}{n(n+1)}=\dfrac1n-\dfrac{1}{n+1}$.`,
+        String.raw`Scrivo la somma parziale: i termini si cancellano a coppie e resta $s_N=1-\dfrac{1}{N+1}$.`,
+        String.raw`Per $N\to+\infty$ si ha $s_N\to1$: la serie converge e la sua somma è $1$.`,
+      ],
+      distractors: [
+        String.raw`La serie diverge, perché il termine generale tende a zero.`,
+        String.raw`La somma vale $\frac12$, perché il primo termine è $\frac12$.`,
+      ],
+      explain: String.raw`Il termine generale che tende a zero non implica convergenza: qui serve la somma parziale. Il primo termine vale $\frac12$, ma la somma di tutti i termini no.`,
+    },
+    {
+      id: 's14.somme.p9', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n\,3^n}$.`,
+      answer: 'log(4/3)',
+      explain: String.raw`$\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}x^n}{n}=\log(1+x)$ con $x=\frac13$: $\log\frac43$.`,
+    },
+    {
+      id: 's14.somme.p10', type: 'num', level: 2,
+      prompt: String.raw`Calcola $\displaystyle\sum_{n\ge0}\frac{(-1)^n\,2^{2n+1}}{(2n+1)!}$.`,
+      answer: 'sin(2)',
+      explain: String.raw`È lo sviluppo di $\sin x$ con $x=2$: $\displaystyle\sum_{n\ge0}\frac{(-1)^nx^{2n+1}}{(2n+1)!}$ con $x=2$.`,
+    },
+  ],
+  flashcards: [
+    { id: 's14.somme.fc1', kind: 'formula', front: String.raw`Serie geometrica`, back: String.raw`$\displaystyle\sum_{n\ge0}x^n=\dfrac{1}{1-x}$ per $|x|<1$. Con $a\,q^n$: la somma è $\dfrac{a}{1-q}$.` },
+    { id: 's14.somme.fc2', kind: 'formula', front: String.raw`Serie esponenziale`, back: String.raw`$\displaystyle\sum_{n\ge0}\dfrac{x^n}{n!}=e^x$ per ogni $x\in\R$. In particolare $e=\sum\dfrac{1}{n!}$.` },
+    { id: 's14.somme.fc3', kind: 'formula', front: String.raw`Serie logaritmica`, back: String.raw`$\displaystyle\sum_{n\ge1}\dfrac{x^n}{n}=-\log(1-x)$ per $|x|<1$; con $x\to-x$: $\displaystyle\sum_{n\ge1}\dfrac{(-1)^{n+1}x^n}{n}=\log(1+x)$.` },
+    { id: 's14.somme.fc4', kind: 'formula', front: String.raw`Seno e coseno`, back: String.raw`$\sin x=\displaystyle\sum_{n\ge0}\dfrac{(-1)^nx^{2n+1}}{(2n+1)!}$ e $\cos x=\displaystyle\sum_{n\ge0}\dfrac{(-1)^nx^{2n}}{(2n)!}$, per ogni $x\in\R$.` },
+    { id: 's14.somme.fc5', kind: 'formula', front: String.raw`Derivata della geometrica`, back: String.raw`$\displaystyle\sum_{n\ge1}nx^n=\dfrac{x}{(1-x)^2}$ e $\displaystyle\sum_{n\ge0}(n+1)x^n=\dfrac{1}{(1-x)^2}$ per $|x|<1$.` },
+    { id: 's14.somme.fc6', kind: 'formula', front: String.raw`Somma con $n^2$`, back: String.raw`$\displaystyle\sum_{n\ge1}n^2x^n=\dfrac{x(1+x)}{(1-x)^3}$ per $|x|<1$.` },
+    { id: 's14.somme.fc7', kind: 'metodo', front: String.raw`Serie che parte da $n=2$`, back: String.raw`Scrivi $\sum_{n\ge2}=\sum_{n\ge0}-(\text{termine }n=0)-(\text{termine }n=1)$: sottrai i termini iniziali alla serie notevole.` },
+    { id: 's14.somme.fc8', kind: 'metodo', front: String.raw`Serie telescopica`, back: String.raw`Se $a_n=b_n-b_{n+1}$, la somma parziale è $s_N=b_1-b_{N+1}$. Si calcola il limite di $b_{N+1}$.` },
+    { id: 's14.somme.fc9', kind: 'errore', front: String.raw`Somma infinita e razionali`, back: String.raw`Una somma finita di razionali è razionale; la somma infinita è un limite e può essere irrazionale, come $e=\sum\dfrac{1}{n!}$.` },
+    { id: 's14.somme.fc10', kind: 'metodo', front: String.raw`Errore per $e$ con $s_n$`, back: String.raw`$s_n=\displaystyle\sum_{k=0}^{n}\dfrac{1}{k!}$ e $0<e-s_n<\dfrac{1}{n!\,n}$: basta scegliere $n$ con $\dfrac{1}{n!\,n}$ sotto la tolleranza.` },
+    { id: 's14.somme.fc11', kind: 'formula', front: String.raw`Errore con Leibniz`, back: String.raw`Per $\sum(-1)^{n+1}a_n$ con $a_n$ decrescente e infinitesima: $|S-s_N|\le a_{N+1}$.` },
+    { id: 's14.somme.fc12', kind: 'errore', front: String.raw`Il termine che tende a zero non basta`, back: String.raw`$a_n\to0$ non implica che la serie converga né dice quanto vale la somma: serve il calcolo delle somme parziali.` },
+  ],
+};
+
 export default {
   id: 's14',
   title: 'Serie di Taylor',
   subtitle: 'Serie di potenze, sviluppabilità, somme notevoli',
   intro: String.raw`Una serie di Taylor è un polinomio "di grado infinito" costruito con le derivate di una funzione. Qui impari quando una serie di potenze converge, quando la sua somma è davvero la funzione e come usare gli sviluppi noti per calcolare somme di serie, anche all'esame.`,
-  skills: [SERIE],
+  skills: [SERIE, SOMME],
 };
