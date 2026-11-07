@@ -1441,10 +1441,664 @@ Dai campioni $\int_1^{+\infty}\frac{dx}{x^\alpha}$ (converge sse $\alpha>1$) e $
   ],
 };
 
+// =====================================================================
+// s13.alterni — serie a segni alterni: Leibniz, convergenza semplice e assoluta
+// =====================================================================
+const ALT = {
+  id: 's13.alterni',
+  title: 'Serie a segni alterni',
+  summary: String.raw`Applichi il criterio di Leibniz, distingui convergenza semplice e assoluta e riconosci le trappole d'esame.`,
+  prereq: ['s13.positivi', 's13.necessaria'],
+  examRefs: ['Itinere 15/01/2026 · Parte B', 'Appello 15/01/2026 · Parte B', 'Appello 10/02/2026 · Parte B', 'Appello 06/07/2026 · Parte B'],
+  lessons: [
+    {
+      id: 's13.alterni.L1',
+      title: 'Segni che si alternano',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Più, meno, più, meno…',
+          body: String.raw`Sommiamo $\displaystyle 1-\frac12+\frac13-\frac14+\cdots=\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$, un termine alla volta.
+
+Le somme parziali vanno su e giù:
+
+- $s_1=1$
+- $s_2=\frac12$
+- $s_3=\frac56$
+- $s_4=\frac7{12}$
+
+Ogni salto va alternativamente in su e in giù, e ogni salto è più corto del precedente. Le somme si stringono attorno a un numero, qui $\log 2\approx0{,}693$. Questa è una serie **a segni alterni**.`,
+        },
+        {
+          type: 'learn',
+          title: 'Serie a segni alterni',
+          body: String.raw`Una serie è **a segni alterni** se i suoi termini cambiano segno a ogni passo. Si scrive così, con $a_n\ge0$ detto **modulo** del termine:
+
+$$\sum_{n=1}^{+\infty}(-1)^n a_n\qquad\text{oppure}\qquad\sum_{n=1}^{+\infty}(-1)^{n+1} a_n.$$
+
+Le due scritture differiscono solo per il segno di tutta la serie. Se una converge, converge anche l'altra.`,
+        },
+        {
+          id: 's13.alterni.L1.c3', type: 'mcq', level: 1,
+          prompt: String.raw`Quale di queste serie **non** è a segni alterni?`,
+          options: [
+            String.raw`$\displaystyle\sum_{n\ge1}\frac{(-1)^n}{n^2}$`,
+            String.raw`$\displaystyle\sum_{n\ge1}(-1)^{n+1}\frac{1}{2^n}$`,
+            String.raw`$\displaystyle\sum_{n\ge1}\frac{1+(-1)^n}{n}$`,
+          ],
+          answer: 2,
+          explain: String.raw`$\frac{1+(-1)^n}{n}$ vale $\frac2n$ per $n$ pari e $0$ per $n$ dispari: tutti i termini sono $\ge0$, nessun cambio di segno. Le altre due alternano segno a ogni passo.`,
+        },
+        {
+          type: 'example',
+          title: 'Le somme parziali, passo passo',
+          problem: String.raw`Calcola le prime somme parziali di $\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n^2}$ e osserva come si comportano.`,
+          steps: [
+            String.raw`Il primo termine è $\frac{(-1)^2}{1^2}=1$: quindi $s_1=1$.`,
+            String.raw`Il secondo termine è $-\frac14$: quindi $s_2=1-\frac14=\frac34$.`,
+            String.raw`Il terzo termine è $+\frac19$: quindi $s_3=\frac34+\frac19=\frac{31}{36}$.`,
+            {
+              text: String.raw`Il quarto termine è $-\frac1{16}$: quindi $s_4=\frac{31}{36}-\frac1{16}$.`,
+              ask: {
+                type: 'num', prompt: String.raw`Quanto vale $s_4$? Scrivi la frazione ridotta.`,
+                answer: '115/144',
+                explain: String.raw`$\frac{31}{36}=\frac{124}{144}$ e $\frac1{16}=\frac9{144}$: $s_4=\frac{115}{144}\approx0{,}80$.`,
+              },
+            },
+          ],
+          result: String.raw`Le somme salgono e scendono, ma le oscillazioni si accorciano: convergono a $\frac{\pi^2}{12}\approx0{,}82$ (lo calcolerai con le serie di Taylor).`,
+        },
+        {
+          type: 'learn',
+          title: 'Il criterio di Leibniz',
+          body: String.raw`>* **Teorema di Leibniz.** Se $a_n\ge0$ è **decrescente** e $a_n\to0$, allora $\displaystyle\sum_{n\ge1}(-1)^{n+1}a_n$ converge.
+
+Le due ipotesi vanno verificate entrambe. Non serve che la decrescenza valga già da $n=1$: basta che valga da un certo punto in poi. Se una delle due ipotesi manca, il teorema non dice nulla.`,
+        },
+        {
+          id: 's13.alterni.L1.c6', type: 'tf', level: 1,
+          prompt: String.raw`Se $a_n\to0$, allora $\displaystyle\sum_{n\ge1}(-1)^{n}a_n$ converge.`,
+          answer: false,
+          explain: String.raw`Falso: $a_n\to0$ è solo la condizione necessaria. Controesempio: $a_n=\frac1n$ per $n$ dispari e $a_n=\frac1{n^2}$ per $n$ pari. I termini dispari valgono $-\frac1n$ e la loro somma va a $-\infty$; i termini pari danno un contributo finito. La serie diverge.`,
+        },
+        {
+          id: 's13.alterni.L1.c7', type: 'order', level: 2,
+          prompt: String.raw`Riordina l'idea della dimostrazione di Leibniz (con $a_n$ decrescente e infinitesima).`,
+          steps: [
+            String.raw`Le somme di indice pari crescono: $s_{2k+2}-s_{2k}=a_{2k+1}-a_{2k+2}\ge0$.`,
+            String.raw`Le somme di indice dispari decrescono: $s_{2k+3}-s_{2k+1}=a_{2k+3}-a_{2k+2}\le0$.`,
+            String.raw`Ogni somma pari è minore o uguale ad ogni somma dispari: $s_{2k}\le s_{2h+1}$ per ogni $k,h$.`,
+            String.raw`Quindi la successione pari è crescente e limitata, e converge a un limite $S$.`,
+            String.raw`Anche le somme dispari convergono, allo stesso $S$, perché $s_{2k+1}-s_{2k}=a_{2k+1}\to0$. Dunque $\sum(-1)^{n+1}a_n$ converge.`,
+          ],
+          distractors: [
+            String.raw`Poiché $a_n\to0$, ogni somma parziale converge, quindi la serie converge.`,
+            String.raw`Le somme dispari crescono perché $a_n$ è decrescente.`,
+          ],
+          explain: String.raw`Il trucco è confrontare le somme pari con le somme dispari, che "racchiudono" $S$. Il primo distrattore è la trappola classica: $a_n\to0$ non basta. Il secondo inverte il verso della monotonia.`,
+        },
+        {
+          id: 's13.alterni.L1.c8', type: 'num', level: 1,
+          prompt: String.raw`Per $\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$, quanto vale la somma parziale $s_4$? Scrivi la frazione.`,
+          answer: '7/12',
+          explain: String.raw`$s_4=1-\frac12+\frac13-\frac14=\frac{12-6+4-3}{12}=\frac7{12}$.`,
+        },
+        {
+          id: 's13.alterni.L1.c9', type: 'tf', level: 1,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac{(-1)^n}{n+1}$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: $a_n=\frac1{n+1}$ è positiva, decrescente e tende a $0$. Leibniz si applica.`,
+        },
+        {
+          id: 's13.alterni.L1.c10', type: 'mcq', level: 2,
+          prompt: String.raw`Per quale di queste serie **non** si può applicare il criterio di Leibniz?`,
+          options: [
+            String.raw`$\displaystyle\sum_{n\ge1}(-1)^n\frac1n$`,
+            String.raw`$\displaystyle\sum_{n\ge1}(-1)^n\frac{n}{n+1}$`,
+            String.raw`$\displaystyle\sum_{n\ge1}(-1)^n\sin\frac1n$`,
+          ],
+          answer: 1,
+          explain: String.raw`In $\frac{n}{n+1}$ il modulo tende a $1$, non a $0$: la serie non converge (condizione necessaria). Le altre due hanno moduli decrescenti e infinitesimi: $\frac1n$ e $\sin\frac1n$ decrescono verso $0$.`,
+        },
+        {
+          id: 's13.alterni.L1.c11', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}(-1)^n\frac{n}{2^n}$ converge.`,
+          answer: true,
+          explain: String.raw`Il modulo $\frac n{2^n}$ tende a $0$ e non cresce mai: $\frac{a_{n+1}}{a_n}=\frac{n+1}{2n}\le1$ per $n\ge1$. Leibniz vale e la serie converge.`,
+        },
+      ],
+    },
+    {
+      id: 's13.alterni.L2',
+      title: 'Leibniz alla prova',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Le due ipotesi, una per una',
+          body: String.raw`Per applicare Leibniz a $\sum(-1)^na_n$ controlla due cose:
+
+1. **$a_n\to0$.** Calcola il limite. Se non è $0$, la serie non converge.
+2. **$a_n$ decrescente.** Confronta $a_{n+1}$ con $a_n$, oppure studia $f(x)$ con $a_n=f(n)$: se $f'(x)\le0$ da un certo punto in poi, la successione decresce da lì in avanti.
+
+> Basta che la decrescenza valga **definitivamente**: i primi termini si possono ignorare.`,
+        },
+        {
+          type: 'example',
+          title: 'Verifica di Leibniz',
+          problem: String.raw`Studia $\displaystyle\sum_{n\ge1}(-1)^{n}\frac{n}{n^2+1}$.`,
+          steps: [
+            String.raw`Il modulo è $a_n=\frac{n}{n^2+1}$, e $a_n\to0$: il numeratore cresce come $n$, il denominatore come $n^2$.`,
+            {
+              text: String.raw`Studio $f(x)=\frac{x}{x^2+1}$: si ha $f'(x)=\frac{1-x^2}{(x^2+1)^2}$.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`Per quali $x\ge1$ vale $f'(x)\le0$?`,
+                options: [
+                  String.raw`Per ogni $x\ge1$: $f'(1)=0$ e $f'(x)<0$ per $x>1$`,
+                  String.raw`Per nessun $x\ge1$`,
+                  String.raw`Solo per $x\ge2$, non per $x\in[1,2)$`,
+                ],
+                answer: 0,
+                explain: String.raw`Il numeratore $1-x^2$ è $\le0$ se e solo se $x\ge1$.`,
+              },
+            },
+            String.raw`Quindi $a_n$ decresce per $n\ge1$ e Leibniz dà la convergenza.`,
+          ],
+          result: String.raw`La serie converge semplicemente. Il modulo però è $\sim\frac1n$: la serie dei moduli diverge, quindi non converge assolutamente.`,
+        },
+        {
+          id: 's13.alterni.L2.c3', type: 'mcq', level: 2,
+          prompt: String.raw`Leibniz si applica a $\displaystyle\sum_{n\ge1}(-1)^n\frac{\log n}{\sqrt n}$?`,
+          options: [
+            String.raw`Sì: $a_n$ è decrescente da un certo punto in poi e $a_n\to0$`,
+            String.raw`No: $a_n$ non è decrescente per nessun $n$`,
+            String.raw`No: $a_n$ non tende a $0$`,
+          ],
+          answer: 0,
+          explain: String.raw`$f(x)=\frac{\log x}{\sqrt x}$ ha $f'(x)=\frac{2-\log x}{2x^{3/2}}$, negativa per $x>e^2\approx7{,}39$: quindi $a_{n+1}\le a_n$ da $n=8$ in poi. Il limite è $0$. I primi termini crescono, ma non importa.`,
+        },
+        {
+          id: 's13.alterni.L2.c4', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: per applicare Leibniz serve che $a_n$ sia decrescente per ogni $n\ge1$.`,
+          answer: false,
+          explain: String.raw`Falso: basta la decrescenza definitiva. Per $\frac{\log n}{\sqrt n}$ la successione cresce fino a $n=7$ e decresce dopo.`,
+        },
+        {
+          type: 'learn',
+          title: 'Un errore frequente',
+          body: String.raw`>! **Errore tipico:** "la successione $a_n$ non è decrescente, quindi la serie diverge". No. Il criterio di Leibniz è solo **sufficiente**: se non si applica, la serie può convergere lo stesso.
+
+Esempio: $\displaystyle\sum_{n\ge1}(-1)^n\frac{2+(-1)^n}{n^2}=\sum_{n\ge1}\frac{1+2(-1)^n}{n^2}$. Il modulo alterna $\frac3{n^2}$ e $\frac1{n^2}$, quindi non è decrescente. Però $\left|\frac{2+(-1)^n}{n^2}\right|\le\frac3{n^2}$ e la serie converge (anche assolutamente).`,
+        },
+        {
+          type: 'learn',
+          title: 'Quanto sbaglio fermandomi prima',
+          body: String.raw`Per una serie di Leibniz vale una stima dell'errore: se $S$ è la somma e $s_N$ la somma parziale di ordine $N$,
+
+$$|S-s_N|\le a_{N+1}.$$
+
+L'errore è più piccolo del primo termine trascurato. Per esempio $\sum\frac{(-1)^{n+1}}{n^2}$ ha $s_3=\frac{31}{36}\approx0{,}861$ e $a_4=\frac1{16}$: la somma $S\approx0{,}822$ differisce da $s_3$ per meno di $\frac1{16}$.`,
+        },
+        {
+          id: 's13.alterni.L2.c7', type: 'num', level: 2,
+          prompt: String.raw`Per $\displaystyle S=\sum_{n\ge1}\frac{(-1)^{n+1}}{n^2}$, quanto vale la somma parziale $s_3$? Scrivi la frazione.`,
+          answer: '31/36',
+          explain: String.raw`$s_3=1-\frac14+\frac19=\frac{36-9+4}{36}=\frac{31}{36}$. Per la stima dell'errore, $|S-s_3|\le a_4=\frac1{16}$.`,
+        },
+        {
+          id: 's13.alterni.L2.c8', type: 'match', level: 2,
+          prompt: String.raw`Abbina ogni serie alla sua conclusione tipica con Leibniz e con i moduli.`,
+          pairs: [
+            [String.raw`$\displaystyle\sum\frac{(-1)^n}{n^2}$`, 'converge assolutamente'],
+            [String.raw`$\displaystyle\sum\frac{(-1)^n}{n}$`, 'converge solo semplicemente'],
+            [String.raw`$\displaystyle\sum(-1)^n\,n$`, 'diverge'],
+          ],
+          explain: String.raw`Il modulo $\frac1{n^2}$ è sommabile: convergenza assoluta. Il modulo $\frac1n$ non è sommabile, ma Leibniz vale: convergenza semplice. In $(-1)^n n$ il termine non tende a $0$.`,
+        },
+        {
+          id: 's13.alterni.L2.c9', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}(-1)^n\frac1{\sqrt n}$ converge semplicemente.`,
+          answer: true,
+          explain: String.raw`Vero: $\frac1{\sqrt n}$ è decrescente e tende a $0$. Leibniz vale. Il modulo $\frac1{\sqrt n}$ invece dà una serie divergente, quindi non c'è convergenza assoluta.`,
+        },
+        {
+          id: 's13.alterni.L2.c10', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}(-1)^n\frac{n}{n+1}$ converge.`,
+          answer: false,
+          explain: String.raw`Falso: $\frac{n}{n+1}\to1\neq0$. Il termine generale non tende a $0$, quindi la serie non converge.`,
+        },
+        {
+          id: 's13.alterni.L2.c11', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n\ge2}\frac{(-1)^n}{\log n}$?`,
+          options: [
+            String.raw`Converge, per Leibniz`,
+            String.raw`Diverge`,
+            String.raw`Non si può decidere con Leibniz`,
+          ],
+          answer: 0,
+          explain: String.raw`Per $n\ge2$, $\frac1{\log n}$ è positivo, decrescente e tende a $0$: Leibniz vale. (Il modulo $\frac1{\log n}\ge\frac1n$ dà serie divergente: la convergenza è solo semplice.)`,
+        },
+      ],
+    },
+    {
+      id: 's13.alterni.L3',
+      title: 'Convergenza semplice e assoluta',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Guardare i moduli',
+          body: String.raw`Data una serie $\sum a_n$ a segni qualunque, consideri la serie dei **moduli** $\sum|a_n|$, che ha termini $\ge0$.
+
+>* **Definizioni.** $\sum a_n$ converge **assolutamente** se $\sum|a_n|$ converge. Converge **semplicemente** se $\sum a_n$ converge ma $\sum|a_n|$ no.
+
+Per la serie dei moduli valgono i criteri per termini positivi della lezione precedente: confronto, confronto asintotico, rapporto, radice, integrale.`,
+        },
+        {
+          type: 'learn',
+          title: 'Assoluta implica semplice',
+          body: String.raw`>* **Teorema.** Se $\sum|a_n|$ converge, allora $\sum a_n$ converge.
+
+Il viceversa è falso: la serie $\sum\frac{(-1)^{n+1}}{n}$ converge ma i moduli danno la serie armonica, che diverge. Quindi converge solo semplicemente.`,
+        },
+        {
+          type: 'example',
+          title: 'Assoluta o semplice?',
+          problem: String.raw`Studia $\displaystyle\sum_{n\ge1}(-1)^n\frac{1}{n^2}$.`,
+          steps: [
+            String.raw`La serie dei moduli è $\displaystyle\sum_{n\ge1}\frac1{n^2}$.`,
+            {
+              text: String.raw`È una armonica generalizzata con esponente $2$.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`La serie $\displaystyle\sum_{n\ge1}\frac1{n^2}$ converge?`,
+                options: ['Sì', 'No'], answer: 0,
+                explain: String.raw`Esponente $2>1$: converge.`,
+              },
+            },
+            String.raw`Quindi la serie di partenza converge **assolutamente**, e perciò anche semplicemente.`,
+          ],
+          result: String.raw`$\sum(-1)^n\frac1{n^2}$ converge assolutamente.`,
+        },
+        {
+          type: 'example',
+          title: 'Solo semplicemente',
+          problem: String.raw`Studia $\displaystyle\sum_{n\ge1}(-1)^n\frac{\log n}{\sqrt n}$ (convergenza semplice e assoluta).`,
+          steps: [
+            String.raw`Il modulo è $|a_n|=\frac{\log n}{\sqrt n}$.`,
+            {
+              text: String.raw`Per $n\ge3$ vale $\log n\ge1$ (perché $e\approx2{,}72<3$), quindi $|a_n|\ge\frac1{\sqrt n}$.`,
+              ask: {
+                type: 'num', prompt: String.raw`Qual è il più piccolo intero $n$ con $\log n\ge1$?`,
+                answer: '3',
+                explain: String.raw`$\log2\approx0{,}69<1$ e $\log3\approx1{,}10\ge1$: il primo intero è $n=3$.`,
+              },
+            },
+            String.raw`$\sum\frac1{\sqrt n}$ diverge (esponente $\frac12\le1$): per confronto $\sum|a_n|$ diverge.`,
+            String.raw`Però Leibniz vale: $a_n$ è decrescente da $n=8$ in poi e tende a $0$. Quindi la serie converge semplicemente.`,
+          ],
+          result: String.raw`La serie converge **semplicemente** ma **non** assolutamente.`,
+        },
+        {
+          id: 's13.alterni.L3.c5', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n\ge1}(-1)^n\frac1{n+1}$?`,
+          options: [
+            'Converge assolutamente',
+            'Converge solo semplicemente',
+            'Diverge',
+          ],
+          answer: 1,
+          explain: String.raw`Il modulo $\frac1{n+1}\ge\frac1{2n}$ dà serie divergente. Leibniz vale: convergenza solo semplice.`,
+        },
+        {
+          id: 's13.alterni.L3.c6', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: se $\sum|a_n|$ diverge, allora $\sum a_n$ diverge.`,
+          answer: false,
+          explain: String.raw`Falso: per $\sum\frac{(-1)^{n+1}}{n}$ i moduli divergono, ma la serie converge (Leibniz). Divergenza dei moduli non implica divergenza della serie.`,
+        },
+        {
+          id: 's13.alterni.L3.c7', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac{\sin n}{n^2}$ converge.`,
+          answer: true,
+          explain: String.raw`Vero: $\left|\frac{\sin n}{n^2}\right|\le\frac1{n^2}$, e $\sum\frac1{n^2}$ converge. Quindi la serie converge assolutamente, e perciò semplicemente. La serie è a segni qualunque: non serve Leibniz.`,
+        },
+        {
+          id: 's13.alterni.L3.c8', type: 'match', level: 2,
+          prompt: String.raw`Abbina ogni serie alla sua conclusione.`,
+          pairs: [
+            [String.raw`$\displaystyle\sum\frac{(-1)^n}{n^{3/2}}$`, 'converge assolutamente'],
+            [String.raw`$\displaystyle\sum\frac{(-1)^n}{\sqrt n}$`, 'converge solo semplicemente'],
+            [String.raw`$\displaystyle\sum(-1)^n\sqrt n$`, 'diverge'],
+          ],
+          explain: String.raw`$n^{-3/2}$ ha modulo sommabile. $n^{-1/2}$ è decrescente e infinitesima ma il modulo non è sommabile. $\sqrt n$ non tende a $0$.`,
+        },
+        {
+          id: 's13.alterni.L3.c9', type: 'order', level: 3,
+          prompt: String.raw`Riordina la dimostrazione: "se $\sum|a_n|$ converge, allora $\sum a_n$ converge".`,
+          steps: [
+            String.raw`Poni $b_n=a_n+|a_n|$: si ha $b_n\ge0$ per ogni $n$.`,
+            String.raw`Poiché $-|a_n|\le a_n\le|a_n|$, si ha $0\le b_n\le2|a_n|$.`,
+            String.raw`Per confronto, $\sum b_n$ converge, perché $\sum 2|a_n|$ converge.`,
+            String.raw`Ma $a_n=b_n-|a_n|$: $\sum a_n$ è differenza di due serie convergenti, quindi converge.`,
+          ],
+          distractors: [
+            String.raw`Poiché $a_n\le|a_n|$, per confronto $\sum a_n$ converge.`,
+            String.raw`Poiché $a_n\to0$, ogni somma parziale converge, quindi $\sum a_n$ converge.`,
+          ],
+          explain: String.raw`Il trucco è passare a termini non negativi $b_n$. Il primo distrattore applica il confronto senza avere $a_n\ge0$. Il secondo confonde $a_n\to0$ con la convergenza.`,
+        },
+        {
+          id: 's13.alterni.L3.c10', type: 'open', level: 3, points: 3,
+          prompt: String.raw`Enuncia e dimostra: la convergenza assoluta implica la convergenza semplice.`,
+          answer: String.raw`**Enunciato.** Se $\sum|a_n|$ converge, allora $\sum a_n$ converge.
+
+**Dimostrazione.** Poni $b_n=a_n+|a_n|\ge0$. Da $-|a_n|\le a_n\le|a_n|$ segue $0\le b_n\le 2|a_n|$. Poiché $\sum2|a_n|$ converge, per il criterio del confronto converge $\sum b_n$. Infine $a_n=b_n-|a_n|$, quindi $\sum a_n=\sum b_n-\sum|a_n|$ converge come differenza di due serie convergenti.`,
+          rubric: [
+            String.raw`Definisce $b_n=a_n+|a_n|\ge0$ e dimostra $b_n\le2|a_n|$`,
+            String.raw`Applica il criterio del confronto alla serie dei $b_n$`,
+            String.raw`Scrive $a_n=b_n-|a_n|$ e conclude per differenza di serie convergenti`,
+            String.raw`Enuncia correttamente ipotesi (convergenza dei moduli) e tesi`,
+          ],
+        },
+        {
+          id: 's13.alterni.L3.c11', type: 'mcq', level: 2,
+          prompt: String.raw`Carattere di $\displaystyle\sum_{n\ge1}(-1)^n\frac{n+1}{n^3+2}$?`,
+          options: [
+            'Converge assolutamente',
+            'Converge solo semplicemente',
+            'Diverge',
+          ],
+          answer: 0,
+          explain: String.raw`Il modulo $\frac{n+1}{n^3+2}\sim\frac1{n^2}$, sommabile (confronto asintotico). Quindi la convergenza è assoluta.`,
+        },
+      ],
+    },
+    {
+      id: 's13.alterni.L4',
+      title: 'Livello d\'esame',
+      cards: [
+        {
+          type: 'learn',
+          title: 'Ordine delle mosse',
+          body: String.raw`All'esame ti servono quattro mosse, in quest'ordine:
+
+1. **Limite del termine.** Se $a_n\not\to0$, la serie diverge: finito.
+2. **Moduli.** Studia $\sum|a_n|$ con confronto o confronto asintotico. Se converge, la serie converge assolutamente: finito.
+3. **Leibniz.** Se i moduli non sommano, verifica se $|a_n|$ è decrescente e infinitesimo.
+4. **Altra via.** Se Leibniz non si applica, scomponi la serie in somme di serie note.`,
+        },
+        {
+          type: 'example',
+          title: 'Una serie che sembra alternata',
+          problem: String.raw`Studia $\displaystyle\sum_{n\ge1}\frac{(-1)^n\,(2+(-1)^n)}{n}$.`,
+          steps: [
+            String.raw`Sviluppo il numeratore: $(-1)^n(2+(-1)^n)=2(-1)^n+(-1)^{2n}=2(-1)^n+1$.`,
+            {
+              text: String.raw`Quindi $a_n=\frac1n+\frac{2(-1)^n}{n}$: la serie è somma di due serie.`,
+              ask: {
+                type: 'mcq', prompt: String.raw`La serie $\displaystyle\sum_{n\ge1}\frac1n$ converge?`,
+                options: ['Sì', 'No'], answer: 1,
+                explain: String.raw`È l'armonica: diverge.`,
+              },
+            },
+            String.raw`$\sum\frac{2(-1)^n}{n}$ converge per Leibniz. Somma di una serie divergente e di una convergente: diverge.`,
+          ],
+          result: String.raw`La serie diverge (a $+\infty$). Il termine $a_n$ non è monotono, quindi Leibniz non c'entra: bisogna scomporre.`,
+        },
+        {
+          id: 's13.alterni.L4.c3', type: 'problem', level: 3, source: 'Appello 06/07/2026 · Parte B', points: 4,
+          prompt: String.raw`Studia $\displaystyle\sum_{n\ge1}(-1)^n\frac{\log(n^2+2)}{n^3}$ (carattere della serie).`,
+          parts: [
+            {
+              type: 'tf', prompt: String.raw`La serie dei moduli $\sum|a_n|$ converge.`,
+              answer: true,
+              explain: String.raw`$\frac{\log(n^2+2)}{n^3}\cdot n^2=\frac{\log(n^2+2)}{n}\to0$: quindi $|a_n|\le\frac1{n^2}$ definitivamente, e $\sum\frac1{n^2}$ converge.`,
+            },
+            {
+              type: 'mcq', prompt: 'Carattere della serie',
+              options: ['Converge assolutamente', 'Converge solo semplicemente', 'Diverge'],
+              answer: 0,
+              explain: String.raw`Se la serie dei moduli converge, la serie converge assolutamente. Leibniz non serve.`,
+            },
+          ],
+          solution: String.raw`$|a_n|=\frac{\log(n^2+2)}{n^3}$ e $\frac{\log(n^2+2)}{n^3}\cdot n^2=\frac{\log(n^2+2)}{n}\to0$. Per confronto asintotico con $\sum\frac1{n^2}$ la serie dei moduli converge: la serie converge assolutamente.`,
+        },
+        {
+          id: 's13.alterni.L4.c4', type: 'problem', level: 3, source: 'Appello 10/02/2026 · Parte B', points: 4,
+          prompt: String.raw`Studia $\displaystyle\sum_{n\ge1}(-1)^n\frac{\log n}{\sqrt n}$: converge semplicemente? assolutamente?`,
+          parts: [
+            {
+              type: 'tf', prompt: String.raw`Definitivamente $a_n=\frac{\log n}{\sqrt n}$ è decrescente e $a_n\to0$.`,
+              answer: true,
+              explain: String.raw`Con $f(x)=\frac{\log x}{\sqrt x}$: $f'(x)=\frac{2-\log x}{2x^{3/2}}\le0$ per $x\ge e^2\approx7{,}39$.`,
+            },
+            {
+              type: 'tf', prompt: String.raw`La serie converge semplicemente.`,
+              answer: true,
+              explain: String.raw`Conseguenza di Leibniz, con le ipotesi verificate da $n=8$ in poi.`,
+            },
+            {
+              type: 'tf', prompt: String.raw`La serie converge assolutamente.`,
+              answer: false,
+              explain: String.raw`Per $n\ge3$, $|a_n|\ge\frac1{\sqrt n}$ e $\sum\frac1{\sqrt n}$ diverge: per confronto $\sum|a_n|$ diverge.`,
+            },
+          ],
+          solution: String.raw`Leibniz (ipotesi verificate definitivamente) dà la convergenza semplice. Il modulo $\frac{\log n}{\sqrt n}\ge\frac1{\sqrt n}$ da $n=3$ in poi non è sommabile: la convergenza non è assoluta.`,
+        },
+        {
+          id: 's13.alterni.L4.c5', type: 'problem', level: 3, source: 'Itinere 15/01/2026 · Parte B', points: 4,
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}\frac{(-1)^n}{\left(\sqrt n\,\log(1+n)\right)^{\gamma}}$, con $\gamma\in\R$.`,
+          parts: [
+            {
+              type: 'interval', prompt: String.raw`Per quali $\gamma$ la serie converge semplicemente?`,
+              answer: '(0,inf)',
+              explain: String.raw`Per $\gamma\le0$ il termine non tende a $0$ (per $\gamma=0$ vale $\pm1$, per $\gamma<0$ diverge). Per $\gamma>0$ il denominatore cresce, quindi $|a_n|\to0$ in modo decrescente: vale Leibniz.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\gamma$ la serie converge assolutamente?`,
+              answer: '[2,inf)',
+              explain: String.raw`Il modulo è $\sim\frac1{n^{\gamma/2}(\log n)^\gamma}$. Per $\gamma>2$ l'esponente $\frac\gamma2>1$ dà convergenza. Per $\gamma=2$ si confronta con $\sum\frac1{n\log^2n}$, convergente. Per $\gamma<2$ con $\gamma>0$ diverge, e per $\gamma\le0$ il termine non tende a $0$.`,
+            },
+          ],
+          solution: String.raw`Semplice per $\gamma>0$ (Leibniz); assoluta per $\gamma\ge2$. Nella fascia $0<\gamma<2$ la serie converge solo semplicemente.`,
+        },
+        {
+          id: 's13.alterni.L4.c6', type: 'problem', level: 3, source: 'Itinere 15/01/2026 · Parte B', points: 4,
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}(-1)^n\frac{n^{\alpha}}{n+1}$, con $\alpha\in\R$.`,
+          parts: [
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha$ la serie converge semplicemente?`,
+              answer: '(-inf,1)',
+              explain: String.raw`$a_n\sim n^{\alpha-1}$: per $\alpha\ge1$ il termine non tende a $0$. Per $\alpha<1$ il modulo tende a $0$ ed è decrescente da un certo punto in poi: vale Leibniz.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha$ la serie converge assolutamente?`,
+              answer: '(-inf,0)',
+              explain: String.raw`Il modulo è $\sim n^{\alpha-1}$, sommabile sse $\alpha-1<-1$, cioè $\alpha<0$.`,
+            },
+          ],
+          solution: String.raw`Il termine generale è $\sim(-1)^n n^{\alpha-1}$. Semplice per $\alpha<1$, assoluta per $\alpha<0$.`,
+        },
+        {
+          id: 's13.alterni.L4.c7', type: 'open', level: 3, source: 'Itinere 15/01/2026 · Parte A', points: 3,
+          prompt: String.raw`Enuncia il criterio di Leibniz e spiega perché le somme parziali di indice pari e dispari convergono allo stesso limite.`,
+          answer: String.raw`**Enunciato.** Se $a_n\ge0$ è decrescente e $a_n\to0$, allora $\sum(-1)^{n+1}a_n$ converge.
+
+**Spiegazione.** Le somme pari $s_{2k}$ sono crescenti, perché $s_{2k+2}-s_{2k}=a_{2k+1}-a_{2k+2}\ge0$. Le somme dispari $s_{2k+1}$ sono decrescenti, perché $s_{2k+3}-s_{2k+1}=-(a_{2k+2}-a_{2k+3})\le0$. Ogni somma pari è $\le$ ogni somma dispari. Quindi la successione pari converge a un limite $S$. Le somme dispari convergono a un limite $S'$, e $s_{2k+1}-s_{2k}=a_{2k+1}\to0$ implica $S=S'$. Dunque anche la successione delle somme parziali converge a $S$.`,
+          rubric: [
+            String.raw`Enuncia le ipotesi (decrescenza, infinitesimo) e la tesi`,
+            String.raw`Mostra la monotonia delle somme pari e dispari`,
+            String.raw`Mostra che la differenza $s_{2k+1}-s_{2k}=a_{2k+1}$ tende a $0$`,
+            String.raw`Conclude che i due limiti coincidono`,
+          ],
+        },
+        {
+          id: 's13.alterni.L4.c8', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: se $\sum(-1)^nb_n$ con $b_n\ge0$ converge, allora converge anche assolutamente.`,
+          answer: false,
+          explain: String.raw`Falso. Controesempio: $b_n=\frac1n$, la serie $\sum\frac{(-1)^n}{n}$ converge ma non assolutamente. Assoluta implica semplice, non il viceversa.`,
+        },
+      ],
+    },
+  ],
+  practice: [
+    {
+      id: 's13.alterni.p1', type: 'tf', level: 1,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac{(-1)^n}{n^2}$ converge assolutamente.`,
+      answer: true,
+      explain: String.raw`Il modulo è $\frac1{n^2}$, sommabile (armonica generalizzata con esponente $2>1$).`,
+    },
+    {
+      id: 's13.alterni.p2', type: 'mcq', level: 1,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n\ge1}(-1)^n\,n$?`,
+      options: ['Converge assolutamente', 'Converge solo semplicemente', 'Diverge'],
+      answer: 2,
+      explain: String.raw`Il termine $(-1)^n n$ non tende a $0$ (il modulo cresce): la serie diverge.`,
+    },
+    {
+      id: 's13.alterni.p3', type: 'num', level: 1,
+      prompt: String.raw`Per $\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}$, quanto vale $s_2$? Scrivi la frazione.`,
+      answer: '1/2',
+      explain: String.raw`$s_2=1-\frac12=\frac12$.`,
+    },
+    {
+      id: 's13.alterni.p4', type: 'tf', level: 2,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge2}\frac{(-1)^n}{n\log n}$ converge assolutamente.`,
+      answer: false,
+      explain: String.raw`Il modulo $\frac1{n\log n}$ dà una serie divergente: per il criterio integrale, $\int\frac{dx}{x\log x}=\log\log x\to+\infty$. La serie converge solo semplicemente, per Leibniz.`,
+    },
+    {
+      id: 's13.alterni.p5', type: 'mcq', level: 2,
+      prompt: String.raw`Carattere di $\displaystyle\sum_{n\ge1}(-1)^n\frac{n^2}{n^3+1}$?`,
+      options: ['Converge assolutamente', 'Converge solo semplicemente', 'Diverge'],
+      answer: 1,
+      explain: String.raw`Il modulo $\frac{n^2}{n^3+1}\sim\frac1n$ non è sommabile. La successione $f(x)=\frac{x^2}{x^3+1}$ ha $f'(x)=\frac{x(2-x^3)}{(x^3+1)^2}<0$ per $x>2^{1/3}$: è decrescente da $n=2$ e tende a $0$. Leibniz: convergenza solo semplice.`,
+    },
+    {
+      id: 's13.alterni.p6', type: 'cloze', level: 2,
+      text: String.raw`Per $\sum(-1)^na_n$ con $a_n\ge0$ decrescente e infinitesima vale il criterio di [[0]]. Se $\sum|a_n|$ converge, la serie è [[1]] convergente.`,
+      blanks: [
+        { options: ['Leibniz', 'Cauchy-Hadamard', 'Taylor'], answer: 0 },
+        { options: ['assolutamente', 'semplicemente', 'puntualmente'], answer: 0 },
+      ],
+      explain: String.raw`Leibniz è il criterio per le serie alterne. Se converge la serie dei moduli, la serie converge assolutamente (e quindi semplicemente).`,
+    },
+    {
+      id: 's13.alterni.p7', type: 'interval', level: 2,
+      prompt: String.raw`Per quali $\alpha\in\R$ converge semplicemente $\displaystyle\sum_{n\ge1}\frac{(-1)^n}{n^{\alpha}}$?`,
+      answer: '(0,inf)',
+      explain: String.raw`Per $\alpha\le0$ il termine non tende a $0$. Per $\alpha>0$ il modulo $\frac1{n^\alpha}$ è decrescente e tende a $0$: vale Leibniz.`,
+    },
+    {
+      id: 's13.alterni.p8', type: 'tf', level: 2,
+      prompt: String.raw`Vero o falso: se $\sum a_n$ converge assolutamente, allora $\sum a_n^2$ converge.`,
+      answer: true,
+      explain: String.raw`Se $\sum|a_n|$ converge, $a_n\to0$: definitivamente $|a_n|\le1$, quindi $a_n^2\le|a_n|$. Per confronto $\sum a_n^2$ converge.`,
+    },
+    {
+      id: 's13.alterni.p9', type: 'open', level: 2, points: 2,
+      prompt: String.raw`Definisci la convergenza assoluta e la convergenza semplice di $\sum a_n$.`,
+      answer: String.raw`La serie $\sum a_n$ **converge assolutamente** se converge la serie dei moduli $\sum|a_n|$. Converge **semplicemente** se $\sum a_n$ converge ma $\sum|a_n|$ non converge.`,
+      rubric: [
+        String.raw`Definisce la convergenza assoluta con la serie dei moduli`,
+        String.raw`Definisce la convergenza semplice come convergenza di $\sum a_n$ senza quella assoluta`,
+      ],
+    },
+    {
+      id: 's13.alterni.p10', type: 'tf', level: 2,
+      prompt: String.raw`Vero o falso: $\displaystyle\sum_{n\ge1}\frac{(-1)^{n+1}}{n}=\log 2$.`,
+      answer: true,
+      explain: String.raw`Vero: è la serie di Taylor di $\log(1+x)$ calcolata in $x=1$. La somma si ottiene in s14, ma il carattere lo decidi già con Leibniz.`,
+    },
+    {
+      id: 's13.alterni.gen-leibniz', type: 'gen', level: 2,
+      gen: (R) => {
+        // a_n = n^(-k/2): k=0 costante, k=1,2 convergenza solo semplice, k>=3 assoluta
+        const k = R.int(0, 5);
+        const shape = k === 1 ? String.raw`\sqrt n` : k === 2 ? 'n' : k % 2 === 0 ? `n^{${k / 2}}` : String.raw`\sqrt{n^{${k}}}`;
+        const term = k === 0 ? String.raw`(-1)^n` : String.raw`\frac{(-1)^n}{${shape}}`;
+        const ans = k === 0 ? 2 : k <= 2 ? 1 : 0;
+        const explain = k === 0
+          ? String.raw`Il termine vale $\pm1$ e non tende a $0$: la serie diverge, perché manca la condizione necessaria.`
+          : k <= 2
+            ? String.raw`Il modulo $\frac1{${shape}}$ è decrescente e tende a $0$: Leibniz dà la convergenza. Ma il modulo ha esponente $\frac{${k}}2\le1$, quindi non è sommabile: convergenza solo semplice.`
+            : String.raw`Il modulo ha esponente $\frac{${k}}2>1$: la serie dei moduli converge, quindi la serie converge assolutamente.`;
+        return {
+          type: 'mcq',
+          prompt: String.raw`Carattere della serie $\displaystyle\sum_{n\ge1}${term}$?`,
+          options: ['Converge assolutamente', 'Converge solo semplicemente', 'Diverge'],
+          noShuffle: true,
+          answer: ans,
+          explain,
+        };
+      },
+    },
+    {
+      id: 's13.alterni.gen-denominatore', type: 'gen', level: 2,
+      gen: (R) => {
+        // denominatore sqrt(n^e) + c: e=0 costante (diverge), e<=2 solo semplice, e>=3 assoluta
+        const e = R.int(0, 5);
+        const c = R.int(1, 4);
+        const pow = e === 1 ? String.raw`\sqrt n` : e === 2 ? 'n' : e % 2 === 0 ? `n^{${e / 2}}` : String.raw`\sqrt{n^{${e}}}`;
+        const den = e === 0 ? String(1 + c) : `${pow}+${c}`;
+        const ans = e === 0 ? 2 : e <= 2 ? 1 : 0;
+        const explain = e === 0
+          ? String.raw`Il termine tende a $\pm\frac1{${1 + c}}\neq0$: la serie diverge.`
+          : e <= 2
+            ? String.raw`Il modulo $\frac1{${den}}$ è decrescente e tende a $0$: Leibniz dà la convergenza. Il modulo si comporta come $\frac1{n^{${H.frac(e, 2)}}}$ con esponente $\le1$: non è sommabile, quindi solo semplicemente.`
+            : String.raw`Il modulo si comporta come $\frac1{n^{${H.frac(e, 2)}}}$ con esponente $>1$: converge, quindi la serie converge assolutamente.`;
+        return {
+          type: 'mcq',
+          prompt: String.raw`Carattere della serie $\displaystyle\sum_{n\ge1}\frac{(-1)^n}{${den}}$?`,
+          options: ['Converge assolutamente', 'Converge solo semplicemente', 'Diverge'],
+          noShuffle: true,
+          answer: ans,
+          explain,
+        };
+      },
+    },
+    {
+      id: 's13.alterni.gen-alpha', type: 'gen', level: 3,
+      gen: (R) => {
+        // a_n = (-1)^n / n^(p*alpha): semplice sse alpha>0, assoluta sse p*alpha>1
+        const p = R.pick([1, 2, 3]);
+        const pa = p === 1 ? String.raw`\alpha` : String.raw`${p}\alpha`;
+        const term = String.raw`\frac{(-1)^n}{n^{${pa}}}`;
+        return {
+          type: 'problem',
+          prompt: String.raw`Si consideri $\displaystyle\sum_{n\ge1}${term}$, con $\alpha\in\R$.`,
+          parts: [
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha$ la serie converge semplicemente?`,
+              answer: '(0,inf)',
+              explain: String.raw`Per $\alpha\le0$ il termine non tende a $0$. Per $\alpha>0$ il modulo $n^{-${pa}}$ è decrescente e tende a $0$: vale Leibniz.`,
+            },
+            {
+              type: 'interval', prompt: String.raw`Per quali $\alpha$ la serie converge assolutamente?`,
+              answer: `(${qstr([1, p])},inf)`,
+              explain: String.raw`Il modulo è $n^{-${pa}}$: è sommabile sse $${p}\alpha>1$, cioè $\alpha>${qtex([1, p])}$.`,
+            },
+          ],
+          solution: String.raw`Il termine è $\frac{(-1)^n}{n^{${pa}}}$. Convergenza semplice per $\alpha>0$ (Leibniz); convergenza assoluta per $\alpha>${qtex([1, p])}$.`,
+        };
+      },
+    },
+  ],
+  flashcards: [
+    { id: 's13.alterni.fc1', kind: 'def', front: 'Serie a segni alterni', back: String.raw`$\sum(-1)^na_n$ con $a_n\ge0$: i termini cambiano segno a ogni passo. $a_n$ è il **modulo** del termine.` },
+    { id: 's13.alterni.fc2', kind: 'thm', front: 'Criterio di Leibniz', back: String.raw`Se $a_n\ge0$ è decrescente (anche solo definitivamente) e $a_n\to0$, allora $\sum(-1)^na_n$ converge.` },
+    { id: 's13.alterni.fc3', kind: 'dim', front: 'Idea della dimostrazione di Leibniz', back: String.raw`Le somme pari $s_{2k}$ crescono, le dispari $s_{2k+1}$ decrescono e ogni pari è $\le$ ogni dispari. Quindi convergono; la differenza $s_{2k+1}-s_{2k}=a_{2k+1}\to0$ dà lo stesso limite.` },
+    { id: 's13.alterni.fc4', kind: 'def', front: 'Convergenza assoluta e semplice', back: String.raw`Assoluta: $\sum|a_n|$ converge. Semplice: $\sum a_n$ converge ma $\sum|a_n|$ no.` },
+    { id: 's13.alterni.fc5', kind: 'thm', front: 'Assoluta implica semplice', back: String.raw`Se $\sum|a_n|$ converge, allora $\sum a_n$ converge. Il viceversa è falso: $\sum\frac{(-1)^{n+1}}{n}$ converge ma non assolutamente.` },
+    { id: 's13.alterni.fc6', kind: 'dim', front: 'Dimostrazione: assoluta implica semplice', back: String.raw`Poni $b_n=a_n+|a_n|$: si ha $0\le b_n\le2|a_n|$, quindi $\sum b_n$ converge per confronto. Poi $a_n=b_n-|a_n|$ è differenza di due serie convergenti.` },
+    { id: 's13.alterni.fc7', kind: 'formula', front: String.raw`Stima dell'errore di Leibniz`, back: String.raw`$|S-s_N|\le a_{N+1}$: l'errore commesso fermandosi alla somma parziale $s_N$ è minore del primo termine trascurato.` },
+    { id: 's13.alterni.fc8', kind: 'errore', front: String.raw`$a_n\to0$ non basta`, back: String.raw`È solo condizione necessaria. Esempio: $a_n=\frac1n$ per $n$ dispari e $a_n=\frac1{n^2}$ per $n$ pari dà $\sum(-1)^na_n$ divergente.` },
+    { id: 's13.alterni.fc9', kind: 'errore', front: 'Moduli divergenti non implicano serie divergente', back: String.raw`Con $\sum\frac{(-1)^{n+1}}{n}$ i moduli divergono, ma la serie converge per Leibniz: il solo fatto che $\sum|a_n|$ diverga non dice nulla su $\sum a_n$.` },
+    { id: 's13.alterni.fc10', kind: 'metodo', front: String.raw`Come classificare $\sum a_n$ a segni alterni`, back: String.raw`1) Limite del termine. 2) Moduli con i criteri per termini positivi. 3) Se i moduli non convergono, Leibniz (decrescenza definitiva e infinitesimo). 4) Altrimenti scomporre la serie.` },
+  ],
+};
+
 export default {
   id: 's13',
   title: 'Serie numeriche',
   subtitle: 'Somme parziali, criteri di convergenza, serie con parametri',
   intro: String.raw`Le serie compaiono in ogni tema: in Parte A (condizione necessaria, criterio del confronto, vero/falso sulle somme) e in Parte B (carattere di una serie con parametro, 2–4 punti). Qui impari a sommare infiniti termini e a decidere se la somma esiste.`,
-  skills: [DEF, NEC, POS],
+  skills: [DEF, NEC, POS, ALT],
 };
