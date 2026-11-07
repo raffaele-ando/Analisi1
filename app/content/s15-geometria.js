@@ -1281,6 +1281,432 @@ Il prodotto misto è il controllo più veloce: se è zero le rette sono complana
           back: String.raw`Usare la normale $(a,b,c)$ di un piano come direzione (è ortogonale alla retta). Confondere "ortogonali" con "incidenti": due rette ortogonali possono essere sghembe. Controllare una sola coordinata quando si verifica un punto. Usare lo stesso parametro $t$ per due rette.` },
       ],
     },
+    // -----------------------------------------------------------------------
+    // s15.piani
+    // -----------------------------------------------------------------------
+    {
+      id: 's15.piani',
+      title: 'Piani nello spazio',
+      summary: String.raw`Saprai scrivere l'equazione di un piano dalla normale, da tre punti o da una retta e un punto, usare il fascio di piani e stabilire la posizione reciproca di piani e rette.`,
+      prereq: ['s15.vettoriale', 's15.rette'],
+      examRefs: ['Itinere 15/01/2026 · Parte B', 'Appello 15/01/2026 · Parte B', 'Appello 10/02/2026 · Parte B'],
+      lessons: [
+        {
+          id: 's15.piani.L1',
+          title: "Equazione del piano",
+          cards: [
+            { type: 'learn', title: 'Il piano e la sua normale',
+              body: String.raw`Un **piano** nello spazio è individuato da un suo punto $P_0$ e da un vettore **normale** $n=(a,b,c)\neq\mathbf 0$, cioè un vettore ortogonale a tutto il piano. Un punto $X$ sta sul piano se e solo se il vettore $X-P_0$ è ortogonale a $n$:
+$$\langle n,\ X-P_0\rangle=0\quad\iff\quad a(x-x_0)+b(y-y_0)+c(z-z_0)=0.$$
+Sviluppando si ottiene l'**equazione cartesiana** $ax+by+cz+d=0$, con $d=-(ax_0+by_0+cz_0)$. I coefficienti $(a,b,c)$ sono la normale.
+
+>* Il piano $ax+by+cz+d=0$ ha normale $(a,b,c)$. Il termine $d$ non influisce sulla direzione del piano, solo su dove si trova.` },
+            { id: 's15.piani.L1.q1', type: 'mcq', level: 1,
+              prompt: String.raw`Qual è una normale del piano $2x-3y+z=5$?`,
+              options: [String.raw`$(2,-3,1)$`, String.raw`$(2,-3,-5)$`, String.raw`$(2,3,1)$`, String.raw`$(2,-3,0)$`],
+              answer: 0,
+              explain: String.raw`I coefficienti di $x,y,z$ danno la normale: $(2,-3,1)$. Il termine noto $-5$ non fa parte della normale (è $d$, con il segno opposto a quello del secondo membro). $(2,3,1)$ cambia il segno di $y$; $(2,-3,0)$ dimentica la $z$.` },
+            { id: 's15.piani.L1.q2', type: 'num', level: 1,
+              prompt: String.raw`Il piano $2x+y-3z+d=0$ passa per $P=(1,0,-1)$. Quanto vale $d$?`,
+              answer: '-5',
+              explain: String.raw`Sostituisco $P$: $2\cdot1+0-3\cdot(-1)+d=0$, cioè $5+d=0$, quindi $d=-5$.` },
+            { id: 's15.piani.L1.q3', type: 'tf', level: 1,
+              prompt: String.raw`Vero o falso: il punto $(1,1,1)$ appartiene al piano $x+2y-z=2$.`,
+              answer: true,
+              explain: String.raw`Sostituisco: $1+2\cdot1-1=2$. L'uguaglianza è verificata, quindi il punto sta sul piano.` },
+            { type: 'example', title: 'Esempio svolto',
+              problem: String.raw`Scrivi l'equazione del piano per $P=(1,2,0)$ con normale $n=(2,-1,3)$.`,
+              steps: [
+                String.raw`Uso la forma $n\cdot(X-P)=0$: $\;2(x-1)-1\cdot(y-2)+3(z-0)=0$.`,
+                { text: String.raw`Sviluppo le parentesi: $2x-2-y+2+3z=0$.`,
+                  ask: { type: 'num', prompt: String.raw`Sommo i termini costanti $-2+2$: quale costante resta?`, answer: '0', explain: String.raw`$-2+2=0$: il piano passa per l'origine.` } },
+                String.raw`Riordino: $2x-y+3z=0$.`,
+              ],
+              result: String.raw`$\pi:\ 2x-y+3z=0$` },
+            { type: 'learn', title: 'Piano per tre punti',
+              body: String.raw`Tre punti $A,B,C$ **non allineati** determinano un piano. Il piano contiene i vettori $B-A$ e $C-A$, quindi la normale è il loro prodotto vettoriale:
+$$n=(B-A)\wedge(C-A).$$
+Poi si usa un qualunque punto (ad esempio $A$) per trovare $d$. Se $A,B,C$ sono allineati, il prodotto vettoriale è $\mathbf 0$ e **non** definisce nessun piano.` },
+            { id: 's15.piani.L1.q4', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova una normale del piano per $A=(1,0,0)$, $B=(0,2,0)$, $C=(0,0,3)$.`,
+              answer: ['6', '3', '2'], labels: ['a', 'b', 'c'],
+              explain: String.raw`$B-A=(-1,2,0)$, $C-A=(-1,0,3)$. Il prodotto vettoriale è $(2\cdot3-0\cdot0,\ 0\cdot(-1)-(-1)\cdot3,\ (-1)\cdot0-2\cdot(-1))=(6,3,2)$. Errore tipico: sottrarre le componenti nell'ordine sbagliato, che cambia solo il verso della normale.` },
+            { id: 's15.piani.L1.q5', type: 'num', level: 2,
+              prompt: String.raw`Il piano per $A,B,C$ dell'esercizio precedente ha equazione $6x+3y+2z+d=0$. Quanto vale $d$?`,
+              answer: '-6',
+              explain: String.raw`Il punto $A=(1,0,0)$ sta sul piano: $6\cdot1+d=0$, quindi $d=-6$. Verifica con $C$: $6\cdot0+0+2\cdot3-6=0$ ✓.` },
+            { id: 's15.piani.L1.q6', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: se $A,B,C$ sono allineati, esiste un unico piano che li contiene.`,
+              answer: false,
+              explain: String.raw`Falso. Per tre punti allineati passano infiniti piani (tutti quelli che contengono quella retta). Il prodotto vettoriale $(B-A)\wedge(C-A)$ è nullo e non dà una normale unica.` },
+            { type: 'learn', title: 'Piani coordinati e casi particolari',
+              body: String.raw`I piani $x=0$, $y=0$, $z=0$ sono i **piani coordinati**: hanno normale $(1,0,0)$, $(0,1,0)$, $(0,0,1)$. Un piano del tipo $y=3$ ha normale $(0,1,0)$ ed è parallelo al piano $y=0$.
+
+>! Errore tipico: quando una variabile **non compare** nell'equazione, il suo coefficiente è $0$. Il piano $x+y=1$ non dipende da $z$: è parallelo all'asse $z$ e la sua normale è $(1,1,0)$.` },
+            { id: 's15.piani.L1.q7', type: 'mcq', level: 2,
+              prompt: String.raw`Quale piano è parallelo all'asse $z$ e passa per $(1,1,0)$?`,
+              options: [String.raw`$x+y=2$`, String.raw`$x+y+z=2$`, String.raw`$z=1$`, String.raw`$x+y=0$`],
+              answer: 0,
+              explain: String.raw`Un piano parallelo all'asse $z$ non contiene la $z$ nell'equazione: $x+y=d$. Per $(1,1,0)$ si ha $d=2$. $x+y+z=2$ dipende da $z$; $z=1$ è parallelo al piano $xy$ e non passa per $(1,1,0)$; $x+y=0$ non passa per il punto.` },
+          ],
+        },
+        {
+          id: 's15.piani.L2',
+          title: 'Piani che contengono una retta',
+          cards: [
+            { type: 'learn', title: 'Piano per una retta e un punto',
+              body: String.raw`Sia $r:\ P_0+t\,v$ una retta e $P\notin r$ un punto. Il piano $\pi$ che contiene $r$ e $P$ contiene:
+
+- il vettore $v$ (direzione di $r$);
+- il vettore $P-P_0$ (dal punto $P_0\in r$ al punto $P$).
+
+Quindi la normale è ortogonale a entrambi:
+$$n=v\wedge(P-P_0).$$
+Poi si scrive $\langle n,\ X-P_0\rangle=0$.` },
+            { type: 'example', title: 'Esempio svolto',
+              problem: String.raw`Scrivi il piano che contiene $r:\ (x,y,z)=(1+t,\ t,\ 2t)$ e il punto $P=(0,1,2)$.`,
+              steps: [
+                String.raw`Un punto di $r$ è $P_0=(1,0,0)$ (per $t=0$), la direzione è $v=(1,1,2)$.`,
+                String.raw`$P-P_0=(-1,1,2)$.`,
+                { text: String.raw`Normale: $n=v\wedge(P-P_0)=(1,1,2)\wedge(-1,1,2)=(1\cdot2-2\cdot1,\ 2\cdot(-1)-1\cdot2,\ 1\cdot1-1\cdot(-1))=(0,-4,2)$.`,
+                  ask: { type: 'tuple', labels: ['a', 'b', 'c'], prompt: String.raw`Calcola $(1,1,2)\wedge(-1,1,2)$.`, answer: ['0', '-4', '2'], explain: String.raw`$(1\cdot2-2\cdot1,\ 2\cdot(-1)-1\cdot2,\ 1\cdot1-1\cdot(-1))=(0,-4,2)$.` } },
+                String.raw`Semplifico la normale dividendo per $2$: $(0,-2,1)$. Piano: $-2(y-0)+1\cdot(z-0)=0$.`,
+              ],
+              result: String.raw`$\pi:\ 2y-z=0$ (normale $(0,2,-1)$).` },
+            { id: 's15.piani.L2.q1', type: 'mcq', level: 2,
+              prompt: String.raw`Quale piano contiene la retta $(x,y,z)=(t,\,t,\,0)$ e il punto $(0,0,1)$?`,
+              options: [String.raw`$x-y=0$`, String.raw`$x+y=0$`, String.raw`$z=0$`, String.raw`$x-y=1$`],
+              answer: 0,
+              explain: String.raw`Direzione $(1,1,0)$, $P-P_0=(0,0,1)$: normale $(1,1,0)\wedge(0,0,1)=(1,-1,0)$, piano $x-y=0$. Controllo: $(t,t,0)$ e $(0,0,1)$ soddisfano $x-y=0$. $x+y=0$ contiene il punto ma non la retta; $z=0$ contiene la retta ma non il punto.` },
+            { id: 's15.piani.L2.q2', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: il piano contenente due rette incidenti ha normale $v_1\wedge v_2$, dove $v_1,v_2$ sono le direzioni delle rette.`,
+              answer: true,
+              explain: String.raw`Vero. Due rette incidenti hanno direzioni non parallele, quindi $v_1\wedge v_2\neq\mathbf 0$: questo vettore è ortogonale a entrambe le direzioni e quindi è la normale del piano che le contiene. Per rette parallele, invece, $v_1\wedge v_2=\mathbf 0$ e serve il vettore $P_2-P_1$.` },
+            { type: 'learn', title: 'Fascio di piani',
+              body: String.raw`Se $r=\pi_1\cap\pi_2$, tutti i piani che contengono $r$ si scrivono come
+$$\pi_1+\lambda\,\pi_2=0\qquad(\lambda\in\R),$$
+dove $\pi_1$ e $\pi_2$ indicano le equazioni dei due piani (il membro sinistro di $ax+by+cz+d=0$). Questa famiglia si chiama **fascio di piani** di asse $r$. Con $\lambda=0$ si ottiene $\pi_1$; il piano $\pi_2$ non è nella forma (si ottiene con $\lambda\to\infty$).
+
+Il fascio è utile per trovare il piano di $r$ che passa per un punto $Q$: basta imporre che $\pi_1(Q)+\lambda\pi_2(Q)=0$ e ricavare $\lambda$.` },
+            { id: 's15.piani.L2.q3', type: 'num', level: 2,
+              prompt: String.raw`Nel fascio $\pi_1+\lambda\pi_2=0$ con $\pi_1:\ x+y-3=0$ e $\pi_2:\ x-y+3z+3=0$, quale $\lambda$ dà il piano che passa per l'origine?`,
+              answer: '1',
+              explain: String.raw`Per $O=(0,0,0)$: $\pi_1(O)=-3$ e $\pi_2(O)=3$, quindi $-3+3\lambda=0$, cioè $\lambda=1$. Il piano è $(x+y-3)+(x-y+3z+3)=0$, cioè $2x+3z=0$.` },
+            { id: 's15.piani.L2.q4', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: due piani distinti che contengono la stessa retta $r$ sono paralleli.`,
+              answer: false,
+              explain: String.raw`Falso: si intersecano proprio lungo $r$. Due piani sono paralleli quando hanno normali proporzionali, e in quel caso non hanno punti in comune (se distinti).` },
+            { id: 's15.piani.L2.q5', type: 'mcq', level: 2,
+              prompt: String.raw`Quanti piani contengono una retta $r$ assegnata?`,
+              options: [String.raw`Infiniti: quelli del fascio di asse $r$`, String.raw`Uno solo`, String.raw`Tre`, String.raw`Nessuno`],
+              answer: 0,
+              explain: String.raw`Infiniti: per ogni retta passano infiniti piani, tutti quelli del fascio. Errore tipico: pensare che basti un punto per determinare un piano (ne servono tre, o una retta e un punto fuori da essa).` },
+            { id: 's15.piani.L2.q6', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova una normale del piano che contiene le rette parallele $r:\ (t,\,0,\,0)$ e $s:\ (t,\,1,\,1)$.`,
+              answer: ['0', '1', '-1'], labels: ['a', 'b', 'c'],
+              explain: String.raw`Le rette sono parallele (direzione $(1,0,0)$), quindi $v_1\wedge v_2=\mathbf 0$ e non basta. Uso un punto di ciascuna: $P_1=(0,0,0)$, $P_2=(0,1,1)$, $P_2-P_1=(0,1,1)$. Normale $(1,0,0)\wedge(0,1,1)=(0\cdot1-0\cdot1,\ 0\cdot0-1\cdot1,\ 1\cdot1-0\cdot0)=(0,-1,1)$.` },
+          ],
+        },
+        {
+          id: 's15.piani.L3',
+          title: 'Posizioni reciproche e intersezioni',
+          cards: [
+            { type: 'learn', title: 'Due piani: parallelismo e intersezione',
+              body: String.raw`Due piani $\pi_1:\ n_1\cdot X+d_1=0$ e $\pi_2:\ n_2\cdot X+d_2=0$ sono:
+
+1. **paralleli** se $n_1\wedge n_2=\mathbf 0$ (normali proporzionali). Se inoltre le equazioni sono proporzionali, sono **coincidenti**; altrimenti sono **paralleli distinti**;
+2. **incidenti** altrimenti, e si intersecano secondo una **retta** di direzione $n_1\wedge n_2$.
+
+Per controllare la coincidenza basta verificare se $\pi_2$ è un multiplo di $\pi_1$.` },
+            { id: 's15.piani.L3.q1', type: 'mcq', level: 2,
+              prompt: String.raw`Posizione reciproca dei piani $x+2y-z=1$ e $2x+4y-2z=5$:`,
+              options: [String.raw`Paralleli distinti`, String.raw`Coincidenti`, String.raw`Incidenti, secondo una retta`, String.raw`Perpendicolari`],
+              answer: 0,
+              explain: String.raw`Le normali $(1,2,-1)$ e $(2,4,-2)=2(1,2,-1)$ sono proporzionali: i piani sono paralleli. Non coincidono: moltiplicando il primo per $2$ si ottiene $2x+4y-2z=2\neq5$.` },
+            { id: 's15.piani.L3.q2', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: i piani $2x+4y-2z=6$ e $x+2y-z=3$ coincidono.`,
+              answer: true,
+              explain: String.raw`Dividendo la prima equazione per $2$ si ottiene $x+2y-z=3$, cioè la seconda. Sono lo stesso piano.` },
+            { id: 's15.piani.L3.q3', type: 'tuple', level: 2, proportional: true,
+              prompt: String.raw`Trova una direzione della retta $r=\pi_1\cap\pi_2$, con $\pi_1:\ x-y+z=0$ e $\pi_2:\ x+y=2$.`,
+              answer: ['-1', '1', '2'], labels: ['l', 'm', 'n'],
+              explain: String.raw`Le normali sono $n_1=(1,-1,1)$ e $n_2=(1,1,0)$. La direzione è $n_1\wedge n_2=((-1)\cdot0-1\cdot1,\ 1\cdot1-1\cdot0,\ 1\cdot1-(-1)\cdot1)=(-1,1,2)$.` },
+            { type: 'learn', title: 'Retta e piano',
+              body: String.raw`Per trovare l'intersezione di una retta $r:\ P_0+t\,v$ con un piano $\pi:\ n\cdot X+d=0$, si sostituisce $X=P_0+tv$ nell'equazione del piano:
+$$n\cdot(P_0+tv)+d=0.$$
+Questa è un'equazione in $t$:
+- **una soluzione** $t_0$: la retta **incide** il piano nel punto $P_0+t_0v$;
+- **nessuna soluzione** (si arriva a $0=k\neq0$): la retta è **parallela** al piano e non lo tocca;
+- **identità** ($0=0$): la retta **giace** nel piano.` },
+            { type: 'example', title: 'Esempio svolto',
+              problem: String.raw`Trova il punto in cui la retta $(x,y,z)=(1+t,\ 2t,\ 3-t)$ incontra il piano $x+y+z=0$.`,
+              steps: [
+                String.raw`Sostituisco: $(1+t)+2t+(3-t)=0$.`,
+                { text: String.raw`Semplifico: $4+2t=0$.`,
+                  ask: { type: 'num', prompt: String.raw`Quale valore di $t$ risolve $4+2t=0$?`, answer: '-2', explain: String.raw`$2t=-4$, quindi $t=-2$.` } },
+                String.raw`Per $t=-2$: $(1-2,\ -4,\ 3+2)=(-1,-4,5)$.`,
+                String.raw`Verifica: $-1-4+5=0$ ✓.`,
+              ],
+              result: String.raw`Il punto è $(-1,-4,5)$.` },
+            { id: 's15.piani.L3.q4', type: 'mcq', level: 2,
+              prompt: String.raw`Intersezione della retta $(t,0,0)$ con il piano $y=1$:`,
+              options: [String.raw`Vuota`, String.raw`Un punto`, String.raw`L'intera retta`, String.raw`Il punto $(1,0,0)$`],
+              answer: 0,
+              explain: String.raw`Sostituendo: $0=1$, impossibile. La retta è parallela al piano (la sua direzione $(1,0,0)$ è ortogonale alla normale $(0,1,0)$) e non lo incontra.` },
+            { type: 'learn', title: 'Tre piani',
+              body: String.raw`Tre piani con equazioni $n_i\cdot X+d_i=0$ formano un sistema $3\times3$. Se le tre normali sono **linearmente indipendenti**, cioè il determinante della matrice dei coefficienti è diverso da zero, i tre piani hanno **un unico punto** in comune.
+
+Se il determinante è nullo bisogna studiare il sistema: può non avere soluzioni (es. tre piani a "prisma"), oppure avere una retta o un piano di soluzioni.` },
+            { id: 's15.piani.L3.q5', type: 'num', level: 2,
+              prompt: String.raw`Per quale $k$ le normali dei piani $x+y=1$, $y+z=2$, $x+kz=0$ sono linearmente dipendenti?`,
+              answer: '-1',
+              explain: String.raw`Il determinante della matrice dei coefficienti $\begin{pmatrix}1&1&0\\0&1&1\\1&0&k\end{pmatrix}$ vale $1\cdot(k-0)-1\cdot(0-1)+0=k+1$. È nullo per $k=-1$, perché allora $(1,0,-1)=(1,1,0)-(0,1,1)$.` },
+            { id: 's15.piani.L3.q6', type: 'tf', level: 2,
+              prompt: String.raw`Vero o falso: tre piani le cui normali sono linearmente indipendenti hanno sempre un unico punto in comune.`,
+              answer: true,
+              explain: String.raw`Vero. Il sistema ha matrice dei coefficienti invertibile, quindi ha una e una sola soluzione.` },
+          ],
+        },
+        {
+          id: 's15.piani.L4',
+          title: "Livello d'esame",
+          cards: [
+            { type: 'learn', title: "Schema per i problemi d'esame sui piani",
+              body: String.raw`Nei problemi d'esame sui piani le domande si ripetono. Lo schema è sempre lo stesso:
+
+1. individuo i dati: punti, direzioni di rette, normali di piani;
+2. scrivo la normale del piano richiesto: $n=(a,b,c)$ con $n\cdot(X-P_0)=0$, usando $\wedge$ quando servono due vettori del piano;
+3. ricavo $d$ imponendo un punto;
+4. per il punto d'intersezione risolvo il sistema tra la retta (in parametriche) e il piano (o i due piani).
+
+>! Attenzione: il piano per una retta $r$ e un punto $P$ **non** ha normale $v$ (quella sarebbe il piano *ortogonale* a $r$), ma $v\wedge(P-P_0)$.` },
+            { id: 's15.piani.L4.q1', type: 'problem', level: 3, points: 4,
+              source: 'Itinere 15/01/2026 · Parte B',
+              prompt: String.raw`Sia $r=\pi_1\cap\pi_2$, con $\pi_1:\ 4x+y-z-6=0$ e $\pi_2:\ 2x-y-z=0$. Determinare: il piano $\alpha$ che contiene $r$ e $P=(0,3,0)$; il piano $\beta$ per $P$ ortogonale a $r$; il punto $H=\alpha\cap\beta$.`,
+              parts: [
+                { type: 'tuple', labels: ['a', 'b', 'c', 'd'], proportional: true, prompt: String.raw`Piano $\alpha$ (equazione $ax+by+cz+d=0$)`,
+                  answer: ['1', '1', '0', '-3'],
+                  explain: String.raw`La direzione di $r$ è $(1,-1,3)$ e un punto è $(1,2,0)$. Il vettore $P-(1,2,0)=(-1,1,0)$ è nel piano: la normale è $(1,-1,3)\wedge(-1,1,0)=(-3,-3,0)\parallel(1,1,0)$. Passa per $P$: $x+y-3=0$.` },
+                { type: 'tuple', labels: ['a', 'b', 'c', 'd'], proportional: true, prompt: String.raw`Piano $\beta$ (equazione $ax+by+cz+d=0$)`,
+                  answer: ['1', '-1', '3', '3'],
+                  explain: String.raw`La normale di $\beta$ è la direzione di $r$: $(1,-1,3)$. Passa per $P=(0,3,0)$: $0-3+0+d=0$, quindi $d=3$.` },
+                { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Punto $H=\alpha\cap\beta$`,
+                  answer: ['9/11', '24/11', '-6/11'],
+                  explain: String.raw`Da $x+y=3$ e $x-y+3z=-3$ sommando si ottiene $2x+3z=0$. Poiché $H\in r$, vale $z=3(x-1)$ (dalle parametriche $x=1+\frac t3$, $z=t$). Quindi $2x+9(x-1)=0$, cioè $x=\frac9{11}$, $y=\frac{24}{11}$, $z=-\frac6{11}$.` },
+              ],
+              solution: String.raw`Il piano $\alpha$ contiene $r$ e $P$: la sua normale è ortogonale alla direzione $(1,-1,3)$ di $r$ e al vettore $P-(1,2,0)=(-1,1,0)$, quindi $n_\alpha=(1,-1,3)\wedge(-1,1,0)=(-3,-3,0)\parallel(1,1,0)$. Con $P$: $\alpha:\ x+y-3=0$.
+
+Il piano $\beta$ è ortogonale a $r$, quindi ha normale $(1,-1,3)$ e passa per $P$: $\beta:\ x-y+3z+3=0$.
+
+Il punto $H$ sta su $\alpha$ e su $\beta$ e, essendo intersezione dei due piani, è il piede della perpendicolare da $P$ alla retta $r$. Risolvo il sistema con l'equazione di $r$: $H=(9/11,\ 24/11,\ -6/11)$. Controllo: $H\in\alpha$ ($\frac{9+24}{11}=3$ ✓), $H\in\beta$ ($\frac{9-24-18}{11}=-3$ ✓).` },
+            { id: 's15.piani.L4.q2', type: 'problem', level: 3, points: 3,
+              source: 'Appello 10/02/2026 · Parte B',
+              prompt: String.raw`Sia $A=(1,1,-1)$ e $r:\ (x,y,z)=(2-t,\ 1+t,\ -1)$. Determinare: il piano $\alpha$ per $A$ ortogonale a $r$; il punto $H=\alpha\cap r$; il piano $\gamma$ per $O$ e $A$ parallelo a $r$.`,
+              parts: [
+                { type: 'tuple', labels: ['a', 'b', 'c', 'd'], proportional: true, prompt: String.raw`Piano $\alpha$`,
+                  answer: ['1', '-1', '0', '0'],
+                  explain: String.raw`La normale è la direzione di $r$: $(-1,1,0)\parallel(1,-1,0)$. Per $A$: $1-1+0+d=0$, quindi $d=0$: $x-y=0$.` },
+                { type: 'tuple', labels: ['x', 'y', 'z'], prompt: String.raw`Punto $H$`,
+                  answer: ['3/2', '3/2', '-1'],
+                  explain: String.raw`Sostituisco $x=2-t$, $y=1+t$ in $x-y=0$: $(2-t)-(1+t)=0$, quindi $t=\frac12$ e $H=(\frac32,\frac32,-1)$. Distanza $d(A,r)=|AH|=\frac{1}{\sqrt2}$.` },
+                { type: 'tuple', labels: ['a', 'b', 'c', 'd'], proportional: true, prompt: String.raw`Piano $\gamma$ per $O$ e $A$ parallelo a $r$`,
+                  answer: ['1', '1', '2', '0'],
+                  explain: String.raw`Il piano contiene $A-O=(1,1,-1)$ e la direzione $(-1,1,0)$ di $r$: normale $(1,1,-1)\wedge(-1,1,0)=(1,1,2)$. Passa per $O$, quindi $d=0$: $x+y+2z=0$.` },
+              ],
+              solution: String.raw`Il piano per $A$ ortogonale a $r$ ha normale $(-1,1,0)$: $x-y=0$. Sostituendo le parametriche di $r$ si trova $t=\frac12$ e $H=(\frac32,\frac32,-1)$, quindi $d(A,r)=|AH|=\frac{1}{\sqrt2}$.
+
+Il piano per $O$ e $A$ parallelo a $r$ contiene $A-O=(1,1,-1)$ e $(-1,1,0)$: la normale è $(1,1,2)$ e il piano è $x+y+2z=0$. La distanza di $r$ da questo piano (che è parallelo a $r$) è $\frac{|2+1-2|}{\sqrt6}=\frac{1}{\sqrt6}$, usando il punto $(2,1,-1)$ di $r$.` },
+            { id: 's15.piani.L4.q3', type: 'mcq', level: 3,
+              prompt: String.raw`Per trovare il piano che contiene una retta $r$ e un punto $P\notin r$, la normale corretta è:`,
+              options: [String.raw`$v\wedge(P-P_0)$`, String.raw`$v$`, String.raw`$v\cdot(P-P_0)$`, String.raw`$P-P_0$`],
+              answer: 0,
+              explain: String.raw`Il piano contiene $v$ e $P-P_0$: la normale è ortogonale a entrambi, cioè $v\wedge(P-P_0)$. $v$ sarebbe la normale del piano *ortogonale* a $r$, che non contiene $r$. $v\cdot(P-P_0)$ è un numero, non un vettore.` },
+            { id: 's15.piani.L4.q4', type: 'order', level: 3,
+              prompt: String.raw`Riordina i passi per scrivere il piano che contiene la retta $r:\ P_0+tv$ e il punto $P\notin r$.`,
+              steps: [
+                String.raw`Scelgo un punto $P_0$ e una direzione $v$ di $r$.`,
+                String.raw`Calcolo il vettore $P-P_0$ che va dalla retta a $P$.`,
+                String.raw`Calcolo la normale $n=v\wedge(P-P_0)$.`,
+                String.raw`Scrivo $\langle n,\ X-P_0\rangle=0$ e la sviluppo in $ax+by+cz+d=0$.`,
+              ],
+              distractors: [String.raw`Uso $v$ come normale del piano per $P$.`],
+              explain: String.raw`La normale deve essere ortogonale sia a $v$ sia a $P-P_0$. Usare $v$ come normale dà il piano ortogonale a $r$ per $P$, che in generale non contiene $r$.` },
+            { id: 's15.piani.L4.q5', type: 'num', level: 3,
+              prompt: String.raw`Per quale $k$ il piano $x+ky+z+3=0$ contiene la retta $(x,y,z)=(t,\ 1+t,\ 2t)$?`,
+              answer: '-3',
+              explain: String.raw`Sostituisco la retta: $t+k(1+t)+2t+3=(k+3)t+(k+3)=(k+3)(t+1)$. Deve essere nullo per ogni $t$, quindi $k=-3$.` },
+            { id: 's15.piani.L4.q6', type: 'tf', level: 3,
+              prompt: String.raw`Vero o falso: il piano per $A$ ortogonale a una retta $r$ contiene $r$.`,
+              answer: false,
+              explain: String.raw`Falso: il piano è ortogonale a $r$, quindi la sua normale è la direzione di $r$. Un piano che contiene $r$ ha invece normale ortogonale a $v$. Errore tipico: confondere "ortogonale a $r$" con "contenente $r$".` },
+            { id: 's15.piani.L4.q7', type: 'open', level: 3, points: 1,
+              source: 'Appello 10/02/2026 · Parte A',
+              prompt: String.raw`Quando due piani sono paralleli? Quando sono coincidenti?`,
+              answer: String.raw`Due piani sono paralleli se hanno normali proporzionali, cioè $n_1\wedge n_2=\mathbf 0$. Sono coincidenti se, oltre a essere paralleli, le loro equazioni sono proporzionali (equivalentemente hanno un punto in comune). Se le normali non sono proporzionali i piani sono incidenti, lungo una retta.`,
+              rubric: ['Normali proporzionali (o prodotto vettoriale nullo)', 'Coincidenti: equazioni proporzionali o un punto in comune', 'Non proporzionali: incidenti lungo una retta'] },
+          ],
+        },
+      ],
+      practice: [
+        { id: 's15.piani.p1', type: 'tuple', level: 1, proportional: true,
+          prompt: String.raw`Trova una normale del piano $3x-y+2z=7$.`,
+          answer: ['3', '-1', '2'], labels: ['a', 'b', 'c'],
+          explain: String.raw`I coefficienti di $x,y,z$ danno la normale: $(3,-1,2)$.` },
+        { id: 's15.piani.p2', type: 'num', level: 1,
+          prompt: String.raw`Il piano con normale $(1,-1,2)$ passa per $A=(2,0,1)$. Quanto vale $d$ nell'equazione $x-y+2z+d=0$?`,
+          answer: '-4',
+          explain: String.raw`$2-0+2+d=0$, quindi $d=-4$.` },
+        { id: 's15.piani.p3', type: 'mcq', level: 1,
+          prompt: String.raw`Quale punto appartiene al piano $x-2y+z=3$?`,
+          options: [String.raw`$(1,-1,0)$`, String.raw`$(2,0,0)$`, String.raw`$(1,1,0)$`, String.raw`$(0,0,0)$`],
+          answer: 0,
+          explain: String.raw`$(1,-1,0)$: $1+2+0=3$ ✓. $(2,0,0)$ dà $2\neq3$; $(1,1,0)$ dà $-1$; l'origine dà $0$.` },
+        { id: 's15.piani.p4', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: i piani $x+y=1$ e $x+y+z=1$ si intersecano lungo una retta.`,
+          answer: true,
+          explain: String.raw`Le normali $(1,1,0)$ e $(1,1,1)$ non sono proporzionali: i piani sono incidenti e l'intersezione è la retta $\{x+y=1,\ z=0\}$.` },
+        { id: 's15.piani.p5', type: 'mcq', level: 2,
+          prompt: String.raw`Quale piano passa per $O$, $A=(1,0,0)$ e $B=(0,1,0)$?`,
+          options: [String.raw`$z=0$`, String.raw`$x+y=1$`, String.raw`$x+y+z=0$`, String.raw`$x=y$`],
+          answer: 0,
+          explain: String.raw`Il piano per tre punti del piano $xy$ è $z=0$. $x+y=1$ non passa per $O$; $x+y+z=0$ non passa per $A$; $x=y$ non passa per $A$.` },
+        { id: 's15.piani.p6', type: 'tuple', level: 2, proportional: true,
+          prompt: String.raw`Trova una direzione della retta $r=\pi_1\cap\pi_2$ con $\pi_1:\ x+y+z=1$ e $\pi_2:\ x-y=0$.`,
+          answer: ['1', '1', '-2'], labels: ['l', 'm', 'n'],
+          explain: String.raw`$n_1\wedge n_2=(1,1,1)\wedge(1,-1,0)=(1\cdot0-1\cdot(-1),\ 1\cdot1-1\cdot0,\ 1\cdot(-1)-1\cdot1)=(1,1,-2)$.` },
+        { id: 's15.piani.p7', type: 'tf', level: 2,
+          prompt: String.raw`Vero o falso: il piano $z=5$ è parallelo al piano $z=0$.`,
+          answer: true,
+          explain: String.raw`Hanno la stessa normale $(0,0,1)$ e sono distinti (uno ha $z=5$, l'altro $z=0$): sono paralleli distinti.` },
+        { id: 's15.piani.p8', type: 'cloze', level: 2,
+          prompt: 'Completa.',
+          text: String.raw`Due piani sono paralleli se le loro normali sono [[0]]. Sono coincidenti se, inoltre, le loro equazioni sono [[1]].`,
+          blanks: [
+            { options: ['proporzionali', 'ortogonali', 'uguali'], answer: 0 },
+            { options: ['proporzionali', 'diverse', 'opposte'], answer: 0 },
+          ],
+          explain: String.raw`Parallelismo: normali proporzionali. Coincidenza: equazioni proporzionali (il termine noto deve seguire lo stesso fattore).` },
+        { id: 's15.piani.p9', type: 'expr', level: 2, vars: ['x', 'y', 'z'],
+          prompt: String.raw`Scrivi l'equazione del piano per $P=(1,0,1)$ con normale $(1,2,0)$ nella forma $ax+by+cz+d=0$ (scrivi il membro sinistro).`,
+          answer: 'x+2y-1',
+          explain: String.raw`$1\cdot(x-1)+2(y-0)+0(z-1)=0$, cioè $x+2y-1=0$.` },
+        { id: 's15.piani.p10', type: 'num', level: 2,
+          prompt: String.raw`Il piano $x+2y+3z=6$ e la retta $(t,\ 0,\ 0)$: quale valore di $t$ dà il punto d'intersezione?`,
+          answer: '6',
+          explain: String.raw`Sostituisco: $t+0+0=6$, quindi $t=6$. Il punto è $(6,0,0)$.` },
+        { id: 's15.piani.g1', type: 'gen', level: 2,
+          gen: (R) => {
+            let A, B, C, n;
+            do {
+              A = [R.int(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              B = [R.int(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              C = [R.int(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              n = H.cross(B.map((x, i) => x - A[i]), C.map((x, i) => x - A[i]));
+            } while (n.every((x) => x === 0));
+            return {
+              type: 'tuple', labels: ['a', 'b', 'c'], proportional: true,
+              prompt: String.raw`Trova una normale del piano per $A=(${A.join(', ')})$, $B=(${B.join(', ')})$ e $C=(${C.join(', ')})$.`,
+              answer: n.map(String),
+              explain: String.raw`Il piano contiene $B-A$ e $C-A$, quindi la normale è il loro prodotto vettoriale $(${n.join(', ')})$. Ogni multiplo non nullo va bene.`,
+            };
+          } },
+        { id: 's15.piani.g2', type: 'gen', level: 1,
+          gen: (R) => {
+            const n = [R.nz(-3, 3), R.nz(-3, 3), R.nz(-3, 3)];
+            const P = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+            const d = -H.dot(n, P) + 0;
+            return {
+              type: 'num',
+              prompt: String.raw`Il piano ha normale $(${n.join(', ')})$ e passa per $P=(${P.join(', ')})$. Scrivi l'equazione nella forma $ax+by+cz+d=0$: quanto vale $d$?`,
+              answer: String(d),
+              explain: String.raw`$d=-(a x_0+b y_0+c z_0)=-(${H.dot(n, P)})=${d}$.`,
+            };
+          } },
+        { id: 's15.piani.g3', type: 'gen', level: 2,
+          gen: (R) => {
+            let n, v, P, t0, Q;
+            do {
+              n = [R.nz(-3, 3), R.int(-3, 3), R.nz(-3, 3)];
+              v = [R.int(-2, 2), R.nz(-2, 2), R.int(-2, 2)];
+              P = [R.int(-3, 3), R.int(-3, 3), R.int(-3, 3)];
+              t0 = R.nz(-3, 3);
+              Q = P.map((x, i) => x + t0 * v[i]);
+            } while (H.dot(n, v) === 0);
+            const d = -H.dot(n, Q) + 0;
+            return {
+              type: 'num',
+              prompt: String.raw`Il piano $${H.planeTex(n[0], n[1], n[2], d)}$ incontra la retta $(x,y,z)=(${P.join(', ')})+t\,(${v.join(', ')})$. Quale valore di $t$ dà il punto d'intersezione?`,
+              answer: String(t0),
+              explain: String.raw`Sostituisco la retta nel piano: $\langle(${n.join(', ')}),\ (${P.join(', ')})+t(${v.join(', ')})\rangle+(${d})=0$. Il valore $t=${t0}$ dà il punto $(${Q.join(', ')})$.`,
+            };
+          } },
+        { id: 's15.piani.g4', type: 'gen', level: 2,
+          gen: (R) => {
+            const type = R.int(0, 2);
+            const n1 = [R.nz(-2, 2), R.int(-2, 2), R.nz(-2, 2)];
+            const d1 = R.int(-3, 3);
+            let n2, rhs2;
+            if (type === 2) {
+              do {
+                n2 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              } while (H.cross(n1, n2).every((x) => x === 0));
+              rhs2 = R.int(-3, 3);
+            } else {
+              const k = R.pick([2, -2, 3]);
+              n2 = n1.map((x) => k * x);
+              rhs2 = k * d1 + (type === 0 ? R.nz(-3, 3) : 0);
+            }
+            const eq1 = H.planeTex(n1[0], n1[1], n1[2], -d1);
+            const eq2 = H.planeTex(n2[0], n2[1], n2[2], -rhs2);
+            return {
+              type: 'mcq',
+              prompt: String.raw`Posizione reciproca dei piani $\pi_1:\ ${eq1}$ e $\pi_2:\ ${eq2}$.`,
+              options: [String.raw`Paralleli distinti`, String.raw`Coincidenti`, String.raw`Incidenti, lungo una retta`],
+              answer: type,
+              explain: String.raw`${type === 2 ? 'Le normali non sono proporzionali: i piani si intersecano lungo una retta.' : type === 1 ? 'Le normali sono proporzionali e le equazioni sono proporzionali: i piani coincidono.' : 'Le normali sono proporzionali, ma i termini noti non seguono lo stesso fattore: i piani sono paralleli e distinti.'}`,
+            };
+          } },
+        { id: 's15.piani.g5', type: 'gen', level: 3,
+          gen: (R) => {
+            let Q, n2, d2, s;
+            do {
+              Q = [R.int(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              n2 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+              d2 = R.int(-3, 3);
+              s = H.dot(n2, Q) + d2;
+            } while (s === 0);
+            const lam = R.nz(-3, 3);
+            const n1 = [R.nz(-2, 2), R.int(-2, 2), R.int(-2, 2)];
+            const d1 = -H.dot(n1, Q) - lam * s;
+            return {
+              type: 'num',
+              prompt: String.raw`Siano $\pi_1:\ ${H.planeTex(n1[0], n1[1], n1[2], d1)}$ e $\pi_2:\ ${H.planeTex(n2[0], n2[1], n2[2], d2)}$. Quale $\lambda$ rende il piano $\pi_1+\lambda\pi_2=0$ passante per $Q=(${Q.join(', ')})$?`,
+              answer: String(lam),
+              explain: String.raw`$\pi_1(Q)=${-lam * s}$ e $\pi_2(Q)=${s}$. Imponendo $\pi_1(Q)+\lambda\pi_2(Q)=0$ si ottiene $\lambda=${lam}$.`,
+            };
+          } },
+      ],
+      flashcards: [
+        { id: 's15.piani.fc1', kind: 'def', front: String.raw`Equazione cartesiana di un piano`,
+          back: String.raw`$ax+by+cz+d=0$ con $(a,b,c)\neq\mathbf 0$. Il vettore $(a,b,c)$ è una normale al piano.` },
+        { id: 's15.piani.fc2', kind: 'formula', front: String.raw`Normale del piano per tre punti $A,B,C$`,
+          back: String.raw`$n=(B-A)\wedge(C-A)$. Se $A,B,C$ sono allineati, $n=\mathbf 0$ e non c'è un piano unico.` },
+        { id: 's15.piani.fc3', kind: 'formula', front: String.raw`Normale del piano per una retta $r:\ P_0+tv$ e un punto $P\notin r$`,
+          back: String.raw`$n=v\wedge(P-P_0)$. Il piano è $\langle n,\ X-P_0\rangle=0$.` },
+        { id: 's15.piani.fc4', kind: 'def', front: String.raw`Fascio di piani di asse $r$`,
+          back: String.raw`È la famiglia dei piani $\pi_1+\lambda\pi_2=0$, con $r=\pi_1\cap\pi_2$ e $\lambda\in\R$. Contiene tutti i piani che passano per $r$, tranne $\pi_2$.` },
+        { id: 's15.piani.fc5', kind: 'metodo', front: String.raw`Posizione reciproca di due piani`,
+          back: String.raw`Normali proporzionali: paralleli (coincidenti se anche le equazioni sono proporzionali). Altrimenti: incidenti lungo una retta di direzione $n_1\wedge n_2$.` },
+        { id: 's15.piani.fc6', kind: 'metodo', front: String.raw`Intersezione di una retta con un piano`,
+          back: String.raw`Sostituisco $X=P_0+tv$ in $n\cdot X+d=0$ e risolvo in $t$. Una soluzione: punto; nessuna: retta parallela al piano; identità: retta contenuta nel piano.` },
+        { id: 's15.piani.fc7', kind: 'thm', front: String.raw`Tre piani con normali linearmente indipendenti`,
+          back: String.raw`Il determinante della matrice dei coefficienti è diverso da zero, quindi i tre piani hanno un unico punto in comune.` },
+        { id: 's15.piani.fc8', kind: 'errore', front: String.raw`Errori tipici sui piani`,
+          back: String.raw`Usare la direzione della retta come normale del piano che la contiene (è la normale del piano ortogonale). Dimenticare $d$ quando si verifica un punto. Dire che due piani con normali proporzionali sono sempre coincidenti (possono essere paralleli distinti).` },
+        { id: 's15.piani.fc9', kind: 'def', front: String.raw`Piani paralleli e coincidenti`,
+          back: String.raw`Paralleli: normali proporzionali. Coincidenti: paralleli con le stesse equazioni a meno di un fattore (in particolare hanno un punto in comune).` },
+      ],
+    },
     // __NEXT_SKILL__
   ],
 };
