@@ -26,6 +26,9 @@
   --danger: #b92a1e;
   --danger-ink: #8f1d14;
   --danger-soft: #fde7e4;
+  /* testo sui pieni semantici: non è mai #fff fisso, cambia con il tema */
+  --on-success: #ffffff;
+  --on-danger: #ffffff;
   --streak: #b4480a;
   --highlight: #fff4c2;
   /* forma */
@@ -65,6 +68,8 @@
     --danger: #ff8a7c;
     --danger-ink: #ffd3cd;
     --danger-soft: #431f1c;
+    --on-success: #07150a;
+    --on-danger: #1d0c0b;
     --streak: #ffa15c;
     --highlight: #3a3217;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -134,13 +139,14 @@ p { margin: 0; }
 .sync-chip-wrap .sync-chip .label { display: none; }
 @keyframes pulse { from { opacity: 0.35; } to { opacity: 1; } }
 
-/* barra inferiore: 5 destinazioni, etichetta sempre visibile, indicatore pill per lo stato attivo */
+/* barra inferiore: tre sezioni, etichetta sempre visibile, indicatore pill per lo stato attivo.
+   Le colonne dipendono dal numero di voci (--tabs), così non restano buchi. */
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
   background: var(--surface); border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-.tabbar nav { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 640px; margin: 0 auto; height: var(--tabbar-h); }
+.tabbar .tabs { display: grid; grid-template-columns: repeat(var(--tabs, 3), minmax(0, 1fr)); max-width: 640px; margin: 0 auto; height: var(--tabbar-h); }
 .tab {
   border: 0; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
   font-size: 0.75rem; line-height: 1rem; font-weight: 600; color: var(--ink-2); position: relative; min-height: var(--touch);
@@ -149,11 +155,11 @@ p { margin: 0; }
 .tab svg { width: 24px; height: 24px; }
 .tab.on { color: var(--accent-ink); }
 .tab.on .ico-wrap { background: var(--accent-soft); }
-.tab .badge { position: absolute; top: 2px; left: calc(50% + 10px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--danger); color: #fff; font-size: 0.6875rem; line-height: 1.125rem; text-align: center; font-weight: 700; }
+.tab .badge { position: absolute; top: 2px; left: calc(50% + 10px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--danger); color: var(--on-danger); font-size: 0.6875rem; line-height: 1.125rem; text-align: center; font-weight: 700; }
 
 @media (min-width: 960px) {
   .tabbar { top: 0; bottom: 0; right: auto; width: 96px; border-top: 0; border-right: 1px solid var(--line); padding-top: 64px; }
-  .tabbar nav { grid-template-columns: 1fr; grid-auto-rows: 72px; height: auto; }
+  .tabbar .tabs { grid-template-columns: 1fr; grid-auto-rows: 72px; height: auto; }
   .main { padding-left: 96px; padding-bottom: 40px; }
   .topbar { padding-left: 96px; }
   .footer-check { left: 96px; }
@@ -175,8 +181,8 @@ p { margin: 0; }
 .btn:hover { filter: brightness(1.06); }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { --b: var(--surface-2); --fg: var(--ink-3); --bd: var(--line); cursor: default; filter: none; transform: none; }
-.btn.green { --b: var(--success); --fg: #fff; }
-.btn.red { --b: var(--danger); --fg: #fff; }
+.btn.green { --b: var(--success); --fg: var(--on-success); }
+.btn.red { --b: var(--danger); --fg: var(--on-danger); }
 .btn.ghost { --b: var(--surface); --fg: var(--accent-ink); --bd: var(--line-strong); }
 .btn.quiet { background: none; border-color: transparent; color: var(--accent-ink); padding-inline: 12px; min-height: var(--touch); }
 .btn.quiet:active { transform: none; opacity: 0.7; }
@@ -253,7 +259,7 @@ mark { background: linear-gradient(transparent 45%, var(--highlight) 45%); color
 .node button.disc .sym .katex { font-size: 1em; }
 .node button.disc svg.ico { width: 28px; height: 28px; }
 .node.locked button.disc { border-color: var(--line-strong); background: var(--surface-2); color: var(--ink-3); box-shadow: none; }
-.node.done button.disc { border-color: var(--success); background: var(--success); color: #fff; }
+.node.done button.disc { border-color: var(--success); background: var(--success); color: var(--on-success); }
 .node.current button.disc { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .node.current button.disc::after { content: ''; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid var(--accent-soft); pointer-events: none; }
 .node .prog { position: absolute; inset: -6px; pointer-events: none; }
@@ -275,7 +281,7 @@ mark { background: linear-gradient(transparent 45%, var(--highlight) 45%); color
 .lesson-row { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .lesson-row:last-child { border-bottom: 0; }
 .lesson-row .n { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); display: grid; place-items: center; font-size: 0.9375rem; font-weight: 600; flex: none; }
-.lesson-row.ok .n { background: var(--success); color: #fff; }
+.lesson-row.ok .n { background: var(--success); color: var(--on-success); }
 .lesson-row.ok .n svg { width: 18px; height: 18px; }
 
 /* ---------- sessione (lezione, ripasso, esame) ---------- */
@@ -284,6 +290,7 @@ mark { background: linear-gradient(transparent 45%, var(--highlight) 45%); color
 .player-top .wrap { display: flex; align-items: center; gap: 12px; min-height: var(--touch); }
 .x-btn { border: 0; background: none; color: var(--ink-2); width: var(--touch); height: var(--touch); padding: 0; display: grid; place-items: center; border-radius: 50%; flex: none; }
 .x-btn:hover { background: var(--surface-2); }
+.x-btn.on { color: var(--accent-ink); background: var(--accent-soft); }
 .x-btn svg { width: 24px; height: 24px; }
 .player-body { flex: 1; padding-top: 8px; padding-bottom: 180px; }
 .qtitle { font-size: 1.375rem; line-height: 1.75rem; font-weight: 700; }

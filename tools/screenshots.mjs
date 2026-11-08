@@ -99,7 +99,7 @@ const tryClick = async (loc) => { if (await loc.count()) { await loc.click(); re
   const page = await newPage();
   await page.goto(base + '/index.html', { waitUntil: 'networkidle' });
   await btn(page, /Inizia la prima lezione/).click(); await page.waitForTimeout(300);
-  await tab(page, 'Profilo').click(); await page.waitForTimeout(300);
+  await page.getByRole('button', { name: 'Profilo' }).click(); await page.waitForTimeout(300);
   await shot(page, '15-profilo', 'Profilo: progressi, salvataggio, preferenze');
   await page.evaluate(() => window.scrollTo(0, 900));
   await shot(page, '16-profilo-fondo', 'Profilo: preferenze e azzeramento');

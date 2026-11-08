@@ -14,20 +14,12 @@ import { streak, validateImported, emptyState, deviceLabel, totalXp } from '../e
 import { sound } from './sound.js';
 import { ai } from './ai.js';
 
+// Tre sezioni in barra (indicazione di HIG tab-bars: poche voci). Il Profilo sta in alto a destra.
 const TABS = [
   { id: 'home', label: 'Percorso', icon: 'path' },
   { id: 'review', label: 'Ripasso', icon: 'review' },
   { id: 'exams', label: 'Esami', icon: 'exam' },
-  { id: 'profile', label: 'Profilo', icon: 'user' },
 ];
-
-/** Stato di sincronizzazione: un punto con etichetta accessibile (il dettaglio è nel Profilo). */
-function SyncDot({ s }) {
-  const kind = s?.kind || 'busy';
-  const text = s?.text || '';
-  const cls = kind === 'ok' ? 'ok' : kind === 'local' ? 'local' : kind === 'err' ? 'err' : 'busy';
-  return html`<span class=${'sync-chip ' + cls} role="img" aria-label=${text} title=${text}><span class="dot"></span></span>`;
-}
 
 export function App() {
   const [, force] = useState(0);
@@ -59,7 +51,7 @@ export function App() {
   const sk = streak(st);
   const onboarding = route.name === 'tab' && route.tab === 'onboarding';
   const activeTab = route.name === 'tab' ? route.tab : route.name === 'history' ? 'profile' : null;
-  const tabLabel = TABS.find((t) => t.id === activeTab)?.label;
+  const tabLabel = TABS.find((t) => t.id === activeTab)?.label || (activeTab === 'profile' ? 'Profilo' : undefined);
   const title = route.name === 'history' ? 'Cronologia' : tabLabel;
   const due = dueCount(course, st) + flashDueCount(course, st);
 
@@ -92,7 +84,7 @@ export function App() {
   } else if (route.name === 'history') {
     screen = html`<${History} />`;
   } else {
-    screen = html`<${TabScreen} tab=${route.tab} go=${go} onHistory=${() => setRoute({ name: 'history', from: 'profile' })} />`;
+    screen = html`<${TabScreen} tab=${route.tab} go=${go} onPath=${() => setRoute({ name: 'tab', tab: 'home' })} onHistory=${() => setRoute({ name: 'history', from: 'profile' })} />`;
   }
 
   const fullScreen = !activeTab; // sessioni: nessuna barra inferiore (sono compiti temporanei, HIG modality)
@@ -103,13 +95,12 @@ export function App() {
       ${back && html`<button class="x-btn" aria-label="Indietro" onClick=${back}><${I.back} /></button>`}
       <h1 class="topbar-title">${title}</h1>
       <span class="spacer"></span>
-      ${sk > 0 && html`<span class="stat flame" title="Giorni di fila" aria-label=${`${sk} giorni di fila`}><${I.flame} />${sk}</span>`}
-      <span class="sync-chip-wrap"><${SyncDot} s=${store.syncStatus} /></span>
+      <button class=${'x-btn' + (activeTab === 'profile' ? ' on' : '')} aria-label="Profilo" aria-current=${activeTab === 'profile' ? 'page' : null} onClick=${() => setRoute({ name: 'tab', tab: 'profile' })}><${I.user} /></button>
     </div></header>`}
     <main class="main" id="main">
       ${onboarding ? html`<${Onboarding} onDone=${(start) => setRoute(start === 'test' ? { name: 'testout', sectionId: 's00', cards: testOutQueue(store.course, 's00', 12) } : { name: 'tab', tab: 'home' })} />` : screen}
     </main>
-    ${!onboarding && !fullScreen && html`<nav class="tabbar" aria-label="Sezioni"><nav>
+    ${!onboarding && !fullScreen && html`<nav class="tabbar" aria-label="Sezioni"><div class="tabs" style=${`--tabs:${TABS.length}`}>
       ${TABS.map((t) => {
         const Ico = I[t.icon];
         const badge = t.id === 'review' && due > 0 ? due : 0;
@@ -117,14 +108,14 @@ export function App() {
         return html`<button class=${'tab' + (on ? ' on' : '')} aria-current=${on ? 'page' : null} onClick=${() => setRoute({ name: 'tab', tab: t.id })}>
           <span class="ico-wrap"><${Ico} /></span>${t.label}${badge > 0 && html`<span class="badge" aria-label=${badge + ' da ripassare'}>${badge > 99 ? '99+' : badge}</span>`}</button>`;
       })}
-    </nav></nav>`}
+    </div></nav>`}
     ${toast && html`<div class="toast" role="status">${toast}</div>`}
   </div>`;
 }
 
-function TabScreen({ tab, go, onHistory }) {
+function TabScreen({ tab, go, onHistory, onPath }) {
   if (tab === 'home') return html`<${Home} go=${go} />`;
-  if (tab === 'review') return html`<${RipassoTab} go=${go} />`;
+  if (tab === 'review') return html`<${RipassoTab} go=${go} onPath=${onPath} />`;
   if (tab === 'exams') return html`<${ExamsHub} go=${go} />`;
   return html`<${ProfileTab} onHistory=${onHistory} />`;
 }
@@ -141,7 +132,7 @@ function Empty({ icon, title, text, action, onAction }) {
 }
 
 /** Ripasso: due viste con un controllo segmentato. "Teoria" è qui perché si ripassa anche così. */
-function RipassoTab({ go }) {
+function RipassoTab({ go, onPath }) {
   const { course, st } = store;
   const [view, setView] = useState('review');
   const due = dueCount(course, st);
@@ -155,7 +146,7 @@ function RipassoTab({ go }) {
     ${view === 'theory'
       ? html`<${TheoryList} go=${go} />`
       : total === 0
-        ? html`<${Empty} icon="review" title="Tutto in ordine" text="Non c'è niente da ripassare adesso." action="Vai al percorso" onAction=${() => go({ name: 'lesson' })} />`
+        ? html`<${Empty} icon="review" title="Tutto in ordine" text="Non c'è niente da ripassare adesso." action="Vai al percorso" onAction=${onPath} />`
         : html`<section class="card hero-today">
             <${Ring} value=${Math.min(total, 30)} max=${30} label=${String(total)} sub="da fare" color="var(--danger)" />
             <div class="stack-sm" style="min-width:0"><p style="font-weight:600">${total} ${total === 1 ? 'elemento' : 'elementi'}</p>
@@ -196,6 +187,7 @@ function ProfileTab({ onHistory }) {
     <section class="stack-sm" aria-labelledby="g-sync"><p class="group-title" id="g-sync">Salvataggio</p>
       <div class="group">
         <${Row} label="Dove" value=${cloudOn ? 'Cloud' : 'Questo dispositivo'} />
+        <${Row} label="Stato" value=${store.syncStatus?.text || ''} />
         <${Row} label="Cronologia e ripristino" onClick=${onHistory} />
       </div>
     </section>
