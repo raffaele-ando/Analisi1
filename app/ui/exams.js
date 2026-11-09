@@ -90,7 +90,7 @@ export function ExamsHub({ go }) {
         const b = best(ex.id);
         const tot = sumPts(ex.A || []) + sumPts(ex.B || []);
         return html`<div class="list-item">
-          <div class="grow"><b>${ex.title}</b><div class="small faint">${KIND[ex.kind] || 'Prova'} · ${ex.durationMin || 120} min · ${tot} punti</div></div>
+          <div class="grow"><b>${ex.title}</b><div class="small faint">${(KIND[ex.kind] && !ex.title.startsWith(KIND[ex.kind])) ? KIND[ex.kind] + ' · ' : ''}${ex.durationMin || 120} min · ${tot} punti</div></div>
           ${b >= 0 && html`<span class=${'chip ' + (b >= 18 ? 'green' : 'red')}>${Math.round(b * 10) / 10}</span>`}
           <button class="btn sm ghost" onClick=${() => go({ name: 'exam', exam: ex })}>Svolgi</button>
         </div>`;
