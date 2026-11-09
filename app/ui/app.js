@@ -151,7 +151,7 @@ function RipassoTab({ go, onPath }) {
             <${Ring} value=${Math.min(total, 30)} max=${30} label=${String(total)} sub="da fare" color="var(--danger)" />
             <div class="stack-sm" style="min-width:0"><p style="font-weight:600">${total} ${total === 1 ? 'elemento' : 'elementi'}</p>
               <p class="small muted">${due} esercizi · ${fdue} schede</p></div>
-            <button class="btn block" style="grid-column:1 / -1" disabled=${due === 0} onClick=${() => go({ name: 'review' })}><${I.review} /> Ripassa</button>
+            <button class="btn block" style="grid-column:1 / -1" onClick=${() => go(due > 0 ? { name: 'review' } : { name: 'flash' })}><${I.review} /> ${due > 0 ? 'Ripassa' : 'Ripassa le schede'}</button>
           </section>`}
   </div>`;
 }
