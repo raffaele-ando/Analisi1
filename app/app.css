@@ -4,33 +4,33 @@
 
 :root {
   /* superfici */
-  --bg: #f5f6fa;
-  --surface: #ffffff;
-  --surface-2: #edf0f7;
+  --bg: #f4f6fa;
+  --surface: #fdfdfe;
+  --surface-2: #e9edf5;
   /* testo */
-  --ink: #141b2d;
-  --ink-2: #465069;
-  --ink-3: #5b6780;
+  --ink: #181f2e;
+  --ink-2: #404858;
+  --ink-3: #626978;
   /* bordi */
-  --line: #dde2ec;
-  --line-strong: #7a85a0;
+  --line: #dadee6;
+  --line-strong: #7a8396;
   /* accento: l'unico colore di marca, usato per azioni e stato attivo */
-  --accent: #1f57d6;
-  --accent-soft: #e4ebff;
-  --accent-ink: #1a46b0;
+  --accent: #315dd4;
+  --accent-soft: #e0eafe;
+  --accent-ink: #23459d;
   --on-accent: #ffffff;
   /* ruoli semantici: successo, errore, serie di giorni, evidenziatore */
-  --success: #137040;
-  --success-ink: #0c5330;
-  --success-soft: #ddf4e7;
-  --danger: #b92a1e;
-  --danger-ink: #8f1d14;
-  --danger-soft: #fde7e4;
+  --success: #0a7e3a;
+  --success-ink: #0d4a22;
+  --success-soft: #ddf4e1;
+  --danger: #cc272e;
+  --danger-ink: #831a1d;
+  --danger-soft: #ffe4e1;
   /* testo sui pieni semantici: non è mai #fff fisso, cambia con il tema */
   --on-success: #ffffff;
   --on-danger: #ffffff;
-  --streak: #b4480a;
-  --highlight: #fff4c2;
+  --streak: #9a5503;
+  --highlight: #fdefba;
   /* forma */
   --r-sm: 10px;
   --r-md: 14px;
@@ -50,28 +50,28 @@
 /* tema scuro: superfici più chiare del fondo (elevazione tonale), non un'inversione */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c1120;
-    --surface: #151d30;
-    --surface-2: #1c2741;
-    --ink: #e9eefa;
-    --ink-2: #b8c2da;
-    --ink-3: #9aa6c2;
-    --line: #2a3654;
-    --line-strong: #5d6b8f;
-    --accent: #8fb1ff;
-    --accent-soft: #1d2e5c;
-    --accent-ink: #bcd0ff;
-    --on-accent: #0c1120;
-    --success: #6fdba3;
-    --success-ink: #c4f5da;
-    --success-soft: #163d2c;
-    --danger: #ff8a7c;
-    --danger-ink: #ffd3cd;
-    --danger-soft: #431f1c;
+    --bg: #090f1c;
+    --surface: #11192a;
+    --surface-2: #1d263a;
+    --ink: #eef2fa;
+    --ink-2: #c3cbdb;
+    --ink-3: #a2abbe;
+    --line: #2f384a;
+    --line-strong: #667493;
+    --accent: #9ebdff;
+    --accent-soft: #1e305b;
+    --accent-ink: #d8e5ff;
+    --on-accent: #0a1121;
+    --success: #6de18b;
+    --success-ink: #ccf4d3;
+    --success-soft: #14361d;
+    --danger: #ff958e;
+    --danger-ink: #fee0dd;
+    --danger-soft: #47211e;
     --on-success: #07150a;
     --on-danger: #1d0c0b;
-    --streak: #ffa15c;
-    --highlight: #3a3217;
+    --streak: #ffa659;
+    --highlight: #493c06;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
     color-scheme: dark;
   }
