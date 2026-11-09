@@ -57,7 +57,8 @@ export function Player({ title, cards, mode = 'lesson', skillId, lessonId, onExi
     setAskOk({});
     setExplain(null);
     window.scrollTo?.(0, 0);
-  }, [idx, queue]);
+    // Solo il cambio di domanda azzera lo stato: accodare un ritentativo (setQueue) non deve cancellare il feedback.
+  }, [idx]);
 
   const skill = card?._skill || skillId;
 
