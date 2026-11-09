@@ -116,15 +116,35 @@ export function ExamRunner({ exam: examProp, resume, onExit, go }) {
   const [confirm, setConfirm] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const saveT = useRef(null);
+  const attRef = useRef(att);
+  const dirtyRef = useRef(false);
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
   const persist = (a) => {
+    attRef.current = a;
+    dirtyRef.current = true;
     setAtt(a);
     clearTimeout(saveT.current);
     saveT.current = setTimeout(() => store.saveExam({ ...a, t: Date.now() }), 1200);
   };
+  // Le risposte non devono andare perse se l'app viene chiusa o nascosta prima del salvataggio differito.
+  useEffect(() => {
+    const flush = () => {
+      if (!dirtyRef.current) return; // nessuna risposta data: niente tentativo fantasma
+      clearTimeout(saveT.current);
+      store.saveExam({ ...attRef.current, t: Date.now() });
+    };
+    const onVis = () => { if (document.visibilityState === 'hidden') flush(); };
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', onVis);
+      flush();
+    };
+  }, []);
   const remaining = att.startedAt + att.durationMin * 60000 - now;
   const setAns = (qid, v) => persist({ ...att, answers: { ...att.answers, [qid]: v } });
   const qs = { A: exam.A || [], B: exam.B || [] };
