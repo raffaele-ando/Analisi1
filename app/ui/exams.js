@@ -108,7 +108,8 @@ function fmtTime(ms) {
 
 export function ExamRunner({ exam: examProp, resume, onExit, go }) {
   const saved = resume ? store.st.exams[resume] : null;
-  const exam = useMemo(() => saved?.exam || examProp, []);
+  // Un tema reale non è salvato nel tentativo (lo ritroviamo dal catalogo tramite examId); un tema generato sì.
+  const exam = useMemo(() => saved?.exam || examProp || store.course.exams.find((e) => e.id === saved?.examId) || { id: saved?.examId, title: saved?.title || 'Prova', A: [], B: [], durationMin: saved?.durationMin || 120 }, []);
   const [att, setAtt] = useState(() => saved || { id: 'att-' + uid(8), examId: exam.id, title: exam.title, exam: exam.generated ? exam : undefined, startedAt: Date.now(), durationMin: exam.durationMin || 120, answers: {}, phase: 'write', done: false, t: Date.now() });
   const [tab, setTab] = useState('A');
   const [now, setNow] = useState(Date.now());
