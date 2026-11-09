@@ -44,6 +44,7 @@ export function Player({ title, cards, mode = 'lesson', skillId, lessonId, onExi
   const [explain, setExplain] = useState(null);
   const t0 = useRef(Date.now());
   const started = useRef(Date.now());
+  const answeredRef = useRef(false);
   const card = queue[idx];
   const isTheory = card && (card.type === 'learn' || card.type === 'example');
   const exerciseTotal = useMemo(() => cards.filter((c) => c.type !== 'learn' && c.type !== 'example').length, [cards]);
@@ -56,6 +57,7 @@ export function Player({ title, cards, mode = 'lesson', skillId, lessonId, onExi
     setStep(1);
     setAskOk({});
     setExplain(null);
+    answeredRef.current = false;
     window.scrollTo?.(0, 0);
     // Solo il cambio di domanda azzera lo stato: accodare un ritentativo (setQueue) non deve cancellare il feedback.
   }, [idx]);
@@ -63,7 +65,9 @@ export function Player({ title, cards, mode = 'lesson', skillId, lessonId, onExi
   const skill = card?._skill || skillId;
 
   const check = () => {
-    if (!card || result) return;
+    // Guardia sincrona: Invio può arrivare sia dal campo sia dal listener globale nello stesso evento.
+    if (!card || result || answeredRef.current) return;
+    answeredRef.current = true;
     const r = gradeEx(card, value);
     const ms = Date.now() - t0.current;
     const xp = store.answer({ ex: card, skillId: skill, ok: r.ok, score: r.score, ms, hinted, retry: !!card._retry });
