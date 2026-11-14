@@ -1,0 +1,655 @@
+{
+  "course_id": 18779,
+  "course_name": "Corso: 082919 - ANALISI MATEMATICA I E GEOMETRIA (DULIO PAOLO) [2025-26] | WeBeep",
+  "excluded_items": [
+    {
+      "type": "resource",
+      "id": "408596",
+      "title": "ISTRUZIONI PRIMA VERIFICA IN ITINERE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "411432",
+      "title": "CONVOCAZIONI PRIMA VERIFICA IN ITINERE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "413526",
+      "title": "VERIFICA IN ITINERE DELL'11 NOVEMBRE 2025 - SOLUZIONI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "413527",
+      "title": "VERIFICA IN ITINERE DELL'11 NOVEMBRE 2025 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "420370",
+      "title": "INFORMAZIONI LOGISTICHE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "421151",
+      "title": "VERIFICA IN ITINERE DEL 15 GENNAIO 2026 - SOLUZIONI PROVA SCRITTA",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "421152",
+      "title": "VERIFICA IN ITINERE del 15 GENNAIO 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "421884",
+      "title": "APPELLO DEL 15 GENNAIO 2026 - SOLUZIONI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "421885",
+      "title": "APPELLO DEL 15 GENNAIO 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "424241",
+      "title": "APPELLO DEL 10 FEBBRAIO 2026 - INFORMAZIONI LOGISTICHE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "425182",
+      "title": "APPELLO DEL 10 FEBBRAIO 2026 - SOLUZIONI PROVA SCRITTA",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "425183",
+      "title": "APPELLO DEL 10 FEBBRAIO 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "451334",
+      "title": "APPELLO DELL'11 GIUGNO 2026 - INFORMAZIONI LOGISTICHE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "451574",
+      "title": "APPELLO DELL' 11 GIUGNO 2026 - SOLUZIONI PROVA SCRITTA",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "451575",
+      "title": "APPELLO DELL' 11 GIUGNO 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "452577",
+      "title": "APPELLO DELLO 06 LUGLIO 2026 - INFORMAZIONI ORGANIZZATIVE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "452746",
+      "title": "APPELLO DELLO 06 LUGLIO 2026 - SOLUZIONI PROVA SCRITTA",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "452747",
+      "title": "APPELLO DELLO 06 LUGLIO 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "475737",
+      "title": "APPELLO DELLO 03 SETTEMBRE 2026 - INFORMAZIONI LOGISTICHE",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "478751",
+      "title": "APPELLO DELLO 03 SETTEMBRE 2026 - SOLUZIONI PROVA SCRITTA",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "resource",
+      "id": "478752",
+      "title": "APPELLO DELLO 03 SETTEMBRE 2026 - RISULTATI",
+      "reason": "excluded_rule"
+    },
+    {
+      "type": "folder",
+      "id": "406541",
+      "title": "Temi d'Esame",
+      "file_count": 23,
+      "reason": "excluded_temi_esame_and_soluzioni_per_plan"
+    }
+  ],
+  "overlap_verified_not_copied": [
+    {
+      "id": "390671",
+      "title_25_26": "PRESENTAZIONE DEL CORSO",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1437639/mod_resource/content/1/Presentazione_Corso.pdf",
+      "sha256_25_26": "c1c92048ac3fd9d1adc870477142978882bf0a5c25e3f2ab3299d97a5fad7906",
+      "size_25_26": 1225643,
+      "pages_25_26": 13,
+      "matched_26_27_file": "Lezioni\\Presentazione_Corso.pdf",
+      "sha256_26_27": "342af36e2a0d51e8f16ba435ebddc339a414716ec5eae374101c1743af8588ea",
+      "pages_26_27": 12,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.599
+    },
+    {
+      "id": "394748",
+      "title_25_26": "ARGOMENTO 1 - INSIEMI NUMERICI",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1461638/mod_resource/content/1/Argomento_1_Insiemi_Numerici.pdf",
+      "sha256_25_26": "c2d6ebe5d3e9b1d6a4f959e8fb591555f8aa5d88b8b2ca037dcaead2c7c48466",
+      "size_25_26": 953524,
+      "pages_25_26": 21,
+      "matched_26_27_file": "Lezioni\\Lezione_1_Insiemi_Numerici.pdf",
+      "sha256_26_27": "5a197b19eae82f527579e349741fc8e0e5989595eb0595a9ecb4e2f4dc13ba12",
+      "pages_26_27": 24,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.728
+    },
+    {
+      "id": "399178",
+      "title_25_26": "ARGOMENTO 2 - I NUMERI COMPLESSI",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1474924/mod_resource/content/2/Argomento_2_I_Numeri_Complessi.pdf",
+      "sha256_25_26": "faf6bd1ad0b17b9fd08d74fec3dc935a2d091f90892fc83f8e6e42cbd2218574",
+      "size_25_26": 449859,
+      "pages_25_26": 13,
+      "matched_26_27_file": "Lezioni\\Lezione_2_I_Numeri_Complessi.pdf",
+      "sha256_26_27": "59faa3b1135fdda7c0f20fe568149492621731b14b98d238c5ffc64c3e2f643e",
+      "pages_26_27": 14,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.8414
+    },
+    {
+      "id": "399179",
+      "title_25_26": "ARGOMENTO 3 - CLASSI PARTICOLARI DI FUNZIONI",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1474925/mod_resource/content/5/Argomento_3_Nuova_Funzioni_e_Successioni.pdf",
+      "sha256_25_26": "18311a1eb6a191411bd0be39335313b69e26ef2c6104eb7c2e30e2c1db083750",
+      "size_25_26": 789233,
+      "pages_25_26": 15,
+      "matched_26_27_file": "Lezioni\\Lezione_3_Nuova_Funzioni_e_Successioni.pdf",
+      "sha256_26_27": "94db4e2f9b41b7ddd917dc6490c042a2ace8045b710157276f5dc8284ae5b465",
+      "pages_26_27": 15,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9942
+    },
+    {
+      "id": "401698",
+      "title_25_26": "ARGOMENTO 4 - IL CONCETTO DI LIMITE",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1481124/mod_resource/content/2/Argomento_4_Nuova_Limiti_Di_Successioni_E_Funzioni.pdf",
+      "sha256_25_26": "3eb2e036a1ff27658046d870f16549b4b1e119a2d051f7b57f63c64538330054",
+      "size_25_26": 587179,
+      "pages_25_26": 19,
+      "matched_26_27_file": "Lezioni\\Lezione_4_Nuova_Limiti_Di_Successioni_E_Funzioni.pdf",
+      "sha256_26_27": "62cea3a6f3ab3dd1e6d63d331e9876ede5e032a7d9cf38edad3dad91dc356256",
+      "pages_26_27": 19,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.8042
+    },
+    {
+      "id": "402356",
+      "title_25_26": "ARGOMENTO 5 - STIME ASINTOTICHE",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1482257/mod_resource/content/2/Argomento_5_Nuova_Infinitesimi_Ed_Infiniti_Confronto.pdf",
+      "sha256_25_26": "070891aa468743fa70415bdea48e52e077c67f2cb4494c119ae6ab7a57afb138",
+      "size_25_26": 1039809,
+      "pages_25_26": 21,
+      "matched_26_27_file": "Lezioni\\Lezione_5_Nuova_Infinitesimi_Ed_Infiniti_Confronto.pdf",
+      "sha256_26_27": "b4db4b495adf415e842d151df482a8ee510f98dbea7069c4c903343804669bf3",
+      "pages_26_27": 21,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9899
+    },
+    {
+      "id": "404096",
+      "title_25_26": "ARGOMENTO 6: FUNZIONI CONTINUE",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1484953/mod_resource/content/1/Argomento_6_Funzioni_Continue%20%281%29.pdf",
+      "sha256_25_26": "286f180376456b6b9966de8184f1cd9d9f19269c4981caa58adee128161d2a74",
+      "size_25_26": 555249,
+      "pages_25_26": 19,
+      "matched_26_27_file": "Lezioni\\Lezione_6_Nuova_Funzioni_Continue.pdf",
+      "sha256_26_27": "30aa2f176d70c53429e5b30e67b60ae9fd7e961b8aa09a2196696df7fe83342f",
+      "pages_26_27": 20,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9569
+    },
+    {
+      "id": "405853",
+      "title_25_26": "ARGOMENTO 7: FUNZIONI DERIVABILI",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1487238/mod_resource/content/1/Argomento_7_Nuova__Funzioni_Derivabili.pdf",
+      "sha256_25_26": "4bbd02c632bb1336d8ca9f6f66c6ffd1a5ec4404e069d01af0752f13fb63851d",
+      "size_25_26": 696072,
+      "pages_25_26": 22,
+      "matched_26_27_file": "Lezioni\\Lezione_7_Nuova__Funzioni_Derivabili.pdf",
+      "sha256_26_27": "64a9e0d9223a558f31729cfac8bcbab29508266cd6688b1a340a2b7d803a30a9",
+      "pages_26_27": 22,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9895
+    },
+    {
+      "id": "407451",
+      "title_25_26": "ARGOMENTO 8: DERIVATE DI ORDINE SUPERIORE",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1489345/mod_resource/content/2/Argomento_8_Continuazione_Derivazione.pdf",
+      "sha256_25_26": "c8357f0168ac82e876cecffaeee644ea28f371a3a09e128ed9fcd5443aa7b034",
+      "size_25_26": 1083793,
+      "pages_25_26": 36,
+      "matched_26_27_file": "Lezioni\\Lezione_8_Continuazione_Derivazione.pdf",
+      "sha256_26_27": "ef2ff5c1937d95bfacd384bd3e739c166930c34177d46ac40ef4fba2eb6b4915",
+      "pages_26_27": 36,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9879
+    },
+    {
+      "id": "407454",
+      "title_25_26": "PROGRAMMA PRIMA VERIFICA IN ITINERE",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1489348/mod_resource/content/1/Programma_Dettagliato_Prima_Verifica_In_Itinere_New.pdf",
+      "sha256_25_26": "e7fa76a00c3357a7328c1ac33242cb1af22f6634ef2d0389cef52aae8956c85a",
+      "size_25_26": 571228,
+      "pages_25_26": 2,
+      "matched_26_27_file": "Preparazione_Itinere\\Programma_Dettagliato_Prima_Verifica_In_Itinere_New.pdf",
+      "sha256_26_27": "c4e2f3005e6fcfba34be5f3afed50fef90bf6be9b807343f767cea3bd2ab3d50",
+      "pages_26_27": 2,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9146
+    },
+    {
+      "id": "411806",
+      "title_25_26": "ARGOMENTO 9: INTEGRAZIONE PROPRIA E IMPROPRIA",
+      "url_25_26": "https://webeep.polimi.it/pluginfile.php/1494949/mod_resource/content/1/Argomento_9_Integrazione_Propria_E_Impropria.pdf",
+      "sha256_25_26": "4761f80dab82b018ce27dabb4f88cb87c099f30fa4ed97bc4ee4c27b98357194",
+      "size_25_26": 749775,
+      "pages_25_26": 27,
+      "matched_26_27_file": "Lezioni\\Lezione_9_Integrazione_Nuova.pdf",
+      "sha256_26_27": "a8c1d922587079ccd49149ebb1063c3b87059bf214cfdfd5dd57e6210d666053",
+      "pages_26_27": 29,
+      "exact_byte_match": false,
+      "token_jaccard_similarity": 0.9472
+    }
+  ],
+  "downloaded_inediti": [
+    {
+      "category": "Lezioni_Inedite",
+      "title": "ARGOMENTO 10: SERIE NUMERICHE",
+      "filename": "Argomento_10_Serie_Numeriche.pdf",
+      "rel_path": "Lezioni_Inedite\\Argomento_10_Serie_Numeriche.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1499141/mod_resource/content/1/Argomento_10_Serie_Numeriche.pdf",
+      "size_bytes": 839442,
+      "pages": 21,
+      "sha256": "5b4bf7cb541a2be64f8c74f644564c3d2c1cd050748d9a7b7cac2ec90eb4a8a0"
+    },
+    {
+      "category": "Lezioni_Inedite",
+      "title": "ARGOMENTO 11: SERIE DI TAYLOR",
+      "filename": "Argomento_11_Serie_Di_Taylor.pdf",
+      "rel_path": "Lezioni_Inedite\\Argomento_11_Serie_Di_Taylor.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1501263/mod_resource/content/2/Argomento_11_Serie_Di_Taylor.pdf",
+      "size_bytes": 250714,
+      "pages": 12,
+      "sha256": "190662e18985ce17d3eab5f93a0c940fc3cdd976d067fe45a9545867f4f2627a"
+    },
+    {
+      "category": "Lezioni_Inedite",
+      "title": "ARGOMENTO 12: PIANI E RETTE NELLO SPAZIO",
+      "filename": "Argomento_12_Geometria_Analitica.pdf",
+      "rel_path": "Lezioni_Inedite\\Argomento_12_Geometria_Analitica.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1501618/mod_resource/content/2/Argomento_12_Geometria_Analitica.pdf",
+      "size_bytes": 627411,
+      "pages": 21,
+      "sha256": "dcff21728c15738c3e8414bcfbe98d04313cb911c3ef6fd62857a0ccfe034b71"
+    },
+    {
+      "category": "Preparazione_Itinere_ed_Esame",
+      "title": "PROGRAMMA GENERALE",
+      "filename": "Programma_Svolto_2025.pdf",
+      "rel_path": "Preparazione_Itinere_ed_Esame\\Programma_Svolto_2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1504500/mod_resource/content/1/Programma_Svolto_2025.pdf",
+      "size_bytes": 252547,
+      "pages": 2,
+      "sha256": "1fde54b7f131e3214142b23cde6afe17a496b0e6883eb11d80fbaf8708879983"
+    },
+    {
+      "category": "Preparazione_Itinere_ed_Esame",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Mettiti alla prova - Testo 05_11_25.pdf",
+      "rel_path": "Preparazione_Itinere_ed_Esame\\Mettiti alla prova - Testo 05_11_25.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Mettiti%20alla%20prova%20-%20Testo%2005_11_25.pdf?forcedownload=1",
+      "size_bytes": 118532,
+      "pages": 4,
+      "sha256": "537a41545f40d9ca651d33a13c068e9ef73f1b815e2536a1e044ef2af2b704a5"
+    },
+    {
+      "category": "Preparazione_Itinere_ed_Esame",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Mettiti alla prova - testo 17_12_2025.pdf",
+      "rel_path": "Preparazione_Itinere_ed_Esame\\Mettiti alla prova - testo 17_12_2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Mettiti%20alla%20prova%20-%20testo%2017_12_2025.%20pdf?forcedownload=1",
+      "size_bytes": 130203,
+      "pages": 4,
+      "sha256": "20b6c69dc47319ecd99696873546a10ba3c6651e90096179c190cfbd75700955"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 03 dicembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 03 dicembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2003%20dicembre%202025.pdf?forcedownload=1",
+      "size_bytes": 40661,
+      "pages": 1,
+      "sha256": "60fc825e901168914e65bc5f217591c26ed078801846850893a5fabef6d9a748"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 05 novembre 2025 -correzione Mettiti alla prova.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 05 novembre 2025 -correzione Mettiti alla prova.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2005%20novembre%202025%20-correzione%20Mettiti%20alla%20prova.pdf?forcedownload=1",
+      "size_bytes": 38168,
+      "pages": 1,
+      "sha256": "148bf274f0a054b9f6bb330f999d50309d8b0ab99c4930f4b053eaa5772a47d5"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 9 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 9 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%209%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 35039,
+      "pages": 1,
+      "sha256": "3cc58b119e52b159d2d9e2e32558193fba0a32b294f24cbbe5d86270273643e5"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 10 dicembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 10 dicembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2010%20dicembre%202025.pdf?forcedownload=1",
+      "size_bytes": 41088,
+      "pages": 1,
+      "sha256": "fffcb945a5efbd5fb4138d491823e10bc16cc9e198f0e19980775324f1db16e9"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 16 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 16 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2016%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 35833,
+      "pages": 1,
+      "sha256": "57fa361515115ff8e21a03958fa27d63971d56e0384e5a1c38a691ca6efc553f"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 17 dicembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 17 dicembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2017%20dicembre%202025.pdf?forcedownload=1",
+      "size_bytes": 41511,
+      "pages": 1,
+      "sha256": "2fb23db39a62086bae2deea6d7e6c7c92bd55d7649bbbefe10a75827b89ce4e4"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 19 novembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 19 novembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2019%20novembre%202025.pdf?forcedownload=1",
+      "size_bytes": 38604,
+      "pages": 1,
+      "sha256": "40fd07876c93fdb6ec2ce66b487c198e456b2301c10d5270f56709a7e1a4e4aa"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 22 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 22 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2022%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 37308,
+      "pages": 1,
+      "sha256": "a3f0c33b265abc59bd8fec80383541fef9600c9994cc0f3b0e286682c09af21f"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione del 26 novembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione del 26 novembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20del%2026%20novembre%202025.pdf?forcedownload=1",
+      "size_bytes": 39833,
+      "pages": 1,
+      "sha256": "0011d72994f5e52a9ce8adcae9b1ecd0590070b8f6b4239f938cd9345ed77bf4"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazione dell1 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazione dell1 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazione%20dell1%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 34604,
+      "pages": 1,
+      "sha256": "469075df50e178ff1bf26478af43eef3a7b88e509271921acf02bd44db39b200"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazioni del 17 settembre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazioni del 17 settembre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazioni%20del%2017%20settembre%202025.pdf?forcedownload=1",
+      "size_bytes": 34019,
+      "pages": 1,
+      "sha256": "2f0d48b6e86f48b4b61cd08a9467f8c820a106f95635e6fa744bfa7f66785f08"
+    },
+    {
+      "category": "Esercitazioni_Balossi",
+      "folder": "Esercitazioni di Balossi B.",
+      "filename": "Slide esercitazioni del 29 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Balossi\\Slide esercitazioni del 29 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1438599/mod_folder/content/0/Slide%20esercitazioni%20del%2029%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 37639,
+      "pages": 1,
+      "sha256": "6cf8ef6e9f8b6cae8f829991235eb12746e0eda565c1ff8665aa766fabb59157"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Silvia Cattaneo",
+      "filename": "Copia di Funzioni1 @ Università Commerciale Luigi Bocconi.pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Copia di Funzioni1 @ Università Commerciale Luigi Bocconi.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1466623/mod_folder/content/0/Copia%20di%20Funzioni1%20%40%20Universit%C3%A0%20Commerciale%20Luigi%20Bocconi.pdf?forcedownload=1",
+      "size_bytes": 465320,
+      "pages": 1,
+      "sha256": "298924684df9b664e6241e6d4a928f39a5e9c6336c5c7971af63b0c044e42ab9"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Silvia Cattaneo",
+      "filename": "Esercitazioni 1 mercoledì 17092025.pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazioni 1 mercoledì 17092025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1466623/mod_folder/content/0/Esercitazioni%201%20mercoled%C3%AC%2017092025.pdf?forcedownload=1",
+      "size_bytes": 694657,
+      "pages": 1,
+      "sha256": "856c29114e61fbb2e9ab796a55b3db3d284d5e9a44dd933b4e3c4e227a6b7b82"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Silvia Cattaneo",
+      "filename": "Presentazione standard (1).pptx",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Presentazione standard (1).pptx",
+      "url": "https://webeep.polimi.it/pluginfile.php/1466623/mod_folder/content/0/Presentazione%20standard%20%281%29.pptx?forcedownload=1",
+      "size_bytes": 5299937,
+      "pages": null,
+      "sha256": "45f65a95e0927e33a976933dea19b207be77bcff511928e9f3b284a36bad1bbe"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Equazioni in C (1).png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Equazioni in C (1).png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Equazioni%20in%20C%20%281%29.png?forcedownload=1",
+      "size_bytes": 2647936,
+      "pages": null,
+      "sha256": "d7357d55d3a6af2aa6e41a8c5846cbe00032ba5949c980135efef5839bb9201c"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Equazioni in C 1.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Equazioni in C 1.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Equazioni%20in%20C%201.png?forcedownload=1",
+      "size_bytes": 2616143,
+      "pages": null,
+      "sha256": "0f584eec1987b24e7982cf7f285e5a21acd717ab184296808187667f51a69291"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Equazioni in C 2.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Equazioni in C 2.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Equazioni%20in%20C%202.png?forcedownload=1",
+      "size_bytes": 952380,
+      "pages": null,
+      "sha256": "23d48c66475364fd0a4902890e4a863b52b4d8b6f0babec72c45847f891d70f0"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Equazioni in C 3.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Equazioni in C 3.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Equazioni%20in%20C%203.png?forcedownload=1",
+      "size_bytes": 1018438,
+      "pages": null,
+      "sha256": "1b7b7759418b625bdc9ad0d78fb43516947b907db074778d7c5679a8cd4dcda3"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Esercizi assegnati.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Esercizi assegnati.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Esercizi%20assegnati.png?forcedownload=1",
+      "size_bytes": 612959,
+      "pages": null,
+      "sha256": "4b73a9fd77d7d17a1b7e331ec5c072bb22407559b2e89f9fabb3e08730ca6305"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Numeri Complessi (1).png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Numeri Complessi (1).png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Numeri%20Complessi%20%281%29.png?forcedownload=1",
+      "size_bytes": 1062984,
+      "pages": null,
+      "sha256": "3905b2dfde11065ce1ac8720537931b81e8ed682ce504e2db36bfa85a385b014"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Numeri Complessi.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Numeri Complessi.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Numeri%20Complessi.png?forcedownload=1",
+      "size_bytes": 1091767,
+      "pages": null,
+      "sha256": "9e484a9ea287529e6a4e5aa1f3fe120fd1eee52e7b9815f02c14c8cb02b4f16b"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Pagina senza titolo 1.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Pagina senza titolo 1.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Pagina%20senza%20titolo%201.png?forcedownload=1",
+      "size_bytes": 504507,
+      "pages": null,
+      "sha256": "2bc3d98e67de9efa073d62c3889a013635ea1a26435326ea4955e311b49339e9"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Pagina senza titolo.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Pagina senza titolo.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Pagina%20senza%20titolo.png?forcedownload=1",
+      "size_bytes": 543518,
+      "pages": null,
+      "sha256": "abe539ffa4710e0a679d6689eda2c2c448a43401b2736453b63bc8adf5acc10b"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite",
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Trasformazioni di funzioni.png",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Trasformazioni di funzioni.png",
+      "url": "https://webeep.polimi.it/pluginfile.php/1479394/mod_folder/content/0/Trasformazioni%20di%20funzioni.png?forcedownload=1",
+      "size_bytes": 1606477,
+      "pages": null,
+      "sha256": "d6a39676da09e2be4c434f0617a081ad3e34cac66a1b97fcc3fd933bae3700d2"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Materiali per Eser a Squadre Riunite Cattaneo di Merc 08/10/25",
+      "filename": "Compiti per mercoledì 15 ottobre - Esercitazioni a classi riunite .pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Compiti per mercoledì 15 ottobre - Esercitazioni a classi riunite .pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1484629/mod_folder/content/0/Compiti%20per%20mercoled%C3%AC%2015%20ottobre%20-%20Esercitazioni%20a%20classi%20riunite%20.pdf?forcedownload=1",
+      "size_bytes": 1355803,
+      "pages": 1,
+      "sha256": "7344870507a5310a9edd2d54d52b3f71ceaf97ac0e14ec84e8dac4a477570ae0"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Materiali per Eser a Squadre Riunite Cattaneo di Merc 08/10/25",
+      "filename": "Esercitazioni a classi riunite di mercoledì 8 ottobre 2025.pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazioni a classi riunite di mercoledì 8 ottobre 2025.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1484629/mod_folder/content/0/Esercitazioni%20a%20classi%20riunite%20di%20mercoled%C3%AC%208%20ottobre%202025.pdf?forcedownload=1",
+      "size_bytes": 1355803,
+      "pages": 1,
+      "sha256": "489f3329f07dd9819262634baad324a45ea04666bfc9c329693b9c48982ac7f4"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Silvia Cattaneo online 26/11/2025",
+      "filename": "lezione-12-integrazione-per-parti.pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\lezione-12-integrazione-per-parti.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1498973/mod_folder/content/0/lezione-12-integrazione-per-parti.pdf?forcedownload=1",
+      "size_bytes": 152547,
+      "pages": 6,
+      "sha256": "0e8a5eface3242b6cc53f3a9b4dcfca32c1e6723095681d8a2efcfabc5f24624"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Silvia Cattaneo online 26/11/2025",
+      "filename": "primitive.pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\primitive.pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1498973/mod_folder/content/0/primitive.pdf?forcedownload=1",
+      "size_bytes": 164358,
+      "pages": 11,
+      "sha256": "7a552b2e29023de7bba44e6e2f9c7aad10e1199b2f235155557e660c77588a23"
+    },
+    {
+      "category": "Esercitazioni_Cattaneo_e_Squadre",
+      "folder": "Esercitazioni Cattaneo Silvia  online 10/12/2025",
+      "filename": "Avevamo concluso la scorsa volta con l’integrazione delle funzioni….pdf",
+      "rel_path": "Esercitazioni_Cattaneo_e_Squadre\\Avevamo concluso la scorsa volta con l’integrazione delle funzioni….pdf",
+      "url": "https://webeep.polimi.it/pluginfile.php/1501344/mod_folder/content/0/Avevamo%20concluso%20la%20scorsa%20volta%20con%20l%E2%80%99integrazione%20delle%20funzioni%E2%80%A6.pdf?forcedownload=1",
+      "size_bytes": 2000139,
+      "pages": 2,
+      "sha256": "2d9e4ed2f2a170e364d32f86573c746f0b57565650a19bd222bfd5f5326d7464"
+    }
+  ],
+  "dedup_skipped_same_hash": [
+    {
+      "folder": "Esercitazione a squadre riunite",
+      "filename": "Equazioni in C.png",
+      "dup_of": "Esercitazioni_Cattaneo_e_Squadre\\Esercitazione_a_squadre_riunite\\Equazioni in C 3.png",
+      "sha256": "1b7b7759418b625bdc9ad0d78fb43516947b907db074778d7c5679a8cd4dcda3",
+      "size_bytes": 1018438
+    }
+  ]
+}

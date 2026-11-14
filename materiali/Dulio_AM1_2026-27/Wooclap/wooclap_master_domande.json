@@ -1,0 +1,3427 @@
+{
+  "total_questions": 104,
+  "topics": [
+    {
+      "slug": "MHREIHT",
+      "title": "Minimo, Massimo, Estremo Inferiore ed Estremo Superiore",
+      "cmid": 494111,
+      "questions_count": 11,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6ab28323db3011680466f7df",
+          "type": "MCQ",
+          "question": "Determinare l'estremo superiore del seguente insieme $A= \\{ (-1)^n \\frac{3n+1}{n}, \\, : \\, n \\in \\mathbb{N}\\setminus \\{0\\}\\}$",
+          "choices": [
+            {
+              "choice_id": "6ab28323db3011680466f7e0",
+              "text": "$3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f7e1",
+              "text": "$\\frac{7}{2}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28323db3011680466f7e2",
+              "text": "$4$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f7e3",
+              "text": "$\\frac{13}{4}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 54,
+          "nb_web_answers": 86
+        },
+        {
+          "num": 2,
+          "id": "6ab283233cac7cfbb0e68e2c",
+          "type": "MCQ",
+          "question": "Determinare l'estremo inferiore dell'insieme $A= \\{ \\frac{n^2+5n+1}{n^2}\\, : \\, n \\in \\mathbb{N} \\setminus \\{0\\} \\}$",
+          "choices": [
+            {
+              "choice_id": "6ab283233cac7cfbb0e68e2d",
+              "text": "$2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283233cac7cfbb0e68e2e",
+              "text": "$\\frac{7}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283233cac7cfbb0e68e2f",
+              "text": "0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283233cac7cfbb0e68e30",
+              "text": "$1$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 66,
+          "nb_web_answers": 83
+        },
+        {
+          "num": 3,
+          "id": "6ab28323d14b750d4e4e46cb",
+          "type": "MCQ",
+          "question": "Sia $A=\\{(-1)^n : n \\in \\mathbb{N}\\}$. Qual è l’estremo superiore di $A$?",
+          "choices": [
+            {
+              "choice_id": "6ab28323d14b750d4e4e46cc",
+              "text": "0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323d14b750d4e4e46cd",
+              "text": "1",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28323d14b750d4e4e46ce",
+              "text": "-1",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323d14b750d4e4e46cf",
+              "text": "Non esiste",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 60,
+          "nb_web_answers": 83
+        },
+        {
+          "num": 4,
+          "id": "6ab28323cecf6c13495383c2",
+          "type": "MCQ",
+          "question": "Sia $A = \\left\\{ 1 - \\frac{1}{n} : n \\in \\mathbb{N} \\right\\}$. Qual è l'estremo superiore di $A$?",
+          "choices": [
+            {
+              "choice_id": "6ab28323cecf6c13495383c3",
+              "text": "$\\frac{1}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323cecf6c13495383c4",
+              "text": "$1-\\frac{1}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323cecf6c13495383c5",
+              "text": "1",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28323cecf6c13495383c6",
+              "text": "0",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 76,
+          "nb_web_answers": 82
+        },
+        {
+          "num": 5,
+          "id": "6ab283234e8d045581030827",
+          "type": "MCQ",
+          "question": "Se un sottoinsieme non vuoto $B\\subset\\mathbb{R}$ è limitato superiormente, cosa si può affermare con certezza riguardo al suo estremo superiore $\\sup(B)$?",
+          "choices": [
+            {
+              "choice_id": "6ab283234e8d045581030828",
+              "text": "$\\sup(B)$ appartiene sempre all'insieme $B$ ed è il massimo di $B$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283234e8d045581030829",
+              "text": "$\\sup(B)$ coincide sempre con il valore massimo dell'insieme.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283234e8d04558103082a",
+              "text": "$\\sup(B)$ è il più piccolo dei maggioranti di $B$ e non necessariamente appartiene a $B$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab283234e8d04558103082b",
+              "text": "$\\sup(B)$ è il più grande dei minoranti di $B$.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 71,
+          "nb_web_answers": 81
+        },
+        {
+          "num": 6,
+          "id": "6ab28323616332dce14e7535",
+          "type": "MCQ",
+          "question": "Dato l'insieme $A=\\left\\{x\\in\\mathbb{R}:\\:x=\\frac{n+1}{2n+3}, n\\in\\mathbb{N}\\right\\}$",
+          "choices": [
+            {
+              "choice_id": "6ab28323616332dce14e7536",
+              "text": "$inf(A)=1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323616332dce14e7537",
+              "text": "$inf(A)=\\frac{1}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323616332dce14e7538",
+              "text": "$sup(A)=\\frac{1}{2}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28323616332dce14e7539",
+              "text": "$sup(A)=1$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 64,
+          "nb_web_answers": 81
+        },
+        {
+          "num": 7,
+          "id": "6ab28323db3011680466f914",
+          "type": "MCQ",
+          "question": "Sia A ⊆ ℝ non vuoto e limitato superiormente, e sia L ∈ ℝ. Quale delle seguenti affermazioni è \nequivalente a \"L = sup A\"?",
+          "choices": [
+            {
+              "choice_id": "6ab28323db3011680466f915",
+              "text": "L è maggiorante di A e ∃ ε₀>0 tale che ∀a∈A, a > L − ε₀",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f916",
+              "text": "L è maggiorante di A e ∀a∈A, ∃ε>0 tale che a  > L − ε",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f917",
+              "text": "L è maggiorante di A e ∀ε>0, L−ε è maggiorante di A",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f918",
+              "text": "L è il minimo dei maggioranti di A, e  inoltre L ∉ A",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28323db3011680466f919",
+              "text": "L è maggiorante di A e ∀ε>0 ∃a∈A tale che a > L − ε",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 41,
+          "nb_web_answers": 79
+        },
+        {
+          "num": 8,
+          "id": "6ab283244e8d045581030883",
+          "type": "MCQ",
+          "question": "Si consideri l'insieme A = { (2n + (−1)ⁿ)/n : n∈ℕ, n≥1 }. Quale delle seguenti affermazioni è vera?",
+          "choices": [
+            {
+              "choice_id": "6ab283244e8d045581030884",
+              "text": "sup A = 2,5, non esiste max A; inf A = 1, non esiste min A",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283244e8d045581030885",
+              "text": "sup A = 2, non esiste max A; inf A = 1 = min  A",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283244e8d045581030886",
+              "text": "sup A = 2,5 = max A; inf A = 1 = min A",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab283244e8d045581030887",
+              "text": "sup A = 2,5 = max A; inf A = 2, non esiste min A",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283244e8d045581030888",
+              "text": "A non è  limitato",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 47,
+          "nb_web_answers": 78
+        },
+        {
+          "num": 9,
+          "id": "6ab283243cac7cfbb0e6900d",
+          "type": "MCQ",
+          "question": "Quale dei seguenti insiemi ha $1$ come minimo",
+          "choices": [
+            {
+              "choice_id": "6ab283243cac7cfbb0e6900e",
+              "text": "$A=\\left\\{1-\\frac{1}{n}:\\:n\\in\\mathbb{N}\\right\\}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283243cac7cfbb0e6900f",
+              "text": "$A=\\left\\{2-\\frac{1}{n}:\\:n\\in\\mathbb{N}\\right\\}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab283243cac7cfbb0e69010",
+              "text": "$A=\\left\\{\\frac{1}{n}:\\:n\\in\\mathbb{N}\\right\\}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab283243cac7cfbb0e69011",
+              "text": "Nessuna delle precedenti risposte",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 58,
+          "nb_web_answers": 80
+        },
+        {
+          "num": 10,
+          "id": "6ab28324dec02bd9451d53e2",
+          "type": "MCQ",
+          "question": "Si consideri l'insieme\n$E=\\left\\{\\frac{n}{n+1}:n\\in\\mathbb{N}\\right\\}.$\nStabilire quale delle seguenti affermazioni è corretta",
+          "choices": [
+            {
+              "choice_id": "6ab28324dec02bd9451d53e3",
+              "text": "$\\inf(E)=\\min(E)=0$ e $\\sup(E)\\neq\\max(E)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28324dec02bd9451d53e4",
+              "text": "$\\inf(E)=\\min(E)=\\dfrac12$ e $\\sup(E)\\neq\\max(E)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28324dec02bd9451d53e5",
+              "text": "$\\inf(E)\\neq\\min(E)$ e $\\sup(E)=\\max(E)=1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28324dec02bd9451d53e6",
+              "text": "$\\inf(E)=\\min(E)=\\dfrac12$ e $\\sup(E)=\\max(E)=1$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 28,
+          "nb_web_answers": 79
+        },
+        {
+          "num": 11,
+          "id": "6ab28324a760171258c04388",
+          "type": "MCQ",
+          "question": "Si consideri l'insieme\n$F=\\left\\{(-1)^n+\\frac1n:n\\in\\mathbb{N}\\right\\}.$\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6ab28324a760171258c04389",
+              "text": "$\\sup(F)=2=\\max(F)$ e $\\inf(F)=-1\\neq\\min(F)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28324a760171258c0438a",
+              "text": "$\\sup(F)=2\\neq\\max(F)$ e $\\inf(F)=-1=\\min(F)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ab28324a760171258c0438b",
+              "text": "$\\sup(F)=\\max(F)=\\dfrac32$ e $\\inf(F)=-1\\neq\\min(F)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ab28324a760171258c0438c",
+              "text": "$\\sup(F)=\\max(F)=2$ e $\\inf(F)=\\min(F)=-1$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 56,
+          "nb_web_answers": 78
+        }
+      ]
+    },
+    {
+      "slug": "JCMRMOE",
+      "title": "Numeri Complessi",
+      "cmid": 485305,
+      "questions_count": 12,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6aa69ac220f221ebfca8584b",
+          "type": "MCQ",
+          "question": "L'insieme dei numeri complessi $z$ che verificano l'uguaglianza $z=\\overline{z-i}$ è:",
+          "choices": [
+            {
+              "choice_id": "6aa69ac220f221ebfca8584c",
+              "text": "un'ellisse",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca8584d",
+              "text": "una retta",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca8584e",
+              "text": "un punto",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca8584f",
+              "text": "nessuna delle altre risposte",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 55,
+          "nb_web_answers": 84
+        },
+        {
+          "num": 2,
+          "id": "6aa69ac220f221ebfca8587d",
+          "type": "MCQ",
+          "question": "Le soluzioni dell'equazione $4z=i|z|^2 \\bar{z}$ sono",
+          "choices": [
+            {
+              "choice_id": "6aa69ac220f221ebfca8587e",
+              "text": "Tutte appartenenti all'asse reale.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca8587f",
+              "text": "Tutte appartenenti all'asse immaginario.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca85880",
+              "text": "L'origine e due punti sulla retta $y=x$, simmetrici rispetto all'origine.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac220f221ebfca85881",
+              "text": "Tre punti distinti appartenenti alla circonferenza$|z|=2$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 60,
+          "nb_web_answers": 73
+        },
+        {
+          "num": 3,
+          "id": "6aa69ac320f221ebfca8590d",
+          "type": "MCQ",
+          "question": "Siano z₀, z₁, z₂, z₃ le quattro soluzioni in ℂ dell'equazione z⁴ = −16. Quale delle seguenti affermazioni è \nvera?",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca8590e",
+              "text": "z₀+z₁+z₂+z₃ = 0",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8590f",
+              "text": "z₀+z₁+z₂+z₃ = 4",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85910",
+              "text": "Sono tutte reali",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85911",
+              "text": "Il loro prodotto è −16",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85912",
+              "text": "Hanno tutte modulo  diverso tra loro",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 50,
+          "nb_web_answers": 70
+        },
+        {
+          "num": 4,
+          "id": "6aa69ac320f221ebfca8594a",
+          "type": "MCQ",
+          "question": "Siano z, w ∈ ℂ, z,w ≠ 0. Quale delle seguenti affermazioni è FALSA in generale?",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca8594b",
+              "text": "|z·w| = |z|·|w|",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8594c",
+              "text": "arg(z·w) = arg(z) + arg(w) (mod 2π)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8594d",
+              "text": "|z+w| ≤ |z| + |w|",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8594e",
+              "text": "arg(z̄) = arg(z)",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8594f",
+              "text": "z·z̄ =  |z|²",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 32,
+          "nb_web_answers": 63
+        },
+        {
+          "num": 5,
+          "id": "6aa69ac320f221ebfca8598c",
+          "type": "MCQ",
+          "question": "L'insieme S = { z ∈ ℂ : Re(z²) > 0 } rappresenta, nel piano di Gauss:",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca8598d",
+              "text": "l'unione dei due settori aperti individuati dalle rette y=x e y=−x che contengono l'asse reale positivo e  negativo",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8598e",
+              "text": "l'unione dei due settori aperti individuati dalle rette y=x e y=−x che contengono l'asse  immaginario positivo e negativo",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca8598f",
+              "text": "il semipiano Re(z) > 0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85990",
+              "text": "la corona circolare 1<|z|<2",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85991",
+              "text": "le rette y=x e  y=−x stesse",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 33,
+          "nb_web_answers": 59
+        },
+        {
+          "num": 6,
+          "id": "6aa69ac320f221ebfca859d2",
+          "type": "MCQ",
+          "question": "Sia $z$ il numero complesso il cui coniugato è $\\overline{z}=(1-i)^3$. Allora risulta",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca859d3",
+              "text": "$z=2+2i$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca859d4",
+              "text": "$z=-2+2i$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca859d5",
+              "text": "$z=2-2i$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca859d6",
+              "text": "$z=-2-2i$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 60
+        },
+        {
+          "num": 7,
+          "id": "6aa69ac320f221ebfca85a64",
+          "type": "MCQ",
+          "question": "Quale tra le seguenti affermazioni sul prodotto di due numeri complessi $z_1 = a + bi$ e $z_2 = c + di$ è corretta?",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca85a65",
+              "text": "Si moltiplicano  le parti reali e le parti immaginarie separatamente.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85a66",
+              "text": "La parte reale del prodotto è sempre il prodotto delle parti reali.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85a67",
+              "text": "Si applica la proprietà distributiva ricordando che $i^2 = -1$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85a68",
+              "text": "Il modulo del prodotto è la somma dei moduli dei singoli numeri.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 54,
+          "nb_web_answers": 60
+        },
+        {
+          "num": 8,
+          "id": "6aa69ac320f221ebfca85ab1",
+          "type": "MCQ",
+          "question": "Qual è il valore della potenza $i^{1323}$ dell'unità immaginaria $i$?",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca85ab2",
+              "text": "$1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85ab3",
+              "text": "$-i$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85ab4",
+              "text": "$-1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85ab5",
+              "text": "$i$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 47,
+          "nb_web_answers": 60
+        },
+        {
+          "num": 9,
+          "id": "6aa69ac320f221ebfca85b02",
+          "type": "MCQ",
+          "question": "Qual è il modulo del numero complesso $z = 3 - 4i$?",
+          "choices": [
+            {
+              "choice_id": "6aa69ac320f221ebfca85b03",
+              "text": "$7$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85b04",
+              "text": "$3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85b05",
+              "text": "$5$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac320f221ebfca85b06",
+              "text": "$4$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 61,
+          "nb_web_answers": 61
+        },
+        {
+          "num": 10,
+          "id": "6aa69ac420f221ebfca85b9b",
+          "type": "MCQ",
+          "question": "Nel campo complesso, si consideri l’equazione $(z^4+1) (z^2+1)^2=0$.",
+          "choices": [
+            {
+              "choice_id": "6aa69ac420f221ebfca85b9c",
+              "text": "L’equazione ha sei soluzioni, ciascuna di molteplicità 2.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85b9d",
+              "text": "L’equazione non ha alcuna soluzione.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85b9e",
+              "text": "L'equazione ha 6 soluzioni distinte, di cui due di molteplicità 2.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85b9f",
+              "text": "L'equazione ha 12 soluzioni distinte.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 51,
+          "nb_web_answers": 59
+        },
+        {
+          "num": 11,
+          "id": "6aa69ac420f221ebfca85c4d",
+          "type": "MCQ",
+          "question": "Si consideri in $\\mathbb{C}$ l'equazione\n$(z-1+i)^4=16$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6aa69ac420f221ebfca85c4e",
+              "text": "Tutte le soluzioni hanno parte reale positiva",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85c4f",
+              "text": "Esiste una sola soluzione con parte immaginaria nulla",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85c50",
+              "text": "Due soluzioni appartengono all'asse immaginario",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85c51",
+              "text": "Tutte le soluzioni hanno lo stesso modulo",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 11,
+          "nb_web_answers": 58
+        },
+        {
+          "num": 12,
+          "id": "6aa69ac420f221ebfca85cb6",
+          "type": "MCQ",
+          "question": "Si consideri in $\\mathbb{C}$ l'equazione\n$(z+2)^3=-8$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6aa69ac420f221ebfca85cb7",
+              "text": "Tutte le soluzioni hanno parte reale negativa",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85cb8",
+              "text": "Esiste una sola soluzione reale",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85cb9",
+              "text": "Le tre soluzioni hanno lo stesso modulo",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aa69ac420f221ebfca85cba",
+              "text": "Due soluzioni appartengono al primo quadrante",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 27,
+          "nb_web_answers": 59
+        }
+      ]
+    },
+    {
+      "slug": "SCNLMHJ",
+      "title": "Successioni e Limiti di Successioni",
+      "cmid": 498037,
+      "questions_count": 11,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6abfca904eb844035d02ccb7",
+          "type": "MCQ",
+          "question": "Determinare il valore $\\lim_{n \\to \\infty} \\left( \\frac{n+2}{n+1} \\right)^n$",
+          "choices": [
+            {
+              "choice_id": "6abfca904eb844035d02ccb8",
+              "text": "0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca904eb844035d02ccb9",
+              "text": "$e$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca904eb844035d02ccba",
+              "text": "$e^2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca904eb844035d02ccbb",
+              "text": "1",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 39,
+          "nb_web_answers": 49
+        },
+        {
+          "num": 2,
+          "id": "6abfca9060b43e8055e9f084",
+          "type": "MCQ",
+          "question": "Per quali $\\alpha$, $\\beta \\in \\mathbb{R}$ le successioni $\\frac{2n^2+\\alpha n+3}{n^2+n+1}$, $\\frac{n^4-n-\\beta}{n^4-n+1}$ tendono allo stesso limite?",
+          "choices": [
+            {
+              "choice_id": "6abfca9060b43e8055e9f085",
+              "text": "per ogni $\\alpha$, $\\beta \\in \\mathbb{R}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca9060b43e8055e9f086",
+              "text": "$\\alpha=\\beta^2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca9060b43e8055e9f087",
+              "text": "$\\alpha=-\\beta$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca9060b43e8055e9f088",
+              "text": "per nessun $\\alpha$, $\\beta \\in \\mathbb{R}$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 40,
+          "nb_web_answers": 43
+        },
+        {
+          "num": 3,
+          "id": "6abfca904eb844035d02cd58",
+          "type": "MCQ",
+          "question": "Sia $(a_n)$ una successione reale. Quale delle seguenti affermazioni è vera?",
+          "choices": [
+            {
+              "choice_id": "6abfca904eb844035d02cd59",
+              "text": "Se $(a_n)$ è limitata, allora converge",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca904eb844035d02cd5a",
+              "text": "Se $(a_n)$ è monotona, allora converge",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca904eb844035d02cd5b",
+              "text": "Se $(a_n)$è monotona e  limitata, allora converge",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca904eb844035d02cd5c",
+              "text": "Se $(a_n)$ converge, allora è monotona",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca904eb844035d02cd5d",
+              "text": "Se $(a_n)$ è limitata e non monotona,  allora non converge",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 29,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 4,
+          "id": "6abfca900fc56280c2efca8b",
+          "type": "MCQ",
+          "question": "Si consideri la successione $a_n = n!/nⁿ$. Quale delle seguenti affermazioni è vera?",
+          "choices": [
+            {
+              "choice_id": "6abfca900fc56280c2efca8c",
+              "text": "$a_n$→ 0",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca900fc56280c2efca8d",
+              "text": "$a_n$ → 1/e",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca900fc56280c2efca8e",
+              "text": "$a_n$ → +∞",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca900fc56280c2efca8f",
+              "text": "($a_n$) è definitivamente crescente",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca900fc56280c2efca90",
+              "text": "($a_n$) non ammette limite",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 31,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 5,
+          "id": "6abfca916d6cfbc17d9de286",
+          "type": "MCQ",
+          "question": "La successione definita da $a₁=\\sqrt{2}$ e $a_{n+1}=\\sqrt{2+a_n}$ per n≥1:",
+          "choices": [
+            {
+              "choice_id": "6abfca916d6cfbc17d9de287",
+              "text": "è crescente e limitata superiormente da 2",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de288",
+              "text": "è decrescente e converge a 0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de289",
+              "text": "non  converge, poiché non è monotona",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de28a",
+              "text": "converge a $\\sqrt{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de28b",
+              "text": "diverge a +∞",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 26,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 6,
+          "id": "6abfca914eb844035d02cdf2",
+          "type": "MCQ",
+          "question": "La successione $\\{\\frac{n}{n^2+1}\\}$ è",
+          "choices": [
+            {
+              "choice_id": "6abfca914eb844035d02cdf3",
+              "text": "Monotona strettamente crescente",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca914eb844035d02cdf4",
+              "text": "Monotona non decrescente",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca914eb844035d02cdf5",
+              "text": "Monotona strettamente decrescente",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca914eb844035d02cdf6",
+              "text": "Monotona non crescente",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 33,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 7,
+          "id": "6abfca916d6cfbc17d9de2d2",
+          "type": "MCQ",
+          "question": "Le successioni $\\{\\frac{n^2+1}{n+1}\\}$ e $\\{\\frac{an+1}{n^2+1}\\}$",
+          "choices": [
+            {
+              "choice_id": "6abfca916d6cfbc17d9de2d3",
+              "text": "Convergono allo stesso limite per ogni valore di $a\\in\\mathbb{R}$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de2d4",
+              "text": "Convergono entrambe ma mai allo stesso limite.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de2d5",
+              "text": "La prima converge, la seconda diverge per ogni $a\\in\\mathbb{R}$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca916d6cfbc17d9de2d6",
+              "text": "La prima diverge, la seconda converge per ogni $a\\in\\mathbb{R}$.",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 34,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 8,
+          "id": "6abfca914eb844035d02ce4c",
+          "type": "MCQ",
+          "question": "Data la successione numerica definita da $a_n = \\frac{3n^2 - 1}{n^2 + 5}$, qual è il suo limite per $n \\to +\\infty$?",
+          "choices": [
+            {
+              "choice_id": "6abfca914eb844035d02ce4d",
+              "text": "$+\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca914eb844035d02ce4e",
+              "text": "$0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca914eb844035d02ce4f",
+              "text": "$3$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca914eb844035d02ce50",
+              "text": "$-\\frac{1}{5}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 39,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 9,
+          "id": "6abfca910fc56280c2efcb8e",
+          "type": "MCQ",
+          "question": "Quale delle seguenti affermazioni su una successione numerica monotona $\\{a_n\\}$ è sempre vera?",
+          "choices": [
+            {
+              "choice_id": "6abfca910fc56280c2efcb8f",
+              "text": "Se $\\{a_n\\}$ è limitata superiormente, allora è convergente.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcb90",
+              "text": "Se $\\{a_n\\}$ è monotona crescente, allora $\\lim_{n \\to +\\infty} a_n = +\\infty$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcb91",
+              "text": "Se $\\{a_n\\}$ è monotona decrescente, allora tutti i suoi termini sono positivi ($a_n > 0$).",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcb92",
+              "text": "Se $\\{a_n\\}$ è monotona e limitata, allora ammette sempre un limite finito ed esiste il $\\lim_{n \\to +\\infty} a_n$.",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 23,
+          "nb_web_answers": 39
+        },
+        {
+          "num": 10,
+          "id": "6abfca918d7e3a0f50e4be23",
+          "type": "MCQ",
+          "question": "Si consideri la successione\n$a_n=\\frac{2n^2+(-1)^n n}{n^2+1}$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6abfca918d7e3a0f50e4be24",
+              "text": "La successione non ammette limite a causa del termine $(-1)^n$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca918d7e3a0f50e4be25",
+              "text": "La successione converge a $1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca918d7e3a0f50e4be26",
+              "text": "La successione converge a $2$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca918d7e3a0f50e4be27",
+              "text": "La successione diverge a $+\\infty$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 31,
+          "nb_web_answers": 39
+        },
+        {
+          "num": 11,
+          "id": "6abfca910fc56280c2efcbff",
+          "type": "MCQ",
+          "question": "Si consideri la successione\n$a_n=\\left(\\frac{n+2}{n+1}\\right)^n$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6abfca910fc56280c2efcc00",
+              "text": "$\\displaystyle\\lim_{n\\to+\\infty}a_n=1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcc01",
+              "text": "$\\displaystyle\\lim_{n\\to+\\infty}a_n=e$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcc02",
+              "text": "$\\displaystyle\\lim_{n\\to+\\infty}a_n=e^2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfca910fc56280c2efcc03",
+              "text": "La successione diverge a $+\\infty$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 30,
+          "nb_web_answers": 39
+        }
+      ]
+    },
+    {
+      "slug": "PIUOEDT",
+      "title": "Limiti di Funzioni, Infiniti, Infinitesimi e loro confronto",
+      "cmid": 498039,
+      "questions_count": 17,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6abfcb414eb844035d0364f1",
+          "type": "MCQ",
+          "question": "Determinare il valore del limite $\\lim_{x \\to 0} \\frac{x \\log(1-2x)}{e^{x^2}-1}$",
+          "choices": [
+            {
+              "choice_id": "6abfcb414eb844035d0364f2",
+              "text": "$-1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb414eb844035d0364f3",
+              "text": "$0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb414eb844035d0364f4",
+              "text": "$2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb414eb844035d0364f5",
+              "text": "$-2$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 38,
+          "nb_web_answers": 58
+        },
+        {
+          "num": 2,
+          "id": "6abfcb426d6cfbc17d9e7686",
+          "type": "MCQ",
+          "question": "Determinare per quali valori di $\\alpha \\in \\mathbb{R}$ la funzione $f(x)=x^{\\alpha-1}\\sin x-1+\\cos x$ è infinitesima.",
+          "choices": [
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7687",
+              "text": "$\\alpha<0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7688",
+              "text": "$\\alpha=0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7689",
+              "text": "$\\alpha>0$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e768a",
+              "text": "per ogni $\\alpha\\in\\mathbb{R}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 27,
+          "nb_web_answers": 54
+        },
+        {
+          "num": 3,
+          "id": "6abfcb424eb844035d03652a",
+          "type": "MCQ",
+          "question": "Siano f, g funzioni infinitesime per x→0, con f(x)=o(x) e g(x)=o(x). Quale delle seguenti affermazioni è \nFALSA, per x→0?",
+          "choices": [
+            {
+              "choice_id": "6abfcb424eb844035d03652b",
+              "text": "f(x)+g(x) = o(x)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d03652c",
+              "text": "f(x)·g(x) = o(x²)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d03652d",
+              "text": "f(x)/x → 0 per x→0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d03652e",
+              "text": "f(x) − g(x) = o(x²)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d03652f",
+              "text": "f(x) − g(x) = o(x)",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 4,
+          "id": "6abfcb426d6cfbc17d9e76da",
+          "type": "MCQ",
+          "question": "$lim_{x→0} \\frac{e^{x^2} − cos(x)}{ x²}$ è uguale a:",
+          "choices": [
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e76db",
+              "text": "3/2",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e76dc",
+              "text": "1/2",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e76dd",
+              "text": "0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e76de",
+              "text": "1",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e76df",
+              "text": "non esiste",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 5,
+          "id": "6abfcb424eb844035d03659e",
+          "type": "MCQ",
+          "question": "Qual è il campo di esistenza (o dominio) della funzione $f(x) = \\frac{1}{\\sqrt{x - 3}}$?",
+          "choices": [
+            {
+              "choice_id": "6abfcb424eb844035d03659f",
+              "text": "$x>3$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365a0",
+              "text": "$x\\geq 3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365a1",
+              "text": "$x\\neq 3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365a2",
+              "text": "$x<3$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 49,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 6,
+          "id": "6abfcb426d6cfbc17d9e7721",
+          "type": "MCQ",
+          "question": "Qual è il campo di esistenza (o dominio) della funzione $f(x) = \\ln(x^2 - 4)$?",
+          "choices": [
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7722",
+              "text": "$-2 <x \\leq 2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7723",
+              "text": "$-2 < x < 2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7724",
+              "text": "$x < -2$ ed  $x > 2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb426d6cfbc17d9e7725",
+              "text": "$x < -2$ oppure $x > 2$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 16,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 7,
+          "id": "6abfcb424eb844035d0365fa",
+          "type": "MCQ",
+          "question": "Sia $f$ asintotica a $g$   per $x\\to x_0$, con $f>0$ in un intorno di $x_0$, eventualmente escluso il punto $x_0$ stesso.  Allora risulta:",
+          "choices": [
+            {
+              "choice_id": "6abfcb424eb844035d0365fb",
+              "text": "$f=g+o(g)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365fc",
+              "text": "$\\lim_{x\\to x_0}\\frac{f(x)}{g(x)}=\\pm\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365fd",
+              "text": "$f=o(g)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb424eb844035d0365fe",
+              "text": "$\\log f$ è asintotica a $\\log g$.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 42,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 8,
+          "id": "6abfcb428d7e3a0f50e54986",
+          "type": "MCQ",
+          "question": "Cosa si intende geometricamente quando si dice che $\\lim_{x \\to x_0} f(x) = L$ ?",
+          "choices": [
+            {
+              "choice_id": "6abfcb428d7e3a0f50e54987",
+              "text": "Che la funzione è continua e derivabile in $x_0$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb428d7e3a0f50e54988",
+              "text": "Che man mano che $x$ si avvicina a $x_0$, i valori di $f(x)$ si avvicinano indefinitamente a $L$.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb428d7e3a0f50e54989",
+              "text": "Che la funzione assume esattamente il valore $L$ in $x_0$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb428d7e3a0f50e5498a",
+              "text": "Che la retta $y = L$ è un asintoto obliquo.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 48,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 9,
+          "id": "6abfcb4285bd74502945fbb3",
+          "type": "MCQ",
+          "question": "Qual è il risultato del limite $\\lim_{x \\to +\\infty} \\frac{- 3x +2x^2 +1}{4+5x^2}$?",
+          "choices": [
+            {
+              "choice_id": "6abfcb4285bd74502945fbb4",
+              "text": "$-\\frac{3}{4}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb4285bd74502945fbb5",
+              "text": "$-\\frac{3}{5}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb4285bd74502945fbb6",
+              "text": "$\\frac{2}{5}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb4285bd74502945fbb7",
+              "text": "$\\frac{5}{2}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 53,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 10,
+          "id": "6abfcb434eb844035d036663",
+          "type": "MCQ",
+          "question": "Quale tra le seguenti relazioni asintotiche è falsa per $x \\to 0$?",
+          "choices": [
+            {
+              "choice_id": "6abfcb434eb844035d036664",
+              "text": "$\\sin(x) \\sim x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036665",
+              "text": "$1 - \\cos(x) \\sim \\frac{x^2}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036666",
+              "text": "$\\ln(1 + x) \\sim x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036667",
+              "text": "$e^x - 1 \\sim x^2$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 50,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 11,
+          "id": "6abfcb430fc56280c2f06a01",
+          "type": "MCQ",
+          "question": "Date due funzioni $f(x)$ e $g(x)$ tali che $\\lim_{x \\to x_0} \\frac{f(x)}{g(x)} = 1$, cosa si può affermare?",
+          "choices": [
+            {
+              "choice_id": "6abfcb430fc56280c2f06a02",
+              "text": "Le due funzioni sono asintotiche.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06a03",
+              "text": "Le due funzioni sono asintoticamente equivalenti per $x \\to x_0$.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06a04",
+              "text": "Le due funzioni hanno lo stesso limite per $x \\to x_0$, ma non sono asintotiche.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06a05",
+              "text": "$f(x) - g(x)$ tende a $1$ per $x \\to x_0$.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 36,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 12,
+          "id": "6abfcb436d6cfbc17d9e7a23",
+          "type": "MCQ",
+          "question": "Sia $f$ una funzione dotata di asintoto orizzontale. Allora è sicuramente vero che",
+          "choices": [
+            {
+              "choice_id": "6abfcb436d6cfbc17d9e7a24",
+              "text": "$\\lim_{x\\to-\\infty}f(x)=L$ e $\\lim_{x\\to+-\\infty}=M$, con $L,M\\in\\mathbb{R}, L\\neq M$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb436d6cfbc17d9e7a25",
+              "text": "$\\lim_{x\\to-\\infty}f(x)=L\\in\\mathbb{R}$ o $\\lim_{x\\to+-\\infty}=M\\in\\mathbb{R}$.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb436d6cfbc17d9e7a26",
+              "text": "$\\lim_{x\\to-\\infty}f(x)=+\\infty$ e $\\lim_{x\\to+-\\infty}=-\\infty$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb436d6cfbc17d9e7a27",
+              "text": "$\\lim_{x\\to-\\infty}f(x)=L$ e $\\lim_{x\\to+-\\infty}=M$, con $L,M\\in\\mathbb{R}, L=M$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 34,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 13,
+          "id": "6abfcb434eb844035d036945",
+          "type": "MCQ",
+          "question": "Nel calcolo del limite $\\lim_{x \\to 0} \\frac{\\sin(3x)}{\\tan(2x)}$, utilizzando i limiti notevoli o il principio di sostituzione degli infinitesimi, a quale rapporto si riconduce il limite?",
+          "choices": [
+            {
+              "choice_id": "6abfcb434eb844035d036946",
+              "text": "$\\frac{3x}{2x}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036947",
+              "text": "$\\frac{3}{2x}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036948",
+              "text": "$\\frac{3x}{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d036949",
+              "text": "$\\frac{2x}{3x}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 50,
+          "nb_web_answers": 53
+        },
+        {
+          "num": 14,
+          "id": "6abfcb430fc56280c2f06b23",
+          "type": "MCQ",
+          "question": "Calcola il seguente limite: $\\lim_{x \\to 3^+} \\frac{1}{x - 3}$",
+          "choices": [
+            {
+              "choice_id": "6abfcb430fc56280c2f06b24",
+              "text": "$3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06b25",
+              "text": "$0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06b26",
+              "text": "$-\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb430fc56280c2f06b27",
+              "text": "$+\\infty$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 51,
+          "nb_web_answers": 52
+        },
+        {
+          "num": 15,
+          "id": "6abfcb434eb844035d0369e4",
+          "type": "MCQ",
+          "question": "Quando non è lecito applicare il principio di sostituzione degli infinitesimi?",
+          "choices": [
+            {
+              "choice_id": "6abfcb434eb844035d0369e5",
+              "text": "Quando si tratta di un prodotto di funzioni.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d0369e6",
+              "text": "Quando si tratta di un rapporto di funzioni.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d0369e7",
+              "text": "Quando l'argomento tende a zero.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb434eb844035d0369e8",
+              "text": "Quando si tratta di una somma o di una differenza algebrica.",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 36,
+          "nb_web_answers": 52
+        },
+        {
+          "num": 16,
+          "id": "6abfcb444eb844035d036b6b",
+          "type": "MCQ",
+          "question": "Per $x\\to 0$ si considerino le funzioni\n$f(x)=1-\\cos x$, $g(x)=x\\sin x$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6abfcb444eb844035d036b6c",
+              "text": "$f$ è un infinitesimo di ordine superiore rispetto a $g$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb444eb844035d036b6d",
+              "text": "$f$ e $g$ sono infinitesimi dello stesso ordine",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb444eb844035d036b6e",
+              "text": "$g$ è un infinitesimo di ordine superiore rispetto a $f$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb444eb844035d036b6f",
+              "text": "$f$ è un infinitesimo mentre $g$ non è un infinitesimo",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 40,
+          "nb_web_answers": 52
+        },
+        {
+          "num": 17,
+          "id": "6abfcb4460b43e8055ea9a8e",
+          "type": "MCQ",
+          "question": "Per $x\\to+\\infty$ si considerino le funzioni\n$f(x)=\\log(1+x^2)$,\n$g(x)=\\sqrt{x}$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6abfcb4460b43e8055ea9a8f",
+              "text": "$f$ e $g$ sono infiniti dello stesso ordine",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb4460b43e8055ea9a90",
+              "text": "$f$ è un infinito di ordine superiore rispetto a $g$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6abfcb4460b43e8055ea9a91",
+              "text": "$g$ è un infinito di ordine superiore rispetto a $f$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6abfcb4460b43e8055ea9a92",
+              "text": "$f$ tende a $0$, mentre $g$ tende a $+\\infty$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 42,
+          "nb_web_answers": 51
+        }
+      ]
+    },
+    {
+      "slug": "OSOUOHK",
+      "title": "Continuità delle Funzioni",
+      "cmid": 501300,
+      "questions_count": 15,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6ad23fe65dd735ab4009e9d3",
+          "type": "MCQ",
+          "question": "Per quali $\\beta$ la funzione $f(x)=\\begin{cases} \\sqrt{2\\beta x^2-1}, \\qquad x \\leq 1\\\\ \\frac{2\\beta}{x+1}, \\qquad x>1 \\end{cases}$ è continua nel punto 1?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe65dd735ab4009e9d4",
+              "text": "$\\beta=1$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009e9d5",
+              "text": "$\\beta>1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009e9d6",
+              "text": "$\\beta<1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009e9d7",
+              "text": "per nessun $\\beta$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 40,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 2,
+          "id": "6ad23fe600060f1ca56d6242",
+          "type": "MCQ",
+          "question": "Per quali $\\beta$ la funzione $f(x)=\\begin{cases} \\frac{x+\\alpha}{x-1}, \\qquad x >2\\\\ \\frac{\\beta-x}{x-3}, \\qquad x\\leq 2 \\end{cases}$ è continua nel punto 2?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe600060f1ca56d6243",
+              "text": "$\\alpha=-\\beta$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6244",
+              "text": "$\\alpha=\\beta$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6245",
+              "text": "$\\alpha=\\beta=1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6246",
+              "text": "$\\alpha=2 \\beta$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 39,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 3,
+          "id": "6ad23fe6525ea0c639572518",
+          "type": "MCQ",
+          "question": "Sia $f: ℝ→ℝ$, derivabile su $\\mathbb{R}$, tale che $lim_{x→+∞} f'(x) =m$, $m\\in \\mathbb{R}, \\quad m\\neq 0,$ e $lim_{x→+∞} f(x)-mx =q, \\in \\mathbb{R}$ . Quale delle seguenti affermazioni è vera?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe6525ea0c639572519",
+              "text": "$lim_{x→+∞} f(x)-mf'(x)$ esiste finito, ed è uguale a q",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957251a",
+              "text": "$lim_{x→+∞} f(x)-mf'(x)$ esiste finito, diverso da q",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957251b",
+              "text": "$lim_{x→+∞} f(x)-mf'(x)$ non sempre esiste",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957251c",
+              "text": "$lim_{x→+∞} f(x)-mf'(x)$ non esiste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957251d",
+              "text": "$lim_{x→+∞} f(x)-mf'(x)$ è infinito",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 9,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 4,
+          "id": "6ad23fe65dd735ab4009ea2f",
+          "type": "MCQ",
+          "question": "Sia $f:[0,1]→ℝ$ continua con f(0)=−1 e f(1)=3. Quale delle seguenti affermazioni è FALSA?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe65dd735ab4009ea30",
+              "text": "Esiste c∈(0,1) tale che f(c)=0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009ea31",
+              "text": "f ammette massimo e minimo assoluti su [0,1]",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009ea32",
+              "text": "f è invertibile su [0,1]",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009ea33",
+              "text": "f assume tutti i valori dell'intervallo [−1,3]",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009ea34",
+              "text": "Esiste c∈(0,1) tale che f(c)=2",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 23,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 5,
+          "id": "6ad23fe600060f1ca56d6291",
+          "type": "MCQ",
+          "question": "La funzione $f(x) = \\frac{sin(2x)}{x}$ per x≠0, f(0)=0, in x=0 presenta",
+          "choices": [
+            {
+              "choice_id": "6ad23fe600060f1ca56d6292",
+              "text": "una discontinuità eliminabile, poiché il limite esiste finito ma è diverso dal valore f(0)",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6293",
+              "text": "una  discontinuità di prima specie (salto), poiché i limiti destro e sinistro sono diversi tra loro",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6294",
+              "text": "una  discontinuità di seconda specie, poiché il limite non esiste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6295",
+              "text": "f è continua in x=0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe600060f1ca56d6296",
+              "text": "f non è definita in x=0,  quindi il concetto di continuità non si applica",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 32,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 6,
+          "id": "6ad23fe6525ea0c63957256a",
+          "type": "MCQ",
+          "question": "Sia $f:[a,b]→ℝ$ continua e strettamente crescente. Quale delle seguenti affermazioni è vera riguardo alla \nfunzione inversa f⁻¹?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe6525ea0c63957256b",
+              "text": "f⁻¹ è definita su [f(a), f(b)], ed è continua e strettamente crescente",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957256c",
+              "text": "f⁻¹ esiste ma non è detto sia  continua",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957256d",
+              "text": "f⁻¹ è definita su tutto ℝ",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957256e",
+              "text": "f⁻¹ è strettamente decrescente",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe6525ea0c63957256f",
+              "text": "f⁻¹ esiste solo se f è anche  derivabile",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 38,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 7,
+          "id": "6ad23fe65dd735ab4009eac7",
+          "type": "MCQ",
+          "question": "Sia $f:[0,1]\\to\\mathbb{R}$ una funzione continua.",
+          "choices": [
+            {
+              "choice_id": "6ad23fe65dd735ab4009eac8",
+              "text": "Esiste sicuramente in $[0,1]$ un punto stazionario.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009eac9",
+              "text": "Esiste sicuramente in $[0,1]$ un punto di minimo, ma potrebbe non esistere alcun punto di massimo.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009eaca",
+              "text": "Esiste sicuramente in $[0,1]$ sia un punto di minimo che un punto di massimo.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe65dd735ab4009eacb",
+              "text": "Esiste sicuramente in $[0,1]$ un punto di massimo, ma potrebbe non esistere alcun punto di minimo.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 29,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 8,
+          "id": "6ad23fe700060f1ca56d6322",
+          "type": "MCQ",
+          "question": "Sia $f$ una funzione continua in un intorno di un punto $x_0$. Allora risulta",
+          "choices": [
+            {
+              "choice_id": "6ad23fe700060f1ca56d6323",
+              "text": "$\\lim_{x\\to x_0^-}f(x)=L$, $\\lim_{x\\to x_0^+}f(x)=M$, con $L,M\\in\\mathbb{R}$, $L<f(x_0)<M$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6324",
+              "text": "$\\lim_{x\\to x_0^-}f(x)=0=\\lim_{x\\to x_0^+}f(x)$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6325",
+              "text": "$\\lim_{x\\to x_0^-}f(x)\\leq0, \\lim_{x\\to x_0^+}f(x)\\geq 0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6326",
+              "text": "$\\lim_{x\\to x_0^-}f(x)=L=\\lim_{x\\to x_0^+}f(x)$, $L=f(x_0)$.",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 9,
+          "id": "6ad23fe7525ea0c63957260b",
+          "type": "MCQ",
+          "question": "Cosa afferma il Teorema di Weierstrass per una funzione continua definita su un intervallo chiuso e limitato $[a, b]$?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe7525ea0c63957260c",
+              "text": "La funzione assume tutti i valori compresi tra il suo minimo e il suo massimo assoluto.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c63957260d",
+              "text": "La funzione è necessariamente derivabile in ogni punto dell'intervallo.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c63957260e",
+              "text": "La funzione ammette almeno un punto di massimo assoluto e un punto di minimo assoluto.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c63957260f",
+              "text": "La funzione interseca l'asse delle ascisse almeno una volta.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 36,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 10,
+          "id": "6ad23fe75dd735ab4009eb1d",
+          "type": "MCQ",
+          "question": "Quale delle seguenti ipotesi è fondamentale affinché si possa applicare il Teorema degli Zeri (o di Bolzano) a una funzione continua $f(x)$ definita in $[a, b]$?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe75dd735ab4009eb1e",
+              "text": "La funzione deve essere derivabile in tutto l'intervallo $[a, b]$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009eb1f",
+              "text": "La funzione deve assumere segni opposti agli estremi dell'intervallo ($f(a) \\cdot f(b) < 0$).",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009eb20",
+              "text": "La funzione deve essere strettamente crescente.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009eb21",
+              "text": "L'intervallo $[a, b]$ deve in realtà essere aperto.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 41,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 11,
+          "id": "6ad23fe700060f1ca56d63f6",
+          "type": "MCQ",
+          "question": "Sia $f:[a,b]\\to\\mathbb{R}$ una funzione continua e derivabile in $(a,b)$.",
+          "choices": [
+            {
+              "choice_id": "6ad23fe700060f1ca56d63f7",
+              "text": "La funzione $f$ ammette sicuramente un punto di estremo relativo in $(a,b)$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d63f8",
+              "text": "Se $f$ ammette un punto di estremo in $(a,b)$, allora $f(a)=f(b)$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d63f9",
+              "text": "Se $f$ ammette un punto $c\\in (a,b)$ di estremo relativo,  allora la tangente al grafico di $f$ in $(c,f(c))$ è orizzontale.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d63fa",
+              "text": "Se $f$ ammette un punto $c\\in (a,b)$ di estremo relativo,  allora la tangente al grafico di $f$ in $(c,f(c))$ è verticale.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 37,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 12,
+          "id": "6ad23fe7525ea0c6395726c6",
+          "type": "MCQ",
+          "question": "Sia $f$ una funzione continua nell'intervallo chiuso $[a, b]$ e derivabile nell'intervallo aperto $(a, b)$. Se $f(a) = f(b)$, quale tra i seguenti teoremi garantisce l'esistenza di almeno uno zero della derivata?",
+          "choices": [
+            {
+              "choice_id": "6ad23fe7525ea0c6395726c7",
+              "text": "Teorema di Lagrange",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c6395726c8",
+              "text": "Teorema di Rolle",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c6395726c9",
+              "text": "Teorema di Weierstrass",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c6395726ca",
+              "text": "Teorema dei valori intermedi",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 34,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 13,
+          "id": "6ad23fe75dd735ab4009ec0b",
+          "type": "MCQ",
+          "question": "Sia $f:[1,2]\\to\\mathbb{R}$ una funzione tale che $f(x)\\neq 0 \\forall x\\in [1,2]$, $f(1)=1$, $f(2)=-1$.",
+          "choices": [
+            {
+              "choice_id": "6ad23fe75dd735ab4009ec0c",
+              "text": "La funzione $f$ è sicuramente limitata su tutto $[1,2]$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009ec0d",
+              "text": "La funzione $f$ è sicuramente illimitata su $[1,2]$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009ec0e",
+              "text": "La funzione $f$ è sicuramente continua su tutto $[1,2]$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe75dd735ab4009ec0f",
+              "text": "La funzione $f$ è sicuramente non continua su tutto $[1,2]$.",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 37,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 14,
+          "id": "6ad23fe700060f1ca56d657e",
+          "type": "MCQ",
+          "question": "Si consideri la funzione\n$f(x)=\n\\begin{cases}\n\\dfrac{\\sin(2x)}{x}, & x\\neq 0,\\\\[4pt]\n\\alpha, & x=0,\n\\end{cases}\n\\quad \\alpha\\in\\mathbb{R}.$\nStabilire per quale valore di $\\alpha$ la funzione $f$ è continua in $x=0$.",
+          "choices": [
+            {
+              "choice_id": "6ad23fe700060f1ca56d657f",
+              "text": "$\\alpha=0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6580",
+              "text": "$\\alpha=1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6581",
+              "text": "$\\alpha=2$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe700060f1ca56d6582",
+              "text": "Per nessun valore di $\\alpha$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 34,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 15,
+          "id": "6ad23fe7525ea0c639572775",
+          "type": "MCQ",
+          "question": "Si consideri la funzione\n$f(x)=\n\\begin{cases}\n\\dfrac{e^x-1}{x}, & x<0,\\\\[4pt]\n\\alpha, & x=0,\\\\[4pt]\n\\dfrac{\\log(1+x)}{x}, & x>0,\n\\end{cases}$\n$\\alpha\\in\\mathbb{R}.$\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6ad23fe7525ea0c639572776",
+              "text": "$f$ è continua in $x=0$ se e solo se $\\alpha=0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c639572777",
+              "text": "$f$ è continua in $x=0$ se e solo se $\\alpha=1$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c639572778",
+              "text": "$f$ presenta una discontinuità di salto in $x=0$ per ogni $\\alpha$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad23fe7525ea0c639572779",
+              "text": "$f$ non è continua in $x=0$ per nessun valore di $\\alpha$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 40
+        }
+      ]
+    },
+    {
+      "slug": "TJKRRKL",
+      "title": "Derivabilità delle Funzioni",
+      "cmid": 501329,
+      "questions_count": 10,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6ad24265a9b3241c5af59380",
+          "type": "MCQ",
+          "question": "Siano $f(x)=\\arctan x$ e $x_0=1$. Scrivere l'equazione della retta tangente la grafico.",
+          "choices": [
+            {
+              "choice_id": "6ad24265a9b3241c5af59381",
+              "text": "$y=\\frac12x+\\frac{\\pi}{4}-\\frac12$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24265a9b3241c5af59382",
+              "text": "$y=x+\\frac{\\pi}{4}-1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24265a9b3241c5af59383",
+              "text": "$y=\\frac12x+\\frac{\\pi}{4}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24265a9b3241c5af59384",
+              "text": "$y=\\frac{x-1}{2}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 33,
+          "nb_web_answers": 43
+        },
+        {
+          "num": 2,
+          "id": "6ad24265bb144fa546ec2e38",
+          "type": "MCQ",
+          "question": "Determinare il massimo e i minimi della funzione $x^2 e^{\\frac{x-3}{x+1}}$.",
+          "choices": [
+            {
+              "choice_id": "6ad24265bb144fa546ec2e39",
+              "text": "Massimo relativo in $x=0$,  e minimo relativo in $x=-2-\\sqrt3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24265bb144fa546ec2e3a",
+              "text": "La funzione non presenta né massimi né minimi relativi",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24265bb144fa546ec2e3b",
+              "text": "Massimo relativo in $x=-2+\\sqrt3$, minimo relativo in $x=-2-\\sqrt3$ e $x=0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24265bb144fa546ec2e3c",
+              "text": "Massimo relativo in $x=-2-\\sqrt3$, minimi relativi in $x=-2+\\sqrt3$  e $x=0$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 10,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 3,
+          "id": "6ad2426600060f1ca5701cc8",
+          "type": "MCQ",
+          "question": "Il punto $c\\in\\mathbb{R}$ è punto di cuspide  per una funzione $y=f(x)$. Stabilire quale delle seguenti affermazioni potrebbe essere vera",
+          "choices": [
+            {
+              "choice_id": "6ad2426600060f1ca5701cc9",
+              "text": "$\\lim_{x\\to c^-}f(x)=+\\infty$  e  $\\lim_{x\\to c^+}f(x)=-\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701cca",
+              "text": "$\\lim_{x\\to c^-}f(x)=-\\infty$ e $\\lim_{x\\to c^+}=+\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701ccb",
+              "text": "$\\lim_{h\\to 0^-}\\frac{f(c+h)-f(c)}{h}=+\\infty$ e $\\lim_{h\\to 0^+}\\frac{f(c+h)-f(c)}{h}=-\\infty$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701ccc",
+              "text": "$\\lim_{h\\to 0^-}\\frac{f(c+h)-f(c)}{h}=+\\infty$ e $\\lim_{h\\to 0^+}\\frac{f(c+h)-f(c)}{h}=+\\infty$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 34,
+          "nb_web_answers": 42
+        },
+        {
+          "num": 4,
+          "id": "6ad24266525ea0c63959cfc7",
+          "type": "MCQ",
+          "question": "Sia $\\lim_{h→0^-}\\frac{f(1+h)-f(1)}{h}=1$ e $\\lim_{h→0^+}\\frac{f(1+h)-f(1)}{h}=-1$.",
+          "choices": [
+            {
+              "choice_id": "6ad24266525ea0c63959cfc8",
+              "text": "$f$ sicuramente non è continua in $x=1$.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959cfc9",
+              "text": "$f$ è continua in $x=1$, che è un suo punto di cuspide.",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959cfca",
+              "text": "$f$ è continua in $x=1$, che è un suo punto angoloso.",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959cfcb",
+              "text": "$f$ è continua in $x=1$, che è un suo punto di flesso a tangente verticale.",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 5,
+          "id": "6ad24266accb5d7d356f32a4",
+          "type": "MCQ",
+          "question": "Data una funzione $f(x)$ continua in $[a, b]$ e derivabile in $(a, b)$, il Teorema di Lagrange afferma che esiste almeno un punto $c \\in (a, b)$ tale che:",
+          "choices": [
+            {
+              "choice_id": "6ad24266accb5d7d356f32a5",
+              "text": "$f'(c) = 0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266accb5d7d356f32a6",
+              "text": "$f'(c) = f(b) - f(a)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266accb5d7d356f32a7",
+              "text": "$f(b)=f'(c)(b-a)+ f(a)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24266accb5d7d356f32a8",
+              "text": "$f'(c) = \\frac{b - a}{f(b) - f(a)}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 30,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 6,
+          "id": "6ad24266a9b3241c5af59459",
+          "type": "MCQ",
+          "question": "Sia f: ℝ→ℝ derivabile in un punto x₀. Quali delle seguenti affermazioni sono FALSE? (2 risposte)",
+          "choices": [
+            {
+              "choice_id": "6ad24266a9b3241c5af5945a",
+              "text": "f è continua in x₀",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266a9b3241c5af5945b",
+              "text": "Se f'(x₀)=0, allora x₀ è un punto di massimo o minimo locale",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24266a9b3241c5af5945c",
+              "text": "La retta tangente al  grafico di f in x₀ ha coefficiente angolare f'(x₀)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266a9b3241c5af5945d",
+              "text": "$f'(x₀) = lim_{h→0}\\frac{f(x₀+h) − f(x₀)}{h}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266a9b3241c5af5945e",
+              "text": "f'(x) è continua in $x_0$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 7,
+          "id": "6ad24266bb144fa546ec2f06",
+          "type": "MCQ",
+          "question": "La funzione $f(x) = |x|^{3/2}$ in x=0:",
+          "choices": [
+            {
+              "choice_id": "6ad24266bb144fa546ec2f07",
+              "text": "è derivabile, con f'(0)=0",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24266bb144fa546ec2f08",
+              "text": "non è derivabile, poiché presenta un punto angoloso in x=0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266bb144fa546ec2f09",
+              "text": "non è  derivabile, poiché presenta una cuspide in x=0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266bb144fa546ec2f0a",
+              "text": "non è continua in x=0",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266bb144fa546ec2f0b",
+              "text": "è derivabile ma f'(0)≠0",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 26,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 8,
+          "id": "6ad2426600060f1ca5701d2d",
+          "type": "MCQ",
+          "question": "Sia f:[0,2]→ℝ continua su [0,2] e derivabile su (0,2), con f(0)=1 e f(2)=5. Quale delle seguenti \naffermazioni è CERTAMENTE vera?",
+          "choices": [
+            {
+              "choice_id": "6ad2426600060f1ca5701d2e",
+              "text": "Esiste c∈(0,2) tale che f'(c)=2",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701d2f",
+              "text": "f'(x)=2 per ogni x∈(0,2)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701d30",
+              "text": "f è strettamente crescente su [0,2]",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701d31",
+              "text": "f'(x)>0  per ogni x∈(0,2)",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad2426600060f1ca5701d32",
+              "text": "f ammette un punto di flesso in (0,2)",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 31,
+          "nb_web_answers": 41
+        },
+        {
+          "num": 9,
+          "id": "6ad24266525ea0c63959d030",
+          "type": "MCQ",
+          "question": "Si consideri la funzione\n$f(x)=x^2 e^{-x}$.\nStabilire quale delle seguenti affermazioni è corretta.",
+          "choices": [
+            {
+              "choice_id": "6ad24266525ea0c63959d031",
+              "text": "$f$ è crescente in tutto $\\mathbb{R}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959d032",
+              "text": "$f$ ha un punto di minimo relativo in $x=2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959d033",
+              "text": "$f$ ha un punto di massimo relativo in $x=2$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24266525ea0c63959d034",
+              "text": "$f$ non possiede punti stazionari",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 30,
+          "nb_web_answers": 40
+        },
+        {
+          "num": 10,
+          "id": "6ad24267accb5d7d356f3550",
+          "type": "MCQ",
+          "question": "Sia $f:\\mathbb{R}\\to\\mathbb{R}$ una funzione derivabile e sia $x_0\\in\\mathbb{R}$.\nSe $x_0$ è un punto di minimo relativo per $f$, quale delle seguenti\naffermazioni è necessariamente vera?",
+          "choices": [
+            {
+              "choice_id": "6ad24267accb5d7d356f3551",
+              "text": "$f'(x_0)>0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24267accb5d7d356f3552",
+              "text": "$f'(x_0)<0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6ad24267accb5d7d356f3553",
+              "text": "$f'(x_0)=0$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6ad24267accb5d7d356f3554",
+              "text": "$f''(x_0)>0$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 35,
+          "nb_web_answers": 40
+        }
+      ]
+    },
+    {
+      "slug": "EPHDSPM",
+      "title": "Integrali Definiti",
+      "cmid": 505223,
+      "questions_count": 12,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6aedc250fc0e67f7a939d23f",
+          "type": "GuessNumber",
+          "question": "Calcolare $\\int_1^3 3x^2 - 2x - 1 dx$",
+          "choices": [],
+          "correct_number": 16,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 2,
+          "id": "6aedc250a03952aca93b3c8b",
+          "type": "MCQ",
+          "question": "$\\int_0^{\\log 2}\\frac{e^{2x}}{e^{3x}+3e^{2x}+1}dx=$",
+          "choices": [
+            {
+              "choice_id": "6aedc250a03952aca93b3c8c",
+              "text": "$\\int_0^{\\log 2}\\frac{t^2}{t^3+3t^2+1}dt$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3c8d",
+              "text": "$\\int_1^{2}\\frac{t^2}{t^3+3t^2+1}dt$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3c8e",
+              "text": "$\\int_0^{\\log 2}\\frac{t}{t^3+3t^2+1}dt$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3c8f",
+              "text": "$\\int_1^{2}\\frac{t}{t^3+3t^2+1}dt$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3c90",
+              "text": "nessuno tra questi",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 3,
+          "id": "6aedc2503d42f1b97abc1673",
+          "type": "MCQ",
+          "question": "Sia $F$ la funzione integrale definita da $F(x)=\\int_1^x|t-3|dt$. È vero che",
+          "choices": [
+            {
+              "choice_id": "6aedc2503d42f1b97abc1674",
+              "text": "nessuna tra queste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2503d42f1b97abc1675",
+              "text": "$F$ è discontinua in $x=3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2503d42f1b97abc1676",
+              "text": "$F$ ha un punto di minimo in $x=3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2503d42f1b97abc1677",
+              "text": "$F$ non è derivabile in $x=3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2503d42f1b97abc1678",
+              "text": "$F$ ha un punto di flesso a tangente orizzontale in $x=3$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 4,
+          "id": "6aedc250fc0e67f7a939d27a",
+          "type": "MCQ",
+          "question": "L'area compresa tra le funzioni $x^2$ e $\\sqrt{x}$ su $[0,1]$ è",
+          "choices": [
+            {
+              "choice_id": "6aedc250fc0e67f7a939d27b",
+              "text": "$2/3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250fc0e67f7a939d27c",
+              "text": "non è calcolabile perché $\\sqrt{x}$ ha una tangente verticale",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250fc0e67f7a939d27d",
+              "text": "$-1/3$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250fc0e67f7a939d27e",
+              "text": "$1/3$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc250fc0e67f7a939d27f",
+              "text": "nessuna delle altre",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 2,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 5,
+          "id": "6aedc250a03952aca93b3cc5",
+          "type": "MCQ",
+          "question": "Data $f(x)=\\begin{cases}\\sin\\frac{1}{x} \\qquad x\\neq 0\\\\0\\qquad\\quad\\,\\, x=0\\end{cases}$ quale affermazione è errata:",
+          "choices": [
+            {
+              "choice_id": "6aedc250a03952aca93b3cc6",
+              "text": "non ammette primitiva su $\\mathbb{R}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3cc7",
+              "text": "$\\int_0^1 f(x)dx<\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3cc8",
+              "text": "è Riemann integrabile su $(0,1]$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3cc9",
+              "text": "nessuna tra queste",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc250a03952aca93b3cca",
+              "text": "è Riemann integrabile su $[-1,1]$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 6,
+          "id": "6aedc251fc0e67f7a939d3b4",
+          "type": "MCQ",
+          "question": "Sia $f\\colon [0,\\infty)\\to \\mathbb{R}$ una funzione di classe $C^2([0,+\\infty))$ tale che $f'(x)<2x$ per ogni $x\\geq 0$. Allora",
+          "choices": [
+            {
+              "choice_id": "6aedc251fc0e67f7a939d3b5",
+              "text": "$\\lim_{x\\to+\\infty}f(x)=+\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d3b6",
+              "text": "$f''(x)<2$ per ogni $x\\geq 0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d3b7",
+              "text": "$f(x)<x^2 + c$, per qualche $c\\in \\mathbb{R}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d3b8",
+              "text": "$\\lim_{x\\to+\\infty}f''(x)<2$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 7,
+          "id": "6aedc251a03952aca93b3d60",
+          "type": "MCQ",
+          "question": "Data $f(x)=\\log\\big[1+x\\sinh(x)-\\sin^2(x)\\big]$ e $F(x)=\\int_0^x f(t) dt$. Per $x\\rightarrow 0$ si ha",
+          "choices": [
+            {
+              "choice_id": "6aedc251a03952aca93b3d61",
+              "text": "$F(0)=1+o(1)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3d62",
+              "text": "$F(x)=x^2+o(x^5)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3d63",
+              "text": "nessuna affermazione è vera",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3d64",
+              "text": "$F(x)=\\frac{1}{10!}x^4+o(x^4)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3d65",
+              "text": "$F(x)=\\frac{1}{10}x^5+o(x^5)$",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 2
+        },
+        {
+          "num": 8,
+          "id": "6aedc2513d42f1b97abc173e",
+          "type": "MCQ",
+          "question": "$\\lim\\limits_{x\\rightarrow 0^+}\\dfrac{\\displaystyle\\int\\limits_{0}^{x}[e^{-\\sin(t^2)}-\\cos^2(t)]\\,dt}{x^5\\cosh(x)}$",
+          "choices": [
+            {
+              "choice_id": "6aedc2513d42f1b97abc173f",
+              "text": "$=0$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc1740",
+              "text": "$=1/30$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc1741",
+              "text": "$=+\\infty$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc1742",
+              "text": "$\\not\\exists$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc1743",
+              "text": "$=1/6$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 9,
+          "id": "6aedc2513d42f1b97abc179c",
+          "type": "MCQ",
+          "question": "Calcolare $\\int_0^1 \\frac{1}{(x^2+1)^2}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc2513d42f1b97abc179d",
+              "text": "$\\frac{\\pi}{8}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc179e",
+              "text": "$\\frac{2+\\pi}{8}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc179f",
+              "text": "$\\frac{1}{4} + \\frac{\\pi}{4}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc2513d42f1b97abc17a0",
+              "text": "$\\frac{2-\\pi}{8}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 10,
+          "id": "6aedc251fc0e67f7a939d490",
+          "type": "MCQ",
+          "question": "Calcolare $\\int_0^1 \\frac{\\sqrt{x}}{1+\\sqrt{x}}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc251fc0e67f7a939d491",
+              "text": "$1 - 2\\log2$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d492",
+              "text": "$\\log 2 - 1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d493",
+              "text": "$\\log4 - 1$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d494",
+              "text": "$2 - 2\\log 2$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 11,
+          "id": "6aedc251a03952aca93b3e3e",
+          "type": "MCQ",
+          "question": "Calcolare $\\int_0^{\\frac{\\pi}{4}} \\frac{\\sin x}{\\cos^2 x}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc251a03952aca93b3e3f",
+              "text": "$1-\\sqrt{2}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3e40",
+              "text": "$\\sqrt{2}-1$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3e41",
+              "text": "$\\sqrt{2}+1$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251a03952aca93b3e42",
+              "text": "$\\frac{1}{\\sqrt{2}-1}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 12,
+          "id": "6aedc251fc0e67f7a939d4f8",
+          "type": "MCQ",
+          "question": "Calcolare $\\int_0^{\\log 3} \\frac{1}{e^{2x}+9}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc251fc0e67f7a939d4f9",
+              "text": "$\\frac{1}{3} \\left( \\frac{\\pi}{4} - \\arctan \\frac{1}{3} \\right)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d4fa",
+              "text": "$\\frac{1}{3} \\left( \\frac{\\pi}{2} - \\arctan \\frac{1}{3} \\right)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d4fb",
+              "text": "$\\frac{1}{3} \\arctan \\frac{1}{3}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc251fc0e67f7a939d4fc",
+              "text": "$\\frac{1}{3} \\left( \\frac{\\pi}{4} + \\arctan \\frac{1}{3} \\right) $",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        }
+      ]
+    },
+    {
+      "slug": "RUMKPKY",
+      "title": "Integrali Indefiniti",
+      "cmid": 505228,
+      "questions_count": 16,
+      "questions": [
+        {
+          "num": 1,
+          "id": "6aedc583fc0e67f7a93dbb03",
+          "type": "MCQ",
+          "question": "$\\int \\arctan x dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc583fc0e67f7a93dbb04",
+              "text": "$x \\arctan x- \\frac{1}{1+x^2}+c$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc583fc0e67f7a93dbb05",
+              "text": "$x \\arctan x-\\log(\\sqrt{1+x^2})+c$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc583fc0e67f7a93dbb06",
+              "text": "$x^2 \\arctan x- \\frac{\\log(1+x^2)}{2}+c$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc583fc0e67f7a93dbb07",
+              "text": "E' un integrale non calcolabile",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 2,
+          "id": "6aedc58328912a2ed740c5f3",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{3 e^{3x}}{5+e^{3x}}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc58328912a2ed740c5f4",
+              "text": "$\\log(5-e^{2x})$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58328912a2ed740c5f5",
+              "text": "$\\log(5+e^{2x})+x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58328912a2ed740c5f6",
+              "text": "$\\log(5+e^{3x})$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc58328912a2ed740c5f7",
+              "text": "$\\frac{1}{5+e^{3x}}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 3,
+          "id": "6aedc5843d42f1b97ac0597d",
+          "type": "MCQ",
+          "question": "$F(x)=\\log(x)$ è una primitiva di $f(x)=\\frac{1}{x}$ su",
+          "choices": [
+            {
+              "choice_id": "6aedc5843d42f1b97ac0597e",
+              "text": "nessuna delle risposte",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc5843d42f1b97ac0597f",
+              "text": "$[0,+\\infty)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc5843d42f1b97ac05980",
+              "text": "$(0,+\\infty)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc5843d42f1b97ac05981",
+              "text": "$\\mathbb{R}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc5843d42f1b97ac05982",
+              "text": "$\\mathbb{R}\\setminus\\{0\\}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 4,
+          "id": "6aedc584fc0e67f7a93dbb8e",
+          "type": "MCQ",
+          "question": "Una primitiva su $\\mathbb{R}$ di $f(x)=\\frac{x}{1+x^4}$ è",
+          "choices": [
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbb8f",
+              "text": "$\\frac{\\arctan(x^2)}{2}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbb90",
+              "text": "$\\log(1+x^4)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbb91",
+              "text": "$\\arctan(x^2)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbb92",
+              "text": "nessuna tra queste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbb93",
+              "text": "$\\arctan\\big(\\frac{x^2}{2}\\big)$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 5,
+          "id": "6aedc584a03952aca93f3796",
+          "type": "MCQ",
+          "question": "Una primitiva di $f(x)=\\cos(x^2)$ su $\\mathbb{R}$",
+          "choices": [
+            {
+              "choice_id": "6aedc584a03952aca93f3797",
+              "text": "esiste, ma non può essere calcolata in termini di funzioni elementari",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc584a03952aca93f3798",
+              "text": "è $F(x)=\\sin(x^2)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584a03952aca93f3799",
+              "text": "è $F(x)=\\frac{\\sin(x^2)}{2x}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584a03952aca93f379a",
+              "text": "non esiste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584a03952aca93f379b",
+              "text": "nessuna delle risposte",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 6,
+          "id": "6aedc58428912a2ed740c660",
+          "type": "MCQ",
+          "question": "Sia $f:[-2,2]\\rightarrow \\mathbb{R}$, continua, $\\leq 0$ e crescente. Quale tra le seguenti può essere una sua primitiva?",
+          "choices": [
+            {
+              "choice_id": "6aedc58428912a2ed740c661",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c662",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c663",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c664",
+              "text": "nessuna tra queste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c665",
+              "text": "",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 7,
+          "id": "6aedc584fc0e67f7a93dbc64",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{e^x}{\\sqrt{1-e^{2x}}}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbc65",
+              "text": "$\\arccos e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbc66",
+              "text": "$\\arctan e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbc67",
+              "text": "$\\arcsin e^x$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbc68",
+              "text": "Nessuna delle precedenti",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 8,
+          "id": "6aedc584fc0e67f7a93dbd2d",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{1}{x \\log x}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd2e",
+              "text": "$\\log(1/x)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd2f",
+              "text": "$\\log|\\log x|$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd30",
+              "text": "$e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd31",
+              "text": "$\\log x$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 9,
+          "id": "6aedc58428912a2ed740c6b7",
+          "type": "MCQ",
+          "question": "$\\int \\arctan x dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc58428912a2ed740c6b8",
+              "text": "$x \\arctan x- \\frac{1}{1+x^2}+c$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c6b9",
+              "text": "$x \\arctan x-\\log(\\sqrt{1+x^2})+c$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c6ba",
+              "text": "$x^2 \\arctan x- \\frac{\\log(1+x^2)}{2}+c$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c6bb",
+              "text": "E' un integrale non calcolabile",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 0,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 10,
+          "id": "6aedc584fc0e67f7a93dbd86",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{3 e^{3x}}{5+e^{3x}}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd87",
+              "text": "$\\log(5-e^{2x})$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd88",
+              "text": "$\\log(5+e^{2x})+x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd89",
+              "text": "$\\log(5+e^{3x})$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc584fc0e67f7a93dbd8a",
+              "text": "$\\frac{1}{5+e^{3x}}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 11,
+          "id": "6aedc58428912a2ed740c76f",
+          "type": "MCQ",
+          "question": "$F(x)=\\log(x)$ è una primitiva di $f(x)=\\frac{1}{x}$ su",
+          "choices": [
+            {
+              "choice_id": "6aedc58428912a2ed740c770",
+              "text": "nessuna delle risposte",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c771",
+              "text": "$[0,+\\infty)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c772",
+              "text": "$(0,+\\infty)$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c773",
+              "text": "$\\mathbb{R}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58428912a2ed740c774",
+              "text": "$\\mathbb{R}\\setminus\\{0\\}$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 12,
+          "id": "6aedc585fc0e67f7a93dbe32",
+          "type": "MCQ",
+          "question": "Una primitiva su $\\mathbb{R}$ di $f(x)=\\frac{x}{1+x^4}$ è",
+          "choices": [
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbe33",
+              "text": "$\\frac{\\arctan(x^2)}{2}$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbe34",
+              "text": "$\\log(1+x^4)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbe35",
+              "text": "$\\arctan(x^2)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbe36",
+              "text": "nessuna tra queste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbe37",
+              "text": "$\\arctan\\big(\\frac{x^2}{2}\\big)$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 13,
+          "id": "6aedc585fc0e67f7a93dbeda",
+          "type": "MCQ",
+          "question": "Una primitiva di $f(x)=\\cos(x^2)$ su $\\mathbb{R}$",
+          "choices": [
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbedb",
+              "text": "esiste, ma non può essere calcolata in termini di funzioni elementari",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbedc",
+              "text": "è $F(x)=\\sin(x^2)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbedd",
+              "text": "è $F(x)=\\frac{\\sin(x^2)}{2x}$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbede",
+              "text": "non esiste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbedf",
+              "text": "nessuna delle risposte",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 14,
+          "id": "6aedc58528912a2ed740c824",
+          "type": "MCQ",
+          "question": "Sia $f:[-2,2]\\rightarrow \\mathbb{R}$, continua, $\\leq 0$ e crescente. Quale tra le seguenti può essere una sua primitiva?",
+          "choices": [
+            {
+              "choice_id": "6aedc58528912a2ed740c825",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c826",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c827",
+              "text": "",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c828",
+              "text": "nessuna tra queste",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c829",
+              "text": "",
+              "is_correct": true
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 15,
+          "id": "6aedc585fc0e67f7a93dbf79",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{e^x}{\\sqrt{1-e^{2x}}}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbf7a",
+              "text": "$\\arccos e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbf7b",
+              "text": "$\\arctan e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbf7c",
+              "text": "$\\arcsin e^x$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc585fc0e67f7a93dbf7d",
+              "text": "Nessuna delle precedenti",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        },
+        {
+          "num": 16,
+          "id": "6aedc58528912a2ed740c8b1",
+          "type": "MCQ",
+          "question": "Calcolare $ \\int \\frac{1}{x \\log x}dx$",
+          "choices": [
+            {
+              "choice_id": "6aedc58528912a2ed740c8b2",
+              "text": "$\\log(1/x)$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c8b3",
+              "text": "$\\log|\\log x|$",
+              "is_correct": true
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c8b4",
+              "text": "$e^x$",
+              "is_correct": false
+            },
+            {
+              "choice_id": "6aedc58528912a2ed740c8b5",
+              "text": "$\\log x$",
+              "is_correct": false
+            }
+          ],
+          "correct_number": null,
+          "nb_correct_answers": 1,
+          "nb_web_answers": 1
+        }
+      ]
+    }
+  ]
+}
